@@ -159,6 +159,8 @@
 
 (setq org-id-extra-files (find-lisp-find-files org-roam-directory "\.org$"))
 
+(org-roam-db-sync)
+
 (org-link-set-parameters
  "x-devonthink-item"
  :export (lambda (path desc backend)
