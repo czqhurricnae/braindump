@@ -3,7 +3,6 @@
 :ID:       A9AF60C8-97DC-42BB-858E-7D712BB17209
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2021-07-20 Jul 01:01>
 #+TITLE: 737NG transfer bus off 灯亮处置预案
 

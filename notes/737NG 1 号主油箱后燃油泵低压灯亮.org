@@ -3,7 +3,6 @@
 :ID:       DD33FF47-8794-4B7E-9E54-9CA5F99EEDFD
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2021-07-24 Jul 23:22>
 #+TITLE: 737NG 1 号主油箱后燃油泵低压灯亮
 

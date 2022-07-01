@@ -3,7 +3,6 @@
 :ID:       FA55CBFB-2AC4-4B8A-A9E5-8CA7D4443BA5
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2022-05-23 May 23:02>
 #+TITLE: 737NG 机身雷击损伤放行标准查找案例
 

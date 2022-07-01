@@ -3,7 +3,6 @@
 :ID:       51BE2C0B-092B-477F-A77D-075C285D3768
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2021-07-19 Jul 14:49>
 #+TITLE: TB 编码规则和更换
 

@@ -3,7 +3,6 @@
 :ID:       0DC7DAAA-632E-4AE1-896F-CFCB4AF32F55
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2021-07-03 Jul 01:01>
 #+TITLE: 737NG 蒙皮厚度的确定
 #+FILETAGS: :chem_milled:

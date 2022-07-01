@@ -3,7 +3,6 @@
 :ID:       DB1D8BCF-817D-42D5-B3D9-6B1579A7D559
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2021-12-19 Dec 01:04>
 #+TITLE: resolving_keybinding_conflicts_with_evil_mode_troubleshooting_image_dired_bindings
 * Question

@@ -3,7 +3,6 @@
 :ID:       442C684C-3FC5-4B53-A4A9-258D5C01878C
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2022-01-11 Jan 03:22>
 #+TITLE: 维修差错调查方法：MEDA
 

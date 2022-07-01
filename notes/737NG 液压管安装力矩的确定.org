@@ -3,7 +3,6 @@
 :ID:       37A418C0-4D1B-4D35-A117-1F8F370546BC
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2021-07-18 Jul 22:11>
 #+TITLE: 737NG 液压管安装力矩的确定
 

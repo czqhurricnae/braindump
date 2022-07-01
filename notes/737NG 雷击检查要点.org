@@ -3,7 +3,6 @@
 :ID:       BF52EAE4-D5AA-4A1D-A579-0515D06D968C
 :END:
 #+LATEX_CLASS: my-article
-#+SETUPFILE: ../theme-rose.setup
 #+DATE: <2022-05-23 May 23:43>
 #+TITLE: 737NG 雷击检查要点
 
