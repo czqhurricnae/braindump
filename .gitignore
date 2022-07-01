@@ -37,6 +37,6 @@
 /public/static/vendor/json/.DS_Store
 /static/.DS_Store
 /local-publish.el
-/themes/
 /public/
 /static/
+/notes/org-roam.db
