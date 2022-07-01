@@ -1,0 +1,119 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/II 类 第四阶段/")); -*-
+:PROPERTIES:
+:ID:       EAAB8E0A-A658-4160-89FF-F29581168E93
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-13 Wed 16:22>
+#+TITLE: II 类 第四阶段
+
+* 天线
+[[file:./static/II 类 第四阶段/2021-01-24_16-38-53_screenshot.jpg]]
+
+* 显示方式
+ADF：APP，VOR，MAP
+ADF 自测试：选择 APP，VOR 模式。
+TCAS：扩展 APP，VOR，MAP，中央 MAP
+WXR：扩展 APP，VOR，MAP，中央 MAP
+GPWS：扩展 APP，VOR，MAP，中央 MAP
+PWS：扩展 APP，VOR，MAP，中央 MAP
+* 二合一控制盒
+- VOR/MB 接收机，包括 VOR 和 MB 功能，仅 1 号 VOR 接收机的指点信标功能处于生效状态。
+- MMR multi-mode receiver 多模式接收机，包括仪表着陆系统和全球卫星定位系统的功能。
+
+* NCP Nav control panel 导航控制面板，控制三个部件。
+** VOR/MB 接收机
+  - VOR 频率
+    - 108.1-111.95MHz 十分位为偶数
+    - 112.0-117.95MHz
+  - MB 频率（ILS makers）
+    - All markers transmit on 75MHz
+    - Outer marker: 400Hz - 2 tones/sec
+    - Middle marker: 1300Hz - dash-dot/sec
+    - Inner marker: 3000Hz - six dots/sec
+    - backcourse: 3000Hz
+
+** DME
+调谐 VOR 或 ILS 频率的同时，DME 频率也会自动调谐好。
+下列 DME 调谐的频率属于 VHF 频段：
+- 108-117.95：DME 台和 VOR 或 ILS 台配对
+- 133.30-135.95：单独的 DME 台
+
+** MMR
+   - GPS 天线频率
+     GPS 天线接收 L 波段信号（1575.42MHz），并将其送给 MMR。
+   — ILS 仪表着陆系统
+     G/S 天线频率：329.15-335MHz
+
+* 工作频率
+** ADF
+ADF 的有效工作频率在 190-1750kHz 之间。
+
+* 术语
+- MSU mode select unit 方式选择组件
+- VSD 垂直状态指示器（VSD）
+- TA terrain look-ahead alerting terrain awareness 前视地形提醒
+- TCF terrain clearance floor 地形净空基底
+- ISDU inertial system display unit 惯性系统显示组件
+- ADI attitude direction indicator 姿态指引
+- GLS GPS landing system
+- BOV bias out of view 偏出视野
+- TCAS traffic alert and collision avoidance system 空中交通与防撞系统
+- VOR very high frequency omni-range system 甚高频全向信标
+- PLA programmed logic array 可编程逻辑阵列
+- AEP audio entertainment player 音频娱乐系统播放器
+- VR video reproducer 视频播放器
+- VDU video distribution unit 视频分配组件
+- AMUX audio multiplexer 音频多路调制器
+- SEB seat electronics box 座椅电子盒
+- PES-audio 音频旅客娱乐系统
+- PCU passenger control unit 旅客控制单元
+- VSCU video system control unit 视频系统控制组件
+- ACU airshow control unit airshow 控制组件
+- DIU digital interface unit 数字接口组件
+- IFE in flight entertainment
+- PRAM pre-recorded announcement boarding music 预录信息
+- LAN low noise amplifer 低噪放大器
+- DIP diplexer 双工器
+- SCM SDU configuration module SDU 构型模块
+- ORT owner requirements tables 用户需要表
+- USIM universal subscriber identify module 用户识别模块卡
+- ACARS aircraft communication addressing and reporting system 无线地寻址和报告系统
+- RA resolution advisory 决策咨询
+- TA traffic advisory 交通咨询
+- MEDB airplane model/engine performance data base 飞机型号/发动机性能数据库
+- OFP operational flight program 飞行操作程序
+- SIDs standard instrument departures 标准仪表离场程序
+- ACARS aircraft communications addressing and reporting system 飞机通信寻址和报告信息
+- VSWR voltage standing wave ratio 电压驻波比
+- B/CRS back course 背航道
+* 高谐音（HI Chime）
+** pilot call，地面呼叫驾驶舱
+当按压 PILOT CALL 电门时， 电门发送信号至：
+- REU，使得 ACP 上的 INT 呼叫灯点亮(XIA012-015，848-999)；
+- 音响警告组件，在驾驶舱发出高谐音；
+- P5 旅客信号牌，使得 CALL 灯点亮(XIA001-006，009-011，801-810，812-838，840-848)。
+
+[[file:./static/II 类 第四阶段/2021-03-25_08-17-15_screenshot.jpg]]
+
+** 前后乘务员控制面板呼叫驾驶舱
+** 对于 XIA009-011，盥洗室烟雾探测器探测到烟雾时会发送离散信号至 PA 放大器，使之发出高谐音
+** 旅客呼叫
+当在旅客服务组件(PSU)上按压乘务员呼叫按钮时，控制电路将有以下指示:
+- 在前后出口标志蓝色灯罩内的灯点亮；
+- 高谐音；
+- PSU 呼叫灯点亮。
+** 厕所呼叫
+当操作厕所的呼叫灯时，28V 直流电引起以下情况发生：
+- 继电器 R1 激励,并且锁定；
+- 高谐音；
+- 厕所呼叫灯/复位电门；
+- 在前或后出口标志指示灯上的琥珀色灯点亮。
+
+* 高低谐音（HI/LO Chime）
+** 声响警告组件接收来自 REU 的离散输入信号，生成 HI/LO 谐音
+- 当 SELCAL 解码器接收到来自地面的 SELCAL 信号时，REU 会接收到来自 SELCAL 声响警 告继电器的输入信号。
+- 当地面台通过 ACARS 网络呼叫机组时，ACARS 管理组件会发送信号至 REU，REU 将信号 送至声响警告组件。
+** 当 SDU 接收到来自卫星系 统的呼叫时，SDU 会激励 R630 SATCOM 声响继电器， 该继电器继而发送 28V DC 至声响警告组件，从而在驾 驶舱发出高低谐音
+** 驾驶舱呼叫乘务员
+** 乘务员呼叫乘务员

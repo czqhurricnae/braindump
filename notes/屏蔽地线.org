@@ -1,0 +1,210 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/屏蔽地线/")); -*-
+:PROPERTIES:
+:ID:       A6251A34-F64B-4F36-99ED-88FB8183F599
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-03 Sat 14:49>
+#+TITLE: 屏蔽地线
+
+* 参考文件
+SWPM 20-10-15
+
+* 电缆屏蔽层材料
+屏蔽电缆的屏蔽层主要由铜、铝等非磁性材料制成，并且厚度很薄，远小于使用频率上金属材料的集肤深度，屏蔽层的效果主要不是由于金属体本身对电场、磁场的反射、吸收而产生的，而是由于屏蔽层的接地产生的。
+
+* 高能脉冲
+我们必须防止高能脉冲进入飞机的导线，因为：
+- 可能造成飞机上的电子设备读取数据时出错。
+- 可能会损害到其连接的电子设备。
+
+* 屏蔽电缆的作用
+- 防止由闪电产生的高能的高脉冲电信号进入到屏蔽层内。
+- 防止飞机外面的高强度高频电能进入到飞机的屏蔽地线里。
+- 防止飞机里的各种设备产生的无线电信号进入屏蔽地线里。
+- 防止屏蔽地线里面的无线电信号发射出来影响其他设备和系统的性能。
+
+* 屏蔽地线标识
+** 可以从[[id:CBDA8A93-A5EA-4888-BBE5-A8320CCB247D][导线件号]]的 TYPE 中获取：TX 代表线的绝缘、屏蔽情况
+T32 屏蔽情况：有屏蔽且材料为铜，涂层为锡
+
+[[file:./static/屏蔽地线/2021-07-03_14-57-50_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-03_14-54-22_screenshot.jpg]]
+[[file:./static/屏蔽地线/2021-07-03_14-54-34_screenshot.jpg]]
+[[file:./static/屏蔽地线/2021-07-03_14-55-03_screenshot.jpg]]
+
+** 可以从导线束 WIRE TYPE CODE 获得
+
+[[file:./static/屏蔽地线/2021-07-03_14-56-39_screenshot.jpg]]
+[[file:./static/屏蔽地线/2021-07-03_14-56-56_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-03_14-58-20_screenshot.jpg]]
+
+* WIRE LIST 种关于屏蔽的内容
+** TERM
+ - DED
+ 表示屏蔽地线的一端衔空，没有用跳线或猪尾巴线连接。
+** SP
+ - A，B...
+ 屏蔽地线终端。
+
+ - JPA，JPB...
+ 标识从连接管到另一终端的导线。
+
+ - FA
+ 表示屏蔽接地是用金属箍或猪尾巴套固定的。
+
+ - FR-()
+ 跳线号，用于将屏蔽地线连到插钉或地。
+
+ - FRAA，FRAB...
+ 表示跳线连到 FA 或 FB。
+
+* TODO 屏蔽地线接地符号
+参考 WDM 00。
+
+* 插头尾部屏蔽地线连接
+** 在插头尾部，屏蔽地线可以通过接线片与连接器直接连接
+
+#+CAPTION: 屏蔽地线通过接线片与连接器连接
+[[file:./static/屏蔽地线/2021-07-03_15-14-30_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-03_15-15-15_screenshot.jpg]]
+
+
+** 屏蔽地线也可以与连接壳体通过压力固定连接
+
+#+CAPTION: 屏蔽地线与连接器壳体连接
+[[file:./static/屏蔽地线/2021-07-03_15-15-33_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-03_15-16-24_screenshot.jpg]]
+
+
+** 对于敏感线路使用金属固定带将屏蔽地线与连接器壳体连接
+
+#+CAPTION: 屏蔽地线通过固定带与连接器连接
+[[file:./static/屏蔽地线/2021-07-03_15-16-36_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-03_15-16-48_screenshot.jpg]]
+
+* 屏蔽地线的施工
+** 钢环铜环冷压接法
+ - 选择金属箍（内和外箍）和地线；
+ - 准备电缆和地线；
+ - 穿上外箍，然后将内箍推到屏蔽线的下面；
+ - 将地线插入外箍，并推到内箍上，夹紧；
+ - 剪去多余的屏蔽线，装上热缩管热缩或胶带缠绕，亚麻绳固定
+
+[[file:./static/屏蔽线/2021-07-03_16-20-40_screenshot.jpg]]
+
+*** 屏蔽地线在导线或电缆的末端
+
+ [[file:./static/屏蔽线/2021-07-03_17-17-13_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-17-20_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-17-27_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-17-38_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-17-57_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-18-07_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-18-22_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-21-43_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-18-43_screenshot.jpg]]
+
+*** 屏蔽地线不在导线或电缆的末端
+
+ [[file:./static/屏蔽线/2021-07-03_17-19-37_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-19-50_screenshot.jpg]]
+
+*** 电缆有两个屏蔽层
+
+ [[file:./static/屏蔽线/2021-07-03_17-20-25_screenshot.jpg]]
+
+ [[file:./static/屏蔽线/2021-07-03_17-20-37_screenshot.jpg]]
+
+** 抽线法（Shield pull through）
+ - 将线准备好，并套上热缩管（0.7 英寸，RT-876）。
+ - 将屏蔽线往前推，然后用尼龙锥子撬开一个洞。
+ - 弯曲电缆后并将内线从洞内拉出。
+
+
+ [[file:./static/屏蔽地线/2021-07-04_12-58-48_screenshot.jpg]]
+
+ [[file:./static/屏蔽地线/2021-07-04_13-00-17_screenshot.jpg]]
+
+ [[file:./static/屏蔽地线/2021-07-04_13-00-26_screenshot.jpg]]
+
+ [[file:./static/屏蔽地线/2021-07-04_13-00-34_screenshot.jpg]]
+
+ [[file:./static/屏蔽地线/2021-07-04_13-00-43_screenshot.jpg]]
+
+ [[file:./static/屏蔽地线/2021-07-04_13-00-50_screenshot.jpg]]
+
+ [[file:./static/屏蔽地线/2021-07-04_13-00-56_screenshot.jpg]]
+
+** 焊锡管焊接法
+- 准备地线和电缆，并套上焊锡管。
+- 接上搭地线并固定焊锡管。
+- 使用热风枪热缩焊锡管合适温度。
+
+ [[file:./static/屏蔽地线/2021-07-04_13-01-47_screenshot.jpg]]
+ [[file:./static/屏蔽地线/2021-07-04_13-01-55_screenshot.jpg]]
+ [[file:./static/屏蔽地线/2021-07-04_13-02-02_screenshot.jpg]]
+
+* 屏蔽材料的选择
+
+[[file:./static/屏蔽地线/2021-07-04_13-38-26_screenshot.jpg]]
+
+- Selection of a Shield Ground Wire 屏蔽地线
+- Selection of Mechanical Ferrules 金属环
+- Solder Sleeve 焊锡管
+- Selection of a Shield Material 屏蔽材料
+- Selection of an Insulation Material 绝缘材料（热缩管，胶带）
+
+* 导线屏蔽层修复
+
+[[file:./static/屏蔽地线/2021-07-04_13-42-54_screenshot.jpg]]
+
+- Wire and Cable Damage and Repair Conditions 导线和电缆的损伤修复标准
+- Repair of Shielded Wire and Shielded Cable with a Splice Assembly 使用接线管修复带屏蔽的导线或电缆
+- Repair of the Shields of a Shields Wire and a Shielded Cable 修复带屏蔽的导线或电缆的屏蔽层
+- Repair of Shield Ground Wire 修复屏蔽地线
+
+** 对于屏蔽导线和电缆的金属屏蔽网小于 1 英寸且圆周小于 25%的损坏
+- 使用异丙醇酒精清洁受损区域,并修复平整。
+- 用胶带缠绕受损区域，并使用亚麻绳固定两端。
+
+[[file:./static/屏蔽地线/2021-07-04_14-15-11_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-04_14-15-19_screenshot.jpg]]
+
+** 对于屏蔽导线和电缆的金属屏蔽网大于 1 英寸或圆周大于 25%的损坏
+- 去除一定长度的绝缘层，清洁受损区域并修复平整。
+- 使用屏蔽材料包在屏蔽层上，并在两端使用焊锡管固定。
+- 外侧使用胶带缠绕，并在两端使用亚麻绳固定。
+
+[[file:./static/屏蔽地线/2021-07-04_14-16-12_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-04_14-16-20_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-04_14-16-26_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-04_14-16-33_screenshot.jpg]]
+
+** 对于屏蔽导线和电缆的金属屏蔽网大于 1 英寸或圆周大于 25%的损坏，靠近线束末端
+- 去除一定长度的绝缘层，清洁受损区域并修复平整。
+- 使用金属内外环及屏蔽材料修复受损区域。
+- 外侧使用胶带缠绕，并在两端使用亚麻绳固定。
+
+[[file:./static/屏蔽地线/2021-07-04_14-17-18_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-04_14-17-36_screenshot.jpg]]
+
+[[file:./static/屏蔽地线/2021-07-04_14-17-49_screenshot.jpg]]

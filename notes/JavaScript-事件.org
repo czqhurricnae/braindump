@@ -1,0 +1,99 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       AD83F8E1-FE80-4ACC-9950-97F9FA27767C
+:END:
+
+#+DATE: <2020-09-29 Tue 20:51>
+#+TITLE: JavaScript-事件
+
+* 事件流描述的是从页面中接收事件的顺序.
+事件流是描述的从页面接受事件的顺序, 当几个都具有事件的元素层叠在一起的时候, 那么你点击其中一个元素, 并不是只有当前被点击的元素会触发事件, 而层叠在你点击范围的所有元素都会触发事件. 事件流包括两种模式冒泡和捕获.
+- 事件冒泡, 是从里往外逐个触发.
+- 事件捕获, 是从外往里逐个触发.
+那么现代的浏览器默认情况下都是冒泡模型, 而捕获则是早期的 Netscape 默认情况. 而现在的浏览器要使用 DOM2 级模型的事件绑定机制才能手动定义事
+件流模式.
+#+BEGIN_SRC html
+<!DOCTYTE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <div id="box" style="background: #abcdef; width: 300px; height: 300px;">
+            <input name="" type="button" value="test" id="btn"/>
+        </div>
+        <script type="text/javascript">
+         var box = document.getElementById("box");
+         var btn = document.getElementById("btn");
+         btn.onclick = function(){
+             alert("Button clicked");
+         };
+
+         box.onclick = function(){
+             alert("Box clicked");
+         };
+
+         document.body.onclick = function(){
+             alert("Body clicked");
+         };
+
+         document.documentElement.onclick = function(){
+             alert("Html clicked");
+         };
+
+         document.onclick = function(){
+             alert("Document clicked");
+         };
+        </script>
+    </body>
+</html>
+#+END_SRC
+
+* 取消冒泡
+#+BEGIN_SRC html
+<!DOCTYTE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <div id="box" style="background: #abcdef; width: 300px; height: 300px;">
+            <input name="" type="button" value="test" id="btn"/>
+        </div>
+        <script type="text/javascript">
+         var box = document.getElementById("box");
+         var btn = document.getElementById("btn");
+         btn.onclick = function(e){
+             alert("Button clicked");
+             var e = e||window.event;
+             if (typeof e.cancelBubble == "undefinded"){
+                 e.stopPropagation();
+             }else{
+                 e.cancelBubble = true;
+             }
+         };
+
+         box.onclick = function(){
+             alert("Box clicked");
+         };
+
+         document.body.onclick = function(){
+             alert("Body clicked");
+         };
+
+         document.documentElement.onclick = function(){
+             alert("Html clicked");
+         };
+
+         document.onclick = function(){
+             alert("Document clicked");
+         };
+        </script>
+    </body>
+</html>
+#+END_SRC
+DOM2 级事件定义了两个方法, 用于添加事件和删除事件处理程序的操作:
+addEventlistener 和 removeEventListener. 所有 DOM 节点中都包含这两个方法, 并且它们都接受 3 个参数; 事件, 函数, 冒泡或捕获的布尔值 true 表示捕获,false 表示冒泡)
+IE 事件处理程序,IE 中实现了 DOM 中类似的两个方法: attachEvent 和 detachEvent 这两个方法接受相关的两个参数: 事件处理程序名称和事件处理程序函数. 在 8 及旧 8 之间版本中只支持事件冒泡, 所以通过 attachEvent 添加的事件处理都会被添加到冒泡阶段.

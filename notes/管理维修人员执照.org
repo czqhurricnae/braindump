@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/管理维修人员执照/")); -*-
+:PROPERTIES:
+:ID:       56FD6EE1-B319-4093-838B-FA51BABEE480
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:50>
+#+TITLE: 管理维修人员执照
+#+ROAM_KEY:
+

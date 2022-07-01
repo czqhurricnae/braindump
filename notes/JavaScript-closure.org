@@ -1,0 +1,150 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       D4E483C6-473C-45E9-9350-56F3757A0019
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-01 Sat 13:12>
+#+TITLE: JavaScript-closure
+
+#+BEGIN_SRC js :results output :exports no-eval
+function foo() {
+    var x = 10;
+    function bar() {
+        console.log(x);
+    }
+    return bar;
+}
+// "foo" returns inner function.
+// "bar" and this returned function can
+// access variable "x", which is set to 10.
+var returnedFunction = foo(); // outer function foo() gets executed
+// let's define a global variable "x".
+var x = 20
+// execution of the returned function.
+returnedFunction();
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+When the inner function bar() is declared, which occurs when outer function foo() gets executed, a closure is formated, in which when the inner function bar() gets executed,
+it can access variable x that is declared in the same scope of bar().
+
+* Make variables private using a closure
+JavaScript doesn't have special syntax for private members, but you can make variables private using a closure.
+
+#+BEGIN_SRC js :results output :exports no-eval
+function Person() {
+    // private properties and methods
+    var name = "jPassion";
+    var myPrivateGetAgeMethod = function() {
+        return 20;
+    }
+    this.getPersonAllInfo = function() {
+        return name + "is " + myPrivateGetAgeMethod();
+    }
+}
+var myPerson = new Person();
+console.dir(myPerson);
+// "name" is undefined, it's private.
+console.log(myPerson.name);
+// "myPrivateGetAgeMethod" is undefined, it's private.
+try {
+    console.log(myPerson.myPrivateGetAgeMethod());
+} catch(err) {
+    console.log(err);
+}
+// public method has access to private members.
+console.log(myPerson.getPersonAllInfo());
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+Person { getPersonAllInfo: [Function] }
+undefined
+TypeError: myPerson.myPrivateGetAgeMethod is not a function
+    at Object.<anonymous> (/private/var/folders/2h/_7667pjd23s4wd9mpdwy401w0000gn/T/babel-R3h2fw/js-script-50JAsR:17:26)
+    at Module._compile (internal/modules/cjs/loader.js:774:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:785:10)
+    at Module.load (internal/modules/cjs/loader.js:641:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:556:12)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:837:10)
+    at internal/main/run_main_module.js:17:11
+jPassionis 20
+#+end_example
+
+name and myPrivateGetAgeMethod properties can not be accessed directory.
+
+* Usage
+
+#+begin_example
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <h3>(Press F12 to display console.) Click one of the links below.
+    </h3>
+    <script type="text/javascript">
+        // Each "a" element gets the correct text,
+        // i.e. "Link 0", "Link 1" and so on. But whichever
+        // link you click, it always alerts the number "5".
+        // Why? (The reason is explained below.)
+        // Declare a outer function. Note that anonymous
+        // inner functions are being registered as event
+        // handlers for "link" (see line #29)
+        function addLinksExample1() {
+            for (var i = 0, link; i < 5; i++) {
+                // Create an anchor and add it to the <body> element
+                link = document.createElement("a");
+                link.innerHTML = "LinkWithoutClosure " + i + "<br/>";
+                // function is defined - in other words, a function object is
+                // created.
+                link.onclick = function () {
+                    alert(i);
+                    console.log(i);
+                };
+                document.body.appendChild(link);
+            }
+            // When addLinksWithoutClosure() outer
+            // function's execution is done, the value
+            // of "i" is set to 5.
+        }
+        // Invoke the outer function. Now the inner function
+        // is defined with its function scope - the variable i,
+        // which is set to 5. When link is clicked, the inner
+        // function gets executed with value of 5.
+        addLinksExample1();
+    </script>
+    <br/>
+    <script type="text/javascript">
+     //
+     // Use Closure to the solve the problem above
+     //
+     function addLinksExample2() {
+       for (var i = 0, link; i < 5; i++) {
+         link = document.createElement("a");
+         link.innerHTML = "LinkWithClosure " + i + "<br/>";
+         // Note that self-invoking function is used here.
+         // The correct value of "i" is passed to the
+         // self-invoking "function(value){..}", which
+         // provides the correct value to its own
+         // internal function.
+         link.onclick = (function (value) {
+           return function () {
+             alert(value);
+             console.log(i);
+           }
+         })(i);
+         document.body.appendChild(link);
+       }
+     }
+     addLinksExample2();
+    </script>
+</body>
+</html>
+#+end_example
+
+[[file:./static/JavaScript-closure/usage.html][See：Usage]]

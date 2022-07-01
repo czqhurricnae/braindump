@@ -1,0 +1,22 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/0705-12 必检项目/")); -*-
+:PROPERTIES:
+:ID:       1A5103A7-7604-4E06-91BB-31D557777C95
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-01 Tue 18:39>
+#+TITLE: 0705-12 必检项目
+
+[[id:62551D88-44EC-46C7-B796-0F43D5B58BC7][8201-8 必检项目管理程序]]
+
+* 必检项目标注方式
+- 计划维修和附件修理的必检项目应标记在维修工作单（卡）。
+- 非计划维修项目应按照确立的通用必检项目原则，在相应的工作单卡、LMR、CMR 上进行标识。
+
+#+transclude: [[id:62551D88-44EC-46C7-B796-0F43D5B58BC7][8201-8 必检项目管理程序]] 
+
+
+
+
+
+
+

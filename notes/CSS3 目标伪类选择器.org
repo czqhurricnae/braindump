@@ -1,0 +1,45 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       99E20195-5F5C-4F26-A059-46CBE322F9E3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-08-01 Sat 12:37>
+#+TITLE: CSS3 目标伪类选择器
+
+目标伪类选择器 ~:target~ 是众多使用的 css3 特性中的一个，用来匹配文档中 uri 中某个标志符的目标元素。
+
+具体来说，uri 中的标志通常会包含一个#，后面带有一个标志符名称，如 ~#box-one:target~ 就是匹配 ID 为 “box_one” 的目标元素。
+
+举个简单的例子：
+
+如一个页面中有一个 a 标签，它的 href 如下： ~<a href="#box-three">Tab 3</a>~ ，同一个页面中也会有以 box-three 为 id 的元素， ~<div id="box-three">tab3 content</div>~
+
+那么 a 标签的 href 属性会链接到 =#box-three= 元素，也就是 ~box-three:target~ 选择符所选的目标元素，它所指定的样式就是当 a 链接到这个元素时候，目标元素的样式。
+
+注意：
+
+目标伪类选择器是一个动态选择器，只有存在 url 指向该匹配元素时候，样式才会生效。
+
+#+begin_example
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style type="text/css">
+     #big-bam-boom:target {
+       color: red;
+     }
+    </style>
+  </head>
+
+  <body>
+    <h1 id="big-bam-boom">Kaplow!</h1>
+    <a href="#big-bam-boom">Mission Control, we're a little parched up here.</a>
+  </body>
+
+</html>
+#+end_example
+
+点击链接进行演示：
+
+[[file:./static/CSS3 目标伪类选择器/CSS3 目标伪类选择器.html][CSS3 目标伪类选择器.html]]

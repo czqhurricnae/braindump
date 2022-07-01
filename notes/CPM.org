@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/CPM/")); -*-
+:PROPERTIES:
+:ID:       02F82892-8ABA-40D1-9995-4BD2FED2D4F6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 22:16>
+#+TITLE: CPM
+
+#+ROAM_KEY:
+
+
+防腐手册
+

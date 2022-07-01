@@ -1,0 +1,303 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 2-bound_method_and_unbound_method_and_classmethod_and_staticmethod/")); -*-
+:PROPERTIES:
+:ID:       0F0BD066-5456-4F41-84E4-13F2475D9C2D
+:END:
+#+LATEX_CLASS: my-article
+#+PROPERTY: header-args :cache yes
+
+#+DATE: <2020-03-22 Sun 18:21>
+#+TITLE: Python 2-bound_method_and_unbound_method_and_classmethod_and_staticmethod
+
+* 函数是非数据描述符
+[[类的 __get__() 调用][See 类的 __get__() 调用]]
+
+在 Python 2 中执行：
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  def func():
+      pass
+
+  func.__get__
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <method-wrapper '__get__' of function object at 0x10c5aed70>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  func.__get__(None, 1)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <unbound method ?.func>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  func.__get__(1, 1)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <bound method ?.func of 1>
+:END:
+
+在 Python 3 中执行：
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  def func():
+      pass
+
+  func.__get__
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <method-wrapper '__get__' of function object at 0x102862e18>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  func.__get__(None, 1)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <function func at 0x102862e18>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  func.__get__(1, 1)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <bound method func of 1>
+:END:
+
+可以看出在 Python 3 中没有了 ~unbound method~ 这个概念。 而是将其看成普通的 function。
+
+** 类的方法通过描述符机制在运行时返回 boud method 对象和 unboud method 对象的机制
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  class A(object):
+
+      a = 1
+
+      def __init__(self):
+          self.b = 2
+
+      # instance method
+      def func(self):
+          return self.b
+#+END_SRC
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.func
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+<unbound method A.func>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.__dict__["func"].__get__(None, A)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+<unbound method A.func>
+:END:
+
+为什么 A.func 等价于 A.__dict__["func"].__get__(None, A)？
+首先明确一个概念，不管是 function 还是在 class 内定义的 method，Python 都一视同仁，将它们视为 function。
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  type(A.__dict__["func"])
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+function
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  def func():
+      pass
+
+  type(func)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+function
+:END:
+
+而从前面一节可知，函数是非数据描述符，所以它有 ~__get__(self, instance, owner)~ 方法。
+所以当调用 ~__get__~ 方法时，instance 参数为 None，owner 参数为该非数据描述符的拥有者即类 A。
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A().func
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+<bound method A.func of <__main__.A object at 0x1047b8b90>>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.__dict__["func"].__get__(A(), A)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+<bound method A.func of <__main__.A object at 0x10484b490>>
+:END:
+
+* classmethod, staticmethod 的运行机制
+同样 classmethod，staticmethod 是非数据描述符。
+
+#+BEGIN_QUOTE
+A data descriptor implements at least __set__() or __delete__(), but can include both. They also often include __get__() since it’s rare to want to set something without also being able to get it too.
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+A nondata descriptor only implements __get__(). If it adds __set__() or __delete__() to its method list, it becomes a data descriptor.
+#+END_QUOTE
+
+#+CAPTION: 类的 __get__() 调用
+<<类的 __get__() 调用>>
+
+[[file:./static/Python 2-bound_method_and_unbound_method_and_classmethod_and_staticmethod/类的 __get__() 调用.jpg]]
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  class classmethod(object):
+      """reconstruct __builtins__.classmethod
+      """
+
+      def __init__(self, f):
+          self.f = f
+
+      def __get__(self, instance, owner=None):
+          print("classmethod __get__ called")
+          print("instance: ", instance)
+          print("owner: ", owner)
+          return self.f.__get__(owner, type)
+
+
+  class staticmethod(object):
+      """reconstruct __builtins__.staticmethod
+      """
+
+      def __init__(self, f):
+          self.f = f
+
+      def __get__(self, instance, owner):
+          print("staticmethod __get__ called")
+          return self.f
+
+
+  class A(object):
+
+      a = 1
+
+      def __init__(self):
+          self.b = 2
+
+      # instance method
+      def func(self):
+          return self.b
+
+      # class method
+      @classmethod
+      def cfunc(cls):
+          return cls.a
+
+      # static method
+      @staticmethod
+      def sfunc(self):
+          return 3
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.cfunc
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+classmethod __get__ called
+('instance: ', None)
+('owner: ', <class '__main__.A'>)
+<bound method type.cfunc of <class '__main__.A'>>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.__dict__["cfunc"].__get__(None, A)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+classmethod __get__ called
+('instance: ', None)
+('owner: ', <class '__main__.A'>)
+<bound method type.cfunc of <class '__main__.A'>>
+:END:
+
+为什么经过 ~classmethod~ 装饰器装饰过的方法就能够不传入类实例而就能变成 bound method，而非前面的例子中的 unbound method 呢？
+其实从 classmethod 中不难看出，是 classmethod 类中的 ~__get__~ 拦截了 A 类中的方法 cfunc 的 ~__get__~ 方法的参数传递过程，
+将原来传入的参数 ~instance = None~ 舍弃，而将 ~owner = <class '__main__.A'>~ 参数传入给 ~cfunc.__get__~ 方法的 instance 作为参数。
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.sfunc
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+staticmethod __get__ called
+<function __main__.sfunc>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.__dict__["sfunc"].__get__(None, A)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+staticmethod __get__ called
+<function __main__.sfunc>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A().sfunc
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+staticmethod __get__ called
+<function __main__.sfunc>
+:END:
+
+#+BEGIN_SRC python :exports no-eval :eval no-export
+  A.__dict__["sfunc"].__get__(A(), A)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+staticmethod __get__ called
+<function __main__.sfunc>
+:END:
+
+为什么经过 staticmethod 装饰器装饰过的方法既可以用类调用，也可以用实例调用，是因为 staticmethod 这个非数据描述符拦截了对 A 类中 sfunc 的访问，并只是简单地将其原样调用。
+
+* 实例属性获取
+
+#+DOWNLOADED: screenshot @ 2020-03-22 18:10:17
+[[file:./static/Python 2-bound_method_and_unbound_method_and_classmethod_and_staticmethod/实例属性获取.jpg]]
+
+* __set__() 和 __del__() 的调用
+
+#+DOWNLOADED: screenshot @ 2020-03-22 18:11:55
+[[file:./static/Python 2-bound_method_and_unbound_method_and_classmethod_and_staticmethod/__set__() 和 __del__() 的调用.jpg]]

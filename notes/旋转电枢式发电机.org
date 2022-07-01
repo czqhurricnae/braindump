@@ -1,0 +1,8 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/旋转电枢式发电机/")); -*-
+:PROPERTIES:
+:ID:       B41FFBED-DFBB-46C2-9A06-695C9EF5105A
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-22 Thu 18:54>
+#+TITLE: 旋转电枢式发电机

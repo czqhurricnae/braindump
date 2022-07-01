@@ -1,0 +1,104 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/短跑道构型/")); -*-
+:PROPERTIES:
+:ID:       F13F6B2F-5A10-462D-9ECA-6129CE5B06D1
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-08-10 Mon 20:18>
+#+TITLE: 短跑道构型
+
+近期，厦航新引进的 738 飞机 B-6887/6889/6800 定制为 SFP 构型。
+SFP（Short Field Performance）或者 SFE（Short Field Enhancement）译为短跑道性能，只是 737NG 飞机的一种设计构型，是客户可以选择定制的。
+早在 2006 年第一架 SFP 构型 737NG 飞机下线，至今已达 300 多架。
+该构型通过推力设置、飞行操纵、起落架系统等方面的改进，使飞机能够在 1465m 的跑道上起降。
+和普通 737NG 具体的区别如下：
+* 737-800W.1
+
+[[file:./static/短跑道构型/2020-08-10_20-23-16_screenshot.jpg]]
+
+=W.x= 的含义？
+
+=W= 代表安装了翼尖小翼。
+=x=1 or 2= 代表安装的是单位置尾撬还是双位置尾撬。
+
+=737-800W= 代表安装单位置尾撬和小翼的 737-800 飞机（虽然没有 =.1= ）。
+
+=737-800W.1= 还代表这是一架短跑道构型的飞机。
+
+* 增大扰流板地面升起角度
+普通飞机：
+
+2#、3#、10# 和 11# 飞行扰流板向上运动的最大范围是 33 度。
+
+4#、5#、8# 和 9# 飞行扰流板向上运动的最大范围是 38 度。
+
+1#、12# 地面扰流板向上运动 60 度。
+
+6#、7# 地面扰流板向上运动 52 度。
+
+短跑道构型飞机：
+
+The travel of the Flight Spoilers and the Inboard Ground Spoilers will be increased such that they will travel to an equivalent of 60 degrees on the ground.
+
+Currently, the Flight Spoiler deploys to approximately 30 degrees on the ground, while the Inboard Ground Spoiler deploys to approximately 52 degrees on the ground (see Figure 1).
+
+[[file:./static/短跑道构型/2020-08-10_20-45-51_0.jpeg]]
+
+* 后缘襟翼 40 度时，前缘襟翼和发动机整流罩之间打开间隙
+Krueger flap seal door: unsealing the Krueger flap during approach and landing.
+
+The addition of an actuated Krueger flap seal door will reduce landing distances by improving stall lift characteristics and thus reducing approach speeds.
+
+The seal door will be actuated to open the gap between the flap and the engine cowl when the trailing edge flaps are in the Flaps 40 position.
+The seal door will remain closed at all other flap settings due to the increased drag from this configuration (see Figure 2).
+
+[[file:./static/短跑道构型/2020-08-10_20-54-14_0.jpeg]]
+
+襟翼 40 度时，前缘襟翼开缝，改变构型，防止失速。
+
+* 在后缘襟翼 25 度前，前缘缝翼不会全伸出
+Sealed leading edge slats: sealing the slats for flaps 10, 15, 25.
+
+The leading edge (LE) slats will be rescheduled so the slats remain in the sealed (intermediate) position for all takeoff flap settings (Flaps 1 through 25).
+
+The LE slats will transition to the Full Extend position for landing flap settings 30 and 40.
+
+The trailing edge (TE) flap system will be revised to include flap load relief for flap detents 10, 15, 25, 30, and 40.
+This enhancement is included in both Short Field Performance options, but is available on 737-800 and -900 airplanes only (see Figure 3).
+
+普通 737NG 襟翼大于 5，缝翼全放出，而 SFP 襟翼大于 25，缝翼才全放出，且是封闭的前缘缝翼。
+普通 737NG 只有襟翼 30、40 可以卸载，它的襟翼 10、15、25、30、40 都能卸载。
+
+[[file:./static/短跑道构型/2020-08-10_23-07-42_0.jpeg]]
+
+[[file:./static/短跑道构型/2020-08-14_20-16-11_640.jpeg]]
+
+* 2-position tailskid 双位置尾撬（可选）
+防擦尾具具有两位置（两级），起飞位置和正常的单位尾撬是一样的，着陆时多伸出 5 英寸，增强触地保护。
+
+[[file:./static/短跑道构型/2021-07-24_23-15-58_screenshot.jpg]]
+
+#+CAPTION: 2-Position Tailskid Control Logic
+[[file:./static/短跑道构型/2021-07-24_23-19-02_screenshot.jpg]]
+
+Two position tail skid: providing a 2 position tailskid.
+
+The final component, available only with option 0222C472A10 on 737-800 and -900 airplanes, is a new two position tail skid (see figure 4).
+
+The existing tail skid protects the aft fuselage from the damaging effects of tail strikes if over-rotation occurs during takeoffs.
+This new tail skid, which extends an additional 5 inches (approximate), will provide protection during landing.
+It will allow for higher angles of attack during approach, with a subsequent reduction in approach speeds and reduced landing distances.
+
+[[file:./static/短跑道构型/2020-08-10_23-12-11_0.jpeg]]
+
+选装 0222C472A10 有，选装 0222C472A09 没有。
+“双位尾撬”属于短跑道（SFP：Short Field Performance）构型的 737-800 飞机所选装的 (非必装) 。
+一般 SFP 构型的 737-800 飞机都没有选装，只在 737-900 飞机上才能看到 。
+
+而在新的 737MAX 机型上，为了获得更大的起降重量性能，“双位尾撬”将成为 737-8 及更大机型的标配。
+
+* New 2-stage flight spoiler actuators and control valves are required
+第一级活门由液压控制将飞行扰流板伸起到正常的 33 度或 38 度，第二级活门由电控制将飞行扰流板伸起更大的角度 56 度和 65 度，第二级活门与内锁活门和扰流板手柄交联。
+
+* 接地后减少慢车推力的延迟时间，从 5 秒减少到 2 秒，以缩短着陆滑跑距离
+
+* 起落架内八倾斜 1 度，以改善主轮胎面磨损均匀性

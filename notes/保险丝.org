@@ -1,0 +1,24 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/保险丝/")); -*-
+:PROPERTIES:
+:ID:       647720E9-EABA-402B-BAE8-E3C6ECBE16A0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-10 Mon 18:16>
+#+TITLE: 保险丝
+* 保险丝的选择
+
+[[file:./static/保险丝/2021-05-10_18-22-56_screenshot.jpg]]
+
+[[eww:marginnote3app://note/A2736653-4B72-4173-BC9E-4050721E2B4C][保险丝的选择]]
+
+* 控制电门保险丝的安装
+
+[[file:./static/保险丝/2021-05-10_18-23-12_screenshot.jpg]]
+
+[[eww:marginnote3app://note/B309778D-6D8D-4E8A-8FFE-2FC347DD2D8F][控制电门保险丝的安装]]
+
+* 参考资料
+- SWPM 20-60-07 INSTALLATION OF LOCKWIRE AND SAFETY CABLE ON ELECTRICAL CONNECTORS, CONNECTOR BACKSHELL CABLE CLAMPS AND SWITCH GUARDS 2.(2)
+- AMM TASK 26-22-00-730-801
+- AMM TASK 20-10-44-400-801
+- 737-SL-20-057

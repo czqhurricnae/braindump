@@ -1,0 +1,87 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Using_org_babel_to_enable_virtualenv/")); -*-
+:PROPERTIES:
+:ID:       44E82219-5DBC-4E51-917A-6903968323F6
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-27 Mon 00:28>
+#+TITLE: Using_org_babel_to_enable_virtualenv
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I hoped to enable a virtualenv with org-babel source block before executing some python.
+
+I wanted to do something like [[file:./static/pyvenv][pyenv]] pyvenv-workon before it evaulates my code block.
+I didn't want to have to manually enable the virtualenv.
+
+Something like,
+
+#+BEGIN_SRC sh :exports no-eval
+#+NAME: elasticsearch_dsl_test
+#+BEGIN_SRC: python :prologue "(pyvenv-workon 'elasticsearch)"
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search, Q
+
+client = Elasticsearch()
+
+search = Search(using=client, index="localdev-news-newsentry")
+response = search.execute()
+
+print ["No response", "Was successfull"][int(response.success())]
+print "Response took {0}ms.".format(response.took)
+#+END_SRC
+#+END_SRC
+
+** comment
+I couldn't quite get it working.
+** comment
+Your use of :prologue will prepend the text as is to the src block. Unquote your prologue and make sure it doesn't return anything that would be prepended.
+** comment
+@mutbuerger is it even possible to do what I'm suggesting? I did more reading and prologue just appends to the start, so python would be interpreting my elisp which is not possible.
+** comment
+If you remove the quotes from your prologue, the sexp will be evaluated for its side-effects and whatever pyvenv-workon returns will be appended to the src block. Default value of :prologue is "", so to make sure nothing gets appended you may use :prologue (progn (pyvenv-workon 'elasticsearch) "").
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+I got this working with multiple virtualenvs concurrently using org-babel =:session= and [[file:./static/pyvenv][pyvenv]].
+
+*Note* that =scratchenv-SNmPgRMB= is the name of one of my personal environments created using [[file:./static/pipenv][pipenv]] replace it with your virtualenv environment name.
+
+#+BEGIN_SRC elisp :session venv-scratch :exports no-eval
+(pyvenv-workon "scratchenv-SNmPgRMB")
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh :session venv-scratch
+echo $VIRTUAL_ENV
+which python
+#+END_SRC
+
+#+RESULTS:
+: /home/costrouc/.virtualenvs/scratchenv-SNmPgRMB
+: /home/costrouc/.virtualenvs/scratchenv-SNmPgRMB/bin/python
+
+#+BEGIN_SRC python :results output :session venv-scratch
+import sys
+print('\n'.join(sys.path))
+#+END_SRC
+
+#+RESULTS:
+:
+: /home/costrouc/.virtualenvs/scratchenv-SNmPgRMB/lib/python36.zip
+: /home/costrouc/.virtualenvs/scratchenv-SNmPgRMB/lib/python3.6
+: /home/costrouc/.virtualenvs/scratchenv-SNmPgRMB/lib/python3.6/lib-dynload
+: /usr/lib/python3.6
+: /home/costrouc/.virtualenvs/scratchenv-SNmPgRMB/lib/python3.6/site-packages
+
+*Read paragraph if you need multiple concurrent virtualenvs*.
+One important thing to note about this approach is that you *must* run the shell and python interpreter once before adding another session with a different virtual environment.
+The reasoning for this is that when org-babel starts a session for =sh= and =python= it launches an interpreter.
+This means that at a minimum you need to run these three blocks before starting a new virtualenv session.

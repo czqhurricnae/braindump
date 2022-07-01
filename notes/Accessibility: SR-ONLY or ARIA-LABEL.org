@@ -1,0 +1,82 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Accessibility: sr-only or aria-label/")); -*-
+:PROPERTIES:
+:ID:       98CAD4C1-A577-447C-A2EA-629C7824FBDB
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-22 Thu 01:01>
+#+TITLE: Accessibility: SR-ONLY or ARIA-LABEL
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+[[https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-label_attribute][From MDN]]:
+
+#+BEGIN_QUOTE
+  In the example below, a button is styled to look like a typical
+  "close" button, with an X in the middle. Since there is nothing
+  indicating that the purpose of the button is to close the dialog, the
+  aria-label attribute is used to provide the label to any assistive
+  technologies.
+
+  #+BEGIN_SRC js
+      <button aria-label="Close" onclick="myDialog.close()">X</button>
+  #+END_SRC
+#+END_QUOTE
+
+According to the Bootstrap Documentation:
+
+#+BEGIN_QUOTE
+  Hide an element to all devices except screen readers with .sr-only
+#+END_QUOTE
+
+So I guess I could also write:
+
+#+BEGIN_SRC js
+    <button onclick="myDialog.close()"><span class="sr-only">Close</span>X</button>
+#+END_SRC
+
+In a Bootstrap project, how can I choose which one to prefer?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+In the MDN example, a screen reader will just speak just the word "close" since =aria-label= overrides the text in the button.
+This will work even if you re-use the code without Bootstrap.
+
+In your example, a screen reader will speak "close x" since you are doing nothing to hide the "x" from screen readers.
+You are also adding a text node to then hiding it with a class.
+
+I would use the example from MDN.
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+The class =sr-only= class is for whole blocks of text content which are only useful to those using a screen reader and should be hidden from others.
+
+An example from and app I'm working on provides instructions for using an accessible controller with the web app:
+
+#+BEGIN_SRC js
+    <div class="sr-only">
+      When voting with the text-to-speech audio, use the accessible
+      controller to navigate your ballot. To navigate through the
+      contests, use the left and right buttons. To navigate through
+      contest choices, use the up and down buttons. To select or
+      unselect a contest choice as your vote, use the select button.
+    </div>
+#+END_SRC
+
+In your example, you simply want to provide different text content for a screen reader. To answer your specific question, use the MDN example.
+
+I've use aria-labels to hint to a screen reader when to add pauses by suffixing titles with periods or commas as necessary (More about [[https://stackoverflow.com/questions/15883778/pausing-in-a-screen-reader-for-accessibility/55273574#55273574][Pausing in a screen reader for accessibility]]):
+
+#+BEGIN_SRC js
+    <h1 aria-label="Hello World.">
+      Hello World
+    </h1>
+#+END_SRC

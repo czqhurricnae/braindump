@@ -1,0 +1,12 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python __all__ 变量/")); -*-
+:PROPERTIES:
+:ID:       3A3C0F37-AA26-47DE-A78A-FFBC19E054A6
+:END:
+#+LATEX_CLASS: my-article
+
+ #+DATE: <2020-10-06 Tue 13:18>
+ #+TITLE: Python __all__ 变量
+
+ =__all__= 放在包文件 =__init__.py= 中时，使得 ~from package.module import *~ 得以实现，
+它包含执行这样的语句时应该被导入的模块的名字。
+它由一个模块字符串列表组成。

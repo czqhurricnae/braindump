@@ -1,0 +1,17 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 减速板手柄位置电门/")); -*-
+:PROPERTIES:
+:ID:       2206AB5F-29CB-4D84-861E-C2495F592C78
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-18 Thu 18:55>
+#+TITLE: 737NG 减速板手柄位置电门
+#+FILETAGS: :S918:
+
+[[file:./static/737NG 减速板手柄位置电门/2021-02-18_18-56-19_screenshot.jpg]]
+
+[[file:./static/737NG 减速板手柄位置电门/2021-02-18_18-56-29_screenshot.jpg]]
+
+[[file:./static/737NG 减速板手柄位置电门/2021-02-18_18-56-44_screenshot.jpg]]
+
+减速板手柄位置电门 *S918* 提供信号使 P3 板上的 *SPEEDBRAKES EXTENDED* 灯工作。
+当减速板手柄从下卡槽位置上移 *7.5* 度时，电门作动，发送信号给 PSEU ，PSEU 点亮 *SPEEDBRAKES EXTENDED* 灯。

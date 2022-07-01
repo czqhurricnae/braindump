@@ -1,0 +1,87 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/JavaScript-call_stack_callback_queue_event_loop/")); -*-
+:PROPERTIES:
+:ID:       64FA501A-2102-4484-8AA6-2E53F277EEDD
+:END:
+#+DATE: <2020-09-29 Tue 20:44>
+#+TITLE: JavaScript-call_stack_callback_queue_event_loop
+
+* the call stack
+** 名称解释
+one thread == one call stack == one thing at a time.
+
++ stack
+栈内存：是一个记录当前程序所在位置的数据结构。
+如果进入某个函数，这个函数就被放在栈里，
+如果离开某个函数， 这个函数就被移除栈外。
+
++ heap
+堆内存：Objects are allocated in a heap which is just a name to denote a large mostly unstructured region of memory.
+
++ message queue 消息队列：
+A JavaScript runtime uses a message queue,
+which is a list of messages to be processed.
+Each message has an associated function which gets called in order to handle the message.
+At some point during the event loop,
+the runtime（运行环境）starts handling the messages on the queue,
+starting with the oldest one.
+To do so, the message is removed from the queue
+and its corresponding function is called with the message as an input parameter.
+As always, 调用回调函数时会为其创建相应的栈。calling a function creates a new stack frame for that function's use.
+The processing of functions continues until the stack is once again empty;
+then the event loop will process the next message in the queue (if there is one).
+
+main() 指代文件本身。
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/call_stack.png]]
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/how_cb_exist_in_call_stack.png]]
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/webapi_handle_setTimeout_callback.png]]
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/webapi_handle_callback_and_setTimeout_can_pop_out.png]]
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/when_callback_done_be_pushed_to_task_queue.png]]
+
+这里要注意必须等到 task queue 其他任务完成， 才被推送到 call stack。
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/even_loop_push_callback_in_task_queue_back_to_stack.png]]
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/run_call_back.png]]
+
+异步调用的另一个例子：
+
+[[file:./static/JavaScript-call_stack_callback_queue_event_loop/Ajax_call_back_handled_by_webapi.png]]
+
+#+BEGIN_SRC js
+// Synchronous
+// forEach() 方法中的函数是在 call stack 中依次
+// 调用的， 如果数组的数据量大， 那么处理速度就会慢。
+
+[1, 2, 3, 4].forEach(function(i) {
+    console.log(i);
+});
+
+// Asynchronous
+function asyncForEach(array, cb) {
+    array.forEach(function() {
+        setTimeout(cb, 0);
+    });
+}
+
+asyncForEach([1, 2, 3, 4], function(i) {
+    console.log(i);
+});
+#+END_SRC
+
+#+RESULTS:
+: 1
+: 2
+: 3
+: 4
+: undefined
+: undefined
+: undefined
+: undefined
+
+不要把任何阻塞的任务放在 call stack 中执行。
+

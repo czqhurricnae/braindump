@@ -1,0 +1,29 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Map}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n}{script\PYGZus{}name}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{subdomain}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+             \PYG{n}{url\PYGZus{}scheme}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{http}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{default\PYGZus{}method}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{GET}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{path\PYGZus{}info}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Return a new :class:`MapAdapter` with the details specified to the}
+\PYG{l+s+sd}{        call.  Note that `script\PYGZus{}name` will default to ``\PYGZsq{}/\PYGZsq{}`` if not further}
+\PYG{l+s+sd}{        specified or `None`.  The `server\PYGZus{}name` at least is a requirement}
+\PYG{l+s+sd}{        because the HTTP RFC requires absolute URLs for redirects and so all}
+\PYG{l+s+sd}{        redirect exceptions raised by Werkzeug will contain the full canonical}
+\PYG{l+s+sd}{        URL.}
+
+\PYG{l+s+sd}{        If no path\PYGZus{}info is passed to :meth:`match` it will use the default path}
+\PYG{l+s+sd}{        info passed to bind.  While this doesn\PYGZsq{}t really make sense for}
+\PYG{l+s+sd}{        manual bind calls, it\PYGZsq{}s useful if you bind a map to a WSGI}
+\PYG{l+s+sd}{        environment which already contains the path info.}
+
+\PYG{l+s+sd}{        `subdomain` will default to the `default\PYGZus{}subdomain` for this map if}
+\PYG{l+s+sd}{        no defined. If there is no `default\PYGZus{}subdomain` you cannot use the}
+\PYG{l+s+sd}{        subdomain feature.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{if} \PYG{n}{subdomain} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{subdomain} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{default\PYGZus{}subdomain}
+        \PYG{k}{if} \PYG{n}{script\PYGZus{}name} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{script\PYGZus{}name} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}
+        \PYG{k}{return} \PYG{n}{MapAdapter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n}{script\PYGZus{}name}\PYG{p}{,} \PYG{n}{subdomain}\PYG{p}{,}
+                          \PYG{n}{url\PYGZus{}scheme}\PYG{p}{,} \PYG{n}{path\PYGZus{}info}\PYG{p}{,} \PYG{n}{default\PYGZus{}method}\PYG{p}{)}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

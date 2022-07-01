@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/splice 接线管的安装/")); -*-
+:PROPERTIES:
+:ID:       C2114A94-DB0B-4C5D-9960-E55490C8813B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-20 Tue 00:19>
+#+TITLE: splice 接线管的安装
+
+- ⼀根导线上所允许使⽤的接线管不能超过三个，（不包括⻜机出⼚时⼚家安装的接线管数⽬）。
+- 如果在线束中对⼏根导线进⾏修理，则每两根导线之间使⽤的接线管之间纵向距离必须满⾜，第⼀根导线上的接线管的末端与另外⼀根导线上的接线管的顶端之间的距离必须最少为 0.25 英⼨。

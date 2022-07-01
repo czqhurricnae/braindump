@@ -1,0 +1,32 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       ED55299B-8455-476D-96C0-42622E771145
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-20 Mon 01:06>
+#+TITLE: Thread Local
+
+#+BEGIN_SRC python :results output :exports no-eval
+import threading
+storage = threading.local()
+storage.foo = 1
+print(storage.foo)
+
+class AnotherThread(threading.Thread):
+    def run(self):
+        storage.foo = 2
+        print(storage.foo)
+
+another = AnotherThread()
+another.start()
+
+print(storage.foo)
+#+END_SRC
+
+#+RESULTS:
+: 1
+: 2
+: 1
+
+只要能偶构造出 ~Thread Local~ 对象，就能够让同一个对象在多个线程下做到状态隔离。
+这个线程不一定是系统线程，可以是用户代码中的其他调度单元，例如 =reenlet= 。

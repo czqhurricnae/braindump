@@ -1,0 +1,78 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/how_to_reference_named_table_or_code_block_in_org_mode/")); -*-
+:PROPERTIES:
+:ID:       B278F004-E009-4D5D-9A1D-20E336C90749
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-27 Mon 21:01>
+#+TITLE: How_to_reference_named_table_or_code_block_in_org_mode
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+In Org-mode buffers, table or code block can have =#+NAME: title=.
+But I don't know how to reference them in current buffer or in other files with org-mode hyperlink.
+(like one link format: =[[file:some-file.org::*headline]]=)
+
+Org-mode has support for some [[https://orgmode.org/org.html#Custom-searches][Custom Search]] functions.
+By default, Org-mode does not supprt this.
+
+Does anybody knows how to add this support?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+I found the solution, Org-mode radio target can be used here.
+here is the doc: [[http://orgmode.org/org.html#Internal-links]] Like this:
+
+#+begin_example
+Here is a named table.
+
+#+NAME: my target
+| x | y |
+| 1 | 2 |
+
+I can reference it with its name. Like this:
+\[\[my target\]\]
+#+end_example
+
+There are also [[http://orgmode.org/manual/References.html#index-remote-references-352][table remote references]] further explained by an example in the following.
+
+First we define a table with a name =TBL_origin= to have something to play with.
+The two numbers in the row =Average= are referenced in the tables further below.
+
+#+begin_example
+#+NAME: TBL_origin
+      | Leaders  | Caption 1 | Caption 2 |
+      |----------+-----------+-----------|
+      | Average  |        16 |        17 |
+      |----------+-----------+-----------|
+      | Leader 1 |        11 |        12 |
+      | Leader 2 |        21 |        22 |
+#+TBLFM: @2$2=vmean(@II$2..@III$2)::@2$3=vmean(@II$3..@III$3)
+#+end_example
+
+The vector of the two numeric cells in row =Average= of table =TBL_origin= are referenced in the table formulas of the next tables.
+
+#+begin_example
+| Use table reference |
+|---------------------|
+|                16.5 |
+#+TBLFM: @2$1=vmean(remote(TBL_origin,@2$2..@2$3))
+#+end_example
+
+Note that you can not directly assign remote references to table ranges
+(see the posting [[https://lists.gnu.org/archive/html/emacs-orgmode/2010-01/msg00433.html][Re:Orgmode remote reference]] in the orgmode mailing list).
+
+A workaround is demonstrated in the following table:
+#+begin_example
+| Refer to averages |
+|-------------------|
+|                16 |
+|                17 |
+#+TBLFM: $1=subscr(remote(TBL_origin,@2$2..@2$3),@#-1)
+#+end_example

@@ -1,0 +1,375 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/What's_the_canonical_way_to_check_for_type_in_Python")); -*-
+:PROPERTIES:
+:ID:       46F29D2C-8198-475E-9155-055CE0230CB3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-22 Thu 02:11>
+#+TITLE: What's_the_canonical_way_to_check_for_type_in_Python
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+What is the best way to check whether a given object is of a given type?
+How about checking whether the object inherits from a given type?
+
+Let's say I have an object =o=. How do I check whether it's a =str=?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+To check if =o= is an instance of =str= or any subclass of =str=, use isinstance (this would be the "canonical" way):
+
+#+BEGIN_SRC python
+    if isinstance(o, str):
+#+END_SRC
+
+To check if the type of =o= is exactly =str= (exclude subclasses):
+
+#+BEGIN_SRC python
+    if type(o) is str:
+#+END_SRC
+
+The following also works, and can be useful in some cases:
+
+#+BEGIN_SRC python
+    if issubclass(type(o), str):
+#+END_SRC
+
+See Built-in Functions in the Python Library Reference for relevant information.
+
+One more note: in this case, if you're using Python 2, you may actually
+want to use:
+
+#+BEGIN_SRC python
+    if isinstance(o, basestring):
+#+END_SRC
+
+because this will also catch Unicode strings
+(=unicode= is not a subclass of =str=; both =str= and =unicode= are subclasses of =basestring=).
+Note that =basestring= no longer exists in Python 3, where there's a strict separation of strings (=str=) and binary data (=bytes=).
+
+Alternatively, =isinstance= accepts a tuple of classes. This will return
+=True= if =o= is an instance of any subclass of any of =(str, unicode)=:
+
+#+BEGIN_SRC python
+    if isinstance(o, (str, unicode)):
+#+END_SRC
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+The *most* Pythonic way to check the type of an object is... not to
+check it.
+
+Since Python encourages Duck Typing, you should just =try...except= to use the object's methods the
+way you want to use them. So if your function is looking for a writable
+file object, /don't/ check that it's a subclass of =file=, just try to
+use its =.write()= method!
+
+Of course, sometimes these nice abstractions break down and
+=isinstance(obj, cls)= is what you need. But use sparingly.
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+=isinstance(o, str)= will return =True= if =o= is an =str= or is of a
+type that inherits from =str=.
+
+=type(o) is str= will return =True= if and only if =o= is a str. It will
+return =False= if =o= is of a type that inherits from =str=.
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4
+  :END:
+
+After the question was asked and answered,
+type hints were added to Python. Type hints in Python allow types to be checked but in a very
+different way from statically typed languages. Type hints in Python
+associate the expected types of arguments with functions as runtime
+accessible data associated with functions and this /allows/ for types to
+be checked. Example of type hint syntax:
+
+#+BEGIN_SRC python
+    def foo(i: int):
+        return i
+
+    foo(5)
+    foo('oops')
+#+END_SRC
+
+In this case we want an error to be triggered for =foo('oops')= since
+the annotated type of the argument is =int=. The added type hint does
+not /cause/ an error to occur when the script is run normally. However,
+it adds attributes to the function describing the expected types that
+other programs can query and use to check for type errors.
+
+One of these other programs that can be used to find the type error is
+=mypy=:
+
+#+BEGIN_SRC python
+    mypy script.py
+    script.py:12: error: Argument 1 to "foo" has incompatible type "str"; expected "int"
+#+END_SRC
+
+(You might need to install =mypy= from your package manager. I don't
+think it comes with CPython but seems to have some level of
+"officialness".)
+
+Type checking this way is different from type checking in statically
+typed compiled languages. Because types are dynamic in Python, type
+checking must be done at runtime, which imposes a cost -- even on
+correct programs -- if we insist that it happen at every chance.
+Explicit type checks may also be more restrictive than needed and cause
+unnecessary errors (e.g. does the argument really need to be of exactly
+=list= type or is anything iterable sufficient?).
+
+The upside of explicit type checking is that it can catch errors earlier
+and give clearer error messages than duck typing. The exact requirements
+of a duck type can only be expressed with external documentation
+(hopefully it's thorough and accurate) and errors from incompatible
+types can occur far from where they originate.
+
+Python's type hints are meant to offer a compromise where types can be
+specified and checked but there is no additional cost during usual code
+execution.
+
+The =typing= package offers type variables that can be used in type
+hints to express needed behaviors without requiring particular types.
+For example, it includes variables such as =Iterable= and =Callable= for
+hints to specify the need for any type with those behaviors.
+
+While type hints are the most Pythonic way to check types, it's often
+even more Pythonic to not check types at all and rely on duck typing.
+Type hints are relatively new and the jury is still out on when they're
+the most Pythonic solution. A relatively uncontroversial but very
+general comparison: Type hints provide a form of documentation that can
+be enforced, allow code to generate earlier and easier to understand
+errors, can catch errors that duck typing can't, and can be checked
+statically (in an unusual sense but it's still outside of runtime). On
+the other hand, duck typing has been the Pythonic way for a long time,
+doesn't impose the cognitive overhead of static typing, is less verbose,
+and will accept all viable types and then some.
+
+* Answer5
+  :PROPERTIES:
+  :CUSTOM_ID: answer5
+  :END:
+
+Here is an example why duck typing is evil without knowing when it is
+dangerous. For instance: Here is the Python code (possibly omitting
+proper indenting), note that this situation is avoidable by taking care
+of isinstance and issubclassof functions to make sure that when you
+really need a duck, you don't get a bomb.
+
+#+BEGIN_SRC python
+    class Bomb:
+        def __init__(self):
+            ""
+
+        def talk(self):
+            self.explode()
+
+        def explode(self):
+            print "BOOM!, The bomb explodes."
+
+    class Duck:
+        def __init__(self):
+            ""
+        def talk(self):
+            print "I am a duck, I will not blow up if you ask me to talk."
+
+    class Kid:
+        kids_duck = None
+
+        def __init__(self):
+            print "Kid comes around a corner and asks you for money so he could buy a duck."
+
+        def takeDuck(self, duck):
+            self.kids_duck = duck
+            print "The kid accepts the duck, and happily skips along"
+
+        def doYourThing(self):
+            print "The kid tries to get the duck to talk"
+            self.kids_duck.talk()
+
+    myKid = Kid()
+    myBomb = Bomb()
+    myKid.takeDuck(myBomb)
+    myKid.doYourThing()
+#+END_SRC
+
+* Answer6
+  :PROPERTIES:
+  :CUSTOM_ID: answer6
+  :END:
+
+#+BEGIN_SRC python
+    isinstance(o, str)
+#+END_SRC
+
+[[file:./static/functions.html#isinstance][Link to
+docs]]
+
+* Answer7
+  :PROPERTIES:
+  :CUSTOM_ID: answer7
+  :END:
+
+You can check for type of a variable using __name__ of a type.
+
+Ex:
+
+#+BEGIN_SRC python
+    >>> a = [1,2,3,4]
+    >>> b = 1
+    >>> type(a).__name__
+    'list'
+    >>> type(a).__name__ == 'list'
+    True
+    >>> type(b).__name__ == 'list'
+    False
+    >>> type(b).__name__
+    'int'
+#+END_SRC
+
+* Answer8
+  :PROPERTIES:
+  :CUSTOM_ID: answer8
+  :END:
+
+I think the cool thing about using a dynamic language like Python is you
+really shouldn't have to check something like that.
+
+I would just call the required methods on your object and catch an
+=AttributeError=. Later on this will allow you to call your methods with
+other (seemingly unrelated) objects to accomplish different tasks, such
+as mocking an object for testing.
+
+I've used this a lot when getting data off the web with
+=urllib2.urlopen()= which returns a /file like/ object. This can in turn
+can be passed to almost any method that reads from a file, because it
+implements the same =read()= method as a real file.
+
+But I'm sure there is a time and place for using =isinstance()=,
+otherwise it probably wouldn't be there :)
+
+* Answer9
+  :PROPERTIES:
+  :CUSTOM_ID: answer9
+  :END:
+
+For more complex type validations I like typeguard's approach of
+validating based on python type hint annotations:
+
+#+BEGIN_SRC python
+    from typeguard import check_type
+    from typing import List
+
+    try:
+        check_type('mylist', [1, 2], List[int])
+    except TypeError as e:
+        print(e)
+#+END_SRC
+
+You can perform very complex validations in very clean and readable
+fashion.
+
+#+BEGIN_SRC python
+    check_type('foo', [1, 3.14], List[Union[int, float]])
+    # vs
+    isinstance(foo, list) and all(isinstance(a, (int, float)) for a in foo)
+#+END_SRC
+
+* Answer10
+  :PROPERTIES:
+  :CUSTOM_ID: answer10
+  :END:
+
+To Hugo:
+
+You probably mean =list= rather than =array=, but that points to the
+whole problem with type checking - you don't want to know if the object
+in question is a list, you want to know if it's some kind of sequence or
+if it's a single object. So try to use it like a sequence.
+
+Say you want to add the object to an existing sequence, or if it's a
+sequence of objects, add them all
+
+#+BEGIN_SRC python
+    try:
+       my_sequence.extend(o)
+    except TypeError:
+      my_sequence.append(o)
+#+END_SRC
+
+One trick with this is if you are working with strings and/or sequences
+of strings - that's tricky, as a string is often thought of as a single
+object, but it's also a sequence of characters. Worse than that, as it's
+really a sequence of single-length strings.
+
+I usually choose to design my API so that it only accepts either a
+single value or a sequence - it makes things easier. It's not hard to
+put a =[ ]= around your single value when you pass it in if need be.
+
+(Though this can cause errors with strings, as they do look like (are)
+sequences.)
+
+* Answer11
+  :PROPERTIES:
+  :CUSTOM_ID: answer11
+  :END:
+
+A simple way to check type is to compare it with something whose type
+you know.
+
+#+BEGIN_SRC python
+    >>> a  = 1
+    >>> type(a) == type(1)
+    True
+    >>> b = 'abc'
+    >>> type(b) == type('')
+    True
+#+END_SRC
+
+* Answer12
+  :PROPERTIES:
+  :CUSTOM_ID: answer12
+  :END:
+
+I think the best way is to typing well your variables. You can do this
+by using the "typing" library.
+
+Example:
+
+=from typing import NewType UserId = NewType ('UserId', int) some_id = UserId (524313=)`
+
+See [[file:./static/typing.html]]
+
+* Answer13
+  :PROPERTIES:
+  :CUSTOM_ID: answer13
+  :END:
+
+You can check with the below line to check which character type the
+given value is:
+
+#+BEGIN_SRC python
+    def chr_type(chrx):
+        if chrx.isalpha()==True:
+            return 'alpha'
+        elif chrx.isdigit()==True:
+            return 'numeric'
+        else:
+            return 'nothing'
+
+    chr_type("12)
+#+END_SRC

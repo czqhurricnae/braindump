@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Hello, Bootstrap Table!</title>
+
+  <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+    crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+</head>
+
+<body>
+  <div class="container mt-2 mb-2">
+    <table data-toggle="table" data-pagination="true" data-search="true"
+      data-url="http://timesheet.applinzi.com:4000/" data-heigh="600"
+      data-detail-view="true" data-detail-formatter="detailFormatter"
+      data-show-footer="true">
+      <thead>
+        <tr>
+          <th data-field="id" data-sortable="true">ID</th>
+          <th data-field="name" data-sortable="true">Name</th>
+          <th data-field="position" data-sortable="true">Positin</th>
+          <th data-field="office" data-sortable="true">Office</th>
+          <th data-field="age" data-sortable="false"
+            data-footer-formatter="totalFormatter">Age</th>
+          <th data-field="start_date" data-sortable="false"
+            data-footer-formatter="amountFormatter">Start_date</th>
+          <th data-field="salary" data-sortable="false"
+            data-formatter="colorFormatter"
+            data-footer-formatter="salaryFormatter">Salary</th>
+          <th data-field="action" data-formatter="actionFormatter">Action</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js">
+  </script>
+  <script>
+    function detailFormatter (index, row) {
+      var html = []
+      $.each(row, function (key, value) {
+        html.push(
+          '<p class="row" style="width:100%"></p><b class="col-md-2">' +
+          key + '<b><span class="col-md-10">: ' + value + '</span></b>')
+      })
+      return html.join('')
+    }
+
+    function totalFormatter () {
+      return 'Total'
+    }
+
+    function amountFormatter (data) {
+      return data.length
+    }
+
+    function salaryFormatter (data) {
+      var field = this.field
+      return '$' + data.map(function (row) {
+          return row[field].substring(1)
+        })
+        .reduce(function (sum, i) {
+          return sum + Number(i)
+        }, 0)
+    }
+
+    function colorFormatter (value) {
+      var color = '#' + Math.floor(Math.random() * 6777215)
+        .toString(16)
+      return '<div style="color:' + color + '">' +
+        '<i class="fa fa-dollar-sign"></i>' + value.substring(1) + '</div>'
+    }
+
+    function actionFormatter (index, row) {
+      var html = []
+      $.each(row, function (key, value) {
+        if (key == 'id') {
+          html.push('<a class="edit" href="?edit=' + value +
+            '" title="edit"><i class="fa fa-edit"></i></a>')
+          html.push('<a class="remove" href="?remove=' + value +
+            '" title="remove"><i class="fa fa-trash"></i></a>')
+        }
+      })
+      return html.join('')
+    }
+
+  </script>
+</body>
+
+</html>

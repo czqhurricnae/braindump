@@ -1,0 +1,321 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/diff 命令和 patch 命令/")); -*-
+:PROPERTIES:
+:ID:       6C9649D5-8DEE-4F08-9420-89F0BA0CD23B
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-21 Wed 19:41>
+#+TITLE: diff 命令和 patch 命令
+
+* diff 命令的使用方法
+diff 命令是 linux 上非常重要的工具, 用于比较文件的内容, 特别是比较两个版本不同的文件以找到改动的地方.
+diff 在命令行中打印每一个行的改动.
+最新版本的 diff 还支持二进制文件.
+diff 程序的输出被称为补丁 (patch), 因为 Linux 系统中还有一个 patch 程序, 可以根据 diff 的输出将 a.c 的文件内容更新为 b.c.
+diff 是 svn,cvs,git 等版本控制工具不可或缺的一部分.
+
+一般使用方法
+
+diff 命令的格式一般为:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+diff [参数][文件或者目录 1][文件或者目录 2]
+#+END_SRC
+
+例如, 有文件 test1 和 test2:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+diff test1 test2
+#+END_SRC
+
+将会输出:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+2,3c2                       # 第一个文件的第 2 到第 3 行和第二个文件的第 2 行开始有冲突
+< asfdasfdasdfasdf          # 删去了两行
+< creverververver
+---
+> qwefqwefqwef              # 添加了这行
+5,9c4                       # 第一个文件第五行到第九行和第二个文件第四行有冲突
+< aaaaaaaaaaaa              # 删去了了五行
+< aaaa
+< a
+< a
+< a
+---
+> qsdqwefqwefqwef           # 添加了一行
+11d5                        # 第一个文件第 11 行与第二个文件第五行相比有删除
+< bbbbbbbbb                 # 删除了这一行
+#+END_SRC
+
+格式的含义如注释所示.
+
+diff 的 normal 显示格式有三种提示:
+
+- a - add
+- c - change
+- d - delete
+
+比较常用的是以合并的方式显示两个文件的不同:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+diff -ruN test1 test2
+#+END_SRC
+
+输出如:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+--- test1   2016-04-21 14:46:55.000000000 +0800 # 第一个文件的信息
++++ test2   2016-04-21 14:44:55.000000000 +0800 # 第二个文件的信息
+@@ -1,11 +1,5 @@                                # 第一个文件 1 到 11 行和第二个文件 1 到 5 行
+utils
+-asfdasfdasdfasdf                               # 前面带减号的是删除的行
+-creverververver
++qwefqwefqwef                                   # 带加号的是增加的行
+util
+-aaaaaaaaaaaa
+-aaaa
+-a
+-a
+-a
++qsdqwefqwefqwef
+qwerqwerqwe
+-bbbbbbbbb
+#+END_SRC
+
+这种输出方式输出的内容可以用于使用 patch 命令进行打补丁包.
+patch 命令我们稍后再看.
+
+** diff 命令也可以比较两个文件夹的不同:
+ 例如有两个文件夹 testa 和 test, 将 test1 和 test2 放进去:
+
+ #+BEGIN_SRC sh :results values list :exports no-eval
+ diff testa testb
+ #+END_SRC
+
+ 得到:
+
+ #+BEGIN_SRC sh :results values list :exports no-eval
+ diff testa/test1 testb/test1    # 对比两个文件夹下面文件名相同的文件
+ 2,3c2                           # 以下是正常的文件对比格式
+ < asfdasfdasdfasdf
+ < creverververver
+ ---
+ > qwefqwefqwef
+ 5,9c4
+ < aaaaaaaaaaaa
+ < aaaa
+ < a
+ < a
+ < a
+ ---
+ > qsdqwefqwefqwef
+ 11d5
+ < bbbbbbbbb
+ Only in testa: test2            # testa 里面有而 testb 里面没有的 test2
+ Only in testb: test3            # testa 里面没有而 testb 有的 test3
+ #+END_SRC
+
+* diff 命令的参数
+- -a 或--text 　diff 预设只会逐行比较文本文件.
+- -b 或--ignore-space-change 　不检查空格字符的不同.
+- -B 或--ignore-blank-lines 　不检查空白行.
+- -c 显示全部内文, 并标出不同之处.
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+diff -c test1 test2
+#+END_SRC
+
+将会得到
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+*** test1 2016-04-21 14:46:55.000000000 +0800
+--- test2 2016-04-21 14:44:55.000000000 +0800
+***************
+*** 1,11 ****
+  utils
+! asfdasfdasdfasdf
+! creverververver
+  util
+! aaaaaaaaaaaa
+! aaaa
+! a
+! a
+! a
+  qwerqwerqwe
+- bbbbbbbbb
+--- 1,5 ----
+  utils
+! qwefqwefqwef
+  util
+! qsdqwefqwefqwef
+  qwerqwerqwe
+#+END_SRC
+
+其中:
+"＋" 比较的文件的后者比前者多一行
+"－" 比较的文件的后者比前者少一行
+"!" 比较的文件两者有差别的行
+
+- -C 或--context 　与执行"-c-" 指令相同.
+- -d 或--minimal 　使用不同的演算法, 以较小的单位来做比较.
+- -D 或 ifdef 　此参数的输出格式可用于前置处理器巨集.
+- -e 或--ed 　此参数的输出格式可用于 ed 的 script 文件.
+- -f 或-forward-ed 　输出的格式类似 ed 的 script 文件, 但按照原来文件的顺序来显示不同处.
+- -H 或--speed-large-files 　比较大文件时, 可加快速度.
+- -l 或--ignore-matching-lines 　若两个文件在某几行有所不同, 而这几行同时都包含了选项中指定的字符或字符串, 则不显示这两个文件的差异.
+- -i 或--ignore-case 　不检查大小写的不同.
+- -l 或--paginate 　将结果交由 pr 程序来分页.
+- -n 或--rcs 　将比较结果以 RCS 的格式来显示.
+- -N 或--new-file 　在比较目录时, 若文件 A 仅出现在某个目录中, 预设会显示:Only in 目录: 文件 A 若使用-N 参数, 则 diff 会将文件 A 与一个空白的文件比较.
+- -p 　若比较的文件为 C 语言的程序码文件时, 显示差异所在的函数名称.
+- -P 或--unidirectional-new-file 　与-N 类似, 但只有当第二个目录包含了一个第一个目录所没有的文件时, 才会将这个文件与空白的文件做比较.
+- -q 或--brief 　仅显示有无差异, 不显示详细的信息.
+- -r 或--recursive 　比较子目录中的文件.
+- -s 或--report-identical-files 　若没有发现任何差异, 仍然显示信息.
+- -S 或--starting-file 　在比较目录时, 从指定的文件开始比较.
+- -t 或--expand-tabs 　在输出时, 将 tab 字符展开.
+- -T 或--initial-tab 　在每行前面加上 tab 字符以便对齐.
+- -u,-U 或--unified= 　以合并的方式来显示文件内容的不同.
+
+即统一格式的输出. 在合并中也使用的是这种模式.
+
+例如前文提到的输出:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+--- test1 2016-04-21 14:46:55.000000000 +0800 # 第一个文件的信息
++++ test2 2016-04-21 14:44:55.000000000 +0800 # 第二个文件的信息
+@@ -1,11 +1,5 @@                              # 第一个文件 1 起 11 行和第二个文件 1 起 5 行
+utils
+-asfdasfdasdfasdf                             # 前面带减号的是删除的行
+-creverververver
++qwefqwefqwef                                 # 带加号的是增加的行
+util
+-aaaaaaaaaaaa
+-aaaa
+-a
+-a
+-a
++qsdqwefqwefqwef
+qwerqwerqwe
+-bbbbbbbbb
+#+END_SRC
+
+第一部分是文件的信息:
+"---" 表示变动前的文件,"+++" 表示变动后的文件.
+第二部分表示变动的位置:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+@@ -1,11 +1,5 @@
+#+END_SRC
+
+减号表示第一个文件, 后面的表示第一行起一共 11 行. 加号表示第二个文件. 后面是第一行起一共 5 行.
+接下来的表示区别的部分.
+
+- v 或--version 　显示版本信息.
+- -w 或--ignore-all-space 　忽略全部的空格字符.
+- -W 或--width 　在使用-y 参数时, 指定栏宽.
+- -x 或--exclude 　不比较选项中所指定的文件或目录.
+- -X 或--exclude-from 　您可以将文件或目录类型存成文本文件, 然后在=中指定此文本文件.
+- -y 或--side-by-side 　以并列的方式显示文件的异同之处.
+
+例如:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+diff test1 test2 -y
+#+END_SRC
+
+将得到:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+utils                                       utils
+asfdasfdasdfasdf                          | qwefqwefqwef
+creverververver                           <
+util                                        util
+aaaaaaaaaaaa                              | qsdqwefqwefqwef
+aaaa                                      <
+a                                         <
+a                                         <
+a                                         <
+qwerqwerqwe                                 qwerqwerqwe
+bbbbbbbbb                                 <
+#+END_SRC
+
+这种模式中:
+"|" 表示前后 2 个文件内容有不同.
+"<" 表示后面文件比前面文件少了 1 行内容.
+">" 表示后面文件比前面文件多了 1 行内容.
+
+- --help 　显示帮助.
+- --left-column 　在使用-y 参数时, 若两个文件某一行内容相同, 则仅在左侧的栏位显示该行内容.
+- --suppress-common-lines 　在使用-y 参数时, 仅显示不同之处.
+
+* patch 命令的使用方法
+** patch 命令的常用格式
+ #+BEGIN_SRC sh :results values list :exports no-eval
+ patch [option] [origfile] [patchfile]
+ #+END_SRC
+
+ 我们可以先用 diff 命令生成 patch 文件. 然后使用 patch 命令将第二个文件内容修改成第一个文件的内容.
+
+ 例如上述的 test1 和 test2:
+
+ #+BEGIN_SRC sh :results values list :exports no-eval
+ diff -ruN test1 test2 > patch.log   # 生成 patch 文件
+ patch test2 patch.log               # 利用 patch 文件和 patch 命令打补丁
+ #+END_SRC
+
+ 之后 test2 的内容就会和 test1 内容一致了.
+
+** patch 的参数
+ 输入选项
+ | -p NUM       | --strip=NUM         | 去除相对路径层次的数目                                       |
+ | -F LINES     | --fuzz LINES        | 设置监别列数                                                 |
+ | -l           | --ignore-whitespace | 忽略修补数据与输入数据的跳格, 空格字符                       |
+ | -c           | --context           | 把修补数据解译成关联性的差异                                 |
+ | -e           | --ed                | 把修补数据解译成 ed 指令可用的叙述文件                       |
+ | -n           | --normal            | 把修补数据解译成一般性的差异                                 |
+ | -u           | --unified           | 把修补数据解译成一致化的差异                                 |
+ | -N           | --forward           | 忽略修补的数据较原始文件的版更旧, 或该版本的修补数据已使用过 |
+ | -R           | --reverse           | 假设修补数据是由新旧文件交换位置而产生                       |
+ | -i PATCHFILE | --input=PATCHFILE   | 读取指定的修补文件                                           |
+
+ 输出选项
+ | -o FILE | --output=FILE        | 设置输出文件的名称, 修补过的文件会以该名称存放                                 |
+ | -r FILE | --reject-file=FILE   | Output rejects to FILE                                                         |
+ | -D NAME | --ifdef=NAME         | 用指定的符号把改变的地方标示出来                                               |
+ | -m      | --merge              | Merge using conflict markers instead of creating reject files                  |
+ | -E      | --remove-empty-files | 若修补过后输出的文件其内容是一片空白,  则移除该文件                            |
+ | -Z      | --set-utc            | 把修补过的文件更改, 存取时间设为 UTC                                           |
+ | -T      | --set-time           | 此参数的效果和指定"-Z 参数类似,  但以本地时间为主                              |
+ |         | --quoting-style=WORD | 使用 WORD 引述类型显示项目名称, 可设定值有 literal,shell,shell-always,c,escape |
+
+ 备份和版本控制选项
+ | -b        | --backup                 | 备份每一个原始文件                                                                                                                                                     |   |
+ |           | --backup-if-mismatch     | 在修补数据不完全吻合, 且没有刻意指定要备份文件时, 才备份文件                                                                                                           |   |
+ |           | --no-backup-if-mismatch  | 在修补数据不完全吻合, 且没有刻意指定要备份文件时, 不要备份文件                                                                                                         |   |
+ | -V STYLE  | --version-control=STYLE  | 用"-b" 参数备份目标文件后, 备份文件的字尾会被加上一个备份字符串, 这个字符串不仅可用"-z" 参数变更, 当使用"-V" 参数指定不同备份方式时, 也会产生不同字尾的备份字符串      |   |
+ | -B PREFIX | --prefix=PREFIX          | 设置文件备份时, 附加在文件名称前面的字首字符串, 该字符串可以是路径名称                                                                                                 |   |
+ | -Y PREFIX | --basename-prefix=PREFIX | 设置文件备份时, 附加在文件基本名称开头的字首字符串                                                                                                                     |   |
+ | -z SUFFIX | --suffix=SUFFIX          | 此参数的效果和指定"-B" 参数类似, 差别在于修补作业使用的路径与文件名若为 src/linux/fs/super.c, 加上"backup/" 字符串后, 文件 super.c 会备份于/src/linux/fs/backup 目录里 |   |
+ | -g NUM    | --get=NUM                | 设置以 RSC 或 SCCS 控制修补作业                                                                                                                                        |   |
+
+ 其他选项
+ | -t    | --batch                | 自动略过错误, 不询问任何问题                                        |
+ | -f    | --force                | 此参数的效果和指定"-t" 参数类似, 但会假设修补数据的版本为新版本     |
+ | -s    | --quiet 或--silent     | 不显示指令执行过程, 除非发生错误                                    |
+ |       | --verbose              | 显示详细的过程信息                                                  |
+ |       | --dry-run              | 实际上不改变任何文件, 演示讲会发生什么                              |
+ |       | --posix                | 符合 POSIX 标准                                                     |
+ | -dDIR | --directory=DIR        | 先改变工作目录到指定的目录                                          |
+ |       | --reject-format=FORMAT | Create 'context' or 'unified' rejects                               |
+ |       | --binary               | 以二进制方式读写数据                                                |
+ |       | --read-only=BEHAVIOR   | 如何处理只读输入文件:" 忽视", 他们是只读的," 警告"(默认), 或" 失败" |
+
+ - patch 命令(默认) 使用从标准输入读入的源文件 < PATCHFILE , 但是使用 -i PATCHFILE 设置.
+ - 源文件包含由 diff 命令产生的差别列表(或者 diff 列表). 差异列表是比较两个文件和构建关于如何纠正差别的指示信息的结果.
+ - 差异列表有三种格式: 正常, 上下文或者是 ed 编辑器风格.patch 命令确定差异列表格式, 除非被 -c,-e 或 -n 标志否决.
+ - 默认,ORIGFILE 被 PATCHFILE 替换. 若 ORIGFILE(原始文件) 不存在时,PATCHFILE(补丁文件) 根据差别列表, 创建 ORIGFILE 文件.
+ - 指定 -b 标志时,ORIGFILE(原始文件) 会备份在自身的文件中, 只是在文件名后附加了后缀 .orig. 使用 -o 标志也可以指定输出的目的地.
+
+ svn diff 生成的 patch 也可以用于更新文件.

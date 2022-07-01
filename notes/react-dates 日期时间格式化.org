@@ -1,0 +1,39 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/react-dates 日期时间格式化/")); -*-
+:PROPERTIES:
+:ID:       E488C783-B44D-43E9-B2B7-1823856C4755
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:32>
+#+TITLE: react-dates 日期时间格式化
+
+onFieldsChange:  
+
+#+BEGIN_SRC js :results values list :exports no-eval
+{date: {…}}date: dirty: falsename: "date"touched: truevalue: Moment_d: Wed Nov 13 2019 12:00:00 GMT+0800 (中国标准时间) {}_i: Mon Nov 11 2019 17:06:36 GMT+0800 (中国标准时间) {}_isAMomentObject: true_isUTC: false_isValid: true_locale: Locale {_calendar: {…}, _longDateFormat: {…}, _invalidDate: "Invalid date", _dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/, ordinal: ƒ, …}_pf: {empty: false, unusedTokens: Array(0), unusedInput: Array(0), overflow: -2, charsLeftOver: 0, …}__proto__: Object__proto__: Object__proto__: Object {selected: Field, inputs: Array(2), date: Field}
+#+END_SRC
+
+onValuesChange:  
+
+#+BEGIN_SRC js :results values list :exports no-eval
+{date: Moment}date: Moment {_isAMomentObject: true, _i: Mon Nov 11 2019 17:06:36 GMT+0800 (中国标准时间), _isUTC: false, _pf: {…}, _locale: Locale, …}_d: Wed Nov 13 2019 12:00:00 GMT+0800 (中国标准时间) {}_i: Mon Nov 11 2019 17:06:36 GMT+0800 (中国标准时间) {}_isAMomentObject: true_isUTC: false_isValid: true_locale: Locale {_calendar: {…}, _longDateFormat: {…}, _invalidDate: "Invalid date", _dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/, ordinal: ƒ, …}_pf: {empty: false, unusedTokens: Array(0), unusedInput: Array(0), overflow: -2, charsLeftOver: 0, …}__proto__: add: ƒ (val, period)calendar: ƒ calendar$1(time, formats)clone: ƒ clone()creationData: ƒ creationData()date: ƒ (value)dates: ƒ ()day: ƒ getSetDayOfWeek(input)dayOfYear: ƒ getSetDayOfYear(input)days: ƒ getSetDayOfWeek(input)daysInMonth: ƒ getDaysInMonth()diff: ƒ diff(input, units, asFloat)endOf: ƒ endOf(units)format: ƒ format(inputString)arguments: (...)caller: (...)length: 1name: "format"prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: moment.js:3437[[Scopes]]: Scopes[3]from: ƒ from(time, withoutSuffix)fromNow: ƒ fromNow(withoutSuffix)get: ƒ stringGet(units)hasAlignedHourOffset: ƒ hasAlignedHourOffset(input)hour: ƒ (value)hours: ƒ (value)inspect: ƒ inspect()invalidAt: ƒ invalidAt()isAfter: ƒ isAfter(input, units)isBefore: ƒ isBefore(input, units)isBetween: ƒ isBetween(from, to, units, inclusivity)isDST: ƒ isDaylightSavingTime()isDSTShifted: ƒ ()isLeapYear: ƒ getIsLeapYear()isLocal: ƒ isLocal()isSame: ƒ isSame(input, units)isSameOrAfter: ƒ isSameOrAfter(input, units)isSameOrBefore: ƒ isSameOrBefore(input, units)isUTC: ƒ isUtc()isUtc: ƒ isUtc()isUtcOffset: ƒ isUtcOffset()isValid: ƒ isValid$2()isoWeek: ƒ getSetISOWeek(input)isoWeekYear: ƒ getSetISOWeekYear(input)isoWeekday: ƒ getSetISODayOfWeek(input)isoWeeks: ƒ getSetISOWeek(input)isoWeeksInYear: ƒ getISOWeeksInYear()lang: ƒ ()local: ƒ setOffsetToLocal(keepLocalTime)locale: ƒ locale(key)localeData: ƒ localeData()arguments: (...)caller: (...)length: 0name: "localeData"prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: moment.js:3503[[Scopes]]: Scopes[3]max: ƒ ()millisecond: ƒ (value)milliseconds: ƒ (value)min: ƒ ()minute: ƒ (value)minutes: ƒ (value)month: ƒ getSetMonth(value)months: ƒ ()parseZone: ƒ setOffsetToParsedOffset()parsingFlags: ƒ parsingFlags()quarter: ƒ getSetQuarter(input)quarters: ƒ getSetQuarter(input)second: ƒ (value)seconds: ƒ (value)set: ƒ stringSet(units, value)startOf: ƒ startOf(units)subtract: ƒ (val, period)to: ƒ to(time, withoutSuffix)toArray: ƒ toArray()toDate: ƒ toDate()toISOString: ƒ toISOString(keepOffset)toJSON: ƒ toJSON()toNow: ƒ toNow(withoutSuffix)toObject: ƒ toObject()toString: ƒ toString()arguments: (...)caller: (...)length: 0name: "toString"prototype: {constructor: ƒ}__proto__: ƒ ()[[FunctionLocation]]: moment.js:3382[[Scopes]]: Scopes[3]unix: ƒ unix()utc: ƒ setOffsetToUTC(keepLocalTime)utcOffset: ƒ getSetOffset(input, keepLocalTime, keepMinutes)valueOf: ƒ valueOf()week: ƒ getSetWeek(input)weekYear: ƒ getSetWeekYear(input)weekday: ƒ getSetLocaleDayOfWeek(input)weeks: ƒ getSetWeek(input)weeksInYear: ƒ getWeeksInYear()year: ƒ (value)years: ƒ ()zone: ƒ ()zoneAbbr: ƒ getZoneAbbr()zoneName: ƒ getZoneName()constructor: ƒ Moment(config)__proto__: Object__proto__: Object {date: Moment, selected: "", inputs: Array(2)}
+#+END_SRC
+
+#+BEGIN_SRC js :results values list :exports both
+new Date().toISOString()
+"2019-11-11T10:13:13.7"
+new Date(Date.parse("2019-11-11T10:13:13.7"));
+Mon Nov 11 2019 10:13:13 GMT+0800 (中国标准时间)
+#+END_SRC
+
+#+BEGIN_SRC js :results values list :exports both
+m = moment(new Date());
+m.format('YYYY-MM-DD');
+'2019-11-11'
+m.toDate()
+2019-11-11T10:23:16.594Z
+#+END_SRC
+
+可见在 react-dates 组件中将 onDateChange, onFocusChange 回调时产生的 moment 对象使用 toDate() 方法格式化并存储到父组件的 datasheets 中后,
+当 entryForm 再次被打开时, 从 datasheets 中拿到的暂存的数据需要用 new Date(Date.parse(XXXX)) 转化后传递给 moment。
+这样才能被 react-dates 识别。
+

@@ -1,0 +1,34 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/飞行控制电门打到 STBY RUB 会发生什么情况/")); -*-
+:PROPERTIES:
+:ID:       9F23E6FA-B02E-43DC-98FA-5448E2833A2F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-13 Sat 22:16>
+#+TITLE: 飞行控制电门打到 STBY RUB 会发生什么情况
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-17-38_screenshot.jpg]]
+
+- 备用方向舵关断活门打开。
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-20-59_2020-12-18_13-37-36_screenshot.jpg]]
+
+- 飞行操纵关断活门关闭。
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-22-26_2020-12-18_13-45-41_screenshot.jpg]]
+
+- 备用电动泵工作。
+此时备用襟翼预位电门必须在 OFF 位。
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-23-20_2020-12-18_13-53-45_screenshot.jpg]]
+
+- STBY RUD ON 灯亮。
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-24-01_2020-12-18_18-59-42_eaa82bd1-f713-4cee-a896-17d2aba1f764_withMarginNotes.jpeg]]
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-24-32_2020-12-18_18-59-50_85717c0b-a58f-488b-96f7-2eccd430b8b7_withMarginNotes.jpeg]]
+
+K1 给 K21 STBY RUDDER ANNUN RELAY 继电器提供电源，将其激励，K21 为 STBY RUD ON 灯提供接地。
+
+[[file:./static/飞行控制电门打到 STBY RUB 会发生什么情况/2021-02-13_22-26-14_2020-12-18_19-16-42_eaa82bd1-f713-4cee-a896-17d2aba1f764_withMarginNotes 2.jpeg]]
+
+当备用电动泵自动工作条件满足时，激励 K1 AUTO STBY RELAY，并通过 K1 给 K21 提供电源，后面同理。

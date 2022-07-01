@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n+nb}{map}\PYG{p}{:} \PYG{n}{Map}\PYG{p}{(}\PYG{p}{[}\PYG{p}{[}\PYG{o}{\PYGZlt{}}\PYG{n}{Rule} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/static/\PYGZlt{}filename\PYGZgt{}}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{static}\PYG{o}{\PYGZgt{}}\PYG{p}{,}
+           \PYG{o}{\PYGZlt{}}\PYG{n}{Rule} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{(}\PYG{n}{HEAD}\PYG{p}{,} \PYG{n}{GET}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{index}\PYG{o}{\PYGZgt{}}\PYG{p}{,}
+           \PYG{o}{\PYGZlt{}}\PYG{n}{Rule} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/hello/}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{(}\PYG{n}{POST}\PYG{p}{,} \PYG{n}{HEAD}\PYG{p}{,} \PYG{n}{GET}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{hello\PYGZus{}user}\PYG{o}{\PYGZgt{}}\PYG{p}{,}
+           \PYG{o}{\PYGZlt{}}\PYG{n}{Rule} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/hello/\PYGZlt{}name\PYGZgt{}}\PYG{l+s+s1}{\PYGZsq{}} \PYG{p}{(}\PYG{n}{HEAD}\PYG{p}{,} \PYG{n}{GET}\PYG{p}{)} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZgt{}} \PYG{n}{hello}\PYG{o}{\PYGZgt{}}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}
+\end{Verbatim}

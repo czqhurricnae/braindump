@@ -1,0 +1,62 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/波音系列飞机常用接线管/")); -*-
+:PROPERTIES:
+:ID:       911FFBFD-3AF3-40A2-A24E-CC9D0264B5F6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-19 Mon 22:03>
+#+TITLE: 波音系列飞机常用接线管
+
+[[file:./static/波音系列飞机常用接线管/2021-07-19_22-54-21_screenshot.jpg]]
+
+* NAS1388-() 和 NAS1389-() 对接（绝缘，防水）接线管
+用于无水增压区域的导线修理。
+
+[[file:./static/波音系列飞机常用接线管/2021-07-19_22-56-01_screenshot.jpg]]
+
+* NAS1387-() 对接（非绝缘，不防水）接线管
+在 SWPM 中，明确将 NAS1387-() 列入非绝缘接线管的表格中：
+- Suject 20-30-12 - assembly of splice
+  - Splices part numbers and description
+    - Uninsulated butt splices
+      - Table 12.part numbers of butt splices
+
+* D-436-() 对接（绝缘，防水）接线管
+用于有水增压区域的导线修理。
+外场最常用的绝缘（防水）接线管 D-436-37 和 D-436-36，D-436-37 用于从 20 号线径到 16 号线径的导线，D-436-36 用于从 26 号 线径到 20 号线径的导线。
+
+根据：
+- Suject 20-30-12 - assembly of splice
+  - Splices part numbers and description
+    - Uninsulated butt splices
+      - Table 20.Component part numbers of sealed splice kits
+
+[[file:./static/波音系列飞机常用接线管/2021-07-19_22-44-01_screenshot.jpg]]
+
+D-436-() 系列的 Component 包含两部分：Butt Splice 和 Sleeve。
+现对两种常见的进行举例：
+
+** D-436-36
+- Butt Splice D-609-06
+  [[file:./static/波音系列飞机常用接线管/2021-07-19_22-35-09_screenshot.jpg]]
+
+- Sleeve D-436-0096
+  [[file:./static/波音系列飞机常用接线管/2021-07-19_22-37-25_screenshot.jpg]]
+
+** D-436-37
+- Butt Splice D-609-07
+  [[file:./static/波音系列飞机常用接线管/2021-07-19_22-36-03_screenshot.jpg]]
+
+- Sleeve D-436-0097
+  [[file:./static/波音系列飞机常用接线管/2021-07-19_22-38-03_screenshot.jpg]]
+
+* 343() 并行接线管
+用于非高温，非增压区域的导线和电缆修理。
+
+* 294() 高温密封接线管和 BACTl2C() 高温非绝缘对接接线管
+用于高温区域的导线和电缆修理。
+
+* 269-31499-() 非绝缘对接接线管
+用于铜芯电源馈线与铜导线的导线修理。
+
+* 277()-1 铜铝过渡对接接线管
+用于铜芯和铝芯电源馈线的修理。

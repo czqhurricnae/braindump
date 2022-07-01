@@ -1,0 +1,64 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 天空内饰窗户灯/")); -*-
+:PROPERTIES:
+:ID:       E222B2CE-BE89-4D40-BD1C-EEB9DA79AC78
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-10 Sun 13:21>
+#+TITLE: 737NG 天空内饰窗户灯
+
+天空内饰飞机设有主控制电门，P5-13 上 CAB/UTIL 就是主 LED 灯 电门，飞行员在紧急情况下可使用该电门切断客舱照明。
+
+主控制电门控制以下设备供电 :
+- LOGO 灯
+- ACARS 打印机
+- 厨房电源
+- 客舱 LED 灯光
+
+如果 CAB/UTIL 电门位于 OFF，ACP 仍然有电，但供往 LED 的 115V 交流电被切断。
+
+* 前 ACP : 前 ACP 包含左侧的硬件部分和右侧的 LCD 和触摸屏部分
+** 左侧的 Hard mounted side 包合
+- 地面勤务开关。
+- LCD 板过热指示，当 ACP 的 LCD 屏幕超温时，橙色灯亮，LCD 屏幕自动关断。
+- Emergency EVAC。
+
+** LCD 触摸屏
+- 维护检查，构型检查，自测和软件安装只能通过前 ACP 完成。
+- 只有前 ACP 有机上娱乐系统（IFE）电源开关。
+- 客舱环境温度（根据客户需要可选）。
+- 烟雾探测（根据客户需要可选）。
+
+* 后 ACP
+** 按键开关部分
+- 应急出口灯开关。
+- LCD 板过热指示。
+- Emergency EVAC。
+
+** LCD 和触摸屏
+- 饮用水和废水量只能在后 ACP 显示。
+- 真空废水系统维护自测。
+- 维护页面中可以进行 LAV INOP Test。
+- 当应急灯光亮时 ，EMERGENCY EXIT LIGHTS 按钮上的红灯亮。
+
+维护屏幕 MAINTENANCE SCREEN：只有飞机在地面适用。
+
+* 前登机门门槛灯
+只有 FWD ENTRY LIGHT 选择 BRIGHT WHITE 档位才亮。
+
+When you set the cabin/utility switch on the P5-13 panel to the ON position, this occurs:
+- Relay R427 energizes.
+- 115V AC goes to the window light internal power supply.
+When you touch the scene button below the Passenger Seating Area section on the ACP Lighting display, the ACP sends intensity and color signals to the window lights.
+The window lights change intensity and color to the preset condition.
+When you touch the OFF button, only the window light internal LED lights go off.
+The window light internal power supply stays connected to the 115V AC.
+
+#+transclude: t
+[[id:A3B4F28E-6B38-4742-97C4-50CA3AEFA68E]]
+
+#+transclude: t
+[[id:029B9F30-C8DB-41E6-B73B-5B1D6C257DB4]]
+
+#+transclude: t
+[[id:0E02E66F-10D0-4A58-B37A-07DFBAEADB28]]

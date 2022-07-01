@@ -1,0 +1,92 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/使用 mkvirtualenv 创建新的 Python 3 虚拟环境时报错 TypeError: stat: path should be string, bytes, os.PathLike or integer, not NoneType/")); -*-
+:PROPERTIES:
+:ID:       6FE98377-A375-4ECB-B3A8-39B01E75B9C6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-17 Sat 17:51>
+#+TITLE: 使用 mkvirtualenv 创建新的 Python 3 虚拟环境时报错 TypeError: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ mkvirtualenv ipy3 --python=python3
+Running virtualenv with interpreter /usr/local/bin/python3
+Already using interpreter /Library/Developer/CommandLineTools/usr/bin/python3
+Using base prefix '/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8'
+New python executable in /Users/c/.virtualenvs/ipy3/bin/python3
+Also creating executable in /Users/c/.virtualenvs/ipy3/bin/python
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/site-packages/virtualenv.py", line 2611, in <module>
+    main()
+  File "/usr/local/lib/python2.7/site-packages/virtualenv.py", line 852, in main
+    create_environment(
+  File "/usr/local/lib/python2.7/site-packages/virtualenv.py", line 1137, in create_environment
+    install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages=site_packages, clear=clear, symlink=symlink)
+  File "/usr/local/lib/python2.7/site-packages/virtualenv.py", line 1599, in install_python
+    shutil.copy(original_python, py_executable)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/shutil.py", line 415, in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/shutil.py", line 240, in copyfile
+    if _samefile(src, dst):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/shutil.py", line 217, in _samefile
+    return os.path.samefile(src, dst)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/genericpath.py", line 100, in samefile
+    s1 = os.stat(f1)
+TypeError: stat: path should be string, bytes, os.PathLike or integer, not NoneType
+#+END_SRC
+
+尝试使用 Python3 自带的 venv：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ python3 -m venv ipy3
+Unable to symlink '/Library/Developer/CommandLineTools/usr/bin/python3' to '/Users/c/.virtualenvs/ipy3/bin/python3'
+Error: Command '['/Users/c/.virtualenvs/ipy3/bin/python3', '-Im', 'ensurepip', '--upgrade', '--default-pip']' died with <Signals.SIGABRT: 6>.
+#+END_SRC
+
+一样无法成功。
+
+运行命令：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ cd /usr/local/bin
+➜ find python*
+python
+python-build
+python-config
+python2
+python2-config
+python2.7
+python2.7-config
+python3-config
+python3.9
+python3.9-config
+pythonw
+pythonw2
+pythonw2.7
+#+END_SRC
+
+可以看出在 ~/usr/local/bin~ 中没有发现 =python3= ，怀疑 =mkvirtualenv= 命令创建新的虚拟环境时是在 ~/usr/local/bin~ 中查找相应的解析器。
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+/usr/local/bin via 🐍 2.7.18
+➜ ls -al python3.9
+lrwxr-xr-x  1 c  admin  42  7 17 12:25 python3.9 -> ../Cellar/python@3.9/3.9.1_3/bin/python3.9
+#+END_SRC
+
+那么改用目前已经存在的 =python3.9= 进行尝试：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ mkvirtualenv ipy3 --python=python3.9
+Running virtualenv with interpreter /usr/local/bin/python3.9
+Already using interpreter /usr/local/opt/python@3.9/bin/python3.9
+Using base prefix '/usr/local/Cellar/python@3.9/3.9.1_3/Frameworks/Python.framework/Versions/3.9'
+New python executable in /Users/c/.virtualenvs/ipy3/bin/python3.9
+Not overwriting existing python script /Users/c/.virtualenvs/ipy3/bin/python (you must use /Users/c/.virtualenvs/ipy3/bin/python3.9)
+Installing setuptools, pip, wheel...
+done.
+virtualenvwrapper.user_scripts creating /Users/c/.virtualenvs/ipy3/bin/predeactivate
+virtualenvwrapper.user_scripts creating /Users/c/.virtualenvs/ipy3/bin/postdeactivate
+virtualenvwrapper.user_scripts creating /Users/c/.virtualenvs/ipy3/bin/preactivate
+virtualenvwrapper.user_scripts creating /Users/c/.virtualenvs/ipy3/bin/postactivate
+virtualenvwrapper.user_scripts creating /Users/c/.virtualenvs/ipy3/bin/get_env_details
+#+END_SRC
+
+创建成功。

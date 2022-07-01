@@ -1,0 +1,281 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React “Spell it as lowercase”/")); -*-
+:PROPERTIES:
+:ID:       FE3E00BC-3D2D-4898-AFBB-C2242DB7C201
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:35>
+#+TITLE: React “Spell it as lowercase”
+
+React does not recognize the `isOpen` prop on a DOM element.
+If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `isopen` instead.
+If you accidentally passed it from a parent component, remove it from the DOM element.
+
+#+BEGIN_SRC js :results values list :exports both
+index.js:1375 Warning: React does not recognize the `formID` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `formid` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+    in div (created by Search)
+    in Search (at entryForm.jsx:116)
+    in div (created by GridColumn)
+    in GridColumn (at entryForm.jsx:109)
+    in div (created by Grid)
+    in Grid (at entryForm.jsx:108)
+    in div (created by FormField)
+    in FormField (at entryForm.jsx:106)
+    in form (at entryForm.jsx:105)
+    in div (at entryForm.jsx:101)
+    in div (at entryForm.jsx:100)
+    in div (at entryForm.jsx:99)
+    in OriginForm (created by Form(OriginForm))
+    in Form(OriginForm) (at dataEntry.jsx:140)
+    in div (created by Segment)
+    in Segment (at dataEntry.jsx:162)
+    in div (created by SegmentGroup)
+    in SegmentGroup (at dataEntry.jsx:156)
+    in div (created by GridColumn)
+    in GridColumn (at dataEntry.jsx:155)
+    in div (created by Grid)
+    in Grid (at dataEntry.jsx:154)
+    in DataEntry (created by Context.Consumer)
+    in Route (at src/index.jsx:13)
+    in Switch (at src/index.jsx:10)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at src/index.jsx:9)
+index.js:1375 Warning: Unknown event handler property `onDelete`. It will be ignored.
+    in div (created by Search)
+    in Search (at entryForm.jsx:116)
+    in div (created by GridColumn)
+    in GridColumn (at entryForm.jsx:109)
+    in div (created by Grid)
+    in Grid (at entryForm.jsx:108)
+    in div (created by FormField)
+    in FormField (at entryForm.jsx:106)
+    in form (at entryForm.jsx:105)
+    in div (at entryForm.jsx:101)
+    in div (at entryForm.jsx:100)
+    in div (at entryForm.jsx:99)
+    in OriginForm (created by Form(OriginForm))
+    in Form(OriginForm) (at dataEntry.jsx:140)
+    in div (created by Segment)
+    in Segment (at dataEntry.jsx:162)
+    in div (created by SegmentGroup)
+    in SegmentGroup (at dataEntry.jsx:156)
+    in div (created by GridColumn)
+    in GridColumn (at dataEntry.jsx:155)
+    in div (created by Grid)
+    in Grid (at dataEntry.jsx:154)
+    in DataEntry (created by Context.Consumer)
+    in Route (at src/index.jsx:13)
+    in Switch (at src/index.jsx:10)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at src/index.jsx:9)
+index.js:1375 Warning: Unknown event handler property `onStash`. It will be ignored.
+    in div (created by Search)
+    in Search (at entryForm.jsx:116)
+    in div (created by GridColumn)
+    in GridColumn (at entryForm.jsx:109)
+    in div (created by Grid)
+    in Grid (at entryForm.jsx:108)
+    in div (created by FormField)
+    in FormField (at entryForm.jsx:106)
+    in form (at entryForm.jsx:105)
+    in div (at entryForm.jsx:101)
+    in div (at entryForm.jsx:100)
+    in div (at entryForm.jsx:99)
+    in OriginForm (created by Form(OriginForm))
+    in Form(OriginForm) (at dataEntry.jsx:140)
+    in div (created by Segment)
+    in Segment (at dataEntry.jsx:162)
+    in div (created by SegmentGroup)
+    in SegmentGroup (at dataEntry.jsx:156)
+    in div (created by GridColumn)
+    in GridColumn (at dataEntry.jsx:155)
+    in div (created by Grid)
+    in Grid (at dataEntry.jsx:154)
+    in DataEntry (created by Context.Consumer)
+    in Route (at src/index.jsx:13)
+    in Switch (at src/index.jsx:10)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at src/index.jsx:9)
+index.js:1375 Warning: React does not recognize the `isOpen` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `isopen` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+    in div (created by Search)
+    in Search (at entryForm.jsx:116)
+    in div (created by GridColumn)
+    in GridColumn (at entryForm.jsx:109)
+    in div (created by Grid)
+    in Grid (at entryForm.jsx:108)
+    in div (created by FormField)
+    in FormField (at entryForm.jsx:106)
+    in form (at entryForm.jsx:105)
+    in div (at entryForm.jsx:101)
+    in div (at entryForm.jsx:100)
+    in div (at entryForm.jsx:99)
+    in OriginForm (created by Form(OriginForm))
+    in Form(OriginForm) (at dataEntry.jsx:140)
+    in div (created by Segment)
+    in Segment (at dataEntry.jsx:162)
+    in div (created by SegmentGroup)
+    in SegmentGroup (at dataEntry.jsx:156)
+    in div (created by GridColumn)
+    in GridColumn (at dataEntry.jsx:155)
+    in div (created by Grid)
+    in Grid (at dataEntry.jsx:154)
+    in DataEntry (created by Context.Consumer)
+    in Route (at src/index.jsx:13)
+    in Switch (at src/index.jsx:10)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at src/index.jsx:9)
+#+END_SRC
+
+#+BEGIN_SRC js :results values list :exports both
+     <div className='ui centered cards'>
+        <div className='ui card'>
+          <div className='extra content'>
+            <h5 className='ui left aligned header'>
+              {formID} #
+            </h5>
+            <form className='ui form' onSubmit={this.handleStash}>
+              <Form.Field>
+                <label>{fields.selected.label}</label>
+                <Grid>
+                  <Grid.Column>
+                    {getFieldDecorator(fields.selected.field, {
+                      initialValue: '',
+                      rules: [{
+                        required: true,
+                        message: fields.selected.message,
+                      }],
+                    })(<Search
+                         loading={isLoading}
+                         onResultSelect={this.handleResultSelect}
+                         onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                           leading: true
+                         })}
+                         results={results}
+                         resultRenderer={resultRenderer}
+                         {...this.props}
+                         placeholder={fields.selected.placeholder}
+                    />)}
+                    <div style={{ color: 'red' }}>
+                      {(getFieldError('selected') || []).join(', ')}
+                    </div>
+                  </Grid.Column>
+                </Grid>
+              </Form.Field>
+              {fields.inputs.map((item, index) => {
+                return (
+                  <div className='field' key={item.label}>
+                    <label>{item.label}</label>
+                    <div className='ui input'>{getFieldDecorator(item.field, {
+                        initialValue: '',
+                        rules: [{
+                          required: true,
+                          message: item.message,
+                        }],
+                    })(
+                        <input placeholder={item.placeholder} type='text'/>
+                      )}</div>
+                    <div style={{ color: 'red' }}>
+                      {(getFieldError(item.field) || []).join(', ')}
+                    </div>
+                  </div>
+                )})}
+              <div className='ui grid'>
+                <div className='center aligned column'>
+                  <div className='ui buttons'>
+                    <button className='ui button' onClick={this.handleDelete}>删除</button>
+                    <div className='or'></div>
+                    <button className='ui button' onClick={this.resetFields}>重置</button>
+                    <div className='or'></div>
+                    <button className='ui positive button' onClick={this.handleStash}>暂存</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+#+END_SRC
+
+会出现错误的原因是 ~Search~ 中我们将父组件的所有属性传递给它，但是 ~Search~ 组件不能识别 ~formID~， ~isOpen~， ~onDelete~， ~onStash~ 这些属性，
+所以我们使用解构的方法将这些从 ~this.props~ 中剔除， 剩下的 ~rest~ 再继续传给 ~Search~ 组件。
+解决方法如下：
+
+#+BEGIN_SRC js :results values list :exports both
+{
+    const { onStash, onDelete, formID, isOpen , ...rest } = this.props;
+    const { getFieldDecorator, getFieldError } = this.props.form;
+    const { isLoading, value, results } = this.state;
+    const fields = this.props.fields;
+    /* const formID = this.props.formID ? this.props.formID : null; */
+
+    return (
+      <div className='ui centered cards'>
+        <div className='ui card'>
+          <div className='extra content'>
+            <h5 className='ui left aligned header'>
+              {formID} #
+            </h5>
+            <form className='ui form' onSubmit={this.handleStash}>
+              <Form.Field>
+                <label>{fields.selected.label}</label>
+                <Grid>
+                  <Grid.Column>
+                    {getFieldDecorator(fields.selected.field, {
+                      initialValue: '',
+                      rules: [{
+                        required: true,
+                        message: fields.selected.message,
+                      }],
+                    })(<Search
+                         loading={isLoading}
+                         onResultSelect={this.handleResultSelect}
+                         onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                           leading: true
+                         })}
+                         results={results}
+                         resultRenderer={resultRenderer}
+                         {...rest}
+                         placeholder={fields.selected.placeholder}
+                    />)}
+                    <div style={{ color: 'red' }}>
+                      {(getFieldError('selected') || []).join(', ')}
+                    </div>
+                  </Grid.Column>
+                </Grid>
+              </Form.Field>
+              {fields.inputs.map((item, index) => {
+                return (
+                  <div className='field' key={item.label}>
+                    <label>{item.label}</label>
+                    <div className='ui input'>{getFieldDecorator(item.field, {
+                        initialValue: '',
+                        rules: [{
+                          required: true,
+                          message: item.message,
+                        }],
+                    })(
+                        <input placeholder={item.placeholder} type='text'/>
+                      )}</div>
+                    <div style={{ color: 'red' }}>
+                      {(getFieldError(item.field) || []).join(', ')}
+                    </div>
+                  </div>
+                )})}
+              <div className='ui grid'>
+                <div className='center aligned column'>
+                  <div className='ui buttons'>
+                    <button className='ui button' onClick={this.handleDelete}>删除</button>
+                    <div className='or'></div>
+                    <button className='ui button' onClick={this.resetFields}>重置</button>
+                    <div className='or'></div>
+                    <button className='ui positive button' onClick={this.handleStash}>暂存</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+#+END_SRC
+

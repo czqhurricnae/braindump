@@ -1,0 +1,15 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/波音工程图纸-图纸页（DWG）/")); -*-
+:PROPERTIES:
+:ID:       C7589273-F93E-420C-B87C-209C018DC137
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-18 Mon 13:11>
+#+TITLE: 波音工程图纸-图纸页（DWG）
+#+FILETAGS: :DWG:
+#+SETUPFILE: ../theme-rose.setup
+
+图页（DWG），即 Drawing（picture sheet），图纸系统的图形说明部分，传统意义上的图纸，用以表达零部件的形状、尺寸，零件、组件之间的装配关系、安装位置等，一般是 2D 的形式，
+有的图页为了使图纸更易读懂，还会有三维视图。
+
+图页可能只有一页，多数情况下有多页，如果零部件太复杂，可以采用多页图纸，在另一种情况下，由于构型不同，也需要多页图纸来表达不同的构型，
+多页图纸在标题栏中按先后顺序分别以 SHEET 1， SHEET 2， SHEET3，......等表示。

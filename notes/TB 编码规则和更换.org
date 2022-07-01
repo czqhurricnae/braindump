@@ -1,0 +1,143 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/TB 编码规则和更换/")); -*-
+:PROPERTIES:
+:ID:       51BE2C0B-092B-477F-A77D-075C285D3768
+:END:
+#+LATEX_CLASS: my-article
+#+SETUPFILE: ../theme-rose.setup
+#+DATE: <2021-07-19 Jul 14:49>
+#+TITLE: TB 编码规则和更换
+
+最近机务君在查询 WDM 的时候，偶然发现线路图中有 3 个同样编号的 TB1202，但内部编码却不相同，回想当年学实操的时候老师给讲过相关知识，但奈何时间太长，经久不用，都忘却了。
+所以机务君又结合 SWPM 把这些内容又梳理了一遍。
+
+[[file:./static/TB 编码规则和更换/1973.jpeg]]
+
+何为 TB？TB 是 Terminal Block 的简写，译为终端接线块，用来实现线束之间的连接与汇合，使得接线美观，方便维护。
+
+在 WDM 91-21-41 TERMINAL STRIP LIST 中可以查询到飞机上所有的 TB 及其件号、站位、类型、{{c1::所连线束}}等内容。
+
+* TB 的编码规则
+如上图所示，3个 TB 的编号都是 1202，但是内部编号分别为 YA3、ZA21、ZB21，有什么区别？具体的编码规则是怎样的呢？
+
+通过查询 WDM 91-21-41 的 TERMINAL STRIP LIST 我们找到 TB1202。
+
+[[file:./static/TB 编码规则和更换/5406.jpeg]]
+
+[[file:./static/TB 编码规则和更换/5767.jpeg]]
+
+可以看到 TB1202 共有 3 种类型及件号，对于件号为 S280W601-301 的 TB，进入 SWPM 的 Cross Reference Index 搜索，找到 SWPM 章节号 SWPM 20-71-14。
+
+[[file:./static/TB 编码规则和更换/6443.jpeg]]
+
+进入 SWPM 20-71-14，可以看到 S280W601-301 是一个接地块 GB。
+
+[[file:./static/TB 编码规则和更换/7095.jpeg]]
+
+[[file:./static/TB 编码规则和更换/7454.jpeg]]
+
+关于 GB 的内容，请参考[[http://mp.weixin.qq.com/s?__biz=MzI4Njg5MzY4NQ==&mid=2247483944&idx=1&sn=65acea50a652975cf49b2cd930164f86&chksm=ebd4b132dca33824dfa56ac4ac1bcab1e3579a15611390de029218151632e26b3bc20fd46b78&scene=21#wechat_redirect][大G，喜欢吗？]]中的相关描述，此处不再赘述，只讲述 TB 相关内容。
+
+对于 TB1202，有 Y 构型的 S280W555-104 及 Z 构型的 S280W555-108。
+进入 SWPM 的 FRONT MATTER 搜索 S280W555，可以看到这个系列的 TB 对应的 SWPM 章节均为 20-90-15，
+在 SWPM 20-90-15 中，我们可以查询到 TB 的件号、类型、编码规则、施工程序等内容。
+
+[[file:./static/TB 编码规则和更换/8819.jpeg]]
+
+打开 SWPM 20-90-15，首先可以看到有许多种终端模块，包括 TB、GB、二极管模块、电阻模块等类别。
+
+[[file:./static/TB 编码规则和更换/9482.jpeg]]
+
+我们找到 TB 的描述部分，可以知道所查询的 TB 的类型分别为 Y 型、Z型（针对 737 系列飞机）。
+
+[[file:./static/TB 编码规则和更换/10136.jpeg]]
+
+[[file:./static/TB 编码规则和更换/10605.jpeg]]
+
+该系列的 TB 对应的五种类型的构型如下图所示：
+
+[[file:./static/TB 编码规则和更换/11237.jpeg]]
+
+[[file:./static/TB 编码规则和更换/11656.jpeg]]
+
+举例来说，如 Y 型 TB（S280W555-104），被分成 4 组 Bus Sets，每组 Bus Set 可以插入 4 个插钉，一个 Y 型 TB 共可以插入 16 个尺寸为 16 的插钉。
+
+TB 插钉定位编码规则参考下图所示：
+
+[[file:./static/TB 编码规则和更换/12529.jpeg]]
+
+[[file:./static/TB 编码规则和更换/13034.jpeg]]
+
+综上可知，TB1202 内部编号 YA3 的意义即：Y型的 TB，该线束终端插钉对应插孔的位置为第一排第三列。同理可知 ZA21、ZB21 的意义。
+
+* 如何更换？
+知道了编码规则之后，机务君以 TB1202 YA3 为例，带大家来看下如何进行 TB 的更换。
+
+** 移除 TB
+- Push the latch of the terminal module to release the latch from the latch retainer on the track.
+
+[[file:./static/TB 编码规则和更换/15671.jpeg]]
+
+- Pull the front of the module from the front of the track.
+
+[[file:./static/TB 编码规则和更换/16257.jpeg]]
+
+- Carefully pull the module to the front of the track until the key is disengaged from the keyway.
+- Pull the module from the track.
+
+* 移除 TB 中的插钉
+[[file:./static/TB 编码规则和更换/54062 copy.png]]
+
+注意查看图片中 =Type= 即代表该导线连接到的插钉的类型代码。
+
+TB1202 中的插钉为 3 个代码为 1A 的插钉，根据代码在 WDM 的 FRONT MATTER 中找到插钉件号：S280W555-920。
+
+[[file:./static/TB 编码规则和更换/17263.jpeg]]
+
+根据插钉件号，在 SWPM 中找到插钉的压接尺寸。
+
+[[file:./static/TB 编码规则和更换/17845.jpeg]]
+
+[[file:./static/TB 编码规则和更换/18352.jpeg]]
+
+根据插钉的压接尺寸，找到移除插钉的工具。
+
+[[file:./static/TB 编码规则和更换/18921.jpeg]]
+
+使用插钉移除工具将 TB 中的 3 个插钉移除。
+
+** 插入插钉
+拿到新的 TB 后，需要使用送钉工具将之前的线钉（如果插钉移除过程中导致插钉或线路损坏，根据需要选择合适的压接工具和线束，重新进行线束和插钉之间的压接）插入到 TB 中。
+根据压接尺寸，选择合适的送钉工具。
+
+[[file:./static/TB 编码规则和更换/20387.jpeg]]
+
+[[file:./static/TB 编码规则和更换/20887.jpeg]]
+
+根据手册中的施工要求，将需要的插钉插入到 TB 中，同时注意满足 A3 位置的要求。
+
+[[file:./static/TB 编码规则和更换/21537.jpeg]]
+
+** 密封
+对于非增压区域的 TB，如果插孔未被使用，需要使用密封柱或密封塞进行密封。该章节未对该类型 TB 的密封柱或密封塞的件号进行要求，需要进入 SWPM 20-00-11 选择合适尺寸的密封柱或密封塞。
+
+- 密封塞
+  [[file:./static/TB 编码规则和更换/22795.jpeg]]
+
+  [[file:./static/TB 编码规则和更换/23295.jpeg]]
+
+- 密封柱
+  [[file:./static/TB 编码规则和更换/23936.jpeg]]
+
+  [[file:./static/TB 编码规则和更换/24463.jpeg]]
+
+** 安装 TB
+- Align the key of the module with the applicable keyway on the track.
+
+[[file:./static/TB 编码规则和更换/25479.jpeg]]
+
+- Push the top of the module until it makes a click and the latch is locked in the latch retainer.
+
+[[file:./static/TB 编码规则和更换/26103.jpeg]]
+
+- 检查确认 TB 安装到位，且没有任何损坏。
+

@@ -1,0 +1,166 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Flask Docker 部署/")); -*-
+:PROPERTIES:
+:ID:       6965F432-BAED-48B5-AF89-52DB69056E28
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-08 Mon 00:48>
+#+TITLE: Flask Docker 部署
+
+* 基础介绍
+- Flask: python 最流行的两个框架之一（django，flask），量级是最大的特点。
+- Gunicorn: 只熟悉熟悉用 java 或者 PHP 做开发的可能对 python 的部署一开始不太理解，flask 应用是一个符合 WSGI 规范的 Python 应用，不能独立运行（类似 app.run 的方式仅适合开发模式），需要依赖其他的组件提供服务器功能。
+- gevent: gunicorn 默认使用同步阻塞的网络模型（-k sync），对于大并发的访问可能表现不够好，我们很方便地顺手套一个 gevent 来增加并发量。
+- Docker: 容器，以理解成一个“黑盒”。项目变得庞大以后，往往我们会疲于管理整个项目的部署和维护。如果我们将整个项目用一个“容器”装起来，那么我们仅仅只用维护一个配置文件告诉计算机每次部署要把什么东西装进“容器”，甚至借用一些工具把这个过程自动化，部署就会变得很方便。这也是为什么我写这篇文章的原因。
+
+整个架构如图所示：
+
+[[file:./static/Flask Docker 部署/1.png]]
+
+* 具体操作
+下面我们首先在自己电脑就可以运行，不用登陆服务器终端，
+以小学期的一个 web 项目为例， 我们的项目架构是这样的：
+
+[[file:./static/Flask Docker 部署/2.png]]
+
+我们先看根目录下的 start.py, 这是项目的启动文件：
+
+#+BEGIN_SRC python
+#start.py
+from project import create_app # 从 project 文件夹中的__init__.py 中导入 create_app 函数
+
+app = create_app() # 记住这里的变量名 app
+
+if __name__ == '__main__':
+    app.run(debug=True)
+#+END_SRC
+
+其中，我们 project 里面的 flask 项目用了 blueprint 的方式去构建，所以我们用了 init.py 来定义这个 flask 项目，这里相当于将 web 项目用文件夹“封装”了起来，部署的内容只和文件夹里面有关。
+
+不过可能更常见的新手教程里面的是这个样式：
+
+#+BEGIN_SRC python
+#start.py
+from flask import Flask
+
+app = Flask(__name__) # 记住这里的变量名 app
+
+pp.route('/')
+def hello():
+    return 'hello docker&flask'
+
+if __name__ == '__main__':
+    app.run(debug=True)
+#+END_SRC
+
+用哪种都无所谓，如果没接触过蓝图直接用第二种常规的方式即可，注意如果用第二种方式，几个用来部署的文件和 Flask 项目应是同级文件夹的。
+
+一旦使用命令 =python start.py= 运行这个应用，打开浏览器，输入网址 =127.0.0.1:5000= 并回车，将会打开我们的网站。
+
+但是这样简单运行的话，只要按一下 =ctrl + c= 终止运行，或者关掉终端，网站就连接不了了，我们要寻求更长久的真正的部署。
+
+** Gunicorn + Gevent
+运行以下命令即可安装这两个利器：
+
+#+BEGIN_SRC python
+pip install gunicorn gevent
+#+END_SRC
+
+在根目录下新建文件 =/gunicorn.conf.py=
+
+#+BEGIN_SRC python
+workers = 5    # 定义同时开启的处理请求的进程数量, 根据网站流量适当调整
+worker_class = "gevent"   # 采用 gevent 库, 支持异步处理请求, 提高吞吐量
+bind = "0.0.0.0:80"
+#+END_SRC
+
+可以使用 =gunicorn= 命令来测试是否可以正确运行，命令如下，打开网址 =127.0.0.1:80= ，将会打开我们的网站。
+
+#+BEGIN_SRC python
+gunicorn app:app -c gunicorn.conf.py
+#+END_SRC
+
+一旦报错，则根据错误提示修复即可。
+
+* 使用 Docker 封装 Flask 应用
+当然第一步先安装 docker。
+
+下面我们将项目用 docker 包装好，以便扔到服务器上直接跑（学生党可以买阿里云或者腾讯云，均有学生优惠）。
+首先我们需要为该应用创建一个 =requirements.txt= 文件，以便容器里面 python 环境的安装：
+
+#+BEGIN_SRC python
+gunicorn
+gevent
+flask
+# ... 以下替换成项目需要安装的所有 python 库, 如 flask-wtf,flask-login...whatever
+#+END_SRC
+
+=requirements.txt= 是做 python 项目常写的一个文件，有了这个文件，在安装 python 应用依赖的三方包时，可以直接用如下命令执行：
+
+#+BEGIN_SRC python
+pip install -r requirements.txt
+#+END_SRC
+当然我们这里先不用执行。
+
+然后我们还要创建一个 =Dockerfile= 文件，以便 Docker 镜像的构建： =/Dockerfile=
+
+#+BEGIN_SRC python
+FROM python:3.6
+WORKDIR /Project/demo
+
+COPY requirements.txt ./
+RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+COPY . .
+
+CMD ["gunicorn", "start:app", "-c", "./gunicorn.conf.py"]
+#+END_SRC
+
+其中，第二行 WORKDIR 后面写的是要部署到服务器上的路径，最后一行里面的 =start= 是我们上面写的 python 启动文件名，app 是启动文件里面要启动的应用名（变量名）。
+完成这两个文件的创建之后，执行如下命令，就可以开始构建 Docker 镜像：
+
+#+BEGIN_SRC sh
+sudo docker build -t 'testflask' .
+#+END_SRC
+
+需要注意的是这个过程需要一点时间，因为它有几百兆。
+构建完成之后，通过如下命令查看镜像列表，可以发现 testflask 显示在其中：
+
+#+BEGIN_SRC python :results values list :xports both
+sudo docker images
+#+END_SRC
+
+将镜像 push 到 docker cloud 上（没有账号的要先注册），这个过程由于官方文档很齐备了，我就直接放链接了，几步就可。
+操作和 git 非常类似。
+https://docs.docker.com/v17.12/docker-cloud/builds/push-images/
+
+* 部署到服务器上
+最后一步了，这里假设服务器是 ubuntu 系统，首先安装 docker
+
+#+BEGIN_SRC sh
+sudo apt-get install docker.io
+#+END_SRC
+
+然后登陆我们准备好的远程服务器终端，把镜像 pull 下来，两三个命令就可，这里还是直接放个简易教程
+
+https://www.shellhacks.com/docker-pull-command-examples/
+
+接下来我们可以直接运行了：
+
+- 临时运行 docker 镜像：
+
+#+BEGIN_SRC sh
+sudo docker run -it --rm -p 80:80 testflask
+#+END_SRC
+
+可以看到 Docker 镜像成功地运行起来了，并处于阻塞状态。
+这时，我们打开浏览器，输入服务器外网 ip，可以我们的网站已经部署上去。
+
+- 生产环境运行（以 daemon 方式运行）
+
+#+BEGIN_SRC sh
+sudo docker run -d -p 80:80 --name test-flask-1 testflask
+#+END_SRC
+
+最后提一点，新手在这里有个坑，记得在服务器的仪表盘（dashboard）的设置里面开启相应的外网端口（这里是 80）。
+那么到这里 Flask 项目已经成功部署。
+更新项目的时候，维护好配置文件，build 一下，push 上去，在服务器 pull 下来，重新运行即可。

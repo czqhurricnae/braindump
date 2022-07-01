@@ -1,0 +1,151 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Padding for inline elements/")); -*-
+:PROPERTIES:
+:ID:       96C13192-5F33-43FD-AA1F-959E0628AE95
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-03 Jun 23:06>
+#+TITLE: Padding for inline elements
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I am reading a book about CSS basics. It is claimed in the book that an
+inline element has complete padding properties but no
+*margin-top/bottom* properties, only *margin-left/right* properties.
+
+My first question is, where can I find this as an official statement? I
+found [[http://www.w3.org/TR/REC-CSS2/visudet.html#q15][here]] that if
+*margin-top/bottom* is set to =auto= then it is set to =0=. But isn't
+that different from saying *margin-top/bottom* does not apply to
+inline-elements?
+
+My second question is, does an inline element really got complete
+padding properties? I tried the following example:
+
+[[file:./static/Padding for inline elements/886.jpeg]]
+
+#+BEGIN_EXAMPLE
+    <!DOCTYPE html>
+    <html>
+
+    <head> </head>
+
+    <body>
+      <div style="margin: 20px; border: solid 20px;background: red;">
+        <p style="margin:0">
+          test test test test test test test test test test test test test test test test test test test test test test test test
+          <strong style="padding:20px;background-color:yellow">hello</strong> test test test test
+        </p>
+      </div>
+    </body>
+
+    </html>
+#+END_EXAMPLE
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+#+BEGIN_QUOTE
+  It is claimed in the book that an inline element has complete padding
+  properties but no margin-top/button properties, only margin-left/right
+  properties.
+
+  My first question is, where can I find this as an official statement?
+#+END_QUOTE
+
+You won't, because it isn't quite true. In the [[https://drafts.csswg.org/css2/box.html#propdef-margin-top][box model]]
+it says that for margin-top and margin-bottom:
+
+#+BEGIN_QUOTE
+  These properties have no effect on non-replaced inline elements.
+#+END_QUOTE
+
+But "no effect" does not mean that the properties don't exist.
+Specifically, they do exist for the purposes of inheritance. Consider
+this example:
+
+#+BEGIN_EXAMPLE
+    p { border:1px solid red }
+    i { vertical-align:top; }
+    span { margin-top: 20px; margin-bottom: 20px;  }
+    b { display:inline-block; }
+    .two { margin:inherit;  }
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+    <p><i>Hello</i> <span>World <b class="one">my good friend</b></span></p>
+    <p><i>Hello</i> <span>World <b class="two">my good friend</b></span></p>
+#+END_EXAMPLE
+
+[[file:./static/Padding for inline elements/2021-06-03_23-12-02_screenshot.jpg]]
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+#+BEGIN_QUOTE
+  My first question is, where can I find this as an official statement?
+  I found here that if margin-top/bottom is set to 'auto' then it is set
+  to '0'. But isn't that different from saying 'margin-top/botton does
+  not apply to inline-elements'?
+#+END_QUOTE
+
+In 8.1 Box Model Spec
+([[http://www.w3.org/TR/REC-CSS2/box.html#propdef-margin]]) "The margin
+edge surrounds the box margin. If the margin has 0 width(height), the
+margin edge is the same as the border edge."
+
+In the page you linked 10.6.1 "The 'height' property doesn't apply, but
+the height of the box is given by the 'line-height' property." So since
+height doesn't apply, then the margin-edge is the same as the border
+edge.
+
+#+BEGIN_QUOTE
+  My second question is, does an inline element really got complete
+  padding properties? I tried the following example:
+#+END_QUOTE
+
+Same reason as above. "the height of the box is given by the
+'line-height' property". The height of that strong element is set by the
+=line-height= as it has no height to reference as a block or
+inline-block element would. I'm pretty sure if you gave it inline-block
+properties it would as a block has height in the model.
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+#+BEGIN_QUOTE
+  but for some reason it has no effect on the surrounding text
+#+END_QUOTE
+
+Try substituting =margin= for =padding= at =strong= element, adding
+=display:inline-block= to =strong= style
+
+#+BEGIN_EXAMPLE
+    <!DOCTYPE html>
+    <html>
+    <head>
+    </head>
+    <body>
+      <div style="margin: 20px;
+              border: solid 20px;
+              background: red;">
+        <p style='margin:0'>test test test test test test test test test test test test test test test test test test test test test test test test
+          <strong style="margin:20px;background-color:yellow;display:inline-block;">hello</strong>
+          test test test test</p>
+      </div>
+    </body>
+    </html>
+#+END_EXAMPLE
+
+* Backlinks                                                        :noexport:
+** No linked reference
+
+** Unlinked references
+[Show unlinked references]

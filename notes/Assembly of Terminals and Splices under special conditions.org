@@ -1,0 +1,8 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Assembly of Terminals and Splices under special conditions/")); -*-
+:PROPERTIES:
+:ID:       D89F95A0-C698-48D7-8CDD-EB302ADB0653
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-19 Mon 13:30>
+#+TITLE: Assembly of Terminals and Splices under special conditions
+#+FILETAGS: :SWPM_20_30_22:

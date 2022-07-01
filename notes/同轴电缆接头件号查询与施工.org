@@ -1,0 +1,159 @@
+# -*- eval: (setq org-./static/同轴电缆接头件号查询与施工-note-screenshot-image-dir (concat default-directory "./static/同轴电缆接头件号查询与施工/")); -*-
+:PROPERTIES:
+:ID:       93E2A936-D53A-4B2D-ACE4-24284584145B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-04 Sun 17:56>
+#+TITLE: 同轴电缆接头件号查询与施工
+
+注：因不同件号的同轴电缆接头处理方法不一样，且 SWPM 里提到的大部分同轴电缆接头我也没见过实物，本文仅介绍常见的同轴电缆接头处理方法，实际工作中如遇到生僻或者比较特殊的同轴电缆接头，请根据实际接头件号查找施工方法。
+
+* 和同轴电缆相关的符号识别
+
+#+CAPTION: Coaxial Cable
+[[file:./static/同轴电缆接头件号查询与施工/image1.png]]
+
+#+CAPTION: Coaxial-Outside Conductor Carried Through
+[[file:./static/同轴电缆接头件号查询与施工/image2.png]]
+
+#+CAPTION: Coaxial-Outside Conductor Not Carried Through
+[[file:./static/同轴电缆接头件号查询与施工/image3.png]]
+
+* 同轴电缆接头件号查找
+** 查找步骤
+- 从 WDM 获取设备号。
+- 在 WDM Equipment List 中根据设备号找到接头件号。
+
+如图：
+
+[[file:./static/同轴电缆接头件号查询与施工/image4.jpeg]]
+
+假设要查询 TCAS 天线 J1（YELLOW）对应的同轴电缆接头件号。由线路图可知其设备号为 D2753。
+
+如图在 WDM Equipment List 中，可确定设备号为 D2753 的件号为 125-88-9。
+
+[[file:./static/同轴电缆接头件号查询与施工/image5.png]]
+
+* 同轴电缆接头的施工
+** SWPM 中和同轴电缆头相关的内容
+一般情况下，SWPM 对同轴电缆接头的描述包括以下内容：
+- Part Numbers and Description: 此部分一般包括接头件号、构型、插针（孔）类型、供应商以及接头的图片等。
+- Coax Connector Assembly Tools: 可从该部分获取同轴接头的压接工具件号。
+- Connector Assembly: 剥线尺寸标准、插针（孔）压接方法等
+- Coax Cable Preparation Procedures
+- Approved Tool Suppliers
+
+** 同轴电缆接头压接工具件号的查找
+同轴电缆接头的压接一般包括插针（Center Contact）和金属套管（Sleeve）的压接两部分。
+
+[[file:./static/同轴电缆接头件号查询与施工/image6.jpeg]]
+
+以下将以查到的件号为 125-88-9  的同轴电缆接头为例，介绍同轴电缆接头压接工具件号的查找方法。
+
+在 SWPM > Manual Front Matter > Cross Reference Index 找到该接头对应的章节号，如图 3.2-1，图 3.2-2。由图可知，我们应参 SWPM 20-51-15。
+
+[[file:./static/同轴电缆接头件号查询与施工/image7.png]]
+
+[[file:./static/同轴电缆接头件号查询与施工/image8.jpeg]]
+
+
+由图 3.2-3，图 3.2-4，图 3.2-5 可知，该接头类型为 Straight Plug，插针类型为压接。
+
+#+CAPTION: 图 3.2-3
+[[file:./static/同轴电缆接头件号查询与施工/image9.png]]
+
+#+CAPTION: 图 3.2-4
+[[file:./static/同轴电缆接头件号查询与施工/image10.jpeg]]
+
+#+CAPTION: 图 3.2-5
+[[file:./static/同轴电缆接头件号查询与施工/image11.jpeg]]
+
+在 Coax Connector Crimp Tools Table 7 中查找，压接 Center Contact 和 Sleeve 的工具代码。由图 3.2-7，可知压接 Center Contact 的工具代码为 *069H* ，压接 K-Grip Sleeve 的工具代码为 *213HLS*
+
+#+CAPTION: 图 3.2-6
+[[file:./static/同轴电缆接头件号查询与施工/image12.png]]
+
+#+CAPTION: 图 3.2-7
+[[file:./static/同轴电缆接头件号查询与施工/image13.jpeg]]
+
+
+分 别 在 Coax Connector Crimp Tools > Table 8 COAX CONNECTOR CENTER CONTACT CRIMP TOOLS, Table 9 COAX CONNECTOR K-GRIP SLEEVE CRIMP TOOLS 中根据 3)中的工具代码查找对应的工具件号。
+
+同一个工具代码可能会有好几种工具件号，可根据实际情况选择所需工具。根据厦航工具房库存情况，对于 Center Contact 的压接，我们选择 KTH-1000, KTH-2216，对于 K- Grip Sleeve 的压接，我们选择 KTH-1000，KTH-2103。
+
+#+CAPTION: 图 3.2-8
+[[file:./static/同轴电缆接头件号查询与施工/image14.jpeg]]
+
+#+CAPTION: 图 3.2-9
+[[file:./static/同轴电缆接头件号查询与施工/image15.jpeg]]
+
+** 同轴电缆的准备
+
+#+CAPTION: 图 3.3-1
+[[file:./static/同轴电缆接头件号查询与施工/image16.png]]
+
+如图 3.3-1，在 Conector Assembly 中查找我们所需的信息。
+
+我们知道该接头类型为 Straight Plug，而不是 Right Angle Plug，且其插针是压接类型的，而不是焊接的。因此此处我们不在 Conector Assembly -- Right Angle Connectors with Solder Type Contacts 查找所需信息。
+
+** Cable Preparation 热缩管的选择
+
+如图 3.3-2，图 3.3-3，从 Table 4, Table 12 中选择所需的热缩管及相应的尺寸，并将热缩管先穿过同轴电缆。
+
+#+CAPTION: 图 3.3-2
+[[file:./static/同轴电缆接头件号查询与施工/image17.jpeg]]
+
+#+CAPTION: 图 3.3-3
+[[file:./static/同轴电缆接头件号查询与施工/image18.jpeg]]
+
+
+
+
+
+** 将 K-Grip Sleeve 套进同轴电缆。如图 3.3-4，若 K-Grip Sleeve 只有一端有台阶， 应将有台阶的一端朝向电缆末端
+
+#+CAPTION: 图 3.3-4
+[[file:./static/同轴电缆接头件号查询与施工/image19.jpeg]]
+
+** 按照 Figure 3 、Table 11 所给的图和尺寸进行剥线（此处的图和表格在 Cable Preparation Dimensions 里可找到）
+
+如图 3.3-6，图 3.3-7。
+
+#+CAPTION: 图 3.3-6
+[[file:./static/同轴电缆接头件号查询与施工/image20.png]]
+
+#+CAPTION: 图 3.3-7
+[[file:./static/同轴电缆接头件号查询与施工/image21.jpeg]]
+
+** 按照图 3.3-8 对 Center Contact 进行压接
+
+#+CAPTION: 图 3.3-8
+[[file:./static/同轴电缆接头件号查询与施工/image22.png]]
+
+
+** 按照图 3.3-9 对 K-Grip Sleeve 进行压接
+
+#+CAPTION: 图 3.3-9
+[[file:./static/同轴电缆接头件号查询与施工/image23.png]]
+
+#+CAPTION: 图 3.3-10
+[[file:./static/同轴电缆接头件号查询与施工/image24.jpeg]]
+
+** 压接后检查
+
+[[file:./static/同轴电缆接头件号查询与施工/image25.jpeg]]
+
+#+CAPTION: 图 3.3-11
+[[file:./static/同轴电缆接头件号查询与施工/image26.jpeg]]
+
+* 热缩管的安装
+
+[[file:./static/同轴电缆接头件号查询与施工/image27.jpeg]]
+
+从 Table 13 中找到热缩管的安装需参考的章节。
+
+** 按照 Paragraph 6.B 进行热缩管的安装
+
+[[file:./static/同轴电缆接头件号查询与施工/image28.png]]
+
+[[file:./static/同轴电缆接头件号查询与施工/image29.png]]

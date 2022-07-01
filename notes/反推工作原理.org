@@ -1,0 +1,19 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/反推工作原理/")); -*-
+:PROPERTIES:
+:ID:       909FC536-C7B9-4034-AC33-C498936E4CAF
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-11 Sat 22:34>
+#+TITLE: 反推工作原理
+
+* 反推放出
+
+[[file:自动油门电门组件.org::* 自动油门电门组件各电门信号作用][See：自动油门电门组件各电门信号作用]]
+
+[[file:./static/反推工作原理/2020-07-12_00-49-14_screenshot.jpg]]
+
+* 收上反推
+[[file:./static/反推工作原理/2020-07-12_01-17-43_screenshot.jpg]]
+
+* 反推保留
+[[id:DE48F577-F7E2-41BF-A100-AAAB861E6A59][See：737NG 反推保留 M 程序]]

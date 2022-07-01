@@ -1,0 +1,12 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 自动刹车压力控制组件/")); -*-
+:PROPERTIES:
+:ID:       8CDBD4CA-10BC-444F-9BAC-496DB3FA20C1
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-18 Thu 13:14>
+#+TITLE: 737NG 自动刹车压力控制组件
+#+FILETAGS: :V122:
+
+[[file:./static/737NG 自动刹车压力控制组件/2021-02-18_13-14-11_screenshot.jpg]]
+
+[[file:./static/737NG 自动刹车压力控制组件/2021-02-18_13-35-43_APCM.png]]

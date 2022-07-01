@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/显影剂使用规范/")); -*-
+:PROPERTIES:
+:ID:       3F006BE9-146A-4E02-9241-13FDAD495B95
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-02 Fri 00:25>
+#+TITLE: 显影剂使用规范
+显影剂（developer，Ardrox9D18）被广泛应用于荧光渗透探伤，油液渗漏探测。但发现显影剂的使用存在不规范的现象因此结合厂家手册及显影剂特性编写此份提示，以规范显影剂的使用。
+
+在高温条件下显影剂对金属部件有腐蚀，在使用显影剂后 4 小时内应及时清理显影剂。
+
+显影剂会软化非金属材料，因此在使用显影剂时不要喷到非金属材料上（如导线，封严等）。

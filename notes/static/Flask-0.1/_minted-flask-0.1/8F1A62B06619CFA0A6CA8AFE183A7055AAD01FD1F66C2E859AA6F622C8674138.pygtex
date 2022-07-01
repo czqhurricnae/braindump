@@ -1,0 +1,50 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Local}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{n+nv+vm}{\PYGZus{}\PYGZus{}slots\PYGZus{}\PYGZus{}} \PYG{o}{=} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb}{object}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}\PYG{p}{)}
+        \PYG{n+nb}{object}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{allocate\PYGZus{}lock}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}iter\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{iteritems}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{proxy}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Create a proxy for a name.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n}{LocalProxy}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{proxy}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}release\PYGZus{}local\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{n}{get\PYGZus{}ident}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,} \PYG{n+nb+bp}{None}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{acquire}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{k}{try}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}\PYG{p}{[}\PYG{n}{get\PYGZus{}ident}\PYG{p}{(}\PYG{p}{)}\PYG{p}{]}\PYG{p}{[}\PYG{n}{name}\PYG{p}{]}
+            \PYG{k}{except} \PYG{n+ne}{KeyError}\PYG{p}{:}
+                \PYG{k}{raise} \PYG{n+ne}{AttributeError}\PYG{p}{(}\PYG{n}{name}\PYG{p}{)}
+        \PYG{k}{finally}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{release}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{name}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{acquire}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{ident} \PYG{o}{=} \PYG{n}{get\PYGZus{}ident}\PYG{p}{(}\PYG{p}{)}
+            \PYG{n}{storage} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}
+            \PYG{k}{if} \PYG{n}{ident} \PYG{o+ow}{in} \PYG{n}{storage}\PYG{p}{:}
+                \PYG{n}{storage}\PYG{p}{[}\PYG{n}{ident}\PYG{p}{]}\PYG{p}{[}\PYG{n}{name}\PYG{p}{]} \PYG{o}{=} \PYG{n}{value}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{storage}\PYG{p}{[}\PYG{n}{ident}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{name}\PYG{p}{:} \PYG{n}{value}\PYG{p}{\PYGZcb{}}
+        \PYG{k}{finally}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{release}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}delattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{acquire}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{k}{try}\PYG{p}{:}
+                \PYG{k}{del} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}\PYG{p}{[}\PYG{n}{get\PYGZus{}ident}\PYG{p}{(}\PYG{p}{)}\PYG{p}{]}\PYG{p}{[}\PYG{n}{name}\PYG{p}{]}
+            \PYG{k}{except} \PYG{n+ne}{KeyError}\PYG{p}{:}
+                \PYG{k}{raise} \PYG{n+ne}{AttributeError}\PYG{p}{(}\PYG{n}{name}\PYG{p}{)}
+        \PYG{k}{finally}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{release}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,138 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/黑苹果更新系统/")); -*-
+:PROPERTIES:
+:ID:       025F151C-7E6A-4297-986E-B0C50DB3A4AA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-19 Sat 22:20>
+#+TITLE: 黑苹果更新系统
+
+* BIOS 推荐配置
+- Sata: AHCI
+- Disable Secure Boot
+- Enable VT
+- Disable VT-D
+- Disable SD card reader（可选，节省 0.5w 功耗。）
+
+* 修改主板默认 DVMT
+安装注意事项（非常重要，否则可能无法进入桌面）：由于主板默认 DVMT 显存 32M，所以 FHD 屏幕修改至少 64M，QHD 至少 96M。
+方式一（推荐）：此方法有风险，目前 bios 在 2.3.1 到 2.9.0 中参数可用，其它自行测试。
+
+使用 DVMT 目录下的 DVMT.efi 引导启动，0x785 是 DVMT Pre-allocation，首先命令 =setup_var 0x785= 回车，查看有无返回值，未修改是返回 0x01(32M)，如果没有返回值，切勿继续尝试以下操作。
+其它 2 个参数也是类似命令，查看有无返回值，没有返回值，切勿继续尝试以下操作。
+
+之后修改以下三个参数 0x4de 0x785 0x786，命令分别为：
+
+- setup_var 0x4de 0x00
+
+- setup_var 0x785 0x06 ：这里我直接设置到 192M，FHD 设置 setup_var 0x785 0x02 即可。
+
+- setup_var 0x786 0x03
+
+| Variable	Offset | Default | value | Desired value | Comment |
+| CFG Lock              | 0x4de | 0x01 (Enabled) | 0x00 (Disabled) | Disable CFG Lock to prevent MSR 0x02 errors on boot        |
+| DVMT Pre-allocation   | 0x785 | 0x01 (32M)     | 0x06 (192M)     | Increase DVMT pre-allocated size to 192M for QHD+ displays |
+| DVMT Total Gfx Memory | 0x786 | 0x01 (128M)    | 0x03 (MAX)      | Increase total gfx memory limit to maximum                 |
+
+以上表格来自：[[https://gitee.com/wukaka667/DELL-XPS13-9360-i58250U-10.15/tree/master][the-darkvoid]]。
+
+教程：
+- 开机按 F2 或者 F12 进入 BIOS，选择 Boot Sequence。
+- 点击 Add Boot Option。
+- 填写名称，随便写什么都可以，选择 DVMT.efi 的路径，你可以把该文件放到 U 盘引导分区，也可以放到硬盘引导分区，随意，我的放在 clover 得 tools 中。
+- 完成后点击 OK，保持 BIOS 设置，重启，按 F12，选择之前的填写的引导后回车，我的是 SHELL。
+- 分别输入以上三条命令，执行后会显示之前的值和设置后的值，结果如下图。
+
+* 更新 Clover
+=内存修正驱动= 要勾选。
+
+[[file:./static/黑苹果更新系统/2020-12-19_22-23-17_screenshot.jpg]]
+
+* 安装好 Clover r5127 EFI bootloader 后
+可以在 EFI 分区看到，有些文件被更新了。
+
+[[file:./static/黑苹果更新系统/2020-12-19_22-29-08_screenshot.jpg]]
+
+其中 =Clover_install_Log.txt= ：
+
+#+BEGIN_QUOTE
+Clover EFI installer log - Sat Dec 19 21:25:19 CST 2020
+Installer version: r5127 (commit: c9cfc183d) EFI bootloader
+======================================================
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         256.1 GB   disk0
+   1:                        EFI ESP                     713.0 MB   disk0s1
+   2:         Microsoft Reserved                         134.2 MB   disk0s2
+   3:                 Apple_APFS Container disk1         255.2 GB   disk0s3
+
+/dev/disk1 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +255.2 GB   disk1
+                                 Physical Store disk0s3
+   1:                APFS Volume Mojave                  151.4 GB   disk1s1
+   2:                APFS Volume Preboot                 45.2 MB    disk1s2
+   3:                APFS Volume Recovery                512.4 MB   disk1s3
+   4:                APFS Volume VM                      1.1 GB     disk1s4
+
+/dev/disk2 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *500.1 GB   disk2
+   1:                        EFI                         209.7 MB   disk2s1
+   2:                  Apple_HFS 内置 500                 499.8 GB   disk2s2
+
+Target volume /Volumes/Mojave on disk1 is APFS on physical store disk0s3
+======================================================
+Backing up EFI files
+
+Backing up /Volumes/Mojave/Private/tmp/EFIROOTDIR/EFI folder to /Volumes/Mojave//Users/c/Clover EFI Backups/r4895/2020-12-19-21h25/EFI
+======================================================
+Installing BootSectors/BootLoader
+
+Stage 0 - Don't write any of boot0af, boot0md, boot0ss to /
+Stage 1 - Don't write any of boot1h2, boot1f32alt, boot1xalt to /
+
+Theme 'HighSierra' (defined in config.plist) not found !
+Using default theme 'christmas'
+======================================================
+=========== Clover EFI Installation Finish ===========
+======================================================
+#+END_QUOTE
+
+* 删除无用的驱动
+=CLOVER-kexts= 下除 Other 文件夹外的都是可以删除。
+#+DOWNLOADED: screenshot @ 2020-12-19 22:31:47
+[[file:./static/黑苹果更新系统/2020-12-19_22-31-47_screenshot.jpg]]
+
+* 更新驱动
+- 安装新驱动前，先挂载分区，将相应的旧驱动删除。
+
+废纸篓中选中的都是要更新前被删除的。
+[[file:./static/黑苹果更新系统/2020-12-19_22-33-49_screenshot.jpg]]
+
+- WhateverGreen 一定要安装。
+[[file:./static/黑苹果更新系统/2020-12-19_22-21-57_screenshot.jpg]]
+
+* 修改 Quirks
+[[file:./static/黑苹果更新系统/2020-12-20_14-05-46_screenshot.jpg]]
+
+* 在 Github 或者码云上下载配置
+搜索栏，搜索“9360 i5”。找到符合的仓库。
+https://gitee.com/wukaka667/DELL-XPS13-9360-i58250U-10.15
+
+* 解决开机图标变大后变小
+
+[[file:./static/黑苹果更新系统/2020-12-23_20-19-01_screenshot.jpg]]
+
+如果是 4K 的屏幕显示器分辨率，“UI 比例”设置为 2，否则应该设置为 1。
+
+* 解决 WiFi：使用 DW1820A
+有关 DW1820A 网卡（三种不同批次编号）的测试和反馈在这里：https://osxlatitude.com/forums/topic/11322-broadcom-bcm4350-cards-under-high-sierramojavecatalina/，
+重点内容挑出来了：
+先上我测试后的结果：CN-08PKF4 和 CN-096JNT 的网卡对 Y50 不管用，CN-0VW3T3 才能用！
+
+[[file:./static/黑苹果更新系统/2020-12-23_22-47-47_screenshot.jpg]]
+
+一定要是 CN-0VW3T3 开头的 DW1820A。
+
+* 查找 Wireless USB Adapter Clover
+[[https://github.com/chris1111/Wireless-USB-Adapter-Clover]]

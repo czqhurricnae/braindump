@@ -1,0 +1,60 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 类型检查/")); -*-
+:PROPERTIES:
+:ID:       D181640E-03AF-425C-BC69-4659159B0D44
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:42>
+#+TITLE: React 类型检查
+
+#+BEGIN_SRC js
+App.propTypes = {
+    title: PropTypes.string,
+    headings: PropTypes.arrayOf(PropTypes.string),
+    data: PropTypes.array,
+    author: PropTypes.string,
+    /**
+     * 如果验证失败, 应该直接"return" 一个 Error 对象, 不是"throw", 也不是 "console.error()".
+     * 不过在 `oneOfType` 中它不起作用.
+     * @param
+     *   props  当前调用者所传入的所有属性和值的键值对
+     * @param
+     *   propName  当前验证的属性名, 此处为'title'
+     * @param
+     *  componentName  当前 component 的名称, 也即是定义本属性的对象
+     */
+    title: function(props, propName, componentName) {
+        // 如果 this.props.title 这个字符串中不包含 matchme, 则报错.
+        // 在这个例子中, 该字符串"Recent Changes" 中不包含 matchme,
+        // 所以报错.
+        if (!/matchme/.test(props[propName])) {
+            return new Error(
+                'Invalid prop `' + propName + '` supplied to' +
+                    ' `' + componentName + '`. Validation failed.'
+            );
+        }
+    },
+    /**
+     * 提供一个自定义的 `arrayOf` 或 `objectOf` 验证器, 它应该在验证失败时返回一个 Error 对象
+     * 被用于验证数组或对象的每个值. 验证器前两个参数的第一个是数组或对象本身, 第二个是它们对应的键.
+     * @param
+     *   propValue  数组或对象本身, 即 this.props.headings 这个数组.
+     * @param
+     *   key  对应的键.
+     * @param
+     *   componentName  当前组件的名称, 即 App.
+     * @param
+     *  propValue[key]  当前验证的值, 如果不为 When 则报错.
+     */
+    headings: PropTypes.arrayOf(function(propValue,
+    key, componentName, location, propFullName) {
+        // this.props.headings 为数组["When", "Who", "Description"],
+        // 因为第一项满足, 而第二项为 Who 不等于 When, 所以报错.
+        if (!/When/.test(propValue[key])) {
+            return new Error(
+                "Invalid prop`" + propFullName + "`supplied to"
+                + "`" + componentName + "`validation failed."
+            );
+        }
+    })
+};
+#+END_SRC

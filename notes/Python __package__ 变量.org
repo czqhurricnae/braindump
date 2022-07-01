@@ -1,0 +1,20 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python __package__ 变量/")); -*-
+:PROPERTIES:
+:ID:       563412FF-4AB0-4992-95A4-44AE9835D197
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-06 Tue 14:22>
+#+TITLE: Python __package__ 变量
+
+如果你正在使用一个包， ~import_module()~ 可以用于相对导入。
+但是需要给 ~import_module()~ 函数一个额外的参数。
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+import importlib
+
+
+b= importlib.import_module('.b', __package__)
+#+END_SRC
+
+效果类似于： ~from . import b~ 。

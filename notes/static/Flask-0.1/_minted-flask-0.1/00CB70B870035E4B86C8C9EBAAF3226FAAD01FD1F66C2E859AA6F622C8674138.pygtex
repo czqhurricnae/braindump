@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{def} \PYG{n+nf}{run\PYGZus{}with\PYGZus{}reloader}\PYG{p}{(}\PYG{n}{main\PYGZus{}func}\PYG{p}{,} \PYG{n}{extra\PYGZus{}files}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{interval}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Run the given function in an independent python interpreter.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{if} \PYG{n}{os}\PYG{o}{.}\PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{WERKZEUG\PYGZus{}RUN\PYGZus{}MAIN}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{true}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}
+        \PYG{n}{thread}\PYG{o}{.}\PYG{n}{start\PYGZus{}new\PYGZus{}thread}\PYG{p}{(}\PYG{n}{main\PYGZus{}func}\PYG{p}{,} \PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{reloader\PYGZus{}loop}\PYG{p}{(}\PYG{n}{extra\PYGZus{}files}\PYG{p}{,} \PYG{n}{interval}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n+ne}{KeyboardInterrupt}\PYG{p}{:}
+            \PYG{k}{return}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{n}{sys}\PYG{o}{.}\PYG{n}{exit}\PYG{p}{(}\PYG{n}{restart\PYGZus{}with\PYGZus{}reloader}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+    \PYG{k}{except} \PYG{n+ne}{KeyboardInterrupt}\PYG{p}{:}
+        \PYG{k}{pass}
+\end{Verbatim}

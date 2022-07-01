@@ -1,0 +1,14 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python 如何复制一个 class/")); -*-
+:PROPERTIES:
+:ID:       08853E1D-FDAF-43F2-9B06-6B37A23A71A5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-19 Mon 01:34>
+#+TITLE: Python 如何复制一个 class
+
+通过下面两种方法可以复制一个 =class= ：
+- =class B(A): pass=
+- =B = type("B", (A,), {})=
+
+* 参考资料
+- [[http://stackoverflow.com/questions/9541025/how-to-copy-a-python-class][How to copy a python class]]

@@ -1,0 +1,244 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Latex 实现图文混排/")); -*-
+:PROPERTIES:
+:ID:       44F88C0B-A2E4-46C8-9F04-F576B08AAF35
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-03-02 Mon 20:10>
+#+TITLE: Latex 实现图文混排
+
+在使用外部图形时，通常的是将其置于一个 figure 环境中，由这一浮动环境来决定最后的位置是在页面的上方或下方。
+
+但有的时候，往往希望将图形放置在一个正文方格内，或者置于页面的左右，也可能是在页面的的中间，四周包围者文本，甚至放在文字的下方作为背景，或重叠放置。
+
+本文将介绍几个有用的图形宏包，可以让你很容易地得到上述特殊效果。
+
+* Wrapfig 宏包
+[[file:./static/Latex 实现图文混排/1.png]]
+
+rapfig 宏包提供了一个 wrapfigure 环境来排版窄小的图形，使得该图形位于文本的一边，并使文本在其边上折行。
+
+wrapfigure 的用法：
+
+~begin{wrapfigure}[行数]{位置}[超出长度]{宽度}<图形>end{wrapfigure }~
+
+这里行数是指图形高度所占的文本行的数目。
+
+如果不给出此选项，wrapfig 会自动计算。
+
+位置是指图形相对于文本的位置，须给定下面四项的一个。
+
+- [r]，[R]：表示图形位于文本的左边。
+- [l]，[L]：表示图形位于文本的右边。
+- [i]，[R]：表示图形位于页面靠里的一边（用在双面格式里）。
+- [o]，[O]：表示图形位于页面靠外的一边。
+
+超出长度是指图形超出文本边界的长度，缺省为 0pt。
+
+宽度则指图形的宽度。
+
+wrapfig 会自动计算图形的高度。
+
+不过，我们也可设定图形的高度，具体可见 wrapfig.sty 内的说明。
+
+- 在 wrapfigure 后必须紧接着输入段落文字，否则会出错。
+- 不能在任何列表环境中使用 wrapfigure，也不能在列表环境前后使用，除非两者之间有一空行或分段指令 par。
+- 如果将 wrapfigure 放在 parbox 或小页环境等分组中，文本折行必须在这些分组前结束。
+- 在双栏页版式中不能使用 wrapfigure。
+- 如果在 wrapfigure 中使用 figure 等浮动对象，它的编号有可能不正确。
+- 如果在 wrapfigure 中使用 table 等浮动对象，它上下方的横线可能被忽略，必须自己再加入。
+- 在折行的文本中，linewidth 并没有改变。
+
+[[file:./static/Latex 实现图文混排/2.png]]
+
+wrapfig 还可用来放大段落的第一个字。本节的第一个字母 ~W~ 就是使用如下命令来得到的：
+
+ ~newcommand{PartSize}{fontsize{1.5cm}{1.5cm}selectfont}intextsep=0ptbegin{wrapfigure}{l}{25pt}textcolor{blue}{mbox{texttt{PartSize W}}}end{wrapfigure}noindenttexttt{rapfig}宏包提供了一个...~
+
+本节中的另一例子使用了如下命令：
+
+#+BEGIN_QUOTE
+begin{wrapfigure}{r}{4.5cm}includegraphics [width=4cm,clip]{tiger.ps}end{wrapfigure}
+mbox{}在使用 textsf{wrapfig}时需要注意下面几点：
+#+END_QUOTE
+
+* Picinpar 宏包
+picinpar 宏包定义了一个基本的环境 window，还有两个变体 figwindow 和 tabwindow。
+
+允许在文本段落中打开一个“窗口”，在其中放入图形，文字和表格等。
+这里我们主要讨论将图形放入文本段落的用法，其它的用法可参考 picinpar 的说明。
+
+#+BEGIN_QUOTE
+begin{window}[行数, 对齐方式, 内容, 内容说明]end{window}
+begin{figwindow}[行数, 对齐方式, 图形, 标题]end{figwindow}
+#+END_QUOTE
+
+这里的行数是指 “窗口” 开始前的行数。
+
+对齐方式是指在段落中 “窗口” 的对齐方式。
+
+缺省为 l，即左对齐。
+另外两种是 c：居中和 r：右对齐。
+第三个参数是出现在 “窗口” 中的内容，这在 figwindow 中就是要插入的图形。
+
+第四个参数则是对 “窗口” 内容的说明性文字，这在 figwindow 中就是图形的标题。
+下面是几个例子：
+
+#+BEGIN_QUOTE
+begin{window}[2,c,{fcolorbox{morelight}{shortstack{%   color{yellow} 你在他乡\还好\吗？}}},{}] 可是哈卜拉姆再聪明。。。。。。。。。可是我偏不喜欢。」
+end{window}
+#+END_QUOTE
+
+[[file:./static/Latex 实现图文混排/3.png]]
+
+#+BEGIN_QUOTE
+begin{figwindow}[1,c,{mbox{%    includegraphics[width=3cm]{tiger.ps}}},{Tiger}] 可是哈卜拉姆再聪明。。。。。。。。。可是我偏不喜欢。」
+end{window}
+#+END_QUOTE
+
+[[file:./static/Latex 实现图文混排/4.png]]
+
+在使用 picinpar 时要注意以下几点：
+
+- 不要在 window 环境中使用 samepage。
+- 不要在 window 环境中使用 footnote，代之在用 footnotemark 标记角注，而将角注的内容在 window 环境外用 footnotetext 来加入。
+- 当使用 paiepic 宏包时，要确保在调入 epic 之前将它调入。
+
+* Picins 宏包
+picins 宏包定义了一个命令 parpic 命令，允许将图形等 LATEX 对象放置在文本段落中。并且，设定适当的参数，可把该对象置于一带框的盒子，有阴影的盒子等等。
+
+parpic 的用法如下：
+
+~parpic(宽度,高度)(水平偏移,垂直偏移)[外观][位置]{图形}~
+
+上面除了图形必须给出外，其余的均可省略。如果宽度和高度均未给出，那么图形将以它的自然大小来嵌入。选项则可取以下的值：
+
+** 位置项, 只能为下面两个中的一个：
+- l：将图形置于文本段落的左方（这也是缺省值）。
+- r：将图形置于文本段落的右方。
+
+** 外观项， 只能为下面五个中的一个， 可与上述位置项配合使用。
+
+- f：将图形置于一个实框盒子中。
+- d：将图形置于一个虚框盒子中。
+- o：将图形置于一个圆角框盒子中。
+- s：将图形置于一个具有阴影效果的盒子中。
+- x：将图形置于一个具有立体效果的盒子中。
+
+位置仅当给定的宽度和高度与图形的实际大小相差很大的情况下才起作用。
+
+若水平偏移或垂直偏移已给出，那么此项也不起作用。
+
+缺省位置是将图形置于盒子的中央。
+也可取以下的值：
+
+- l：将图形置于盒子的左方。
+- r：将图形置于盒子的右方。
+- t：将图形置于盒子的上方。
+- b：将图形置于盒子的下方。
+
+另外，picins 宏包还提供了一些命令来控制图形与文本的间距，图形外框的线宽等。详见 picins 宏包所附的说明。下面是几个例子：
+
+ ~parpic{%includegraphics[width=3cm]%{tiger.ps}}仅当给定的宽度和高度与。。。~
+[[file:./static/Latex 实现图文混排/5.png]]
+
+~parpic(3cm,3.5cm)[sr]{%  includegraphics[width=2.5cm]%{tiger.ps}}仅当给定的宽度和高度与。。。~
+[[file:./static/Latex 实现图文混排/6.png]]
+  ~boxlength{10pt}%parpic(3.5cm,4cm)[xr]{%  includegraphics[width=3cm]%{tiger.ps}}仅当给定的宽度和高度与。。。~
+[[file:./static/Latex 实现图文混排/7.png]]
+
+* 演示代码
+#+BEGIN_QUOTE
+documentclass[a4paper]{article}
+
+usepackage{wrapfig}
+
+usepackage{picins}
+
+usepackage{graphicx}
+
+usepackage{color}
+
+begin{document}
+
+begin{wrapfigure}[2]{l}{15pt} textcolor{blue}{raisebox{15pt}{raisebox
+
+{150pt}{bfseriesHuge T}}} end{wrapfigure}noindent he goal for the Frank electrode system is to capture the three-dimensional extent of the heart dipole.  For this, it is necessary to measure potential differences not just in the frontal plane, as in the limb leads, but along the antero-posterior (front-to-back) axis of the body.
+
+
+
+begin{wrapfigure}[7]{r}[10pt]{3cm}
+
+includegraphics{tiger.eps}
+
+end{wrapfigure}
+
+The diagram below illustrates the original Frank lead system and we will use a simplified version of this.The goal for the Frank electrode system is to capture the three-dimensional extent of the heart dipole.  For this, it is
+
+necessary to measure potential differences not just in the frontal plane, as in the limb leads, but along the antero-posterior (front-to-back) axis of the body.  The diagram below illustrates the original Frank lead system and we will use a simplified version of this.
+
+
+
+parpic{%
+
+  includegraphics[width=3cm]%
+
+                  {tiger.eps}}
+
+The goal for the Frank electrode system is to capture the three-dimensional extent of the heart dipole.  For this, it is necessary to measure potential differences not just in the frontal plane, as in the limb leads, but along the antero-posterior (front-to-back) axis of the body.  The diagram below illustrates the original Frank lead system  and we will use a simplified version of this.
+
+
+
+parpic(3cm,2.5cm)[sr]{%
+
+  includegraphics[width=2.5cm]%
+
+                  {tiger.eps}}
+
+The goal for the Frank electrode system is to capture the three-dimensional extent of the heart dipole.  For this, it is necessary to measure potential differences not just in the frontal plane, as in the limb leads, but along the antero-posterior (front-to-back) axis of the body.  The diagram below illustrates the original Frank lead system and we will use a simplified version of this.
+
+
+
+boxlength{10pt}%
+
+parpic(2.5cm,2cm)[xr]{%
+
+  includegraphics[width=2cm]%
+
+                  {tiger.eps}}
+
+The goal for the Frank electrode system is to capture the three-dimensional extent of the heart dipole.  For this, it is necessary to measure potential differences not just in the frontal plane, as in the limb leads, but along the antero-posterior (front-to-back) axis of the body.  The diagram below illustrates the original Frank lead system and we will use a simplified version of this.
+
+end{document}
+#+END_QUOTE
+[[file:./static/Latex 实现图文混排/8.png]]
+
+#+BEGIN_QUOTE
+documentclass[a4paper]{article}
+
+usepackage{picinpar}
+
+usepackage{graphicx}
+
+usepackage{color}
+
+begin{document}
+
+
+
+begin{figwindow}[3,l,%
+
+           {includegraphics[width=80pt]{tiger.eps}},%
+
+           {label{fig:leadfield}TeX{} Tiger}]
+
+In this lab, you will record the standard limb leads in sequence,according to the diagram below:
+
+
+
+The goal for the Frank electrode system is to capture the three-dimensional extent of the heart dipole.  For this, it is necessary to measure potential differences not just in the frontal plane, as in the limb leads, but along the antero-posterior (front-to-back) axis of the body.  The diagram below illustrates the original Frank lead system cite{RSM:Fra56} and we will use a simplified version of this.
+
+end{figwindow}
+
+end{document}
+#+END_QUOTE
+[[file:./static/Latex 实现图文混排/9.png]]

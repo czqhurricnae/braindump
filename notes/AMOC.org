@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AMOC/")); -*-
+:PROPERTIES:
+:ID:       706BBB9F-44ED-4141-994B-1CC193BB9F16
+:ROAM_ALIASES: 合规替代方法 "Alternate Method of Compliance"
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-20 Tue 13:29>
+#+TITLE: AMOC
+
+Alternate Method of Compliance 合规替代方法
+
+#+transclude: [[file:波音系列飞机结构修理的批准.org::#AMOC][波音系列飞机结构修理的批准]]

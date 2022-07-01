@@ -1,0 +1,27 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/II 类 第六阶段/")); -*-
+:PROPERTIES:
+:ID:       BEB64184-1B1A-44E3-8CD1-84B661E04D29
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-28 Thu 15:18>
+#+TITLE: II 类 第六阶段
+如何更新 EEC 序号
+FMC
+进入软备用，后果
+EGT 超，减推力
+硬备用
+保证推力足够
+识别发动机的喷嘴
+蓝色小，银色大
+燃油三个子系统
+HMU 属于控制子系统
+除起动时 EGT 参与控制防止热起动，是否参与系统控制
+反推联锁电磁阀
+联锁机构
+FFCCV，N1 振动传感器测量径向的振动
+EEC 断电可以显示，N1，N2，VIB
+APU 辅助油路打开的条件
+APU 温控活门
+SPU，SCU 的作用
+MAINT 灯亮的条件 3.8 夸脱

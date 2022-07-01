@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/IOC/")); -*-
+:PROPERTIES:
+:ID:       977CA2C4-5DA2-480A-BB63-586C3F628189
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 21:40>
+#+TITLE: IOC
+
+#+ROAM_KEY:
+
+
+IOSA 监察委员会

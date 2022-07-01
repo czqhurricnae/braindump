@@ -1,0 +1,162 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/org-mode 转 latex ，设置 block 的 latex 选项/")); -*-
+:PROPERTIES:
+:ID:       637DBA90-7117-4935-9B53-61C7F1AC430B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-30 Thu 13:42>
+#+TITLE: org-mode 转 latex ，设置 block 的 latex 选项
+
+org-mode 转 latex 时，我需要设置一个 block 的一些 latex 选项。看文档使用 =:options= 这个选项来加感觉没
+有效果。
+
+比如这个 org 块：
+
+#+begin_example
+#+ATTR_LATEX: :options commentstyle=\bfseries
+#+BEGIN_SRC emacs-lisp
+       (defun Fib (n)
+         (if (< n 2) n (+ (Fib (- n 1)) (Fib (- n 2)))))
+#+END_SRC
+#+end_example
+
+导出：
+
+#+begin_example
+\begin{verbatim}
+       (defun Fib (n)
+         (if (< n 2) n (+ (Fib (- n 1)) (Fib (- n 2)))))
+\end{verbatim}
+#+end_example
+
+对应的 ~commentstyle=\bfseries~ 这个选项就是加不上。
+
+我希望的结果是：
+
+#+begin_example
+\begin{verbatim}[commentstyle=\bfseries]
+       (defun Fib (n)
+         (if (< n 2) n (+ (Fib (- n 1)) (Fib (- n 2)))))
+\end{verbatim}
+#+end_example
+
+生成的 pdf 效果如下：
+
+#+DOWNLOADED: screenshot @ 2020-07-30 13:57:54
+[[file:./static/org-mode 转 latex ，设置 block 的 latex 选项/2020-07-30_13-57-54_screenshot.jpg]]
+
+* 方案一
+使用 =listings= ， =org= 的设置如下：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(require 'ox-latex)
+(setq org-latex-listings t)
+;; 如果不希望每次都载入这些Latex包，省略这两行，
+;; 可以只在org文件里用LATEX_HEADER调用
+(add-to-list 'org-latex-packages-alist '("" "listings"))
+(add-to-list 'org-latex-packages-alist '("" "xcolor"))
+#+END_SRC
+
+将 ~hurricane-org/post-init-org~ 中：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(setq org-latex-listings 'minted)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+#+END_SRC
+
+这两句注释掉：
+
+要求在左侧加行号，并且把注解用紫色显示：
+
+#+begin_example
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \usepackage{xcolor}
+
+#+ATTR_LATEX: :options numbers=left, commentstyle=\color{violet}
+#+BEGIN_SRC emacs-lisp
+(defun Fib (n) ;; some comments
+(if (< n 2) n (+ (Fib (- n 1)) (Fib (- n 2))))) ;; some comments
+#+END_SRC
+#+end_example
+
+使用命令 ~org-latex-export-to-pdf~ 命令导出为 PDF。
+
+导出 Latex：
+
+#+begin_example
+... % 省略部分导言
+
+\usepackage{listings}
+\usepackage{xcolor}
+...
+
+\begin{document}
+
+\lstset{language=Lisp,label= ,caption= ,captionpos=b,numbers=none,numbers=left, commentstyle=\color{violet}}
+\begin{lstlisting}
+(defun Fib (n) ;; some comments
+(if (< n 2) n (+ (Fib (- n 1)) (Fib (- n 2))))) ;; some comments
+\end{lstlisting}
+
+\end{document}
+#+end_example
+
+效果如下：
+
+#+DOWNLOADED: screenshot @ 2020-07-30 15:56:53
+[[file:./static/org-mode 转 latex ，设置 block 的 latex 选项/2020-07-30_15-56-53_screenshot.jpg]]
+
+* 方案二
+使用 =minted= ， =org= 的设置如下：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(setq org-latex-listings 'minted)
+#+END_SRC
+
+插入一个换行的箭头： ~:options breaklines~ 。
+=minted= 实现这个功能还需要调用 =keyval= 包。
+
+#+begin_example
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usemintedstyle{borland}
+#+LATEX_HEADER: \usepackage{keyval}
+
+#+ATTR_LATEX: :options numbers=left, breaklines
+#+BEGIN_SRC emacs-lisp
+(defun Fib(n) ;; some loooooooooooooooooooooooooooooooooooooooooooooooooooooong comments
+  (if (< n 2) n
+    (+ (Fib (- n 1)) (Fib (- n 2))))) ;; some comments
+#+end_example
+
+使用命令 ~org-latex-export-to-pdf~ 命令导出为 PDF。
+
+导出 Latex：
+
+#+begin_example
+... % 省略部分导言
+
+\usepackage{minted}
+\usemintedstyle{borland}
+\usepackage{keyval}
+...
+
+\begin{document}
+
+\begin{minted}[,breaklines]{common-lisp} % 是的，你没看错
+(defun Fib (n) ;; some loooooooooooooooooooooooooooooooooooooooooooooooooooooong comments
+(if (< n 2) n (+ (Fib (- n 1)) (Fib (- n 2))))) ;; some comments
+\end{minted}
+
+\end{document}
+#+end_example
+
+效果如下：
+
+#+DOWNLOADED: screenshot @ 2020-07-30 15:17:32
+[[file:./static/org-mode 转 latex ，设置 block 的 latex 选项/2020-07-30_15-17-32_screenshot.jpg]]
+
+这两种方法不能共存。
+
+* 参考链接
+https://emacs-china.org/t/org-mode-latex-latex/6651/4

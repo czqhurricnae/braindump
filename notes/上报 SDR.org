@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/上报 SDR/")); -*-
+:PROPERTIES:
+:ID:       8563265B-B91A-49C6-8D16-1A2DAF144892
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:49>
+#+TITLE: 上报 SDR
+#+ROAM_KEY:
+

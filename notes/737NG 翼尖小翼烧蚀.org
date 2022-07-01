@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 翼尖小翼烧蚀/")); -*-
+:PROPERTIES:
+:ID:       C01FCC29-4631-4681-A4B4-26F0A687974E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-06 Tue 08:56>
+#+TITLE: 737NG 翼尖小翼烧蚀
+
+参考文件：SRM 57-30-01-1A-2。
+
+后缘紧固件烧蚀：每两个烧蚀的紧固件中间至少要有 10 个完好的紧固件。
+上下蒙皮烧蚀：最大直径不超过 2.0 inch（50.8mm），且已贴高速胶带临时密封。 两个损伤之间至少相隔 10 inch（254mm）。
+后缘烧蚀：
+上部后缘最深允许打磨 0.5 inch。
+下部后缘最深允许打磨 0.1 inch。
+深宽比至少 20:1。

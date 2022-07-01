@@ -1,0 +1,33 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/JavaScript-原型链/")); -*-
+:PROPERTIES:
+:ID:       A97B6F9C-5832-4724-B9AD-8CB8FCEE99C4
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-30 Thu 17:15>
+#+TITLE: JavaScript-原型链
+
+* hasOwnProperty()
+- 从 Object 继承来
+- 只当给定属性存在于实例对象时返回 true
+
+* in/for in
+- 给定属性存在于实例对象或原型对象时可用
+
+* =[[Prototype]]= 等价于 =__proto__=
+- 所有对象（除了原型对象）包括 Object 方法，Function 方法都是由 Function 构造函数构造，方法也是对象。
+- 指向继承父类。
+- 构造函数包括 Function 自身，Object，的继承父类指向 ~Function.prototype~ 指向的原型对象。
+- 所有对象会通过 =__proto__= 顺着原型链最终指向 ~Object.prototype~ 。
+- 所有原型对象最终指向 ~Object.prototype~ 。
+- ~Object.prototype~ 的继承父类指向 null。
+- 不要纠结先有 Object 对象还是先有 Function 方法，它们互相依赖，同时诞生。
+- 检查对象 i 是不是属于类 C，使用 ~instanceof~ ，检查 i 原型链上是否存在 ~C.prototype~ 。
+
+[[file:./static/JavaScript-原型链/2020-07-30_17-22-50_screenshot.jpg]]
+
+[[file:./static/JavaScript-原型链/2020-07-30_17-23-05_screenshot.jpg]]
+
+[[file:./static/JavaScript-原型链/2020-07-30_17-23-17_screenshot.jpg]]
+
+[[file:React 构造函数中为什么要将类方法绑定到 this.org::* 箭头函数][See：箭头函数]]

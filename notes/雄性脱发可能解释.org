@@ -1,0 +1,181 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/雄性脱发可能解释")); -*-
+:PROPERTIES:
+:ID:       96F0698E-6BD6-48EB-AB4C-FD46FB9C07ED
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-15 Thu 14:35>
+#+TITLE: 雄性脱发可能解释
+
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: bold-subgraph-table
+| *cluster(必填)* | *label*  | *style(默认"none")* | *color(默认"black")* | *nodestyle(默认"none")* | *nodecolor(默认"black")* | *nodeflow(必填, 以";"分隔)* | *kwargs(以";"结尾)* |
+|-----------------+----------+---------------------+----------------------+-------------------------+--------------------------+-----------------------------+---------------------|
+| cluster_drug    | 药物治疗 |                     |                      |                         |                          | e;f;g;h;i;j;k;l;m;n;        |                     |
+| cluster_no_drug | 非药物   |                     |                      |                         |                          | o;p;q;r;s;t;                |                     |
+#+LATEX: }
+
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: bold-node-table
+| *node(必填)* | *label*                                     | *shape(默认"box")* | *style(可选"filled")* | *fillcolor(默认"none")* | *fontcolor(默认"black")* | *fontsize(默认"18",数字必须是字符串格式)* | *kwargs(以","结尾)* |
+|--------------+---------------------------------------------+--------------------+-----------------------+-------------------------+--------------------------+-------------------------------------------+---------------------|
+| a            | 遗传因素                                    |                    | filled                | pink                    |                          |                                           |                     |
+| b            | 3.PGD2/PGE2 比例升高                        | ellipse            |                       |                         |                          |                                           |                     |
+| c            | 4.炎症和纤维化                              | ellipse            |                       |                         |                          |                                           |                     |
+| d            | 一个为脱发烦恼的青年                        |                    | filled                | pink                    |                          |                                           |                     |
+| e            | 非那雄胺/螺内酯                             | none               |                       |                         |                          | "9"                                       |                     |
+| f            | 控制路径 1 ，抑制 5α 还原酶                 | none               |                       |                         |                          | "9"                                       |                     |
+| g            | 米诺地尔                                    | none               |                       |                         |                          | "9"                                       |                     |
+| h            | 控制路径 5，6，增加血流和生长因子           | none               |                       |                         |                          | "9"                                       |                     |
+| i            | RU58841/CB0301                              | none               |                       |                         |                          | "9"                                       |                     |
+| j            | 控制路径 2，阻止 DHT 与受体结合             | none               |                       |                         |                          | "9"                                       |                     |
+| k            | SM04554                                     | none               |                       |                         |                          | "9"                                       |                     |
+| l            | 控制路径 5，控制 wnt 信号阻止头发进入休止期 | none               |                       |                         |                          | "9"                                       |                     |
+| m            | PG2 抑制剂和 PE2 补充剂                     | none               |                       |                         |                          | "9"                                       |                     |
+| n            | 控制路径 3 降低比例                         | none               |                       |                         |                          | "9"                                       |                     |
+| o            | 豆制品                                      | none               |                       |                         |                          | "9"                                       |                     |
+| p            | 控制路径 2，减少 DHT 与受体结合             | none               |                       |                         |                          | "9"                                       |                     |
+| q            | 微针                                        | none               |                       |                         |                          | "9"                                       |                     |
+| r            | 控制路径 5，6，刺激头发进入生长期           | none               |                       |                         |                          | "9"                                       |                     |
+| s            | 锯棕榈/南瓜子                               | none               |                       |                         |                          | "9"                                       |                     |
+| t            | 作用与非那相同，效果小                      | none               |                       |                         |                          | "9"                                       |                     |
+| 1            | 采取措施                                    |                    |                       |                         |                          |                                           |                     |
+#+LATEX: }
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: bold-graph-table
+| *from* | *to* | *label*                            | *style(默认"bold",可选"dotted") | *color(默认"black")* | *fontcolor* | *tailport(可选"n","ne","e","se","sw","w","nw")* | *lhead(为子图的名称即 cluster 列的值)* | *ltail(为子图的名称即 cluster 列的值)* | *kwargs(以" "结尾)* |
+|--------+------+------------------------------------+---------------------------------+----------------------+-------------+-------------------------------------------------+----------------------------------------+----------------------------------------+---------------------|
+| a      | b    | 1.头皮内 5ɑ 还原酶增加             |                                 |                      |             |                                                 |                                        |                                        |                     |
+| a      | b    | 2.头皮内雄性激素受体增加           |                                 |                      |             |                                                 |                                        |                                        |                     |
+| b      | c    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| c      | d    | 5.生长因子减少，大量头发进入休止期 |                                 |                      |             |                                                 |                                        |                                        |                     |
+| c      | d    | 6.毛囊血流不畅                     |                                 |                      |             |                                                 |                                        |                                        |                     |
+| a      | d    | 青春期                             |                                 |                      |             |                                                 |                                        |                                        |                     |
+| e      | f    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| g      | h    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| i      | j    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| k      | l    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| m      | n    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| o      | p    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| q      | r    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| s      | t    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| d      | 1    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | e    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | g    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | i    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | k    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | m    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | o    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | q    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | s    |                                    |                                 |                      |             |                                                 |                                        |                                        |                     |
+#+LATEX: }
+#+name: create-bold-from-tables
+#+HEADER: :var subgraph=bold-subgraph-table nodes=bold-node-table graph=bold-graph-table
+#+BEGIN_SRC emacs-lisp :results output :exports none
+(concat
+    (princ "//rankdir=LR;\n") ;; remove comment characters '//' for horizontal layout; add for vertical layout
+    (princ "compound=true;\n")
+    (mapconcat
+      (lambda (x)
+        (princ (replace-regexp-in-string "\\\\vert" "|" (format "subgraph %s {label=\"%s\"; style=%s; color=%s; node [style=%s, color=%s]; %s %s}
+"
+                          (car x)
+                          (nth 1 x)
+                          (if (string= "" (nth 2 x)) "none" (nth 2 x))
+                          (if (string= "" (nth 3 x)) "black" (nth 3 x))
+                          (if (string= "" (nth 4 x)) "none" (nth 4 x))
+                          (if (string= "" (nth 5 x)) "black" (nth 5 x))
+                          (nth 6 x)
+                          (nth 7 x)
+                          )))) subgraph "
+")
+    "\n"
+    (mapconcat
+      (lambda (x)
+        (princ (replace-regexp-in-string "\\\\vert" "|" (format "%s[label=\"%s\", shape=%s, style=\"%s\", fillcolor=\"%s\", fontcolor=\"%s\", fontsize=\"%s\", %s];\n"
+                          (car x)
+                          (nth 1 x)
+                          (if (string= "" (nth 2 x)) "box" (nth 2 x))
+                          (if (string= "" (nth 3 x)) "none" (nth 3 x))
+                          (if (string= "" (nth 4 x)) "none" (nth 4 x))
+                          (if (string= "" (nth 5 x)) "black" (nth 5 x))
+                          (if (string= "" (nth 6 x)) "18" (nth 6 x))
+                          (nth 7 x)
+                          )))) nodes "
+")
+    "\n"
+    (mapconcat
+    (lambda (x)
+      (princ (replace-regexp-in-string "\\\\vert" "|" (format "%s -> %s [label=\"%s\" style=%s color=%s fontcolor=\"%s\" tailport=%s lhead=%s ltail=%s %s];\n"
+              (car x)
+              (nth 1 x)
+              (nth 2 x)
+              (if (string= "" (nth 3 x)) "bold" (nth 3 x))
+              (if (string= "" (nth 4 x)) "black" (nth 4 x))
+              (if (string= "" (nth 5 x)) "black" (nth 5 x))
+              (if (string= "" (nth 6 x)) "none" (nth 5 x))
+              (if (string= "" (nth 7 x)) "none" (nth 6 x))
+              (if (string= "" (nth 8 x)) "none" (nth 7 x))
+              (nth 9 x)
+              )))) graph "\n"))
+#+END_SRC
+
+#+RESULTS: create-bold-from-tables
+#+begin_example
+//rankdir=LR;
+compound=true;
+subgraph cluster_drug {label="药物治疗"; style=none; color=black; node [style=none, color=black]; e;f;g;h;i;j;k;l;m;n; }
+subgraph cluster_no_drug {label="非药物"; style=none; color=black; node [style=none, color=black]; o;p;q;r;s;t; }
+a[label="遗传因素", shape=box, style="filled", fillcolor="pink", fontcolor="black", fontsize="18", ];
+b[label="3.PGD2/PGE2 比例升高", shape=ellipse, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+c[label="4.炎症和纤维化", shape=ellipse, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+d[label="一个为脱发烦恼的青年", shape=box, style="filled", fillcolor="pink", fontcolor="black", fontsize="18", ];
+e[label="非那雄胺/螺内酯", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+f[label="控制路径 1 ，抑制 5α 还原酶", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+g[label="米诺地尔", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+h[label="控制路径 5，6，增加血流和生长因子", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+i[label="RU58841/CB0301", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+j[label="控制路径 2，阻止 DHT 与受体结合", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+k[label="SM04554", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+l[label="控制路径 5，控制 wnt 信号阻止头发进入休止期", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+m[label="PG2 抑制剂和 PE2 补充剂", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+n[label="控制路径 3 降低比例", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+o[label="豆制品", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+p[label="控制路径 2，减少 DHT 与受体结合", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+q[label="微针", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+r[label="控制路径 5，6，刺激头发进入生长期", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+s[label="锯棕榈/南瓜子", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+t[label="作用与非那相同，效果小", shape=none, style="none", fillcolor="none", fontcolor="black", fontsize="9", ];
+1[label="采取措施", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+a -> b [label="1.头皮内 5ɑ 还原酶增加" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+a -> b [label="2.头皮内雄性激素受体增加" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+b -> c [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+c -> d [label="5.生长因子减少，大量头发进入休止期" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+c -> d [label="6.毛囊血流不畅" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+a -> d [label="青春期" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+e -> f [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+g -> h [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+i -> j [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+k -> l [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+m -> n [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+o -> p [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+q -> r [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+s -> t [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+d -> 1 [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> e [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> g [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> i [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> k [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> m [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> o [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> q [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> s [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+#+end_example
+
+#+BEGIN_SRC dot ./static/雄性脱发可能解释/dotImg/bold.png :var input=create-bold-from-tables :exports results
+digraph {
+  $input
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:./static/雄性脱发可能解释/dotImg/bold.png]]

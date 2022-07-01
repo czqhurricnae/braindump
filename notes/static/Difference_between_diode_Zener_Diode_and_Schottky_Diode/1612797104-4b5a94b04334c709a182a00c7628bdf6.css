@@ -1,0 +1,56 @@
+
+
+
+@font-face {
+    font-family: 'Gudea';
+    font-style: normal;
+    font-weight: 400;
+	font-display: swap;
+    src: local('Gudea'),
+        url("") format('woff2'), 
+        url("") format('woff'); 
+}
+
+
+@font-face {
+    font-family: 'Gudea';
+    font-style: italic;
+    font-weight: 400;
+	font-display: swap;
+    src: local('Gudea Italic'), local('Gudea-Italic'),
+        url("") format('woff2'), 
+        url("") format('woff'); 
+}
+
+
+@font-face {
+    font-family: 'Gudea';
+    font-style: normal;
+    font-weight: 700;
+	font-display: swap;
+    src: local('Gudea Bold'), local('Gudea-Bold'),
+        url("") format('woff2'), 
+        url("") format('woff'); 
+}
+
+
+@font-face {
+    font-family: 'Magra';
+    font-style: normal;
+    font-weight: 400;
+	font-display: swap;
+    src: local('Magra'),
+        url("") format('woff2'), 
+        url("") format('woff'); 
+}
+
+
+@font-face {
+    font-family: 'Magra';
+    font-style: normal;
+    font-weight: 700;
+	font-display: swap;
+    src: local('Magra Bold'), local('Magra-Bold'),
+        url("") format('woff2'), 
+        url("") format('woff'); 
+}

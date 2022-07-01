@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/emacs org 参考文献工具 org-ref 简介/")); -*-
+:PROPERTIES:
+:ID:       B14B0556-BC7F-4CB5-AC0E-95CB8F3FF179
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-22 Mon 00:05>
+#+TITLE: emacs org 参考文献工具 org-ref 简介
+
+[[video:./static/emacs org 参考文献工具 org-ref 简介/emacs org 参考文献工具 org-ref 简介.mp4][emacs org 参考文献工具 org-ref 简介.mp4]]

@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 火警故障不工作测试/")); -*-
+:PROPERTIES:
+:ID:       D584E548-08E0-4CA8-904F-52BF0A8E81D3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-27 Tue 19:50>
+#+TITLE: 737NG 火警故障不工作测试
+
+发动机和 APU 火警探测组件上所有故障区域显示灯亮。
+发动机和 APU 火警探测组件上所有故障显示灯亮在 5 秒后亮。
+注意：过热/火警测试时这些灯是不会点亮的？

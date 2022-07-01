@@ -1,0 +1,99 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Namespaced components/")); -*-
+:PROPERTIES:
+:ID:       5E7BBBFA-A24B-4899-9868-B8F10718DD69
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:41>
+#+TITLE: Namespaced components
+
+#+BEGIN_SRC js
+RecentChangesTable.Heading = class extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        return (<th>{this.props.heading}</th>);
+    }
+};
+
+RecentChangesTable.Row = class extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        return (
+                <tr>
+                <td>{this.props.changeSet.when}</td>
+                <td>{this.props.changeSet.who}</td>
+                <td>{this.props.changeSet.description}</td>
+                </tr>
+        );
+    }
+};
+
+RecentChangesTable.Headings = class extends Component {
+    constructor(props) {
+        super(props);
+}
+    render () {
+        let headings = this.props.headings.map((heading, index) =>
+           {return (<RecentChangesTable.Heading heading={heading}/>);}
+        );
+
+        return (
+            <thead>
+            <tr>
+            {headings}
+            </tr>
+            </thead>
+        );
+    }
+};
+
+RecentChangesTable.Rows = class extends Component {
+    constructor(props) {
+        super(props);
+}
+
+    render () {
+        let rows = this.props.rows.map((value, index) =>
+            {return (<RecentChangesTable.Row changeSet={value}/>);}
+        );
+
+        return (
+                <tbody>
+                {rows}
+            </tbody>
+        );
+    }
+};
+
+function RecentChangesTable(props) {
+    return (<table>{props.children}</table>);
+}
+
+class App extends Component {
+    constructor(props) {
+          super(props);
+    }
+
+    render() {
+        return (
+                <div>
+                    <h1>
+                        {this.props.title}
+                    </h1>
+                    <RecentChangesTable>
+                        <RecentChangesTable.Headings headings={this.props.headings}/>
+                        <RecentChangesTable.Rows rows={this.props.data}/>
+                    </RecentChangesTable>
+                </div>
+        );
+  }
+}
+
+export default App;
+#+END_SRC
+

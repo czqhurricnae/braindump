@@ -1,0 +1,37 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Spacemacs 报错 code for hash md5 was not found/")); -*-
+:PROPERTIES:
+:ID:       5176F2AA-4494-4CF6-BAB0-59059ACA937E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-17 Sat 17:17>
+#+TITLE: Spacemacs 报错：code for hash md5 was not found
+
+Spacemacs 启动时报错：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+ERROR:root:code for hash md5 was not found.
+Traceback (most recent call last):
+File \"/usr/local/Cellar/python@2/2.7.16/Frameworks/Python.framework/Versions/2.7/lib/python2.7/hashlib...
+#+END_SRC
+
+网上查询一番，怀疑 brew 安装的 Python 2 出现问题。
+
+使用命令：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+brew install python2
+#+END_SRC
+
+无法安装。
+
+在 stackoverflow 上有[[https://stackoverflow.com/questions/60298514/how-to-reinstall-python2-from-homebrew#][相同问题]]，其中以下方案能够成功安装：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+/usr/local/bin/brew tap-new ${USER}/homebrew-python2
+
+/usr/local/bin/brew extract python@2 ${USER}/homebrew-python2
+
+/usr/local/bin/brew install /usr/local/Homebrew/Library/Taps/${USER}/homebrew-python2/Formula/python@2.7.17.rb
+
+/usr/local/bin/brew untap ${USER}/python2
+#+END_SRC

@@ -1,0 +1,1114 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-how_do_coroutines_work/")); -*-
+:PROPERTIES:
+:ID:       9EDC0828-0990-4A75-B1DD-D0C55636308D
+:END:
+
+#+DATE: <2016-12-01 Thu 10:06>
+#+TITLE: Python-how_do_coroutines_work
+
+[[file:./static/Python-how_do_coroutines_work/3696428.png]]
+
+* 设置为 non-blocking socket
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12月 01
+    版本:
+        python3
+    作用:
+        使用socket来获取网页,并计算所用时间
+"""
+import socket
+import time
+
+def get(path):
+    s = socket.socket(family=socket.AF_INET, type = socket.SOCK_STREAM)
+    s.setblocking(False)
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    s.connect(('localhost', 80))
+    s.send(request.encode('utf-8'))
+    chuncks = []
+    while True:
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+    """
+    body = b''.join(chuck for chuck in chuncks)
+    html = body.decode('utf-8')
+    """
+    html = b''.join(chuncks).decode('utf-8')
+    print(html.split('\n')[0])
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # get('http://localhost/hello.py')
+    # Error!
+    get('/hello.py')
+    get('/hello.py')
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+出现错误:
+
+#+BEGIN_EXAMPLE
+Traceback (most recent call last):
+  File "get_by_socket.py", line 49, in <module>
+    get('/hello.py')
+  File "get_by_socket.py", line 21, in get
+    s.connect(('localhost', 80))
+BlockingIOError: [Errno 115] Operation now in progress
+#+END_EXAMPLE
+
+为什么会出现这种错误？
+因为设置 socket 为非阻塞的，而非阻塞就意味着套接字 socket 要么连接成功要么抛出异常，不允许阻塞，暂停而等待去连接成功。
+
+* 忽略 =BlockingIOError= 而强行发送请求
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12月 0
+    版本:
+        python3
+    作用:
+        使用socket来获取网页,并计算所用时间
+
+"""
+import socket
+import time
+def get(path):
+    s = socket.socket(family=socket.AF_INET, type = socket.SOCK_STREAM)
+    s.setblocking(False)
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    s.send(request.encode('utf-8'))
+    chuncks = []
+    while True:
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+    """
+    body = b''.join(chuck for chuck in chuncks)
+    html = body.decode('utf-8')
+    """
+    html = b''.join(chuncks).decode('utf-8')
+    print(html.split('\n')[0])
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # get('http://localhost/hello.py')
+    # Error!
+    get('/hello.py')
+    get('/hello.py')
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+出现错误:
+
+#+BEGIN_EXAMPLE
+Traceback (most recent call last):
+  File "get_by_socket.py", line 52, in <module>
+    get('/hello.py')
+  File "get_by_socket.py", line 26, in get
+   s.send(request.encode('utf-8'))
+OSError: [Error 57] Socket is not connected
+#+END_EXAMPLE
+
+这是因为当忽略 =BlockingIOError= 异常开始一个非阻塞套接字 socket 连接后，虽然该连接操作完成了，但是后续强制发送请求时，
+套接字 socket 发送请求操作还没能准备好，无法发送请求，也就是说套接字 socket 现在还是不可写 writable。
+
+* 使用 selector 监听套接字 socket 直至可写
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12月 01
+    版本:
+        python3
+    作用:
+        使用socket来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE
+selector = DefaultSelector()
+
+
+def get(path):
+    s = socket.socket(family=socket.AF_INET, type = socket.SOCK_STREAM)
+    s.setblocking(False)
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    # s.fileno() an integer, a file descriptor
+    # to tell the selector this is the file number
+    # There we are interested in events on
+    # EVENT_WRITE We want to konw when the socket is
+    # writable
+    selector.register(s.fileno(), EVENT_WRITE)
+    # Call select() to wait for some event that we have
+    # asked about to happen
+    selector.select()
+    # Once the event happend we can unregister the file
+    # number, by this point the socket is writable now
+    selector.unregister(s.fileno())
+    s.send(request.encode('utf-8'))
+    chuncks = []
+    while True:
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+    """
+    body = b''.join(chuck for chuck in chuncks)
+    html = body.decode('utf-8')
+    """
+    html = b''.join(chuncks).decode('utf-8')
+    print(html.split('\n')[0])
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # get('http://localhost/hello.py')
+    # Error!
+    get('/hello.py')
+    get('/hello.py')
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+出现错误:
+
+#+BEGIN_EXAMPLE
+Traceback (most recent call last):
+  File "/home/c/get_by_socket.py", line 70, in <module>
+    get('/hello.py')
+  File "/home/c/get_by_socket.py", line 49, in get
+    chunck = s.recv(1000)
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+#+END_EXAMPLE
+
+出现错误是因为此时 socket 还不是可读的 readable，我们并没有等到服务器 server 返回相应 response。
+
+* 使用 selector 监听套接字 socket 直至可读
+
+  #+BEGIN_SRC python
+  #!/usr/bin/python3
+  # coding: utf-8
+  """
+      时间:2016 12 月 01
+      版本:
+          python3
+      作用:
+          使用 socket 来获取网页,并计算所用时间
+  """
+  import socket
+  import time
+  import selectors
+  from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+  selector = DefaultSelector()
+
+
+  def get(path):
+      s = socket.socket(family=socket.AF_INET, type = socket.SOCK_STREAM)
+      s.setblocking(False)
+      request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+      try:
+          s.connect(('localhost', 80))
+      except BlockingIOError:
+          pass
+      # s.fileno() an integer, a file descriptor
+      # to tell the selector this is the file number
+      # There we are interested in events on
+      # EVENT_WRITE We want to konw when the socket is
+      # writable
+      selector.register(s.fileno(), EVENT_WRITE)
+      # Call select() to wait for some event that we have
+      # asked about to happen
+      selector.select()
+      # Once the event happend we can unregister the file
+      # number,by this point the socket is writable now
+      selector.unregister(s.fileno())
+      s.send(request.encode('utf-8'))
+      chuncks = []
+      while True:
+          selector.register(s.fileno(), EVENT_READ)
+          selector.select()
+          selector.unregister(s.fileno())
+          chunck = s.recv(1000)
+          if chunck:
+              chuncks.append(chunck)
+          else:
+              break
+      """
+      body = b''.join(chuck for chuck in chuncks)
+      html = body.decode('utf-8')
+      """
+      html = b''.join(chuncks).decode('utf-8')
+      print(html.split('\n')[0])
+
+
+  if __name__ == "__main__":
+      start_time = time.time()
+      # get('http://localhost/hello.py')
+      # Error!
+      get('/hello.py')
+      get('/hello.py')
+      print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+结果输出：
+
+#+BEGIN_EXAMPLE
+    HTTP/1.1 200 OK
+    HTTP/1.1 200 OK
+    Time elapsed 0.0770308971
+#+END_EXAMPLE
+
+* 使用 callback
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+selector = DefaultSelector()
+
+
+def get(path):
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.setblocking(False)
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    callback = lambda: connected(s, request)
+    # s.fileno() an integer, a file descriptor
+    # to tell the selector this is the file number
+    # There we are interested in events on
+    # EVENT_WRITE We want to konw when the socket is
+    # writable
+    selector.register(s.fileno(), EVENT_WRITE, data = callback)
+    # Call select() to wait for some event that we have
+    # asked about to happen
+    selector.select()
+
+
+def connected(s, request):
+    # s is writable!
+    s.send(request.encode('utf-8'))
+    # Once the event happend we can unregister the file
+    # number, by this point the socket is writable now
+    selector.unregister(s.fileno())
+    chuncks = []
+    while True:
+        selector.register(s.fileno(), EVENT_READ)
+        selector.select()
+        selector.unregister(s.fileno())
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+    """
+    body = b''.join(chuck for chuck in chuncks)
+    html = body.decode('utf-8')
+    """
+    html = b''.join(chuncks).decode('utf-8')
+    print(html.split('\n')[0])
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # get('http://localhost/hello.py')
+    # Error!
+    get('/hello.py')
+    get('/hello.py')
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+输出
+
+#+BEGIN_EXAMPLE
+Time elapsed 0.0006766319
+#+END_EXAMPLE
+
+为什么会出现如此，其实是因为 =callback= 从未被执行，那么如何保证在 selector 所等待的事件 event 执行时， =callback= 同时被执行呢？
+
+** 使用 selector.select()查看
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+selector = DefaultSelector()
+
+
+def get(path):
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.setblocking(False)
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    callback = lambda: connected(s, request)
+    # s.fileno() an integer, a file descriptor
+    # to tell the selector this is the file number
+    # There we are interested in events on
+    # EVENT_WRITE We want to konw when the socket is
+    # writable
+    selector.register(s.fileno(), EVENT_WRITE, data = callback)
+    # Call select() to wait for some event that we have
+    # asked about to happen
+    selector.select()
+
+
+def connected(s, request):
+    # s is writable!
+    s.send(request.encode('utf-8'))
+    # Once the event happend we can unregister the file
+    # number, by this point the socket is writable now
+    selector.unregister(s.fileno())
+    chuncks = []
+    while True:
+        selector.register(s.fileno(), EVENT_READ)
+        selector.select()
+        selector.unregister(s.fileno())
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+    """
+    body = b''.join(chuck for chuck in chuncks)
+    html = body.decode('utf-8')
+    """
+    html = b''.join(chuncks).decode('utf-8')
+    print(html.split('\n')[0])
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # get('http://localhost/hello.py')
+    # Error!
+    get('/hello.py')
+    get('/hello.py')
+    while True:
+        events = selector.select()
+        for event, mask in events:
+            print('event:{!r}\n'.format(event), 'mask:{!r}'.format(mask))
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+输出：
+
+#+BEGIN_EXAMPLE
+event:SelectorKey(fileobj=5, fd=5, events=2, data=<function get.<locals>.<lambda> at 0x7f99470211e0>)
+mask:2
+#+END_EXAMPLE
+
+可以看出 =for event,mask in events= 中 =event.data= 就是 callback 函数。
+
+** 手动调用 callback
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+selector = DefaultSelector()
+
+
+def get(path):
+    s = socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM)
+    s.setblocking(False)
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    callback = lambda: connected(s, request)
+    selector.register(s.fileno(), EVENT_WRITE, data = callback)
+
+
+def connected(s, request):
+    # s is writable!
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    while True:
+        selector.register(s.fileno(), EVENT_READ)
+        selector.select()
+        selector.unregister(s.fileno())
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+    """
+    body = b''.join(chuck for chuck in chuncks)
+    html = body.decode('utf-8')
+    """
+    html = b''.join(chuncks).decode('utf-8')
+    print(html.split('\n')[0])
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # get('http://localhost/hello.py')
+    # Error!
+    get('/hello.py')
+    get('/hello.py')
+    while True:
+        events = selector.select()
+        for event, mask in events:
+            cb = event.data
+            cb()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+输出：
+
+#+BEGIN_EXAMPLE
+Traceback (most recent call last):
+  File "/home/c/get_by_socket.py", line 73, in <module>
+    cb()
+  File "/home/c/get_by_socket.py", line 31, in <lambda>
+    callback = lambda: connected(s, request)
+  File "/home/c/get_by_socket.py", line 45, in connected
+    chunck = s.recv(1000)
+BlockingIOError: [Errno 11] Resource temporarily unavailable
+#+END_EXAMPLE
+
+此时的 cb 即为：
+
+#+BEGIN_SRC python
+ callback = lambda: connected(s, request)
+
+    ...
+
+def connected(s, request):
+    # s is writable!
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    while True:
+        selector.register(s.fileno(), EVENT_READ)
+        selector.select()
+        selector.unregister(s.fileno())
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            break
+#+END_SRC
+
+可以看出 =cb()= 运行后是进入 =connected= 函数的，并且在 =chunck = s.recv(1000)= 处抛出异常，那么为什么明明在 =connected= 函数中套接字 socket 可读监听语句没能起到作用呢？
+
+#+BEGIN_SRC python
+selector.register(s.fileno(), EVENT_READ)
+selector.select()
+selector.unregister(s.fileno())
+#+END_SRC
+
+** 事件循环 event loop
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+selector = DefaultSelector()
+
+
+def get(path):
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.setblocking(False)
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    callback = lambda: connected(s, request)
+    selector.register(s.fileno(), EVENT_WRITE, data = callback)
+
+
+def connected(s, request):
+    # s is writable!
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    # This is a event loop
+    callback = lambda: readable(s, chuncks)
+    selector.register(s.fileno(), EVENT_READ, data = callback)
+
+
+def readable(s, chuncks):
+    # s is readable!
+    selector.unregister(s.fileno())
+    chunck = s.recv(1000)
+    if chunck:
+        chuncks.append(chunck)
+        callback = lambda: readable(s, chuncks)
+        selector.register(s.fileno(), EVENT_READ, data = callback)
+    else:
+        html = (b''.join(chuncks)).decode('utf-8')
+        print(html.split('\n')[0])
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    get('/hello.py')
+    while True:
+        events = selector.select()
+        for event, mask in events:
+            cb = event.data
+            cb()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+输出：
+
+#+BEGIN_EXAMPLE
+    HTTP/1.1 200 OK
+#+END_EXAMPLE
+
+#+BEGIN_SRC python
+    callback = lambda: connected(s, request)
+        selector.register(s.fileno(), EVENT_WRITE, data = callback)
+#+END_SRC
+
+#+BEGIN_SRC python
+    callback = lambda: readable(s, chuncks)
+        selector.register(s.fileno(), EVENT_READ, data = callback)
+#+END_SRC
+
+这些都是事件循环，但是有个弊端：在主程序中的 =while= 循环无法结束，无法运行 =while= 循环后的输出语句。
+
+### 使用 callback 的最终版本
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+n_task = 0
+selector = DefaultSelector()
+
+
+def get(path):
+    global n_task
+    n_task += 1
+    s = socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM)
+    s.setblocking(False)
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    callback = lambda: connected(s, request)
+    selector.register(s.fileno(), EVENT_WRITE, data = callback)
+
+
+def connected(s, request):
+    # s is writable!
+    selector.unregister(s.fileno())
+    s.send(request.encode('utf-8'))
+    chuncks = []
+    # This is a event loop
+    callback = lambda: readable(s, chuncks)
+    selector.register(s.fileno(), EVENT_READ, data = callback)
+
+
+def readable(s, chuncks):
+    global n_task
+    # s is readable!
+    selector.unregister(s.fileno())
+    chunck = s.recv(1000)
+    if chunck:
+        chuncks.append(chunck)
+        callback = lambda: readable(s, chuncks)
+        selector.register(s.fileno(), EVENT_READ, data = callback)
+    else:
+        html = (b''.join(chuncks)).decode('utf-8')
+        print(html.split('\n')[0])
+        n_task -= 1
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    get('/hello.py')
+    get('/hello.py')
+    while n_task:
+        events = selector.select()
+        for event, mask in events:
+            cb = event.data
+            cb()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+输出：
+
+#+BEGIN_EXAMPLE
+    HTTP/1.1 200 OK
+    HTTP/1.1 200 OK
+    Time elapsed 0.0419731140
+#+END_EXAMPLE
+
+* 使用 Future 类
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+n_task = 0
+selector = DefaultSelector()
+
+
+class Future():
+    def __init__(self):
+        self.callbacks = []
+
+    def resolve(self):
+        for c in self.callbacks:
+            c()
+
+
+def get(path):
+    global n_task
+    n_task += 1
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.setblocking(False)
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    callback = lambda: connected(s, request)
+    f = Future()
+    f.callbacks.append(callback)
+    selector.register(s.fileno(), EVENT_WRITE, data = f)
+
+
+def connected(s, request):
+    # s is writable!
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    # This is a event loop
+    callback = lambda: readable(s, chuncks)
+    f = Future()
+    f.callbacks.append(callback)
+    selector.register(s.fileno(), EVENT_READ, data = f)
+
+
+def readable(s, chuncks):
+    global n_task
+    # s is readable!
+    selector.unregister(s.fileno())
+    chunck = s.recv(1000)
+    if chunck:
+        chuncks.append(chunck)
+        callback = lambda: readable(s, chuncks)
+        f = Future()
+        f.callbacks.append(callback)
+        selector.register(s.fileno(), EVENT_READ, data=f)
+    else:
+        html = (b''.join(chuncks)).decode('utf-8')
+        print(html.split('\n')[0])
+        n_task -= 1
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    get('/hello.py')
+    get('/hello.py')
+    while n_task:
+        events = selector.select()
+        for event, mask in events:
+            future = event.data
+            future.resolve()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+* 使用 coroutine
+** 没有使用 Task 类,无法对 =generator object= 调用 =next= 方法
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+n_task = 0
+selector = DefaultSelector()
+
+
+class Future():
+    def __init__(self):
+        self.callbacks = []
+
+    def resolve(self):
+        for c in self.callbacks:
+            c()
+
+
+def get(path):
+    global n_task
+    n_task += 1
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.setblocking(False)
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    f = Future()
+    selector.register(s.fileno(), EVENT_WRITE, data = f)
+    # Need to pause until s is writable
+    # But how to start to continue?
+    yield f
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    callback = lambda: readable(s, chuncks)
+    f = Future()
+    f.callbacks.append(callback)
+    selector.register(s.fileno(), EVENT_READ, data = f)
+
+
+def readable(s, chuncks):
+    global n_task
+    # s is readable!
+    selector.unregister(s.fileno())
+    chunck = s.recv(1000)
+    if chunck:
+        chuncks.append(chunck)
+        callback = lambda: readable(s, chuncks)
+        f = Future()
+        f.callbacks.append(callback)
+        selector.register(s.fileno(), EVENT_READ, data = f)
+    else:
+        html = (b''.join(chuncks)).decode('utf-8')
+        print(html.split('\n')[0])
+        n_task -= 1
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    # Just return a generator object
+    # How can we execute the genertor
+    # How can we call 'next' on it
+    get('/hello.py')
+    get('/hello.py')
+    while n_task:
+        events = selector.select()
+        for event, mask in events:
+            future = event.data
+            future.resolve()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+输出
+
+#+BEGIN_EXAMPLE
+Time elapsed 0.0000045300
+#+END_EXAMPLE
+
+** 使用 Task 类
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+n_task = 0
+selector = DefaultSelector()
+
+
+class Future():
+    def __init__(self):
+        self.callbacks = []
+
+    def resolve(self):
+        for c in self.callbacks:
+            c()
+
+
+class Task():
+    def __init__(self, gen):
+        self.gen = gen
+        self.step()
+
+    def step(self):
+        future = next(self.gen)
+        future.callbacks.append(self.step)
+
+
+def get(path):
+    global n_task
+    n_task += 1
+    s = socket.socket(family=socket.AF_INET, type= socket.SOCK_STREAM)
+    s.setblocking(False)
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    f = Future()
+    print('future writable %i' % id(f))
+    selector.register(s.fileno(), EVENT_WRITE, data=f)
+    yield f
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    f = Future()
+    print('future readable %i' % id(f))
+    selector.register(s.fileno(), EVENT_READ, data=f)
+    while True:
+        yield f
+        selector.unregister(s.fileno())
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+            f = Future()
+            print('future readable %i' % id(f))
+            selector.register(s.fileno(), EVENT_READ, data=f)
+        else:
+            html = (b''.join(chuncks)).decode('utf-8')
+            print(html.split('\n'))
+            n_task -= 1
+            return
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    Task(get('/hello.py'))
+    while n_task:
+        events = selector.select()
+        for event, mask in events:
+            future = event.data
+            print(id(future))
+            future.resolve()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+** 使用 Task 类优化版本
+
+#+BEGIN_SRC python
+#!/usr/bin/python3
+# coding: utf-8
+"""
+    时间:2016 12 月 01
+    版本:
+        python3
+    作用:
+        使用 socket 来获取网页,并计算所用时间
+"""
+import socket
+import time
+import selectors
+from selectors import DefaultSelector, EVENT_WRITE, EVENT_READ
+n_task = 0
+selector = DefaultSelector()
+
+
+class Future():
+    def __init__(self):
+        self.callbacks = []
+
+    def resolve(self):
+        for c in self.callbacks:
+            c()
+
+
+class Task():
+    def __init__(self, gen):
+        self.gen = gen
+        self.step()
+
+    def step(self):
+        future = next(self.gen)
+        future.callbacks.append(self.step)
+
+
+def get(path):
+    global n_task
+    n_task += 1
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.setblocking(False)
+    try:
+        s.connect(('localhost', 80))
+    except BlockingIOError:
+        pass
+    request = 'GET {} HTTP/1.0\r\n\r\n'.format(str(path))
+    f = Future()
+    print('future writable %i' % id(f))
+    selector.register(s.fileno(), EVENT_WRITE, data=f)
+    yield f
+    s.send(request.encode('utf-8'))
+    selector.unregister(s.fileno())
+    chuncks = []
+    while True:
+        f = Future()
+        print('future readable %i' % id(f))
+        selector.register(s.fileno(), EVENT_READ, data=f)
+        yield f
+        selector.unregister(s.fileno())
+        chunck = s.recv(1000)
+        if chunck:
+            chuncks.append(chunck)
+        else:
+            html = (b''.join(chuncks)).decode('utf-8')
+            print(html.split('\n'))
+            n_task -= 1
+            return
+
+
+if __name__ == "__main__":
+    start_time = time.time()
+    Task(get('/hello.py'))
+    while n_task:
+        events = selector.select()
+        for event, mask in events:
+            future = event.data
+            print(id(future))
+            future.resolve()
+    print('Time elapsed {:.10f}'.format(time.time() - start_time))
+#+END_SRC
+
+* generator 原理
+
+#+BEGIN_EXAMPLE
+<<< def gen_fn():
+... print("start")
+... yield 1
+... print("middle")
+... yield 2
+... print("done")
+...
+<<< gen = gen_fn()
+<<< gen
+<generator object gen_fn at 0x10967b410>
+<<< gen.gi_code.co_code
+b't\x00d\x01\x83\x01\x01\x00d\x0
+2V\x00\x01\x00t\x00d\x03\x83\x01
+\x01\x00d\x04V\x00\x01\x00t\x00d
+\x05\x83\x01\x01\x00d\x00S\x00'
+<<< len(gen.gi_code.co_code)
+40
+<<< gen.gi_frame.f_lasti
+-1
+<<< next(gen)
+start
+1
+<<< gen.gi_frame.f_lasti
+10
+<<< ret = next(gen)
+middle
+<<< ret
+2
+<<< gen.gi_frame.f_lasti
+24
+<<< next(gen)
+done
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+StopIteration
+<<< gen.gi_frame.f_lasti
+Traceback (most recent call last):
+File "<stdin>", line 1, in <mo
+dule>
+AttributeError: 'NoneType' objec
+#+END_EXAMPLE
+
+[[id:241C1FAD-06D8-4559-8CA6-47EE38DA1FE9][See：Python-协程]]

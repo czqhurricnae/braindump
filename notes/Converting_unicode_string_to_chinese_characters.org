@@ -1,0 +1,47 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Converting_unicode_string_to_chinese_characters/")); -*-
+:PROPERTIES:
+:ID:       E6FB9BDE-25B4-4A49-B1FA-3B701B75CCD3
+:END:
+
+#+DATE: <2020-10-22 Thu 01:34>
+#+TITLE: Converting_unicode_string_to_chinese_characters
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+How can I convert the following Unicode string to Chinese characters?
+
+The string is:
+
+#+BEGIN_SRC python
+    '\\u5982\\u679c\\u6211\\u662f\\u4e00\\u4e2a\\u4ece\\u524d\\u7684\\u54f2\\u4eba\\uff0c\\u6765\\u5230\\u4eca\\u5929\\u7684\\u4e16\\u754c\\uff0c\\u6211\\u4f1a\\u6700\\u6000\\u5ff5\\u4ec0\\u4e48\\uff1f'
+#+END_SRC
+
+And I want it to be:
+
+#+BEGIN_SRC python
+    如果我是一个从前的哲人，来到今天的世界，我会最怀念什么？
+#+END_SRC
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+Decode it using =unicode-escape= will give you what you want.
+
+Python 2.7
+#+BEGIN_SRC python
+    >>> print '\\u5982\\u679c\\u6211\\u662f\\u4e00\\u4e2a\\u4ece\\u524d\\u7684\\u54f2\\u4eba\\uff0c\\u6765\\u5230\\u4eca\\u5929\\u7684\\u4e16\\u754c\\uff0c\\u6211\\u4f1a\\u6700\\u6000\\u5ff5\\u4ec0\\u4e48\\uff1f'.decode('unicode-escape')
+    如果我是一个从前的哲人，来到今天的世界，我会最怀念什么？
+#+END_SRC
+
+Python 3.x
+#+BEGIN_SRC python
+    >>> print('\\u5982\\u679c\\u6211\\u662f\\u4e00\\u4e2a\\u4ece\\u524d\\u7684\\u54f2\\u4eba\\uff0c\\u6765\\u5230\\u4eca\\u5929\\u7684\\u4e16\\u754c\\uff0c\\u6211\\u4f1a\\u6700\\u6000\\u5ff5\\u4ec0\\u4e48\\uff1f'.encode('ascii').decode('unicode-escape'))
+    如果我是一个从前的哲人，来到今天的世界，我会最怀念什么？
+    >>> print(b'\\u5982\\u679c\\u6211\\u662f\\u4e00\\u4e2a\\u4ece\\u524d\\u7684\\u54f2\\u4eba\\uff0c\\u6765\\u5230\\u4eca\\u5929\\u7684\\u4e16\\u754c\\uff0c\\u6211\\u4f1a\\u6700\\u6000\\u5ff5\\u4ec0\\u4e48\\uff1f'.decode('unicode-escape'))
+    如果我是一个从前的哲人，来到今天的世界，我会最怀念什么？
+#+END_SRC

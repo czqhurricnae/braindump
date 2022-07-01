@@ -1,0 +1,15 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/特征值、特征向量/")); -*-
+:PROPERTIES:
+:ID:       E77F1E60-173C-4DD0-B9A1-4744FA9082E7
+:ROAM_ALIASES: "Eigen values" "Eigen vectors"
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-12 Sat 20:48>
+#+TITLE: 特征值、特征向量
+
+#+ROAM_KEY:
+
+
+设 A 是 n 阶矩阵，如果存在一个数 $\lambda$ 及非零的 n 维列向量 $\alpha$ ，使得
+$$A\alpha = \lambda\alpha$$
+成立，则称 $\lambda$ 是矩阵 A 的一个 *特征值* ，称非零向量 $\alpha$ 是矩阵 A 属于特征值 $\lambda$ 的一个 *特征向量* 。

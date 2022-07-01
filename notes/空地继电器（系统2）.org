@@ -1,0 +1,28 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/地继电器（系统 2）/")); -*-
+:PROPERTIES:
+:ID:       12CA8BA0-AC5A-4FA9-B965-64AEC759F028
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-13 Sat 21:42>
+#+TITLE: 空地继电器（系统2）
+
+[[file:./static/空地继电器（系统2）/2021-02-13_21-42-59_screenshot.jpg]]
+* 空中模式继电器
+** R585
+   用于右反推。
+
+** R588
+   用于备用方向舵控制，灰水余水活门以及地面自动减速板控制。
+
+* 地面模式继电器
+** R590
+   用于航徽灯。
+
+** R591
+   用于地面自动减速板控制。
+
+** R595
+   用于皮托管加温，左右组件活门和 PTU。
+
+** R596
+   用于前轮转弯作动筒。

@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/升降舵调整片控制机构/")); -*-
+:PROPERTIES:
+:ID:       41562A7D-5B21-41E6-ADBB-FA629C96216F
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-19 Sat 17:47>
+#+TITLE: 升降舵调整片控制机构
+
+#+DOWNLOADED: screenshot @ 2020-12-19 17:47:11
+[[file:./static/升降舵调整片控制机构/2020-12-19_17-47-11_screenshot.jpg]]

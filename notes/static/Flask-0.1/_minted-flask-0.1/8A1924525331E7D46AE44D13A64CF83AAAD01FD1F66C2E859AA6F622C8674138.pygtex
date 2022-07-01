@@ -1,0 +1,77 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{def} \PYG{n+nf}{run\PYGZus{}simple}\PYG{p}{(}\PYG{n}{hostname}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{application}\PYG{p}{,} \PYG{n}{use\PYGZus{}reloader}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,}
+               \PYG{n}{use\PYGZus{}debugger}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{use\PYGZus{}evalex}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,}
+               \PYG{n}{extra\PYGZus{}files}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{reloader\PYGZus{}interval}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{threaded}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,}
+               \PYG{n}{processes}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{request\PYGZus{}handler}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{static\PYGZus{}files}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+               \PYG{n}{passthrough\PYGZus{}errors}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Start an application using wsgiref and with an optional reloader.  This}
+\PYG{l+s+sd}{    wraps `wsgiref` to fix the wrong default reporting of the multithreaded}
+\PYG{l+s+sd}{    WSGI variable and adds optional multithreading and fork support.}
+
+\PYG{l+s+sd}{    .. versionadded:: 0.5}
+\PYG{l+s+sd}{       `static\PYGZus{}files` was added to simplify serving of static files as well}
+\PYG{l+s+sd}{       as `passthrough\PYGZus{}errors`.}
+
+\PYG{l+s+sd}{    .. versionadded:: 0.6}
+\PYG{l+s+sd}{       support for SSL was added.}
+
+\PYG{l+s+sd}{    :param hostname: The host for the application.  eg: ``\PYGZsq{}localhost\PYGZsq{}``}
+\PYG{l+s+sd}{    :param port: The port for the server.  eg: ``8080``}
+\PYG{l+s+sd}{    :param application: the WSGI application to execute}
+\PYG{l+s+sd}{    :param use\PYGZus{}reloader: should the server automatically restart the python}
+\PYG{l+s+sd}{                         process if modules were changed?}
+\PYG{l+s+sd}{    :param use\PYGZus{}debugger: should the werkzeug debugging system be used?}
+\PYG{l+s+sd}{    :param use\PYGZus{}evalex: should the exception evaluation feature be enabled?}
+\PYG{l+s+sd}{    :param extra\PYGZus{}files: a list of files the reloader should watch}
+\PYG{l+s+sd}{                        additionally to the modules.  For example configuration}
+\PYG{l+s+sd}{                        files.}
+\PYG{l+s+sd}{    :param reloader\PYGZus{}interval: the interval for the reloader in seconds.}
+\PYG{l+s+sd}{    :param threaded: should the process handle each request in a separate}
+\PYG{l+s+sd}{                     thread?}
+\PYG{l+s+sd}{    :param processes: number of processes to spawn.}
+\PYG{l+s+sd}{    :param request\PYGZus{}handler: optional parameter that can be used to replace}
+\PYG{l+s+sd}{                            the default one.  You can use this to replace it}
+\PYG{l+s+sd}{                            with a different}
+\PYG{l+s+sd}{                            :class:`\PYGZti{}BaseHTTPServer.BaseHTTPRequestHandler`}
+\PYG{l+s+sd}{                            subclass.}
+\PYG{l+s+sd}{    :param static\PYGZus{}files: a dict of paths for static files.  This works exactly}
+\PYG{l+s+sd}{                         like :class:`SharedDataMiddleware`, it\PYGZsq{}s actually}
+\PYG{l+s+sd}{                         just wrapping the application in that middleware before}
+\PYG{l+s+sd}{                         serving.}
+\PYG{l+s+sd}{    :param passthrough\PYGZus{}errors: set this to `True` to disable the error catching.}
+\PYG{l+s+sd}{                               This means that the server will die on errors but}
+\PYG{l+s+sd}{                               it can be useful to hook debuggers in (pdb etc.)}
+\PYG{l+s+sd}{    :param ssl\PYGZus{}context: an SSL context for the connection. Either an OpenSSL}
+\PYG{l+s+sd}{                        context, the string ``\PYGZsq{}adhoc\PYGZsq{}`` if the server should}
+\PYG{l+s+sd}{                        automatically create one, or `None` to disable SSL}
+\PYG{l+s+sd}{                        (which is the default).}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{if} \PYG{n}{use\PYGZus{}debugger}\PYG{p}{:}
+        \PYG{k+kn}{from} \PYG{n+nn}{werkzeug.debug} \PYG{k+kn}{import} \PYG{n}{DebuggedApplication}
+        \PYG{n}{application} \PYG{o}{=} \PYG{n}{DebuggedApplication}\PYG{p}{(}\PYG{n}{application}\PYG{p}{,} \PYG{n}{use\PYGZus{}evalex}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{static\PYGZus{}files}\PYG{p}{:}
+        \PYG{k+kn}{from} \PYG{n+nn}{werkzeug.wsgi} \PYG{k+kn}{import} \PYG{n}{SharedDataMiddleware}
+        \PYG{n}{application} \PYG{o}{=} \PYG{n}{SharedDataMiddleware}\PYG{p}{(}\PYG{n}{application}\PYG{p}{,} \PYG{n}{static\PYGZus{}files}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{inner}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{make\PYGZus{}server}\PYG{p}{(}\PYG{n}{hostname}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{application}\PYG{p}{,} \PYG{n}{threaded}\PYG{p}{,}
+                    \PYG{n}{processes}\PYG{p}{,} \PYG{n}{request\PYGZus{}handler}\PYG{p}{,}
+                    \PYG{n}{passthrough\PYGZus{}errors}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context}\PYG{p}{)}\PYG{o}{.}\PYG{n}{serve\PYGZus{}forever}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{if} \PYG{n}{os}\PYG{o}{.}\PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{WERKZEUG\PYGZus{}RUN\PYGZus{}MAIN}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)} \PYG{o}{!=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{true}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}
+        \PYG{n}{display\PYGZus{}hostname} \PYG{o}{=} \PYG{n}{hostname} \PYG{o}{!=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{*}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{and} \PYG{n}{hostname} \PYG{o+ow}{or} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{localhost}\PYG{l+s+s1}{\PYGZsq{}}
+        \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{:}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{display\PYGZus{}hostname}\PYG{p}{:}
+            \PYG{n}{display\PYGZus{}hostname} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{[}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{]}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{display\PYGZus{}hostname}
+        \PYG{n}{\PYGZus{}log}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{info}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ * Running on }\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{://}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{:}\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}
+             \PYG{o+ow}{and} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{http}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{or} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{https}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{display\PYGZus{}hostname}\PYG{p}{,} \PYG{n}{port}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{use\PYGZus{}reloader}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} Create and destroy a socket so that any exceptions are raised before}
+        \PYG{c+c1}{\PYGZsh{} we spawn a separate Python interpreter and lose this ability.}
+        \PYG{n}{test\PYGZus{}socket} \PYG{o}{=} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{socket}\PYG{p}{(}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{AF\PYGZus{}INET}\PYG{p}{,} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{SOCK\PYGZus{}STREAM}\PYG{p}{)}
+        \PYG{n}{test\PYGZus{}socket}\PYG{o}{.}\PYG{n}{setsockopt}\PYG{p}{(}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{SOL\PYGZus{}SOCKET}\PYG{p}{,} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{SO\PYGZus{}REUSEADDR}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{n}{test\PYGZus{}socket}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{p}{(}\PYG{n}{hostname}\PYG{p}{,} \PYG{n}{port}\PYG{p}{)}\PYG{p}{)}
+        \PYG{n}{test\PYGZus{}socket}\PYG{o}{.}\PYG{n}{close}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n}{run\PYGZus{}with\PYGZus{}reloader}\PYG{p}{(}\PYG{n}{inner}\PYG{p}{,} \PYG{n}{extra\PYGZus{}files}\PYG{p}{,} \PYG{n}{reloader\PYGZus{}interval}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{inner}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}

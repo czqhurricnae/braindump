@@ -1,0 +1,26 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG EEC BITE 故障等级/")); -*-
+:PROPERTIES:
+:ID:       E8C19F80-1BFD-40C5-9128-9E0C0BDF0D93
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-09 Tue 00:17>
+#+TITLE: 737NG EEC BITE 故障等级
+
+* 短时故障
+** 定义
+EEC 发现必须在段时间内排除的故障，没有驾驶舱效应。
+** 推迟时限计算
+从上次 EEC BITE 起推迟 150。
+T=150FH-S（S 为 EEC BITE 周期）。
+
+#+BEGIN_QUOTE
+SHORT TIME Fault - Calculate the remaining flight hours that you can operate with this fault as follows[fn:1]:
+
+The remaining Flight Hours (R) = 150 flight hours - "Q", where "Q" is the scheduled maintenance interval your airline uses to check the EEC BITE TEST - RECENT FAULTS, SHORT TIME category.
+
+NOTE:If your airline looks for EEC faults every 70 flight hour, then "Q" = 70. If your airline looks for EEC faults every 150 flight hours, then "Q" = 150.
+#+END_QUOTE
+
+* Footnotes
+
+[fn:1] AMM 73-21-00

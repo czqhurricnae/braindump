@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/二号风挡结构图/")); -*-
+:PROPERTIES:
+:ID:       B4D97FDC-803D-4426-92F3-EC66DD843C1E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-18 Fri 11:43>
+#+TITLE: 二号风挡结构图
+
+
+[[file:./static/二号风挡结构图/2020-12-18_11-43-51_screenshot.jpg]]

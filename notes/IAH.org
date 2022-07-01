@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/IAH/")); -*-
+:PROPERTIES:
+:ID:       652E0AF0-F301-4582-AB0D-8AC23E87CAA6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 21:38>
+#+TITLE: IAH
+
+#+ROAM_KEY:
+
+IOSA 审计员手册

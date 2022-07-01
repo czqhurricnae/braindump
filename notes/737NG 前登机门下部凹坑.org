@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 前登机门下部凹坑/")); -*-
+:PROPERTIES:
+:ID:       54ED95D0-6202-4AA3-B061-1300483AD994
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-20 Wed 20:13>
+#+TITLE: 737NG 前登机门下部凹坑
+2021 年 1 月 9 日，B-6887 执行 MF8492（重庆-厦门），航后检查发现前登机门后下部有一凹坑，尺寸 20*20*0.1mm。
+依据 SRM 判断为允许损伤，转 NRC 监控。完成加强检查，检查其余地方正常。

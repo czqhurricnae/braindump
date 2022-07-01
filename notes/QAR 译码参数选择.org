@@ -1,0 +1,83 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/QAR 译码参数选择/")); -*-
+:PROPERTIES:
+:ID:       4C33ED20-6FBD-4687-9F22-DBFE5A76F417
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-30 Sat 15:47>
+#+TITLE: QAR 译码参数选择
+
+* 引气超温
++--------------+------------+
+| 参数         | 说明       |
++--------------+------------+
+| GMT CLOCK    |            |
+| (HR/MIN/SEC) |            |
+| aGMTHMS      |            |
+| HMS          |            |
++--------------+------------+
+| Bleed        |            |
+| manifold     |            |
+| pressure_L   |            |
+| MP_L         |            |
++--------------+------------+
+| Bleed        |            |
+| manifold     |            |
+| pressure_R   |            |
+| MP_R         |            |
++--------------+------------+
+| PCO Outlet   |            |
+| Temp_l(XIA)  |            |
+| PCOTR_L      |            |
+| degF         |            |
++--------------+------------+
+| PCO Outlet   |            |
+| Temp_r(XIA)  |            |
+| PCOTR_R      |            |
+| degF         |            |
++--------------+------------+
+| BARO COR     | barometric |
+| ALT NO 1     | 大气压力   |
+| aALTBARO     |            |
+| FEET         |            |
++--------------+------------+
+| N11          |            |
+| _N1_1        |            |
+| % PRM        |            |
++--------------+------------+
+| N12          |            |
+| _N1_2        |            |
+| % PRM        |            |
++--------------+------------+
+| ENG1 COWL    |            |
+| ANTI-ICE     |            |
+| SW           |            |
+| aCOWL11      |            |
++--------------+------------+
+| ENG2 COWL    |            |
+| ANTI-ICE     |            |
+| SW           |            |
+| aCOWL21      |            |
++--------------+------------+
+| WING         |            |
+| ANTI-ICE     |            |
+| SWITCH       |            |
+| aWINGS1      |            |
++--------------+------------+
+
+* N1 目标值不一致
+
+| 参数           | 说明 |
+|----------------+------|
+| CTF1           |      |
+| N21C           | 右发 |
+| AIRG_GND       |      |
+| ECS_PACK_FLW_L |      |
+| ECS_PACK_FLW_R |      |
+| ECS_PACK_ON_L  |      |
+| ECS_PACK_ON_R  |      |
+
+* PACK 非指令关闭
+[[id:801CE335-5CCE-4D6E-8151-7710E2B4F4CA][译码分析]]
+
+#+transclude: [[id:801CE335-5CCE-4D6E-8151-7710E2B4F4CA][译码分析]] :only-contents 

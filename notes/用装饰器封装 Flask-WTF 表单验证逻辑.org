@@ -1,0 +1,123 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       50FD5797-CD1F-40A4-A459-77BDA1F20FAA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-05-23 六 15:50>
+#+TITLE: 用装饰器封装 Flask-WTF 表单验证逻辑
+
+在使用 Flask-WTF 的时候，常会用下面这样的代码来验证表单数据的合法性：
+
+#+BEGIN_SRC python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+  form = TestForm()
+  # 判断是否合法
+  if not form.validate_on_submit():
+    return 'err', 400
+
+# 主要逻辑
+#+END_SRC
+
+对于有很多提交接口的项目来说，需要在每个路由下写相同的的逻辑，造成了大量的代码重复。
+在 Flask-Login 中，要把一个路由设置为登录后才能访问，只需要在路由上加一个 ~@login_required~ 装饰器，不需要额外的代码。
+能不能像 Flask-Login 一样，用装饰器来封装对表单的验证逻辑呢？
+
+* 实现表单验证装饰器
+由于不同路由使用的表单类不一样，所以需要为装饰器传入一个表单类参数，并且在路由函数中需要用到表单中的值，所以还需要将验证通过的表单传给路由函数。
+
+#+transclude: t
+See：[[id:59FF8925-B753-4915-AD80-DD515A9F2BC2][带参数的装饰器]]
+
+#+BEGIN_SRC python
+def validate_form(self, form_cls):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            if not form.validate_on_submit():
+                return 'error', 400
+            return fn(form, *args, **kwargs)
+        return wrapper
+    return decorator
+#+END_SRC
+
+使用方式如下:
+
+#+BEGIN_SRC python
+@validate_form(TestForm)  # 需要传入要验证的表单类
+@app.route('/', methods=['GET', 'POST'])
+def index(form):
+    # 执行到这里说明表单验证通过
+#+END_SRC
+
+经过在项目中的应用，发现装饰器还是有一些缺陷：
+
+- 无法自定义处理非法表单的逻辑
+- 不支持 get 方式提交的表单（查看 ~validate_on_submit（）~ 源码可知其只支持对 post 和 put 方式提交的表单进行验证）
+
+* 丰富一下
+要自定义处理非法表单的逻辑，需要增加一个可以传入自定义逻辑的接口。
+表单非法时接口的返回往往是一致的，所以我们为所有应用装饰器的路由传入一个统一的处理逻辑。
+将装饰器封装在一个类中，在类中添加一个配置处理逻辑的方法。
+
+#+BEGIN_SRC python
+from functools import wraps
+
+from flask import request
+
+
+class FormValidator(object):
+
+    def __init__(self, error_handler=None):
+        self._error_handler = error_handler
+
+    def validate_form(self, form_cls):
+        def decorator(fn):
+            @wraps(fn)
+            def wrapper(*args, **kwargs):
+                if not form.validate_on_submit() and self._error_handler:
+                    return self._error_handler(form.errors)
+                return fn(form, *args, **kwargs)
+            return wrapper
+        return decorator
+
+    def error_handler(self, fn):
+        self._error_handler = fn
+        return fn
+#+END_SRC
+
+~error_handler~ 也是一个装饰器，被它修饰的方法就是处理非法表单的方法。
+
+#+BEGIN_SRC python
+@form_validator.error_handler
+def error_handler(errors):
+    return jsonify({'errors': errors}), 400
+#+END_SRC
+
+接下来支持 get 方法，在 flask 中，我们可以通过 ~request.args~ 来获取到 get 方法提交的参数。
+思路是用获取到的参数生成一个表单类的实例，然后就可以通过调用表单类的 ~validate()~ 方法来判断是否合法了。
+修改 ~validate_form~ 装饰器：
+
+#+BEGIN_SRC python
+def validate_form(self, form_cls):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            if request.method == 'GET':
+                form = form_cls(formdata=request.args)
+            elif request.method in ('POST', 'PUT'):
+                form = form_cls()
+            else:
+                return fn(*args, **kwargs)
+            if not form.validate() and self._error_handler:
+                return self._error_handler(form.errors)
+            return fn(form, *args, **kwargs)
+        return wrapper
+    return decorator
+#+END_SRC
+
+大功告成！使用上面的装饰器，就可以免除在路由函数中重复写表单验证逻辑，并且同时支持 put，post 和 get 方法提交的表单。

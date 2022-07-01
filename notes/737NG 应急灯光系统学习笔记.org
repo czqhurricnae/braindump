@@ -1,0 +1,91 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 应急灯光系统学习笔记/")); -*-
+:PROPERTIES:
+:ID:       9D767F64-2AF0-49D0-9509-91845020980F
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-27 Dec 14:38>
+#+TITLE: 737NG 应急灯光系统学习笔记
+
+[[file:./static/737NG 应急灯光系统学习笔记/1322.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/6035.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/8518.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/6454.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/6708.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/6907.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/7107.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/7308.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/7509.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/7710.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/7913.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/8116.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/8317.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/8518.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/8721.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/8922.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/9124.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/9327.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/9529.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/9729.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/9929.jpeg]]
+
+当时一架飞机前登机门后外部应急灯不亮
+
+保留限制白天飞行
+
+有人认为 33-14 保留的是整个外部照明系统
+
+一个灯失效应该可以不用保留开 NRC
+
+当时我不同意
+
+因为各处灯照亮的是各处的区域
+
+从而组成一个外部应急照明系统
+
+保证飞机撤离时整个外部区域的照明
+
+前登机门处照明失效
+
+没有其他灯光可以替代
+
+肯定是不能开 NRC 的
+
+[[file:./static/737NG 应急灯光系统学习笔记/10872.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/11074.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/11275.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/11477.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/11676.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/11877.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/12080.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/12282.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/12485.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/12685.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/12886.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/13087.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/13286.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/13487.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/13688.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/13889.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/14091.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/14292.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/14494.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/14697.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/14898.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/15098.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/15299.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/15499.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/15699.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/15901.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/16100.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/16301.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/16503.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/16706.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/16907.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/17107.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/17310.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/17512.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/17712.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/17915.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/18118.jpeg]]
+[[file:./static/737NG 应急灯光系统学习笔记/18319.jpeg]]

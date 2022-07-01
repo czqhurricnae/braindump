@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/隐患/")); -*-
+:PROPERTIES:
+:ID:       0D7D7B1C-F2D0-4759-B6FC-3689101E6EE6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-29 Sat 10:14>
+#+TITLE: 隐患
+
+#+ROAM_KEY:
+
+
+安全隐患，一般是指可能导致不安全事件或事故发生的 *物的不安全状态* 、 *人的不安全行为* 、 *环境的不良* 以及 *管理上的缺陷* 等。
+
+简单地说，隐患就是物、人、环境、管理等方面的“缺陷”。
+
+与[[id:323FBB70-EBED-4106-AEB6-8F8B588C7819][风险]]常被当成[[id:80406A3A-57A9-4F89-95B6-80322C587784][危险源]]一样，风险也常常被当成隐患，这种情况也较为常见。

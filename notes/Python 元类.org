@@ -1,0 +1,67 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 元类/")); -*-
+:PROPERTIES:
+:ID:       016820F3-F4AC-402A-964B-0505ED066B96
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-12 Mon 01:28>
+#+TITLE: Python 元类
+
+* 没有显式指定元类，即 =__metaclass__=
+如果一个类没有显式指定元类，这种情况会以基类元组中的第一个基类的元类作为自己的元类。
+对于新式类来说，新式类都是继承自 =object= 类，而 =object= 类的元类是 =type= ，所以新式类默认元类是 =type= 。
+
+#+BEGIN_SRC python :results output :exports no-eval
+class Foo(object):
+    def foo(self):
+        return 'foo'
+
+print(type(Foo))
+#+END_SRC
+
+#+RESULTS:
+: <type 'type'>
+
+[[id:8DEA9DA6-E7AE-4EE9-988D-3902C0A6162B][See：Python 内置函数 type()]]
+
+* 显示指定元类，单没有指定继承的基类
+这种情况 =class= 语句会搜索全局变量 =__metaclass__= ，如果找到就将其作为元类，否则使用 Python 默认的元类。
+
+#+BEGIN_SRC python :results output :exports no-eval
+class Foo():
+    __metaclass__ = type
+
+    def foo(self):
+        return 'foo'
+print(type(Foo))
+#+END_SRC
+
+#+RESULTS:
+: <type 'type'>
+
+* 既没有显示指定元类，也没有指定继承的基类，则使用 Python 默认的元类
+
+* Python 默认的元类
+在 Python 2 中，默认的元类是 =types.ClassType= ，就是所谓的旧式类。
+
+该类，Python 2.2 以后不提倡使用。
+
+#+BEGIN_SRC python :results output :exports no-eval
+import types
+
+
+class Foo():
+    def foo(self):
+        return 'foo'
+
+print(isinstance(Foo, types.ClassType))
+#+END_SRC
+
+#+RESULTS:
+: True
+
+Python 3 以后，默认的元类都是 =type= 了。
+
+* Python 自定义元类
+** Python 3
+在 Python 3 中自定义元类，需要在基类元组中提供 =metaclass= 关键字（不带下划线）。
+~class FooMeta(metaclass=type)~ 。

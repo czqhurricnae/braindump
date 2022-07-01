@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Boeing Standard Wire Part Number Data/")); -*-
+:PROPERTIES:
+:ID:       CBDA8A93-A5EA-4888-BBE5-A8320CCB247D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-07 Mon 01:03>
+#+TITLE: Boeing Standard Wire Part Number Data
+
+[[file:./static/Boeing Standard Wire Part Number Data/2020-12-07_01-03-34_screenshot.jpg]]
+
+- BMS13-XX 代表波音导线材料规格。
+- TXX 代表导线/电缆的类型。
+- T32 代表屏蔽电缆，芯线由镀镍铜合金丝组成。
+- CXX 代表导线或电缆的等级，C03 是指三芯电缆。
+- GXXX 代表芯线的导线规格是 20。
+- XXX 代表颜色代码，004 是指黄色。
+
+[[eww:marginnote3app://note/978D22F1-7968-4B61-B964-CA10BDACFFAA][Boeing Standard Wire Part Number Data]]

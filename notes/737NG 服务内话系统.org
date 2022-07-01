@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 服务内话系统/")); -*-
+:PROPERTIES:
+:ID:       8E2B6EE3-FDC0-4B53-B772-FCFAD7ADB480
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-23 Sat 15:40>
+#+TITLE: 737NG 服务内话系统
+
+[[file:./static/737NG 服务内话系统/2021-01-23_15-40-11_screenshot.jpg]]
+
+- 红色：乘务员手提电话，服务内话点到驾驶舱耳机
+- 绿色：手提麦克风到驾驶舱耳机
+
+[[file:./static/737NG 服务内话系统/2021-01-23_16-52-38_SSM 23-42-12.jpeg]]
+[[file:./static/737NG 服务内话系统/2021-01-23_16-53-41_SSM 23-41-11.jpeg]]
+[[file:./static/737NG 服务内话系统/2021-01-23_16-56-55_SSM 23-51-11  6.jpeg]]
+[[file:./static/737NG 服务内话系统/2021-01-23_16-56-59_SSM 23-51-11  7.jpeg]]
+[[file:./static/737NG 服务内话系统/2021-01-23_16-57-02_SSM 23-51-11  8.jpeg]]

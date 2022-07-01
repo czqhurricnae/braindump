@@ -1,0 +1,13 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/terminal lug 接线片的查找/")); -*-
+:PROPERTIES:
+:ID:       E7548B2E-B574-4736-8B67-C5064D20CC1F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-09-09 Wed 15:12>
+#+TITLE: terminal lug 接线片的查找
+
+[[file:./static/terminal lug 接线片的查找/1.jpg]]
+
+* 在 WDM 中将接线片所在的导线找出来。
+
+[[file:./static/terminal lug 接线片的查找/2020-09-09_15-24-12_screenshot.jpg]]

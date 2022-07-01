@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/时间关键宣告/")); -*-
+:PROPERTIES:
+:ID:       655B08FB-ABF2-4C60-A9C0-6BAEF78F545C
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :INSTR_SWITCH:
+
+#+DATE: <2021-03-30 Tue 11:09>
+#+TITLE: 时间关键宣告
+[[file:./static/时间关键宣告/2021-03-30_11-09-49_screenshot.jpg]]

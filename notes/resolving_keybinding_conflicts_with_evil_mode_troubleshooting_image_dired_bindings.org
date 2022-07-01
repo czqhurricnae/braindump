@@ -1,0 +1,220 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/resolving_keybinding_conflicts_with_evil_mode_troubleshooting_image_dired_bindi/")); -*-
+:PROPERTIES:
+:ID:       DB1D8BCF-817D-42D5-B3D9-6B1579A7D559
+:END:
+#+LATEX_CLASS: my-article
+#+SETUPFILE: ../theme-rose.setup
+#+DATE: <2021-12-19 Dec 01:04>
+#+TITLE: resolving_keybinding_conflicts_with_evil_mode_troubleshooting_image_dired_bindings
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I am trying to move/rename 100+ images inside of a directory, so I am
+using Image-Dired to view the images as thumbnails and as I move/rename
+them.
+
+I want to move multiple images at a time, so I am "marking" the
+thumbnailed images with =image-dired-mark-thumb-original-file=, which
+marks the associated file in the dired buffer. After this, I can move
+all of the marked files as usual using dired.
+
+Since I am using Evil-mode, the default keybindings do not work in the
+image-dired thumbnail buffer, so I am planning to map some basic
+keybindings, such as =l= and =h= to move forward/backward one image, and
+=m= and =u= to mark/unmark the image files in the dired buffer.
+
+I tried the following, but the keybindings are still being shadowed by
+evil-mode:
+
+#+BEGIN_EXAMPLE
+    (defun image-dired-keybindings()
+      (message "making keybindings!")
+      (local-unset-key (kbd "l"))
+      (local-unset-key (kbd "h"))
+      (local-unset-key (kbd "m"))
+      (local-unset-key (kbd "u"))
+      (local-set-key (kbd "m") 
+                     'image-dired-mark-thumb-original-file)
+      (local-set-key (kbd "u") 
+                     'image-dired-unmark-thumb-original-file)
+      (local-set-key (kbd "l") 
+                     'image-dired-forward-image)
+      (local-set-key (kbd "h") 
+                     'image-dired-backward-image)
+      (message "making keybindings finished"))
+
+
+    (add-hook 'image-dired-thumbnail-mode-hook
+              'image-dired-keybindings)
+#+END_EXAMPLE
+
+Any suggestions? My =*Messages*= buffer is logging the debug messages,
+and here is some detail on the modes in my image dired thumbnail buffer:
+
+#+BEGIN_EXAMPLE
+    Enabled minor modes: Auto-Composition Auto-Compression Auto-Encryption
+    Blink-Cursor Column-Number Desktop-Save Electric-Indent Erc-Autojoin
+    Erc-Button Erc-Fill Erc-Irccontrols Erc-List Erc-Match Erc-Menu
+    Erc-Move-To-Prompt Erc-Netsplit Erc-Networks Erc-Noncommands
+    Erc-Pcomplete Erc-Readonly Erc-Ring Erc-Stamp Erc-Track Evil
+    Evil-Local File-Name-Shadow Font-Lock Global-Auto-Complete
+    Global-Font-Lock Global-Hl-Line Global-Undo-Tree Global-Visual-Line
+    Imagex-Global-Sticky Imagex-Sticky Line-Number Menu-Bar Mouse-Wheel
+    Read-Only Show-Paren Size-Indication Tooltip Transient-Mark Undo-Tree
+    Yas Yas-Global
+
+    (Information about these minor modes follows the major mode info.)
+
+    image-dired-thumbnail mode defined in `image-dired.el':
+    Browse and manipulate thumbnail images using dired.
+    Use `image-dired-dired' and `image-dired-setup-dired-keybindings' to get a
+    nice setup to start with.
+
+    This mode runs the hook `image-dired-thumbnail-mode-hook', as the final step
+    during initialization.
+
+    key             binding
+    ---             -------
+
+    C-b             image-dired-backward-image
+      (that binding is currently shadowed by another mode)
+    C-d             image-dired-delete-char
+      (that binding is currently shadowed by another mode)
+    C-f             image-dired-forward-image
+      (that binding is currently shadowed by another mode)
+    RET             image-dired-display-thumbnail-original-image
+      (that binding is currently shadowed by another mode)
+    C-n             image-dired-next-line
+      (that binding is currently shadowed by another mode)
+    C-p             image-dired-previous-line
+      (that binding is currently shadowed by another mode)
+    SPC             image-dired-display-next-thumbnail-original
+      (that binding is currently shadowed by another mode)
+    .               image-dired-track-original-file
+      (that binding is currently shadowed by another mode)
+    D               image-dired-thumbnail-set-image-description
+      (that binding is currently shadowed by another mode)
+    L               image-dired-rotate-original-left
+      (that binding is currently shadowed by another mode)
+    R               image-dired-rotate-original-right
+      (that binding is currently shadowed by another mode)
+    c               image-dired-comment-thumbnail
+      (that binding is currently shadowed by another mode)
+    d               image-dired-flag-thumb-original-file
+      (that binding is currently shadowed by another mode)
+    g               Prefix Command
+    h               image-dired-backward-image
+      (that binding is currently shadowed by another mode)
+    l               image-dired-forward-image
+      (that binding is currently shadowed by another mode)
+    m               image-dired-mark-thumb-original-file
+      (that binding is currently shadowed by another mode)
+    q               image-dired-kill-buffer-and-window
+      (that binding is currently shadowed by another mode)
+    r               image-dired-rotate-thumbnail-right
+      (that binding is currently shadowed by another mode)
+    t               Prefix Command
+      (that binding is currently shadowed by another mode)
+    u               image-dired-unmark-thumb-original-file
+      (that binding is currently shadowed by another mode)
+    DEL             image-dired-display-previous-thumbnail-original
+      (that binding is currently shadowed by another mode)
+    <C-mouse-1>     image-dired-mouse-toggle-mark
+    <C-return>      image-dired-thumbnail-display-external
+    <delete>        image-dired-flag-thumb-original-file
+    <down>          image-dired-next-line
+      (that binding is currently shadowed by another mode)
+    <left>          image-dired-backward-image
+      (that binding is currently shadowed by another mode)
+    <mouse-1>       image-dired-mouse-select-thumbnail
+    <mouse-2>       image-dired-mouse-display-image
+      (that binding is currently shadowed by another mode)
+    <right>         image-dired-forward-image
+      (that binding is currently shadowed by another mode)
+    <tab>           image-dired-jump-original-dired-buffer
+      (that binding is currently shadowed by another mode)
+    <up>            image-dired-previous-line
+      (that binding is currently shadowed by another mode)
+
+    g f             image-dired-line-up
+      (that binding is currently shadowed by another mode)
+    g g             image-dired-line-up-dynamic
+      (that binding is currently shadowed by another mode)
+    g i             image-dired-line-up-interactive
+      (that binding is currently shadowed by another mode)
+
+    ...TRUNCATED FOR BREVITY....
+#+END_EXAMPLE
+
+And inside the image-dired-thumbnail buffer, running =C-h k= for the
+command =l= shows that =l= is still bound to the evil-mode keybinding
+=evil-forward-char=:
+
+#+BEGIN_EXAMPLE
+    l runs the command evil-forward-char, which is an interactive compiled
+    Lisp function in `evil-commands.el'.
+
+    It is bound to <right>, SPC, l.
+
+    (evil-forward-char &optional COUNT CROSSLINES NOERROR)
+
+    Move cursor to the right by COUNT characters.
+    Movement is restricted to the current line unless CROSSLINES is non-nil.
+    If NOERROR is non-nil, don't signal an error upon reaching the end
+    of the line or the buffer; just return nil.
+#+END_EXAMPLE
+
+How to I resolve this conflict to easily mark and traverse images in my
+images-dired-thumbnail buffer?
+
+--------------
+
+*Update*
+
+Following @Drew's suggestion below, I tried resolving this using the
+=image-dired-thumbnail-mode-map=, as shown below:
+
+#+BEGIN_EXAMPLE
+    (add-hook 'image-dired-thumbnail-mode-hook
+          (lambda ()
+                (define-key image-dired-thumbnail-mode-map "l" 'image-dired-forward-image)
+                (define-key image-dired-thumbnail-mode-map "h" 'image-dired-backward-image)
+                (define-key image-dired-thumbnail-mode-map "u" 'image-dired-unmark-thumb-original-file)
+                (define-key image-dired-thumbnail-mode-map "m" 'image-dired-mark-thumb-original-file)
+                )
+              )
+#+END_EXAMPLE
+
+I also tried substituting ="l"= with =(kbd "l")=, but no success. I am
+still getting the same issue, where my mode help menu lists the key
+bindings as =currently shadowed by another mode=. =C-h m= shows the same
+conflicts:
+
+#+BEGIN_EXAMPLE
+    h               image-dired-backward-image
+      (that binding is currently shadowed by another mode)
+    l               image-dired-forward-image
+      (that binding is currently shadowed by another mode)
+#+END_EXAMPLE
+
+Any suggestions?
+
+Also, I double-checked my version of =image-dired= using
+=list-packages=, and it was listed as 0.4.11. I believe the source is
+[[http://web.mit.edu/Emacs/source/emacs/lisp/image-dired.el][here]]
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+Apparently there was some kind of evil-mode conflict. The following line
+fixed everything:
+
+#+BEGIN_EXAMPLE
+    (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
+#+END_EXAMPLE
+
+I hope this helps someone :-)

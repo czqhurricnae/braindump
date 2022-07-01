@@ -1,0 +1,43 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/使用 mkvirtualenv 创建新的虚拟环境时报错：bad interpreter/")); -*-
+:PROPERTIES:
+:ID:       9E18880F-C5B5-44C9-880E-A1BF6C9FE31D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-17 Sat 17:27>
+#+TITLE: 使用 mkvirtualenv 创建新的虚拟环境时报错：bad interpreter
+
+* 错误现象
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ mkvirtualenv ipy3
+mkvirtualenv:78: /usr/local/bin/virtualenv: bad interpreter: /usr/local/opt/python@2/bin/python2.7: no such file or directory
+#+END_SRC
+
+* 错误原因
+运行命令：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ head -n1 /usr/local/bin/virtualenv
+
+#!/usr/local/opt/python@2/bin/python2.7
+#+END_SRC
+
+原来 virtualenv 脚本文件首行声明该脚本运行使用的解析器位置： ~/usr/local/opt/python@2/bin/python2.7~ 。
+然而在[[id:5176F2AA-4494-4CF6-BAB0-59059ACA937E][Spacemacs 报错：code for hash md5 was not found]]中重新使用 brew 安装了新的 Python 2，相应原来的解析器文件已经不存在。
+
+运行命令：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ vim /usr/local/bin/virtualenv
+#+END_SRC
+
+将 ~/usr/local/opt/python@2/bin/python2.7~ 修改为 ~/usr/local/opt/python@2.7.17/bin/python2.7~ 。
+
+可以运行命令进行验证：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ ls -al /usr/local/opt/python@2.7.17/bin/python2.7
+lrwxr-xr-x 1 c admin 57 7 17 13:01 /usr/local/opt/python@2.7.17/bin/python2.7 -> ../Frameworks/Python.framework/Versions/2.7/bin/python2.7
+#+END_SRC
+
+可以看出新的指定的解析器的软连接指向的是使用 brew 重新安装的 Python 2。

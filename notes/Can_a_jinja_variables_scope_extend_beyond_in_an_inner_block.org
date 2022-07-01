@@ -1,0 +1,288 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Can_a_jinja_variables_scope_extend_beyond_in_an_inner_block/")); -*-
+:PROPERTIES:
+:ID:       7FCBB344-8D3C-4E7D-82D8-A8B9BB5D598C
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-26 Mon 01:40>
+#+TITLE: Can_a_jinja_variables_scope_extend_beyond_in_an_inner_block
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I have the following Jinja template:
+
+#+BEGIN_SRC js
+    < set mybool = False >
+    < for thing in things >
+        <div class='indent1'>
+            <ul>
+                < if current_user >
+                  < if current_user.username == thing['created_by']['username'] >
+                    < set mybool = True >
+                    <li>mybool: {{ mybool }}</li> <!-- prints True -->
+                    <li><a href='#'>Edit</a></li>
+                  < endif >
+                < endif >
+                <li>Flag</li>
+            </ul>
+        </div>
+        <hr />
+    < endfor >
+
+    < if not mybool >
+        <!-- always prints this -->
+        <p>mybool is false!</p>
+    < else >
+      <p>mybool is true!</p>
+    < endif >
+#+END_SRC
+
+If the condition is met in the =for= loop, I'd like to change =mybool=
+to true so I can display =mybool is true!= below. However, it looks like
+the scope of the inner =mybool= is limited to the =if= statement, so the
+/desired/ =mybool= is never set.
+
+How can I set the "global" =mybool= so I can use it in the last =if=
+statement?
+
+*EDIT*
+
+I've found
+[[http://webcache.googleusercontent.com/search?q=cache:BCRT8FHONykJ:svn.python.org/projects/external/Jinja-1.2/docs/html/scopes.html+jinja+top+level+variable&hl=en&gl=us&strip=0][some
+suggestions]] (only the cached page views correctly), but they don't
+seem to work. Perhaps they're deprecated in Jinja2...
+
+*EDIT*
+
+Solution provided below. I am still curious why the suggestions above do
+not work though. Does anyone know for sure that they were deprecated?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+One way around this limitation is to enable the
+[[http://jinja.pocoo.org/docs/extensions/#expression-statement]["do"
+expression-statement extension]] and use an array instead of boolean:
+
+#+BEGIN_SRC js
+    < set exists = [] >
+    < for i in range(5) >
+          < if True >
+              < do exists.append(1) >
+          < endif >
+    < endfor >
+    < if exists >
+        <!-- exists is true -->
+    < endif >
+#+END_SRC
+
+To enable Jinja's "do" expression-statement extension:
+=e = jinja2.Environment(extensions=["jinja2.ext.do",])=
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+Answer to a related question: I wanted to have a global counter of the
+number of times I entered a certain if-block in the template, and ended
+up with the below.
+
+At the top of the template:
+
+#+BEGIN_SRC js
+    < set counter = ['1'] >
+#+END_SRC
+
+In the if-block I want to count:
+
+#+BEGIN_SRC js
+    < if counter.append('1') >< endif >
+#+END_SRC
+
+When displaying the count:
+
+#+BEGIN_SRC js
+    {{ counter|length }}
+#+END_SRC
+
+The string ='1'= can be replaced with any string or digit, I believe. It
+is still a hack, but not a very large one.
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+*Update 2018*
+
+As of Jinja [[http://jinja.pocoo.org/docs/2.10/changelog/][2.10]] (8th
+Nov 2017) there is a =namespace()= object to address this particular
+problem. See the official
+[[http://jinja.pocoo.org/docs/2.10/templates/#assignments][/Assignments/
+documentation]] for more details and an example; the
+[[http://jinja.pocoo.org/docs/2.10/templates/#namespace][=class=
+documentation]] then illustrates how to assign several values to a
+namespace.
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4
+  :END:
+
+You can solve your problem using this hack (without extensions):
+
+#+BEGIN_SRC js
+    import jinja2
+
+    env = jinja2.Environment()
+    print env.from_string("""
+    < set mybool = [False] >
+    < for thing in things >
+        <div class='indent1'>
+            <ul>
+                < if current_user >
+                  < if current_user.username == thing['created_by']['username'] >
+                    < set _ = mybool.append(not mybool.pop()) >
+                    <li>mybool: {{ mybool[0] }}</li> <!-- prints True -->
+                    <li><a href='#'>Edit</a></li>
+                  < endif >
+                < endif >
+                <li>Flag</li>
+            </ul>
+        </div>
+        <hr />
+    < endfor >
+
+    < if not mybool[0] >
+        <!-- always prints this -->
+        <p>mybool is false!</p>
+    < else >
+      <p>mybool is true!</p>
+    < endif >
+    """).render(current_user={'username':'me'},things=[{'created_by':{'username':'me'}},{'created_by':{'username':'you'}}])
+#+END_SRC
+
+* Answer5
+  :PROPERTIES:
+  :CUSTOM_ID: answer5
+  :END:
+
+When writing a =contextfunction()= or something similar you may have
+noticed that the context tries to stop you from modifying it.
+
+If you have managed to modify the context by using an internal context
+API you may have noticed that changes in the context don't seem to be
+visible in the template. The reason for this is that =Jinja= uses the
+context only as primary data source for template variables for
+performance reasons.
+
+If you want to modify the context write a function that returns a
+variable instead that one can assign to a variable by using set:
+
+=< set comments = get_latest_comments() >=
+
+[[http://jinja.pocoo.org/docs/faq/#why-is-the-context-immutable][Source]]
+
+* Answer6
+  :PROPERTIES:
+  :CUSTOM_ID: answer6
+  :END:
+
+Had a need to find the max num of entries in an object (object) from a
+list (objects_from_db),
+
+This did not work for reasons known in jinja2 and variable scope.
+
+#+BEGIN_SRC js
+     < set maxlength = 0 >
+     < for object in objects_from_db >
+         < set ilen = object.entries | length >
+         < if maxlength < ilen >
+             < set maxlength = ilen >
+         < endif >
+     < endfor >
+#+END_SRC
+
+Here's what works:
+
+#+BEGIN_SRC js
+     < set mlength = [0]>
+     < for object in objects_from_db >
+         < set ilen = object.entries | length >
+         < if mlength[0] < ilen >
+             < set _ = mlength.pop() >
+             < set _ = mlength.append(ilen)>
+         < endif >
+     < endfor >
+     < set maxlength = mlength[0] >
+#+END_SRC
+
+Hope this helps someone else trying to figure out the same.
+
+* Answer7
+  :PROPERTIES:
+  :CUSTOM_ID: answer7
+  :END:
+
+Here's the general case for anyone wanting to use the =namespace()=
+object to have a variable persist outside of a =for= loop.
+
+#+BEGIN_SRC js
+    < set accumulator = namespace(total=0) >
+    < for i in range(0,3) >
+        < set accumulator.total = i + accumulator.total >
+        {{accumulator.total}}
+     < endfor >`          {# 0 1 3 #}
+     {{accumulator.total}}  {# 3 (accumulator.total persisted past the end of the loop) #}
+#+END_SRC
+
+* Answer8
+  :PROPERTIES:
+  :CUSTOM_ID: answer8
+  :END:
+
+Found this great
+[[https://fabianlee.org/2016/10/18/saltstack-setting-a-jinja2-variable-from-an-inner-block-scope/][article]]
+that describes a little hack. It's not possible to change value of a
+jinja variable in a different scope, but it's possible to modify a
+global dictionary values:
+
+#+BEGIN_SRC js
+    # works because dictionary pointer cannot change, but entries can
+
+    < set users = ['alice','bob','eve'] >
+    < set foundUser = { 'flag': False } >
+
+    initial-check-on-global-foundUser:
+      cmd.run:
+        name: echo initial foundUser = {{foundUser.flag}}
+
+    < for user in users >
+    <- if user == "bob" >
+    <-   if foundUser.update({'flag':True}) ><- endif >
+    <- endif >
+    echo-for-{{user}}:
+      cmd.run:
+        name: echo my name is {{user}}, has bob been found? {{foundUser.flag}}
+    < endfor >
+
+    final-check-on-global-foundUser:
+      cmd.run:
+        name: echo final foundUser = {{foundUser.flag}}
+#+END_SRC
+
+I've also found very helpful this syntax to set the value without
+actually using =set=:
+
+#+BEGIN_SRC js
+    <-   if foundUser.update({'flag':True}) ><- endif >
+#+END_SRC
+
+It actually checks the result of an =update= operation on a dictionary
+(note to self).

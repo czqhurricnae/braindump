@@ -1,0 +1,116 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/通过插头来查找插钉件号/")); -*-
+:PROPERTIES:
+:ID:       91616453-6C45-4ACB-AB68-DADF57B187BC
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-09-09 Wed 16:49>
+#+TITLE: 通过插头来查找插钉件号
+
+* 通过设备号（终端类型 TT）查找插头件号
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_16-49-27_screenshot.jpg]]
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_16-50-52_screenshot.jpg]]
+
+可以看到 D1815 对应的插头的件号为：BACC63CB22-55S6。
+
+* 通过插头件号确定 SWPM 章节号
+在“20-CROSS REFERENCE INDEX”中查找“BACC63CB”可以定位到“20-61-11”。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-14-52_screenshot.jpg]]
+
+或者在“20-35-11”中查找，也是定位到“20-61-11”。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-17-44_screenshot.jpg]]
+
+* 确定插头构型
+在“20-61-11 MIL-C-26500 FRONT RELEASE CONNECTORS”-->“BACC63CB and BACC63CC Bayonet Coupled, Vibration Resistant Connector” 中可以确定插头构型。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-26-05_screenshot.jpg]]
+
+可以确定“BACC63CB22-55S6”：
+- Shell Size。
+22
+- Insert Configuration。
+55
+- Contact Type。
+Sockets
+- Alternate Keyway Postion。
+6
+
+* 根据插入构型确定插钉的尺寸和插头构型图
+在目录中“[[id:00F87A74-63D8-4235-9DDC-4F9F073C9C7C][Insert Configurations]]”快速定位到“Insert Configurations for MIL-C-26500 Type Connectors”。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-34-01_screenshot.jpg]]
+
+在“Table 36 CONNECTOR INSERT CONFIGURATIONS”中。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-35-53_screenshot.jpg]]
+
+在“22-55”这一行中确定插钉的 Contact Cavity Size 为“20”。
+插头构型图为“Figure 70”。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-37-21_screenshot.jpg]]
+
+* 在 SWPM 中根据插钉的尺寸和导线的 AWG 以及插头所在环境查找到插钉的件号
+根据步骤一中可知线号为“20”，步骤四中可知插钉的 Contact Cavity Size 为“20”。
+在目录中“Standard Contact Part Numbers”快速定位到“Table 24 BOEING STANDARD CONTACT PART NUMBERS”。
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-43-19_screenshot.jpg]]
+
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-44-47_screenshot.jpg]]
+
+在“2020”这一行中，根据步骤三中确定插钉的类型是“Socket”，最终得到插钉的件号。
+[[file:./static/通过插头来查找插钉件号/2020-09-09_17-45-37_screenshot.jpg]]
+
+“2020” 中第一个 20 代表 engage end size，第二个 20 代表 crimp barrel size（插钉压接端）。
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-30-39_screenshot.jpg]]
+
+在本例子中 engage end size 和 crimp barrel size 一样大小。
+如果插钉对应的导线 AWG 为 22，那么该如何选择呢？
+
+按照插钉压接端尺寸必须比导线大的原则，应该选择 2020，2018，而不是 2022。
+
+* 如何查询插钉是否为标准钉
+以电插头 D438 为例子。
+插钉 contact cavity size，即 engage end size 为 20，连接电插头 1 号插钉的导线线径 AWG 为 22。
+一般情况下，插针的大小尺寸和导线的线径是相等的，但这是对大部分标准插针而言，还有一些特殊的插针，插钉的大小和导线线径不同，这就需要我们除了知道插针的大小以外，还要知道对应该插钉的导线线径，来综合得出插针的件号。
+接下来我们去查询 1 号针是不是标准钉？
+根据导线号：W5158-0001-22 查询 WDM 的 wire list。
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-40-11_screenshot.jpg]]
+
+既然是标准钉，那么 Engaging end size 与 Crimp barrel size 是一样的，均为 20。
+
+* 剥线工具查询
+根据 导线标识号 W5158-0001-22  查找 WDM 的 wire list  得知。
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-48-20_screenshot.jpg]]
+导线的类型为 PA ,然后查找 SWPM20-00-15 得知剥线工具为 ST2222-29。
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-48-55_screenshot.jpg]]
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-49-02_screenshot.jpg]]
+
+* 剥线长度查询
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-46-56_screenshot.jpg]]
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-46-39_screenshot.jpg]]
+
+* 退钉工具查询
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-51-43_screenshot.jpg]]
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-51-58_screenshot.jpg]]
+
+* 进钉工具查询
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-53-34_screenshot.jpg]]
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-53-23_screenshot.jpg]]
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-53-48_screenshot.jpg]]
+
+* 压接工具查询
+
+[[file:./static/通过插头来查找插钉件号/2021-07-04_23-54-42_screenshot.jpg]]

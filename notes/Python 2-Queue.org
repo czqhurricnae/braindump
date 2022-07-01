@@ -1,0 +1,246 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 2-Queue/")); -*-
+:PROPERTIES:
+:ID:       A9E40E0A-E689-4653-976B-8AD263C474BB
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-11 Thu 16:39>
+#+TITLE: Python 2-Queue
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports no-eval :session
+  import threading, time, random
+
+  ##########################################################################################
+  # Fuzzing is a technique for amplifying race condition errors to make them more visible
+
+  FUZZ = True
+
+
+  def fuzz():
+      if FUZZ:
+          time.sleep(random.random())
+
+  ###########################################################################################
+
+
+  counter = 0
+
+
+  def worker():
+      'My job is to increment the counter and print the current count'
+      global counter
+
+      fuzz()
+      oldcnt = counter
+      fuzz()
+      counter = oldcnt + 1
+      fuzz()
+      print('The count is %d' % counter)
+      fuzz()
+      print('\n')
+      fuzz()
+      print('---------------')
+      fuzz()
+      print('\n')
+      fuzz()
+
+
+  print('Starting up')
+  fuzz()
+  for i in range(10):
+      threading.Thread(target=worker).start()
+      fuzz()
+  print('Finishing up')
+  fuzz()
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- Starting up
+- The count is 1
+-
+-
+- The count is 2
+- ---------------
+-
+-
+-
+-
+- The count is 3
+- The count is 3
+- ---------------
+-
+-
+- ---------------
+-
+-
+-
+-
+-
+-
+- ---------------
+- The count is 4
+-
+-
+-
+-
+- The count is 4
+- ---------------
+- Finishing up
+:END:
+
+* Queue-线程安全的 FIFO 实现
+
+#+BEGIN_SRC ipython :session :results raw drawer :exports no-eval
+  from Queue import Queue
+  from threading import Thread
+  import urllib
+  import urlparse
+
+  import feedparser
+
+  num_fetch_threads = 2
+  enclosure_queue = Queue()
+
+  feed_urls = ["http://advocacy.python.org/podcasts/littlebit.rss",
+                ]
+
+
+  def downloadEnclosures(i, q):
+      while True:
+          print "%s: Looking for the next enclosure" % i
+          url = q.get()
+          parsed_url = urlparse.urlparse(url)
+          print "%s: Downloading:" % i, parsed_url.path
+          response = urllib.urlopen(url)
+          data = response.read()
+          outfile_name = url.rpartition("/")[-1]
+          with open(outfile_name, "wb") as outfile:
+              outfile.write(data)
+          q.task_done()
+
+
+  for i in range(num_fetch_threads):
+      worker = Thread(target=downloadEnclosures,
+                      args=(i, enclosure_queue))
+      worker.setDaemon(True)
+      worker.start()
+
+
+  for url in feed_urls:
+      response = feedparser.parse(url, agent="fetch_padcast.py")
+  for entry in response["entries"][-5:]:
+      for enclosure in entry.get("enclosure", []):
+          parsed_url = urlparse.urlparse(enclosure["url"])
+          print "Queuing:", parsed_url.path
+          enclosure_queue.put(enclosure["url"])
+
+  print "***Main thread waiting"
+  enclosure_queue.join()
+  print "***Done"
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+:END:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports no-eval :session
+  import threading
+  import Queue
+
+
+  counter = 0
+
+  counter_queue = Queue.Queue()
+
+
+  def counter_manager():
+      'I have EXCLUSIVE rights to update the counter variable'
+      global counter
+
+      while True:
+          increment = counter_queue.get()
+          counter += increment
+          print_queue.put([
+              'The count is %d' % counter,
+              '---------------'])
+          counter_queue.task_done()
+
+
+  t = threading.Thread(target=counter_manager)
+  t.daemon = True
+  t.start()
+  del t
+
+  ###########################################################################################
+
+  print_queue = Queue.Queue()
+
+
+  def print_manager():
+      'I have EXCLUSIVE rights to call the "print" keyword'
+      while True:
+          job = print_queue.get()
+          for line in job:
+              print(line)
+          print_queue.task_done()
+
+
+  t = threading.Thread(target=print_manager)
+  t.daemon = True
+  t.start()
+  del t
+
+  ###########################################################################################
+
+
+  def worker():
+      'My job is to increment the counter and print the current count'
+      counter_queue.put(1)
+
+
+  print_queue.put(['Starting up'])
+  worker_threads = []
+  for i in range(10):
+      t = threading.Thread(target=worker)
+      worker_threads.append(t)
+      t.start()
+  for t in worker_threads:
+      t.join()
+
+  counter_queue.join()
+  print_queue.put(['Finishing up'])
+  print_queue.join()
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- Starting up
+- The count is 1
+- ---------------
+- The count is 2
+- ---------------
+- The count is 3
+- ---------------
+- The count is 4
+- ---------------
+- The count is 5
+- ---------------
+- The count is 6
+- ---------------
+- The count is 7
+- ---------------
+- The count is 8
+- ---------------
+- The count is 9
+- ---------------
+- The count is 10
+- ---------------
+- Finishing up
+:END:
+
+* threading.local()
+在多线程中使用全局变量不好，可以使用 ~threading.local()~ 使得在每个线程内都是全局的。
+
+* 杀死线程
+Python 没有提供直接的杀死线程的机制，但是可以使用 ctypes，这可能导致杀死一个正持有锁的线程导致死锁。

@@ -1,0 +1,70 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/为什么设置 display:inline 后，padding-bottom 仍然起作用/")); -*-
+:PROPERTIES:
+:ID:       7B5E2BC3-7534-412A-A824-D169AAB4C9DC
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-28 Mon 23:30>
+#+TITLE: 为什么设置 display:inline 后，padding-bottom 仍然起作用
+
+ 我将 p 的 display 设置为 inline 后，按理说应该是 margin 和 padding 都是上下不起作用，左右起作用，但是为什么 padding-bottom 仍然起作用？
+
+ 这是 html 代码：
+
+ #+BEGIN_SRC html
+ <div id="fu">
+     <p>1505</p>
+     <p>计科</p>
+ </div>
+ #+END_SRC
+
+ 这是 css 代码：
+
+ #+BEGIN_SRC css
+     p {
+     display: inline;
+     background-color: blue;
+     margin: 20px;
+     padding: 20px;
+     border: 5px solid transparent;
+     }
+ #+END_SRC
+
+[[file:./static/为什么设置 display:inline 后，padding-bottom 仍然起作用/2021-06-28_23-31-46_2021-06-03_23-26-13_bV5rAm.jpeg]]
+
+其实不是 padding-bottom 仍然起作用。准确来说是 padding-bottom 与 padding-top 都会起作用。
+只是起作用只是从表现上起作用，但并不占据文档流。
+什么意思呢，就是表面上 p 标签被设为了 inline，高度被撑开了，但其在文档流中占据的高度并没有包含  padding-top 和 padding-bottom。
+
+
+ #+BEGIN_SRC css
+ <div>
+   <div style="height: 20px;
+               background-color: red;">
+   </div>
+     <div style="
+                 background-color: yellowgreen;
+                 padding-top: 20px;
+                 padding-bottom: 20px;
+                 ">
+       <p style="display: inline;
+                 background-color: blue;
+                 padding-top: 20px;
+                 padding-bottom: 20px;
+                 border: 5px solid transparent;
+                 ">1505</p>
+       <p style="display: inline;
+                 background-color: blue;
+                 margin-top: 400px;
+                 margin-bottom: 20px;
+                 padding-top: 40px;
+                 padding-bottom: 20px;
+                 border: 5px solid transparent;
+                 ">计科</p>
+     </div>
+   <div style="height: 20px;
+               background-color: red;">
+   </div>
+ </div>
+ #+END_SRC
+
+[[file:./static/为什么设置 display:inline 后，padding-bottom 仍然起作用/2021-06-28_23-33-34_screenshot.jpg]]

@@ -1,0 +1,20 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/IOSA/")); -*-
+:PROPERTIES:
+:ID:       4328FC04-4840-4479-A944-A674A34760D4
+:ROAM_ALIASES: "IATA Operational Safety Audit"
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-15 Tue 16:35>
+#+TITLE: IOSA
+
+#+ROAM_KEY:
+
+
+IOSA 认证（IATA Operational Safety Audit），即国际航空运输协会运行安全审计认证，
+是国际航空运输协会（IATA）制定的一项为国际所认可和接受的航空安全标准，用于评估航空公司的运行管理和控制系统。
+
+这项认证创建于 2003 年，以国际审计标准为指导，力求通过稳定的标准来进行审计。
+IATA 要求其成员必须在 2007 年底之前通过 IOSA 认证。此项认证的有效期为两年，过期须重新进行审计。
+IATA 指出，自创办至今已进行超过 570 次审计，共有 214 家航空公司完成 IOSA 注册。
+
+通过进行审计，对 350 家航空公司提出了改进方案并进行实施，由此提高飞行安全系数；另一方面，降低了代码共享的冗余，帮助航空公司大幅削减成本。

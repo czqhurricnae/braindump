@@ -1,0 +1,195 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 包，模块，类以及代码文件和目录的一种管理方案/")); -*-
+:PROPERTIES:
+:ID:       9CAD1FC0-9EAD-4466-8445-3F7FDD7519A5
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-06 Tue 14:07>
+#+TITLE: Python 包，模块，类以及代码文件和目录的一种管理方案
+
+* 背景
+Python 存在着包，模块，类，函数。
+
+- 一个文件算一个模块
+- 一个包含 =__init__.py= 的目录算一个包
+
+为了控制代码文件不过大，需要将几个类或者函数分配到一个文件中。
+这时导入文件的情形：
+
+#+BEGIN_SRC python :values list :exports no-eval
+import package_a.class_a_file as caf
+a = caf.ClassA()
+from package_a.class_a_file import *
+a = ClassA()
+#+END_SRC
+
+可以看出的一个弊端是，当按一个类分配一个文件时，当有很多相关的类被使用时，就必须写很多的 ~import~ 。
+
+** 希望达到的效果
+
+ #+BEGIN_SRC sh :results values list :exports no-eval
+ #文件目录结构
+ #|--demo.py
+ #|--package_a
+ #   |--__init__.py
+ #   |--class_a.py  #类ClassA
+ #   |--class_b.py  #类ClassB和函数func_b()
+ #+END_SRC
+
+在 =demo.py= 文件中可以直接使用：
+
+ #+BEGIN_SRC python :results raw drawer values list :exports no-eval
+ from package_a import *
+
+
+ a = ClassA()
+ b = ClassB()
+ func_b()
+ #+END_SRC
+
+实现的思路是利用 ~sys.modules~ 取到包和模块的名字，然后用 ~__package__~ 区分包和模块。
+
+[[id:563412FF-4AB0-4992-95A4-44AE9835D197][See：Python =__package__= 变量]]
+
+* 解决方案
+
+#+CAPTION: demo.py
+<<demo.py>>
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+  from package_a import *
+
+  a = ClassA()
+  b = ClassB()
+  func_b()
+#+END_SRC
+
+#+CAPTION: base.py
+<<base.py>>
+ #+BEGIN_SRC python :results raw drawer values list :exports no-eval
+  import sys
+
+  _packet_ = {}
+
+
+  def export(item):
+      module = sys.modules[item.__module__]
+      package = sys.modules[module.__package__]
+      package.__dict__[item.__name__] = item
+      if not package.__name__ in _packet_:
+          _packet_[package.__name__] = []
+      _packet_[package.__name__].append(item.__name__)
+      return item
+
+
+  def packet(name):
+      if not name in _packet_:
+          _packet_[name] = []
+      return _packet_[name]
+#+END_SRC
+
+#+CAPTION: __init__.py
+<<__init__.py>>
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+import base
+
+from . import class_a, class_b
+
+__all__ = base.packet(__name__)
+
+
+@base.export
+def pafunc():
+    print('pafunc')
+
+#+END_SRC
+
+#+CAPTION: class_a.py
+<<class_a.py>>
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+import base
+
+
+@base.export
+class ClassA:
+    pass
+
+
+@base.export
+def func_a():
+    print('func_a')
+#+END_SRC
+
+#+CAPTION: class_b.py
+<<class_b.py>>
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+import base
+
+
+@base.export
+class ClassB:
+    pass
+
+
+@base.export
+def func_b():
+    print('func_b')
+#+END_SRC
+
+* 使用解决方案
+目录结构：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+#|--base.py
+#|--demo.py
+#|--package_a
+#   |--__init__.py
+#   |--class_a.py  #类ClassA
+#   |--class_b.py  #类ClassB和函数func_b()
+#+END_SRC
+
+- 使用 ~@base.epxort~ 标记要导出的类或者函数
+- 在包 =__init__.py= 文件中初始化变量 ~__all__ = base.packet(__name__)~ 。
+
+* 运行过程
+在 =__init__.py= 文件中，对 ~__all__ = base.packet(__name__)~ 打断点。
+当执行 =Step Into My Code= 进入到 =base.py= 文件中时，可以看到 ~_packet_~ 的值变成： ~<class 'dict'>: {'package_a': ['ClassA', 'func_a', 'ClassB', 'func_b']}~ 。
+那么为什么 ~package~ 的值会变成这样呢？难道是 =__init__.py= 文件中的 ~from . import class_a, class_b~ 。
+
+进行验证：
+
+在 =class_a.py= 中，对 =ClassA= 导出前打断点调试。
+
+#+DOWNLOADED: screenshot @ 2020-10-07 19:46:34
+[[file:./static/Python 包，模块，类以及代码文件和目录的一种管理方案/2020-10-07_19-46-34_screenshot.jpg]]
+
+可以看出 =base.py= 文件中 ~_packet_~ 的值变成： ~<class 'dict'>: {'package_a': ['ClassA']}~ 。
+
+#+DOWNLOADED: screenshot @ 2020-10-07 19:50:06
+[[file:./static/Python 包，模块，类以及代码文件和目录的一种管理方案/2020-10-07_19-50-06_screenshot.jpg]]
+
+当 =base.py= 文件中，执行完函数 ~def packet(name)~ 后会将 ~_packet~ 值返回给 =__init__.py= 文件中的 ~__all__~ 。
+所以 ~__all__~ 的值如图所示：
+
+#+DOWNLOADED: screenshot @ 2020-10-07 20:05:56
+[[file:./static/Python 包，模块，类以及代码文件和目录的一种管理方案/2020-10-07_20-05-56_screenshot.jpg]]
+
+** =__init__.py= 文件中的 ~pafunc~ 函数又是如何被包含到变量 ~__all__~ 中呢？
+在文件 =__init__.py= 中，在函数 ~pafunc~ 打断点。
+
+#+DOWNLOADED: screenshot @ 2020-10-07 20:54:05
+[[file:./static/Python 包，模块，类以及代码文件和目录的一种管理方案/2020-10-07_20-54-05_screenshot.jpg]]
+
+还未进行下一步执行，此时的变量 ~__all__~ 的值为： ~<class 'list'>: ['ClassA', 'func_a', 'ClassB', 'func_b']~ 。
+
+#+DOWNLOADED: screenshot @ 2020-10-07 20:55:50
+[[file:./static/Python 包，模块，类以及代码文件和目录的一种管理方案/2020-10-07_20-55-50_screenshot.jpg]]
+
+当执行完装饰器 ~export~ 后，变量 ~_packet_~ 的值为： ~<class 'dict'>: {'package_a': ['ClassA', 'func_a', 'ClassB', 'func_b', 'pafunc']}~ 。
+再执行 =Step Over= 跳转回 =__init__.py= 文件后，变量 ~__all__~ 的值就变成了： ~<class 'list'>: ['ClassA', 'func_a', 'ClassB', 'func_b', 'pafunc']~ 。
+
+#+DOWNLOADED: screenshot @ 2020-10-07 21:00:16
+[[file:./static/Python 包，模块，类以及代码文件和目录的一种管理方案/2020-10-07_21-00-16_screenshot.jpg]]
+
+不知道为什么？
+
+[[id:3A3C0F37-AA26-47DE-A78A-FFBC19E054A6][See：Python =__all__= 变量]]

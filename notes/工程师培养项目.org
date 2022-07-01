@@ -1,0 +1,57 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/工程师培养项目/")); -*-
+:PROPERTIES:
+:ID:       113A6F65-C85B-4947-98D0-288BEC8797E7
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-07 Wed 14:27>
+#+TITLE: 工程师培养项目
+
+* IPC
+如何查件号
+
+* AMM
+如何查拆装手册
+如何查标准力矩及某一部件力矩
+
+* FIM
+找个航线故障，查出排故方案。
+
+* 图纸（Eng Info Delivery）
+已知件号：如何查图纸
+已知图纸号：如何查部件
+图纸号和件号的关系
+
+* 产品标准（Product Stardards）
+已知化工品标准：如何查对应厂家号 QPL 与 TDS 代表什么，如何查询。
+如何通过公司航材系统查询航材信息（QPL，TDS）
+
+* 构型（My Boeing Configuration ）
+如何查询 LOPA 图
+
+* 航材查询（Spares Engineering and Provisioning ）
+如何查航材互换
+
+* 维护手册（Maintenance Documents ）
+如何查 CMM
+如何查 BOEing 工卡
+如何查 BOEing 工具
+
+* 维修咨询（Service Request System ）
+熟悉下关于我们工作以前发过的 SR
+
+* FTD（Fleet Team Digest）熟悉下关于我们工作相关的维修信息
+ARMS 的航材系统定件
+
+* 学习 TB、MB 内容
+学习传阅系统过去的 TB、MB
+学习使用 TB、MB 系统
+
+* 生产准备
+MF8203-43
+MF8205-4
+
+* NRC 方案编写
+MF8203-40
+MF7802-7
+MF3776-4
+MF7802-5

@@ -1,0 +1,30 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 导航显示方式/")); -*-
+:PROPERTIES:
+:ID:       296FC2CA-73EF-4AA9-B219-9D76EB8CA3E9
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-24 Sun 13:04>
+#+TITLE: 737NG 导航显示方式
+
+* 拓展进近方式
+[[file:./static/737NG 导航显示方式/2021-01-24_13-05-06_screenshot.jpg]]
+* 中央进近方式
+
+[[file:./static/737NG 导航显示方式/2021-01-24_13-06-05_screenshot.jpg]]
+
+* 拓展 VOR 方式
+[[file:./static/737NG 导航显示方式/2021-01-24_13-09-41_screenshot.jpg]]
+
+* 中央 VOR 方式
+[[file:./static/737NG 导航显示方式/2021-01-24_13-10-04_screenshot.jpg]]
+
+* 拓展 MAP 方式
+[[file:./static/737NG 导航显示方式/2021-01-24_13-12-22_screenshot.jpg]]
+
+* 中央 MAP 方式
+[[file:./static/737NG 导航显示方式/2021-01-24_13-12-50_screenshot.jpg]]
+[[file:./static/737NG 导航显示方式/2021-01-24_13-14-02_screenshot.jpg]]
+
+* PLAN 方式
+[[file:./static/737NG 导航显示方式/2021-01-24_13-15-00_screenshot.jpg]]

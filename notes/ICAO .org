@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/ICAO /")); -*-
+:PROPERTIES:
+:ID:       6FE2C272-B3B4-491D-91EA-2678209C5825
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 13:03>
+#+TITLE: ICAO 
+
+#+ROAM_KEY:
+
+国际民航组织 International Civil Aviation Organization
+

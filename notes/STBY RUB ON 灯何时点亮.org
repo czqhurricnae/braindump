@@ -1,0 +1,22 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/STBY RUB ON 灯何时点亮/")); -*-
+:PROPERTIES:
+:ID:       D075F942-791D-4A92-9B95-3CD6A54234F4
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-13 Sat 22:34>
+#+TITLE: STBY RUB ON 灯何时点亮
+
+- 将任一飞行控制电门打到 STBY RUD 位。[[id:9F23E6FA-B02E-43DC-98FA-5448E2833A2F][飞行控制电门打到 STBY RUB 会发生什么情况]]
+此时备用襟翼预位电门必须在 OFF 位，效果：关闭通往副翼 PCU、副翼自动驾驶作动器、方向舵主 PCU、升降舵 PCU、升降舵自动驾驶作动器、升降舵感觉计算机的液压，备用泵工作，备用方向舵关断活门打开，STBY RUD ON 灯亮。
+
+[[file:./static/STBY RUB ON 灯何时点亮/2021-02-13_22-35-07_screenshot.jpg]]
+
+- 备用襟翼预位电门预位。
+[[file:./static/STBY RUB ON 灯何时点亮/2021-02-13_22-37-30_screenshot.jpg]]
+
+此时只有备用泵工作，STBY RUD 灯不亮，备用方向舵关断活门不会打开。
+
+- 备用前缘襟翼预位电门预位，控制电门 DOWN。
+[[file:./static/STBY RUB ON 灯何时点亮/2021-02-13_22-40-09_screenshot.jpg]]
+
+效果：前缘备用驱动关断活门继电器激励，使前缘襟翼缝翼关断活门打开，使自保持电路激励。将电信号送到备用关断活门指示继电器 [[id:181AD0CD-D493-4553-B81A-4E64FEEC2371][R625]]。

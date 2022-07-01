@@ -1,0 +1,27 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Flask 重建数据库索引/")); -*-
+:PROPERTIES:
+:ID:       0AB92733-75D5-4EDB-8040-998434B397D3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-23 Sun 23:30>
+#+TITLE: Flask 重建数据库索引
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+python run.py shell
+/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/exthook.py:71: ExtDeprecationWarning: Importing flask.ext.babelex is deprecated, use flask_babelex instead.
+.format(x=modname), ExtDeprecationWarning
+Building prefix dict from the default dictionary ...
+Loading model from cache /var/folders/2h/_7667pjd23s4wd9mpdwy401w0000gn/T/jieba.cache
+Loading model cost 0.631 seconds.
+Prefix dict has been built succesfully.
+
+In [1]: from container_whooshalchemyplus import index_all
+
+In [2]: with app.app_context():
+...:     index_all(app)
+...:
+Indexing Chapter...                  done	3s
+Indexing StandardTime...             done	0s
+Indexing Announcement...             done	0s
+Indexing Tool...
+#+END_SRC

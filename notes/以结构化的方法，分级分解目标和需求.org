@@ -1,0 +1,15 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/以结构化的方法，分级分解目标和需求/")); -*-
+:PROPERTIES:
+:ID:       4F061986-8DA7-4DFC-958C-72228A938AFD
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-02 Sun 23:44>
+#+TITLE: 以结构化的方法，分级分解目标和需求
+
+#+ROAM_KEY:
+
+
+* 用系统管理方法论中结构化的管理方法，强化制度设计，落实企业主体责任
+- 对三个敬畏，作风建设中提出的要求，与公司实际运行相结合，进行需求分析。
+- 落实需求位具体事项和标准，与现有的部门与岗位的职责和程序对标，合并同类项，拾遗补漏。
+

@@ -1,0 +1,13 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/备用关断活门指示继电器（R625）/")); -*-
+:PROPERTIES:
+:ID:       181AD0CD-D493-4553-B81A-4E64FEEC2371
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :R625:
+
+#+DATE: <2021-02-13 Sat 22:48>
+#+TITLE: 备用关断活门指示继电器（R625）
+
+控制从后缘襟翼着陆警告电门到主轮舱关闭 PTU 控制活门的电源。
+
+[[file:./static/备用关断活门指示继电器（R625）/2021-02-14_09-28-15.jpg]]

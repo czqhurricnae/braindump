@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/fay seal/")); -*-
+:PROPERTIES:
+:ID:       37D3EB89-3662-4125-B43D-AED22560DDB1
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-02-14 Sun 18:54>
+#+TITLE: fay seal
+
+[[file:./static/fay seal/2021-02-14_18-54-11_screenshot.jpg]]

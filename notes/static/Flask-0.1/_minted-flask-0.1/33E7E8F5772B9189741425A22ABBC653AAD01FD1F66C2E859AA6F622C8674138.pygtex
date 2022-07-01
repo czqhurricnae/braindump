@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{MapAdapter}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Returned by :meth:`Map.bind` or :meth:`Map.bind\PYGZus{}to\PYGZus{}environ` and does}
+\PYG{l+s+sd}{    the URL matching and building based on runtime information.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{map}\PYG{p}{,} \PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n}{script\PYGZus{}name}\PYG{p}{,} \PYG{n}{subdomain}\PYG{p}{,}
+                 \PYG{n}{url\PYGZus{}scheme}\PYG{p}{,} \PYG{n}{path\PYGZus{}info}\PYG{p}{,} \PYG{n}{default\PYGZus{}method}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map} \PYG{o}{=} \PYG{n+nb}{map}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}name} \PYG{o}{=} \PYG{n}{server\PYGZus{}name}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{script\PYGZus{}name}\PYG{o}{.}\PYG{n}{endswith}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{:}
+            \PYG{n}{script\PYGZus{}name} \PYG{o}{+}\PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{script\PYGZus{}name} \PYG{o}{=} \PYG{n}{script\PYGZus{}name}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{subdomain} \PYG{o}{=} \PYG{n}{subdomain}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}scheme} \PYG{o}{=} \PYG{n}{url\PYGZus{}scheme}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{path\PYGZus{}info} \PYG{o}{=} \PYG{n}{path\PYGZus{}info} \PYG{o+ow}{or} \PYG{l+s+sa}{u}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZsq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{default\PYGZus{}method} \PYG{o}{=} \PYG{n}{default\PYGZus{}method}
+\end{Verbatim}

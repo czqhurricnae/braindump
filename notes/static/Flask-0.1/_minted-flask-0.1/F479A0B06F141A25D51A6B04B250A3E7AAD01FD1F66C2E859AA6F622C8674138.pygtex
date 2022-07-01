@@ -1,0 +1,126 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{TCPServer}\PYG{p}{(}\PYG{n}{BaseServer}\PYG{p}{)}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} 注3}
+
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Base class for various socket\PYGZhy{}based server classes.}
+
+\PYG{l+s+sd}{    Defaults to synchronous IP stream (i.e., TCP).}
+
+\PYG{l+s+sd}{    Methods for the caller:}
+
+\PYG{l+s+sd}{    \PYGZhy{} \PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}(server\PYGZus{}address, RequestHandlerClass, bind\PYGZus{}and\PYGZus{}activate=True)}
+\PYG{l+s+sd}{    \PYGZhy{} serve\PYGZus{}forever(poll\PYGZus{}interval=0.5)}
+\PYG{l+s+sd}{    \PYGZhy{} shutdown()}
+\PYG{l+s+sd}{    \PYGZhy{} handle\PYGZus{}request()  \PYGZsh{} if you don\PYGZsq{}t use serve\PYGZus{}forever()}
+\PYG{l+s+sd}{    \PYGZhy{} fileno() \PYGZhy{}\PYGZgt{} int   \PYGZsh{} for select()}
+
+\PYG{l+s+sd}{    Methods that may be overridden:}
+
+\PYG{l+s+sd}{    \PYGZhy{} server\PYGZus{}bind()}
+\PYG{l+s+sd}{    \PYGZhy{} server\PYGZus{}activate()}
+\PYG{l+s+sd}{    \PYGZhy{} get\PYGZus{}request() \PYGZhy{}\PYGZgt{} request, client\PYGZus{}address}
+\PYG{l+s+sd}{    \PYGZhy{} handle\PYGZus{}timeout()}
+\PYG{l+s+sd}{    \PYGZhy{} verify\PYGZus{}request(request, client\PYGZus{}address)}
+\PYG{l+s+sd}{    \PYGZhy{} process\PYGZus{}request(request, client\PYGZus{}address)}
+\PYG{l+s+sd}{    \PYGZhy{} shutdown\PYGZus{}request(request)}
+\PYG{l+s+sd}{    \PYGZhy{} close\PYGZus{}request(request)}
+\PYG{l+s+sd}{    \PYGZhy{} handle\PYGZus{}error()}
+
+\PYG{l+s+sd}{    Methods for derived classes:}
+
+\PYG{l+s+sd}{    \PYGZhy{} finish\PYGZus{}request(request, client\PYGZus{}address)}
+
+\PYG{l+s+sd}{    Class variables that may be overridden by derived classes or}
+\PYG{l+s+sd}{    instances:}
+
+\PYG{l+s+sd}{    \PYGZhy{} timeout}
+\PYG{l+s+sd}{    \PYGZhy{} address\PYGZus{}family}
+\PYG{l+s+sd}{    \PYGZhy{} socket\PYGZus{}type}
+\PYG{l+s+sd}{    \PYGZhy{} request\PYGZus{}queue\PYGZus{}size (only for stream sockets)}
+\PYG{l+s+sd}{    \PYGZhy{} allow\PYGZus{}reuse\PYGZus{}address}
+
+\PYG{l+s+sd}{    Instance variables:}
+
+\PYG{l+s+sd}{    \PYGZhy{} server\PYGZus{}address}
+\PYG{l+s+sd}{    \PYGZhy{} RequestHandlerClass}
+\PYG{l+s+sd}{    \PYGZhy{} socket}
+
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{n}{address\PYGZus{}family} \PYG{o}{=} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{AF\PYGZus{}INET}
+
+    \PYG{n}{socket\PYGZus{}type} \PYG{o}{=} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{SOCK\PYGZus{}STREAM}
+
+    \PYG{n}{request\PYGZus{}queue\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{5}
+
+    \PYG{n}{allow\PYGZus{}reuse\PYGZus{}address} \PYG{o}{=} \PYG{n+nb+bp}{False}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{server\PYGZus{}address}\PYG{p}{,} \PYG{n}{RequestHandlerClass}\PYG{p}{,} \PYG{n}{bind\PYGZus{}and\PYGZus{}activate}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Constructor.  May be extended, do not override.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{BaseServer}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{server\PYGZus{}address}\PYG{p}{,} \PYG{n}{RequestHandlerClass}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket} \PYG{o}{=} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{socket}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{address\PYGZus{}family}\PYG{p}{,}
+                                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket\PYGZus{}type}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{bind\PYGZus{}and\PYGZus{}activate}\PYG{p}{:}
+            \PYG{k}{try}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}bind}\PYG{p}{(}\PYG{p}{)}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}activate}\PYG{p}{(}\PYG{p}{)}
+            \PYG{k}{except}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}close}\PYG{p}{(}\PYG{p}{)}
+                \PYG{k}{raise}
+
+    \PYG{k}{def} \PYG{n+nf}{server\PYGZus{}bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Called by constructor to bind the socket.}
+
+\PYG{l+s+sd}{        May be overridden.}
+
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{allow\PYGZus{}reuse\PYGZus{}address}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{setsockopt}\PYG{p}{(}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{SOL\PYGZus{}SOCKET}\PYG{p}{,} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{SO\PYGZus{}REUSEADDR}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}address}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}address} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{getsockname}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{server\PYGZus{}activate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Called by constructor to activate the server.}
+
+\PYG{l+s+sd}{        May be overridden.}
+
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{listen}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}queue\PYGZus{}size}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{server\PYGZus{}close}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Called to clean\PYGZhy{}up the server.}
+
+\PYG{l+s+sd}{        May be overridden.}
+
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{close}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{fileno}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Return socket file number.}
+
+\PYG{l+s+sd}{        Interface required by select().}
+
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{fileno}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Get the request and client address from the socket.}
+
+\PYG{l+s+sd}{        May be overridden.}
+
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{accept}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{shutdown\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{request}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Called to shutdown and close an individual request.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{}explicitly shutdown.  socket.close() merely releases}
+            \PYG{c+c1}{\PYGZsh{}the socket and waits for GC to perform the actual close.}
+            \PYG{n}{request}\PYG{o}{.}\PYG{n}{shutdown}\PYG{p}{(}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{SHUT\PYGZus{}WR}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{error}\PYG{p}{:}
+            \PYG{k}{pass} \PYG{c+c1}{\PYGZsh{}some platforms may raise ENOTCONN here}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{close\PYGZus{}request}\PYG{p}{(}\PYG{n}{request}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{close\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{request}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Called to clean up an individual request.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{request}\PYG{o}{.}\PYG{n}{close}\PYG{p}{(}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/塑料扎带/")); -*-
+:PROPERTIES:
+:ID:       C0E7C214-A517-4BF9-808E-F6B6B4552A86
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-07 Wed 16:36>
+#+TITLE: 塑料扎带
+#+FILETAGS: :plastic_tie_strap:
+
+只能用于增压区。
+
+[[file:./static/塑料扎带/2021-04-07_16-36-25_screenshot.jpg]]
+[[file:./static/塑料扎带/2021-04-07_16-36-37_screenshot.jpg]]

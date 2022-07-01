@@ -1,0 +1,12 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/波音工程图纸-图纸页资料清单（PSDL）/")); -*-
+:PROPERTIES:
+:ID:       4EF0A17B-6FEE-49BC-9EA0-424144048ABF
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :PSDL:
+#+DATE: <2021-01-18 Mon 13:20>
+#+TITLE: 波音工程图纸-图纸页资料清单（PSDL）
+
+图页资料清单（PSDL），即 Picture Sheet Data List，以文字的形式说明图页上的旗标（FLAG NOTES），通用标注（GENERAL NOTES）等。
+注意：有的 [[id:12ABC211-BFB4-41EB-B477-5444288F6679][PL]] 中也有可能出现旗标，但 PSDL 中的旗标超越 PL 中的旗标。
+查阅旗标一定以 PSDL 中的为准。

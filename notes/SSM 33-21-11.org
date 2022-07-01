@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/SSM 33-21-11/")); -*-
+:PROPERTIES:
+:ID:       029B9F30-C8DB-41E6-B73B-5B1D6C257DB4
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-10 Sun 14:01>
+#+TITLE: SSM 33-21-11
+
+[[file:./static/SSM 33-21-11/2021-01-10_15-27-20_SSM 33-21-11.jpeg]]

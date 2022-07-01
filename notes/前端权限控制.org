@@ -1,0 +1,71 @@
+:PROPERTIES:
+:ID:       61B8895F-46AC-45A2-88CD-45576A985DBC
+:END:
+
+#+DATE: <2020-12-12 Sat 00:59>
+#+TITLE: 前端权限控制
+
+* 前端实现权限控制
+# #+CALL: createTree(toInclude="*.*", toExclude="", directory="/Users/c/admin-permission-demo/src/", createLink="true")
+
+#+RESULTS:
+:results:
++ assets/
+	+ [[file:/Users/c/admin-permission-demo/src//assets/yay.jpg][yay.jpg]]
++ common/
+	+ [[file:/Users/c/admin-permission-demo/src//common/menu.ts][menu.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//common/router.ts][router.ts]]
++ components/
+	+ Exception/
+		+ [[file:/Users/c/admin-permission-demo/src//components/Exception/index.less][index.less]]
+		+ [[file:/Users/c/admin-permission-demo/src//components/Exception/index.tsx][index.tsx]]
+		+ [[file:/Users/c/admin-permission-demo/src//components/Exception/typeconfig.js][typeconfig.js]]
+	+ GlobalHeader/
+		+ [[file:/Users/c/admin-permission-demo/src//components/GlobalHeader/index.less][index.less]]
+		+ [[file:/Users/c/admin-permission-demo/src//components/GlobalHeader/index.tsx][index.tsx]]
+	+ PageHeader/
+		+ [[file:/Users/c/admin-permission-demo/src//components/PageHeader/index.js][index.js]]
+	+ PermissionPage/
+		+ [[file:/Users/c/admin-permission-demo/src//components/PermissionPage/index.tsx][index.tsx]]
+	+ SideMenu/
+		+ [[file:/Users/c/admin-permission-demo/src//components/SideMenu/index.less][index.less]]
+		+ [[file:/Users/c/admin-permission-demo/src//components/SideMenu/index.tsx][index.tsx]]
++ hoc/
+	+ [[file:/Users/c/admin-permission-demo/src//hoc/table.tsx][table.tsx]]
++ [[file:/Users/c/admin-permission-demo/src//index.less][index.less]]
++ [[file:/Users/c/admin-permission-demo/src//index.ts][index.ts]]
++ layouts/
+	+ [[file:/Users/c/admin-permission-demo/src//layouts/BasicLayout.tsx][BasicLayout.tsx]]
+	+ [[file:/Users/c/admin-permission-demo/src//layouts/UserLayout.less][UserLayout.less]]
+	+ [[file:/Users/c/admin-permission-demo/src//layouts/UserLayout.tsx][UserLayout.tsx]]
++ models/
+	+ [[file:/Users/c/admin-permission-demo/src//models/connect.ts][connect.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//models/global.ts][global.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//models/goods.ts][goods.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//models/login.ts][login.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//models/order.ts][order.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//models/permission.ts][permission.ts]]
++ [[file:/Users/c/admin-permission-demo/src//router.tsx][router.tsx]]
++ routes/
+	+ Dashborad/
+		+ [[file:/Users/c/admin-permission-demo/src//routes/Dashborad/index.js][index.js]]
+		+ [[file:/Users/c/admin-permission-demo/src//routes/Dashborad/styles.css][styles.css]]
+	+ Exception/
+		+ [[file:/Users/c/admin-permission-demo/src//routes/Exception/403.tsx][403.tsx]]
+		+ [[file:/Users/c/admin-permission-demo/src//routes/Exception/404.tsx][404.tsx]]
+	+ GoodsList/
+		+ [[file:/Users/c/admin-permission-demo/src//routes/GoodsList/GoodsList.tsx][GoodsList.tsx]]
+	+ [[file:/Users/c/admin-permission-demo/src//routes/IndexPage.css][IndexPage.css]]
+	+ TableList/
+		+ [[file:/Users/c/admin-permission-demo/src//routes/TableList/MyTable.js][MyTable.js]]
+		+ [[file:/Users/c/admin-permission-demo/src//routes/TableList/TableList.tsx][TableList.tsx]]
+	+ User/
+		+ [[file:/Users/c/admin-permission-demo/src//routes/User/Login.less][Login.less]]
+		+ [[file:/Users/c/admin-permission-demo/src//routes/User/Login.tsx][Login.tsx]]
++ services/
+	+ [[file:/Users/c/admin-permission-demo/src//services/api.ts][api.ts]]
++ [[file:/Users/c/admin-permission-demo/src//type.d.ts][type.d.ts]]
++ utils/
+	+ [[file:/Users/c/admin-permission-demo/src//utils/request.ts][request.ts]]
+	+ [[file:/Users/c/admin-permission-demo/src//utils/utils.ts][utils.ts]]
+:end:

@@ -1,0 +1,77 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python WSGI middleware/")); -*-
+:PROPERTIES:
+:ID:       CC4C5DC2-91CA-4CAA-A2F7-60A2B848FB2D
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-19 Sun 22:31>
+#+TITLE: Python WSGI middleware
+
+有些程序可能处于服务器端和程序端两者之间：对于服务器程序，它就是应用程序，而对于应用程序，它就是服务器程序。
+这就是中间层 middleware。
+middleware 对服务器程序和应用是透明的，
+它像一个代理/管道一样，把接收到的请求进行一些处理，然后往后传递，一直传递到客户端程序，最后把程序的客户端处理的结果再返回。
+如下图所示：
+
+[[file:./static/Python WSGI middleware/WSGI.png]]
+
+middleware 做了两件事情：
+
+- 被服务器程序（有可能是其他 middleware）调用， 返回结果回去
+- 调用应用程序（有可能是其他 middleware），把参数传递过去
+
+=PEP 333= 上面给出了 middleware 的可能使用场景：
+
+- 根据 url 把请求给到不同的客户端程序（url routing）
+- 允许多个客户端程序/web 框架同时运行，就是把接到的同一个请求传递给多个程序
+- 负载均衡和远程处理：把请求在网络上传输
+- 应答的过滤处理
+
+那么简单地 ~middleware~ 实现是怎么样的呢？下面的代码实现的是一个简单地 ~url routing~ 的 ~middleware~ ：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class Router(object):
+    def __init__(self):
+        self.path_info = {}
+    def route(self, environ, start_response):
+        application = self.path_info[environ['PATH_INFO']]
+        return application(environ, start_response)
+    def __call__(self, path):
+        def wrapper(application):
+            self.path_info[path] = application
+        return wrapper
+
+router = Router()
+#+END_SRC
+
+怎么在程序里面使用呢？
+
+#+BEGIN_SRC python :results values list :exports no-eval
+#here is the application
+@router('/hello')  # 调用 route 实例, 把函数注册到 paht_info 字典
+def hello(environ, start_response):
+    status = '200 OK'
+    output = 'Hello'
+    response_headers = [('Content-type', 'text/plain'),
+                        ('Content-Length', str(len(output)))]
+    write = start_response(status, response_headers)
+    return [output]
+
+
+@router('/world')
+def world(environ, start_response):
+    status = '200 OK'
+    output = 'World!'
+    response_headers = [('Content-type', 'text/plain'),
+                        ('Content-Length', str(len(output)))]
+    write = start_response(status, response_headers)
+    return [output]
+
+
+#here run the application
+result = router.route(environ, start_response)
+for value in result:
+    write(value)
+#+END_SRC
+
+注：上面的代码来自[[http://linluxiang.iteye.com/blog/799163][这篇博客]]。

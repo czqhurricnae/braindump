@@ -1,0 +1,263 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/JavaScript-继承/")); -*-
+:PROPERTIES:
+:ID:       A58AED20-94D6-4713-946C-9EF0F2F26601
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-30 Thu 16:47>
+#+TITLE: JavaScript-继承
+
+#+BEGIN_SRC js :results output :exports no-eval
+var a = {
+    x: 10,
+    calculate: function(z) {
+        return this.x + this.y + z;
+    }
+}
+var b = {
+    y: 20,
+    __proto__: a
+}
+var c = {
+    y:30,
+    __proto__: a
+}
+console.log(b.calculate(30));
+console.log(c.calculate(40));
+#+END_SRC
+
+#+RESULTS:
+: 60
+: 80
+
+[[id:A97B6F9C-5832-4724-B9AD-8CB8FCEE99C4][See：JavaScript-原型链]]
+
+* object.getPrototypeOf(obj)
+
+#+BEGIN_SRC js :results output :exports no-eval
+var a = {
+    x: 10,
+    calculate: function(z) {
+        return this.x + this.y + z;
+    }
+}
+var b = {
+    y: 20,
+    __proto__: a
+}
+var c = {
+    y:30,
+    __proto__: a
+}
+console.log(Object.getPrototypeOf(a));
+console.log(a.__proto__);
+console.log(Object.getPrototypeOf(b));
+console.log(b.__proto__);
+console.log(Object.getPrototypeOf(c));
+console.log(c.__proto__);
+#+END_SRC
+
+#+RESULTS:
+: {}
+: {}
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+
+~__proto__~ field is not standard event through it is supported by most JavsScript implementations.
+ECMAScript 5+ compliant engines now provide a standard way to access internal prototype of a JavaScript object through ~getPrototypeOf(~) method.
+
+* Inheritance through Prototype
+If the object itself doesn't have a property/method that is requested,
+then the prototype objects in the prototype chainis searched.
+So the prototype objects can capture shared properties/methods, thus
+providing inheritance.
+
+#+BEGIN_SRC js :results output :exports no-eval
+var foo = {
+    x: 10,
+    y: 20
+}
+
+console.dir(foo);
+
+// Note that the "toString" method is not present in the
+// "foo" object. But the prototype object of "foo"
+// object is Object object, which has "toString" method.
+console.log("foo.toString = " + foo.toString);
+console.log("foo.toString() = " + foo.toString());
+
+// Display the "prototype chain"
+console.log("foo.__proto__ = " + foo.__proto__);
+console.log("foo.__proto__.__proto__ = " + foo.__proto__.__proto__)
+#+END_SRC
+
+#+RESULTS:
+: { x: 10, y: 20 }
+: foo.toString = function toString() { [native code] }
+: foo.toString() = [object Object]
+: foo.__proto__ = [object Object]
+: foo.__proto__.__proto__ = null
+: TypeError: foo.xyz is not a function
+
+* set prototype field manually
+
+ #+BEGIN_SRC js :results output :exports no-eval
+ var a = {
+     x: 10,
+     calculate: function(z) {
+         return this.x + this.y + z
+     }
+ };
+ console.dir(a);
+
+ var b = {
+     y: 20,
+     __proto__: a
+ };
+ console.dir(b);
+
+ var c = {
+     y: 30,
+ };
+
+ c.__proto__ = a;
+ console.dir(c);
+
+ // Call the inherited method.
+ console.log(b.calculate(30));
+ console.log(c.calculate(40));
+
+ // ECMAScript 5 compliant engines now provide a standard way to access
+ // internal prototype of a JavaScript object: Object.getPrototypeOf(obj).
+ console.log("Object.getPrototypeOf(b).x = " + Object.getPrototypeOf(b).x);
+ console.log("b.__proto__.x = " + b.__proto__.x);
+ console.log("b.x = " + b.x);
+
+ var d = {
+ __proto__: b
+ };
+ console.log(c.calculate(50));
+ #+END_SRC
+
+ #+RESULTS:
+ : { x: 10, calculate: [Function: calculate] }
+ : { y: 20 }
+ : { y: 30 }
+ : 60
+ : 80
+ : Object.getPrototypeOf(b).x = 10
+ : b.__proto__.x = 10
+ : b.x = 10
+ : 90
+
+
+[[file:./static/JavaScript-继承/2020-07-31_20-03-16_screenshot.jpg]]
+
+* Constructor Function.prototype
+Besides =creation of objects=, a constructor function does another useful thing — it automatically sets a “function prototype” object for newly created objects.
+
+This function prototype object is stored in the =.prototype= property
+- This is different from ~__proto__~ property
+- When a JavaScript object is created from the Constructor Function, the proto property of the resulting object points to the function prototype object
+- In other words, any properties and methods added to the function prototype object are available to the resulting object
+
+#+BEGIN_SRC js :results output :exports no-eval
+// Function constructor
+function Foo(y) {
+    this.y = y;
+}
+
+// Add property "x" to function prototype
+Foo.prototype.x = 10;
+
+// Add method "calculate" to function prototype
+Foo.prototype.calculate = function(z) {
+    return this.x + this.y + z;
+}
+console.dir(Foo);
+
+// Now create our "b" and "c" objects are created from "Foo"
+var b = new Foo(20);
+var c = new Foo(30);
+console.dir(b);
+console.dir(c);
+
+// Call the inherited method
+console.log(b.calculate(30));
+console.log(c.calculate(40));
+console.dir(Foo.prototype);
+console.log(Foo.prototype.__proto__ == Object.prototype);
+console.log(Foo.__proto__ == Function.prototype);
+console.log(Foo.__proto__);
+console.log(Foo.__proto__.__proto__ == Object.prototype);
+console.log(Foo.__proto__.__proto__);
+console.log(Foo.__proto__.__proto__.__proto__ == null);
+console.log(Foo.__proto__.__proto__.__proto__);
+console.log(b.__proto__);
+console.log(c.__proto__);
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+[Function: Foo]
+Foo { y: 20 }
+Foo { y: 30 }
+60
+80
+Foo { x: 10, calculate: [Function] }
+true
+true
+[Function]
+true
+{}
+true
+null
+Foo { x: 10, calculate: [Function] }
+Foo { x: 10, calculate: [Function] }
+#+end_example
+
+[[file:./static/JavaScript-继承/2020-07-30_17-26-29_screenshot.jpg]]
+
+#+BEGIN_SRC js :results output :exports no-eval
+function MyFunction(name, size) {
+    this.name = name;
+    this.size = size;
+}
+
+// Add a function to the prototype of MyFunction.
+MyFunction.prototype.tellSize = function() {
+    console.log("size of " + this.name + " is " + this.size);
+    console.log("age of " + this.name + " is " + this.age);
+}
+
+// Add a field to the prototype of MyFunction.
+MyFunction.prototype.age = 10;
+
+console.log("MyFunction----------");
+console.dir(MyFunction);
+
+// Create an instance of the object.
+// Note that new object has tellSize() method.
+var myObj = new MyFunction("Desk", "30 inches");
+myObj.tellSize();
+
+console.log("myObj----------");
+console.dir(myObj);
+
+// myObj.__proto__.tellSize2 = function() {}
+Object.getPrototypeOf(myObj).tellSize2 = function() {
+    console.log("size2 of " + this.name + " is " + this.size);
+    console.log("age2 of " + this.name + " is " + this.age);
+}
+
+myObj.tellSize2();
+
+console.log("myObj-----------");
+console.dir(this.myObj);
+#+END_SRC
+
+#+RESULTS:
+
+[[file:./static/JavaScript-继承/2020-07-31_21-58-10_screenshot.jpg]]

@@ -1,0 +1,38 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/AP 宣告牌/")); -*-
+:PROPERTIES:
+:ID:       69D2A746-E3AF-4073-B1CC-FA683D7C0D58
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :autoflight_status_annunciator:ASAs:
+
+#+DATE: <2021-03-28 Sun 20:51>
+#+TITLE: AP 宣告牌
+
+[[file:./static/AP 宣告牌/2021-03-28_20-54-08_23-1217.png]]
+
+[[file:./static/AP 宣告牌/2021-03-28_20-54-16_23-1218.png]]
+
+- A/P 宣告牌琥珀色[fn:1]
+  当 DFCS 从 CMD 转换为 CWS，MCP 发送 CWS WARN 警告信号至 ASAs，使得 A/P 宣告牌琥珀色闪亮。
+
+- A/P 宣告牌红色
+  - 闪亮[fn:1]：
+    - 当 A/P 脱开时，MCP 发送 A/P 警告信号至 ASAs，使 A/P 宣告牌红色闪亮。
+  - 稳定亮[fn:2]：
+    - DFCS 处于 BITE 状态。
+    - 两部 FCC 无法协同工作。
+    - 一部 FCC 在地面上电测试失败。
+    - 飞机高于 400FT，因单通道俯仰权限无效导致无法从 A/P G/A （复飞）方式退出进入高度截获方式在飞机高于 400FT，因单通道俯仰权限无效导致无法从 A/P G/A 方式退出进入高度截获方式 飞机高于 400FT，因单通道俯仰权限无效导致无法从 A/P G/A 方式退出进入高度截获方式。
+    - 飞机处于 A/P G/A 时 MCP 总线失效。
+
+- A/T 宣告牌琥珀色
+当 FCC 发现 A/T 无法保持飞机的速度，将发送空速警告信号至本边 ASAs，使 A/T 宣告牌琥珀色闪亮。
+
+* Footnotes
+
+[fn:2]
+[[file:./static/AP 宣告牌/2021-03-29_08-21-58_screenshot.jpg]]
+
+[fn:1]
+[[file:./static/AP 宣告牌/2021-03-28_21-16-56_screenshot.jpg]]
+

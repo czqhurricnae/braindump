@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 起落架选择活门/")); -*-
+:PROPERTIES:
+:ID:       A2FEEFB3-94C2-4C3D-9E4A-8C2DFC05509A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-30 Tue 17:00>
+#+TITLE: 737NG 起落架选择活门
+
+[[file:./static/737NG 起落架选择活门/2021-03-30_17-01-24_640.png]]
+人工放出电磁活门在备用位时，液压经过电磁活门后作动旁通活门使其旁通，从而堵住了起落架收上压力，并将起落架收上压力管路连接到回油管。

@@ -1,0 +1,82 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Filter Table</title>
+    <link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script src="filter_table.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="optionDiv">
+        Filter By Position
+        <select name="selectField" id="selectField">
+            <option value="All">All</option>
+            <option value="Student">Student</option>
+            <option value="Assistant">Assistant</option>
+            <option value="Professor">Professor</option>
+        </select>
+    </div>
+    <table id="myTable">
+        <tr id="HeadRow">
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Age</td>
+            <td>Position</td>
+        </tr>
+        <tr position = "Student">
+            <td>John</td>
+            <td>John's Last Name</td>
+            <td>25</td>
+            <td>Student</td>
+        </tr>
+        <tr position = "Assistant">
+            <td>Timmy</td>
+            <td>Timmy's Last Name</td>
+            <td>22</td>
+            <td>Assistant</td>
+        </tr>
+        <tr position = "Professor">
+            <td>Eddy</td>
+            <td>Eddy's Last Name</td>
+            <td>35</td>
+            <td>Professor</td>
+        </tr>
+        <tr position = "Professor">
+            <td>Emma</td>
+            <td>Emma's Last Name</td>
+            <td>38</td>
+            <td>Professor</td>
+        </tr>
+        <tr position = "Student">
+            <td>Emily</td>
+            <td>Emily's Last Name</td>
+            <td>20</td>
+            <td>Student</td>
+        </tr>
+        <tr position = "Assistant">
+            <td>Jack</td>
+            <td>Jack's Last Name</td>
+            <td>30</td>
+            <td>Assistant</td>
+        </tr>
+        <tr position = "Student">
+            <td>Robert</td>
+            <td>Robert's Last Name</td>
+            <td>20</td>
+            <td>Student</td>
+        </tr>
+        <tr position = "Assistant">
+            <td>Danny</td>
+            <td>Danny's Last Name</td>
+            <td>37</td>
+            <td>Assistant</td>
+        </tr>
+        <tr position = "Professor">
+            <td>Erick</td>
+            <td>Erick's Last Name</td>
+            <td>42</td>
+            <td>Professor</td>
+        </tr>
+    </table>
+</body>
+</html>

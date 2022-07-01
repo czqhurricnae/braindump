@@ -1,0 +1,115 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/机务 AirFase B4 版本客户端安装手册/")); -*-
+:PROPERTIES:
+:ID:       AEBDB199-DE70-41DE-9AE3-AF44BCE50690
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-01 Tue 18:51>
+#+TITLE: 机务 AirFase B4 版本客户端安装手册
+
+* 步骤 1：卸载旧版本
+如果要安装的电脑已安装过 AirFase，需卸载 AirFase，如没有直接进入步骤 2。
+卸载方式：控制面板 -> 卸载程序 -> 选择 AirFase -> 右击 -> 点击卸载。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_18-56-07_screenshot.jpg]]
+
+选择是：
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_18-56-28_screenshot.jpg]]
+
+卸载完成后弹出是否移除设置选择，选否。点击 finish，完成卸载。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_18-56-40_screenshot.jpg]]
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_18-58-02_screenshot.jpg]]
+
+* 步骤 2：环境设置
+打开 ~C:\Windows\System32\drivers\etc~ 目录下面的 hosts 文件。
+添加 ~11.6.68.46 xmnjwairfase~ 。
+如果已有，不用重复添加。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-00-50_screenshot.jpg]]
+
+点击 ~开始 -> 运行~ ，输入 ~\\xmnjwairfase~ 。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-02-19_screenshot.jpg]]
+
+打开以下页面，输入用户名： ~airfase_ws~ ，密码： ~JIWU@123~ ，一定要勾上“记住我的凭证”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-03-55_screenshot.jpg]]
+
+进入下面的页面，说明本机跟 AirFASE 服务器已经建立了连接。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-04-19_screenshot.jpg]]
+
+生成一个与工号或名字相关联的计算机名，确保不会与其他人相同。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-04-36_screenshot.jpg]]
+
+* 步骤 3：安装 AirFase
+运行安装程序，点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-05-45_screenshot.jpg]]
+
+输入用户名和公司名，点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-06-19_screenshot.jpg]]
+
+点击“YES”同意条款。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-07-07_screenshot.jpg]]
+
+选择“WorkStation”，点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-07-51_screenshot.jpg]]
+
+点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-08-12_screenshot.jpg]]
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-08-20_screenshot.jpg]]
+
+点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-08-39_screenshot.jpg]]
+
+点击“NEXT”。
+输入服务器 ~xmnjwairfase~ ，点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-09-34_screenshot.jpg]]
+
+点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-09-52_screenshot.jpg]]
+
+点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-10-12_screenshot.jpg]]
+
+点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-10-47_screenshot.jpg]]
+
+输入本地 windows 的用户名和密码，点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-13-24_screenshot.jpg]]
+
+点击“NEXT”。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-13-47_screenshot.jpg]]
+
+如果出现以上窗口，代表本地用户名和密码存在错误，需要卸载并重新安装。
+点击完成。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-14-06_screenshot.jpg]]
+
+至此，airfase 安装完毕。
+
+登录 AirFase，用户名： ~engi~ ,密码： ~jw@1~ 。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-14-57_screenshot.jpg]]
+
+点击“List and Trace”。
+弹出以下服务器 RawData 文件夹界面，则安装正确。
+
+[[file:./static/机务 AirFase B4 版本客户端安装手册/2020-09-01_19-15-49_screenshot.jpg]]

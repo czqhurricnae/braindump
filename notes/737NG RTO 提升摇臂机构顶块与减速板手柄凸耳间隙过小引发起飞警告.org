@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG RTO 提升摇臂机构顶块与减速板手柄凸耳间隙过小引发起飞警告/")); -*-
+:PROPERTIES:
+:ID:       0541ECD6-2F4B-4012-9077-B26DB3AD0050
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :31_53007_SPDBRK_HDL_UP:
+
+#+DATE: <2021-02-18 Thu 20:05>
+#+TITLE: 737NG RTO 提升摇臂机构顶块与减速板手柄凸耳间隙过小引发起飞警告
+
+[[file:./static/737NG RTO 提升摇臂机构顶块与减速板手柄凸耳间隙过小引发起飞警告/2021-02-18_20-12-02_screenshot.jpg]]
+
+[[id:0527B2DF-BEF8-4ED3-A381-4709AD8F23AA][See：737NG 减速板中断起飞电门]]
+
+RTO 提升摇臂机构顶块在反推手柄收回时，没有随反推手柄一起收回，导致减速板手柄的凸耳与 RTO 提升摇臂机构顶块之间的间歇较小，导致减速板手柄未进入“下卡位”，
+使 S651 电门感受在“UP”位，从而引发起飞警告故障。
+
+RTO 提升摇臂机构顶块因长时间使用，沉积的灰尘较多，且减速板手柄盖板对 RTO 提升臂机构顶块之间存在摩擦，导致顶块不能正常收回，从而引发该故障的发生。

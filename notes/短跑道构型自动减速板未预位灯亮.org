@@ -1,0 +1,72 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/短跑道构型自动减速板未预位灯亮/")); -*-
+:PROPERTIES:
+:ID:       DC57F87D-3183-413E-AA4F-E45D0216C214
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-15 Sat 12:18>
+#+TITLE: 短跑道构型自动减速板未预位灯亮
+
+[[id:F3F33525-40BF-4018-A505-BEE9F727843D][See：自动减速板]]
+
+[[id:F13F6B2F-5A10-462D-9ECA-6129CE5B06D1][See：短跑道构型]]
+
+为什么执行备用方向舵 PCU 操作测试后 SPEED BRAKE DO NOT ARM 灯亮？
+或者飞行训练时，机组反映在空中 SPEED BRAKE DO NOT ARM 灯亮？
+
+这两者有共同之处，前者飞机被超控到空中模式，后者是空中模式。
+
+* 故障现象
+减速板手柄放 ARM 位后，SPEED BRAKE DO NOT ARM 灯亮（可能同时 SPEED BRAKE ARMED 灯也亮）。
+
+* 处理方法
+拨出然后闭合 =P6-2 A5= 跳开关，前推任一油门杆到起飞警告响再收回。
+将减速板手柄放 ARM 位后，确保 SPEED BRAKE DO NOT ARM 灭，SPEED BRAKE ARMED 灯亮。
+
+* GROUND SPOILER INTERLOCK VALVE
+对于 短跑道构型飞机，地面扰流板内锁活门有两个传感器：S01131 和 S1050。
+
+#+BEGIN_QUOTE
+The ground spoiler interlock valve also has two proximity sensors and a pressure switch.
+For one of the proximity sensors, the target is near when the airplane is in the air, and the target is far when the airplane is on the ground.
+For the other proximity sensor, the target is near when the airplane is on the ground, and the target is far when the airplane is in the air.
+The pressure switch closes when the pressure to the ground spoiler actuators is more than 750 psi.
+
+One of the proximity sensors (S1050) and the pressure switch send their data to the proximity switch electronics unit(PSEU).
+This data is for the takeoff warning system and to operate the SPEEDBRAKES EXTENDED light.
+
+Data from the other proximity sensor (S01131) is used to operate the flight spoiler solenoid operated valves (SOVS).
+It also inputs to the SPEEDBRAKE DO NOT ARM light in case of a relay or signal failure.
+#+END_QUOTE
+
+** S01131 作用
+- 为短跑道飞行扰流板补充行程系统的控制逻辑提供空地信号，去控制飞行扰流板的 SOVS。
+- 通过控制 L3 灯，提示某个继电器或信号失效。
+
+[[file:./static/短跑道构型自动减速板未预位灯亮/2020-08-15_13-11-28_640.png]]
+[[file:./static/短跑道构型自动减速板未预位灯亮/2020-08-15_13-11-35_640.png]]
+
+临近传感器 S01131 通过感知内锁活门钢索的运动来判断空地状态（靶标空中远离，地面临近）。
+此信号与来自空地继电器 R588（即 PSEU 的空地信息）的空地信号一起同时送达减速板临近传感器继电器 R968，
+当 R968 感受到两个空地信号都为空中时，通过控制飞行扰流板作动筒内部电磁活门的开闭，
+来防止当飞机在空中，襟翼收上时，飞行扰流板升到 UP 位，导致飞机失速。
+而当 R968 感受到两个空地信号都为地面，且襟翼放下时，则解除限制，使飞行扰流板可以升到 UP 位。
+
+** S1050 作用
+- 与地面扰流板内锁活门上的 PRESSURE SWITCH 一起给 PSEU 提供信号，用于起飞警告系统和控制 SPEEDBRAKE EXTENDED 灯。
+
+* 故障原因
+
+#+BEGIN_QUOTE
+If the Air/Ground System does not switch to ground mode within 3 seconds of the Speed Brake Ground Proximity Sensor (S01131) switching to ground mode,
+the SPEEDBRAKE DO NOT ARM light will illuminate and latch.
+#+END_QUOTE
+
+[[file:./static/短跑道构型自动减速板未预位灯亮/2020-08-15_12-22-32_SSM27-62-11_1.jpg]]
+[[file:./static/短跑道构型自动减速板未预位灯亮/2020-08-15_12-22-35_SSM27-62-11_2.jpg]]
+
+可以看出 S01131 控制 R00968 的吸合。
+
+R588 完成 R00969 的接地。
+
+R00969 是延时自锁继电器，在通电延时 3 秒后吸合，并且锁定在吸合位置，除非拔出 =SPOILER PCU SOV SYS B= 跳开关才能复位（或者整机断电）。

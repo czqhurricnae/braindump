@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/气象雷达自测试/")); -*-
+:PROPERTIES:
+:ID:       14290867-CDA7-4917-8511-13B6370F6A99
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-30 Tue 08:37>
+#+TITLE: 气象雷达自测试
+
+[[file:./static/气象雷达自测试/2021-03-30_08-37-16_screenshot.jpg]]

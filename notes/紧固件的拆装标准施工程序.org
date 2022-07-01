@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/紧固件的拆装标准施工程序/")); -*-
+:PROPERTIES:
+:ID:       BA6D71CB-00C0-492C-B28A-077AEED8EFED
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-20 Tue 16:02>
+#+TITLE: 紧固件的拆装标准施工程序
+#+FILETAGS: :SRM_51_40_02:
+
+SRM 51-40-02

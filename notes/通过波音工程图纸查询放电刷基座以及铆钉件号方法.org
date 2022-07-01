@@ -1,0 +1,44 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/")); -*-
+:PROPERTIES:
+:ID:       94532B40-F94D-496D-902E-EB9D862DD6D5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-18 Mon 09:41>
+#+TITLE: 通过波音工程图纸查询放电刷基座以及铆钉件号方法
+
+下文我们以 B-2868 左机翼翼梢放电刷为例，查询该放电刷基座件号以及铆钉件号：
+从 AIPC 中查询左机翼组件的件号：284N1115-11。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_09-42-52_screenshot.jpg]]
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-54-00_screenshot.jpg]]
+在 myboeingfleet 网站中选择”Engineering information Delivery”模块。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_09-49-23_screenshot.jpg]]
+分别选择“part numbers”和“part drawings”模块，其中“part numbers”模块用来复核件
+号的适用性以及相关使用的工程图纸，“part drawings”模块是用来查询相应的图纸。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_09-50-21_screenshot.jpg]]
+进入“part numbers”模块，填写相应参数，搜索到适用的部件清单。
+“Used-On Drawing” 列就是 “Drawing Number”，在后续“part drawing” 模块查询时使用。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_09-53-21_screenshot.jpg]]
+点击上图搜素到的部件清单，得到适用于本架飞机的“DRAWING PICTURE SHEET”号，在后面选择适用的工程图纸有用。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_09-57-16_screenshot.jpg]]
+进入”part drawing”。模块，填写相应参数，搜索到适用图纸文件。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-15-07_screenshot.jpg]]
+点击上图选定适用的图纸号“284N1115”，其中“SHEET”为“1”的，就弹出以下界面，然后在右侧“TYPE”中选择“DWG”，按压搜索就得到对应的工程图纸文件(注意：当 DWG 文件中找不到你所要的信息时，选择 PL（parts list）文件，则可能找到)。
+图纸类型一般有：MPL、PL、DWG，而 MPL、PL 相当于 IPC 的部件列表，是 PDF 格式的，DWG 就是工程图纸。
+但一个图纸号往往有多个 ID，用于区分，这就要我们从 MPL、PL 中确认 ID SHEET 号。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-16-16_screenshot.jpg]]
+点击上图适用的工程图纸文件。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-16-57_screenshot.jpg]]
+找到对应的放电刷安装位置（机翼）的图纸位置（C3 A5）。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-20-41_screenshot.jpg]]
+和上面的方法一样，在“part drawing ”中查询工程图纸号为“119N0002”的工程图纸。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-26-33_screenshot.jpg]]
+在图纸中找到放电刷基座位置并得到放电刷基座的件号为：611R-6A，铆钉件号信息 XA/4N/C,
+其中“XA”代表类型；“4”代表直径；“N”代表钉头朝向；“C”代表 countersink；有这些铆钉
+件号信息后，通过在工程图纸第一页的右上角有给出铆钉具体件号的“公式”，将相应参数填入即
+可得到铆钉的具体件号：BACR15BA4AD()，最后面空的括号为铆钉的长度，工程图纸中没有给出，
+但不影响，长度我们自己可以裁剪。
+
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-29-27_screenshot.jpg]]
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-30-40_screenshot.jpg]]
+在航材系统中查询放电刷基座件号：611R-6A，可以得到相应的替代件件号为：16288。
+[[file:./static/通过波音工程图纸查询放电刷基座以及铆钉件号方法/2021-01-18_10-36-02_screenshot.jpg]]

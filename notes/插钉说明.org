@@ -1,0 +1,28 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/插钉说明/")); -*-
+:PROPERTIES:
+:ID:       F1922A8A-9608-4D51-B834-4D74860F1B61
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-13 Sun 00:30>
+#+TITLE: 插钉说明
+
+[[file:./static/插钉说明/2021-06-13_00-30-58_screenshot.jpg]]
+
+[[file:./static/插钉说明/2021-06-13_00-31-05_screenshot.jpg]]
+
+- PN：如：M39029/31-228
+- 颜色带：第一条要比第二和第三条宽一倍
+- BIN 一基本识别码：与颜色码相对应
+- 内插钉上的颜色码是没有意义的，仅供识别用
+- 颜色码：
+
+0 一 Black (BLK)
+1 一 Brown (BRN)
+2 一 Red (RED)
+3 一 Orange (ORN)
+4 一 Yellow (YEL)
+5 一 Green (GRN)
+6 一 Blue (BLU)
+7 一 Violet (VIO)
+8 一 Gray (GRA)
+9 一 White (WHT)

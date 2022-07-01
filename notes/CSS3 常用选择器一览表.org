@@ -1,0 +1,70 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/CSS3 常用选择器一览表/")); -*-
+:PROPERTIES:
+:ID:       D639425D-6780-401E-87DA-E61EA88D7A2D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-19 Sun 15:35>
+#+TITLE: CSS3 常用选择器一览表
+
+[[id:99E20195-5F5C-4F26-A059-46CBE322F9E3][See：CSS3 目标伪类选择器]]
+
+* 基本选择器
+| 选择器                         | IE | fireFox | chrome | opera | safari |
+|--------------------------------+----+---------+--------+-------+--------|
+| *[通配符选择器]                | ok | ok      | ok     | ok    | ok     |
+| E[元素选择器]                  | ok | ok      | ok     | ok    | ok     |
+| #id{ID 选择器}                 | ok | ok      | ok     | ok    | ok     |
+| .class[类选择器]               | ok | ok      | ok     | ok    | ok     |
+| selector1, selectorN[群选择器] | ok | ok      | ok     | ok    | ok     |
+
+* 层次选择器
+| 选择器              | IE    | fireFox | chrome | opera | safari |
+| E F[后代选择器]     | ok    | ok      | ok     | ok    | ok     |
+| E>F[子选择器]}      | ok 7+ | ok      | ok     | ok    | ok     |
+| E+F[相邻兄弟选择器] | ok 7+ | ok      | ok     | ok    | ok     |
+| E~F[通用兄弟选择器] | ok 7+ | ok      | ok     | ok    | ok     |
+
+* 动态伪类选择器
+| 选择器                            | IE    | fireFox | chrome | opera | safari |
+| E:link[链接伪类选择器, 未访问]    | ok    | ok      | ok     | ok    | ok     |
+| E:visited[链接伪类选择器, 已访问] | ok    | ok      | ok     | ok    | ok     |
+| E:active[行为之元素激活]          | ok 8+ | ok      | ok     | ok    | ok     |
+| E:hover[行为之鼠标停留]           | ok    | ok      | ok     | ok    | ok     |
+| E:focus[行为之获取焦点]           | ok 8+ | ok      | ok     | ok    | ok     |
+
+* 目标伪类选择器
+| 选择器                   | IE    | fireFox | chrome | opera | safari |
+| E:target[目标伪类选择器] | ok 9+ | ok      | ok     | ok    | ok     |
+
+* UI 元素状态伪类选择器
+| 选择器                 | IE    | fireFox | chrome | opera | safari |
+| E:checked[选中状态]    | ok 9+ | ok      | ok     | ok    | ok     |
+| E:enabled[启用状态]    | ok 9+ | ok      | ok     | ok    | ok     |
+| E:disabled[不可用状态] | ok 9+ | ok      | ok     | ok    | ok     |
+
+* 结构伪类选择器
+  - Note taken on [2019-10-21 Mon 15:38] \\
+    注 1: 从 1 开始, 可以是数字, 也可以是 even, odd, 还可以是公式: 2n/2n+1/n+5 (从第五个开始) / -n+5 (第一个到第五个)...
+| 选择器                                       | IE    | fireFox | chrome | opera | safari |
+| E:first-child[第一个子元素]                  | ok 9+ | ok      | ok     | ok    | ok     |
+| E:last-child[最后一个子元素]                 | ok 9+ | ok      | ok     | ok    | ok     |
+| E F:nth-child(n)[E 下的第 n 个子元素 F] 注 1 | ok 9+ | ok      | ok     | ok    | ok     |
+| E F:nth-last-child(n)[选择倒数第 n 个]       | ok 9+ | ok      | ok     | ok    | ok     |
+| E:root[E 所在文档的根元素]                   | ok 9+ | ok      | ok     | ok    | ok     |
+| E:only-child[只有一个子元素]                 | ok 9+ | ok      | ok     | ok    | ok     |
+| E:empty[一个子元素都没有的]                  | ok 9+ | ok      | ok     | ok    | ok     |
+
+* 否定伪类选择器
+| 选择器                           | IE    | fireFox | chrome | opera | safari |
+| E:not(F)[匹配除了 F 外的 E 元素] | ok 9+ | ok      | ok     | ok    | ok     |
+
+* 属性选择器
+| 选择器                                                           | IE    | fireFox | chrome | opera | safari |
+|------------------------------------------------------------------+-------+---------+--------+-------+--------|
+| E[attr][具有 attr 属性的元素]                                    | ok 7+ | ok      | ok     | ok    | ok     |
+| E[attr=val][attr 属性等于 val 的元素]                            | ok 7+ | ok      | ok     | ok    | ok     |
+| E[attrl=val][attr 具有 val 或者 以 val- 开始的元素]              | ok 7+ | ok      | ok     | ok    | ok     |
+| E[attr~=val][attr 具有多个空格分开的值, 其中有一个是 val 的元素] | ok 7+ | ok      | ok     | ok    | ok     |
+| E[attr*=val][attr 包含 val 的元素]                               | ok 7+ | ok      | ok     | ok    | ok     |
+| E[attr^=val][attr 以 val 开头的元素]                             | ok 7+ | ok      | ok     | ok    | ok     |
+| E[attr$=val][attr 以 val 结尾的元素]                             | ok 7+ | ok      | ok     | ok    | ok     |

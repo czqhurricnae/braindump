@@ -1,0 +1,697 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       78BE2894-55C1-4A04-AC9D-F741D7A8DD65
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-29 Mon 16:37>
+#+TITLE: Python 常见错误
+
+* 使用列表作为函数的可选参数默认值
+#+BEGIN_SRC python :results output :exports no-eval
+def extendList(val, list=[]):
+    list.append(val)
+    return list
+
+list1 = extendList(10)
+list2 = extendList(123,[])
+list3 = extendList('a')
+
+print "list1 = %s" % list1
+print "list2 = %s" % list2
+print "list3 = %s" % list3
+#+END_SRC
+
+#+RESULTS:
+: list1 = [10, 'a']
+: list2 = [123]
+: list3 = [10, 'a']
+
+怎样修改 extendList 的定义能够产生以下预期的行为?
+
+很多人都会误认为 ~list1=[10]~ ， ~list3=[‘a’]~ ，因为他们以为每次 extendList 被调用时，列表参数的默认值都将被设置为[]。
+但实际上的情况是，新的默认列表只在函数被定义的那一刻创建一次。
+
+当 extendList 被没有指定特定参数 list 调用时，这组 list 的值随后将被使用。
+这是因为 *带有默认参数的表达式在函数被定义的时候被计算，不是在调用的时候被计算* 。
+因此 list1 和 list3 是在同一个默认列表上进行操作（计算）的。而 list2 是在一个分离的列表上进行操作（计算）的。（通过传递一个自有的空列表作为列表参数的数值）。
+
+extendList 的定义可以作如下修改。
+
+尽管，创建一个新的列表，没有特定的列表参数。
+
+下面这段代码可能能够产生想要的结果。
+
+#+BEGIN_SRC python :results output :exports no-eval
+def extendList(val, list=None):
+    if list is None:
+        list = []
+        list.append(val)
+    return list
+
+list1 = extendList(10)
+list2 = extendList(123,[])
+list3 = extendList('a')
+
+print "list1 = %s" % list1
+print "list2 = %s" % list2
+print "list3 = %s" % list3
+#+END_SRC
+
+#+RESULTS:
+: list1 = [10]
+: list2 = []
+: list3 = ['a']
+
+* 在函数中执行 exec 不会影响全局变量
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :session :results output :exports no-eval
+x = 2
+
+
+def foo():
+    print x
+
+def bar():
+    print x
+    x = 3
+
+
+def hmn():
+    print x
+    exec("x = 3")
+    print "x in function hmn(): ", x
+
+
+try:
+    foo()
+except:
+    print "Oops"
+
+
+try:
+    bar()
+except Exception as e:
+    print e
+    print "Oops"
+
+
+try:
+    hmn()
+except:
+    print "Oops"
+
+print "x in global: ", x
+
+exec("x = 3")
+print "x in global after exec: ", x
+#+END_SRC
+
+#+RESULTS:
+: 2
+: local variable 'x' referenced before assignment
+: Oops
+: 2
+: x in function hmn():  3
+: x in global:  2
+: x in global after exec:  3
+
+* 错误地使用类变量
+我们来看下面这个例子：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session A
+class A(object):
+    x = 1
+
+
+class B(A):
+    pass
+
+
+class C(A):
+    pass
+
+
+print A.x, B.x, C.x
+#+END_SRC
+
+#+RESULTS:
+: 1 1 1
+
+这个结果很正常。
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session A
+B.x = 2
+print A.x, B.x, C.x
+#+END_SRC
+
+#+RESULTS:
+: 1 2 1
+
+嗯，结果和预计的一样。
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session A
+A.x = 3
+print A.x, B.x, C.x
+#+END_SRC
+
+#+RESULTS:
+: 3 2 3
+
+在 Python 语言中，类变量是以字典的形式进行处理的，并且遵循方法解析顺序（Method Resolution Order，MRO）。
+
+[[id:D9EDB036-21BC-4D24-A99F-3DF8574515BF][Python 2-MRO_and_super]]
+
+因此，在上面的代码中，由于类 C 中并没有 x 这个属性，解释器将会查找它的基类（base class，尽管 Python 支持多重继承，但是在这个例子中，C 的基类只有 A）。
+换句话说，C 并不没有独立于 A 真正属于自己的 x 属性。
+所以，引用 ~C.x~ 实际上就是引用了 ~A.x~ 。
+如果没有处理好这里的关系，就会导致示例中出现的这个问题。
+
+* 错误地指定异常代码块（exception block）的参数
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+try:
+    l = ["a", "b"]
+    int(l[2])
+except ValueError, IndexError:  # To catch both exceptions, right?
+    pass
+#+END_SRC
+
+#+RESULTS:
+: Traceback (most recent call last):
+: File "<stdin>", line 3, in <module>
+: IndexError: list index out of range
+
+这段代码的问题在于，except 语句并不支持以这种方式指定异常。在 Python 2.x 中，需要使用变量 e 将异常绑定至可选的第二个参数中，才能进一步查看异常的情况。
+因此，在上述代码中，except 语句并没有捕获 IndexError 异常；而是将出现的异常绑定到了一个名为 IndexError 的参数中。
+
+要想在 except 语句中正确地捕获多个异常，则应将第一个参数指定为元组，然后在元组中写下希望捕获的异常类型。
+另外，为了提高可移植性，请使用 as 关键词，Python 2 和 Python 3 均支持这种用法。
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+try:
+    l = ["a", "b"]
+    int(l[2])
+except (ValueError, IndexError) as e:
+    print(e)
+    pass
+#+END_SRC
+
+#+RESULTS:
+: list index out of range
+
+* 错误理解 Python 中的变量名解析
+Python 中的变量名解析遵循所谓的 LEGB 原则，也就是：
+“L：本地作用域；E：上一层结构中 def 或 lambda 的本地作用域；G：全局作用域；B：内置作用域”
+（Local，Enclosing，Global，Builtin），按顺序查找。看上去是不是很简单？不过，事实上这个原则的生效方式还是有着一些特殊之处。
+说到这点，我们就不得不提下面这个常见的 Python 编程错误。
+请看下面的代码：
+
+#+BEGIN_SRC ipython
+     x = 10
+     def foo():
+         x += 1
+         print x
+     foo()
+   #+END_SRC
+
+#+RESULTS:
+: UnboundLocalErrorTraceback (most recent call last)
+: <ipython-input-17-7d1ba0f04350> in <module>()
+:     3     x += 1
+:     4     print x
+: ----> 5 foo()
+:
+: <ipython-input-17-7d1ba0f04350> in foo()
+:      1 x = 10
+:      2 def foo():
+: ----> 3     x += 1
+:      4     print x
+:      5 foo()
+:
+: UnboundLocalError: local variable 'x' referenced before assignment
+
+出了什么问题？
+
+上述错误的出现，是因为当你在某个作用域内为变量赋值时，该变量被 Python 解释器自动视作该作用域的本地变量，并会取代任何上一层作用域中相同名称的变量。
+正是因为这样，才会出现一开始好好的代码，在某个函数内部添加了一个赋值语句之后却出现了 ~UnboundLocalError~ ，难怪会让许多人吃惊。
+在使用列表时，Python 程序员尤其容易陷入这个圈套。
+请看下面这个代码示例：
+
+#+BEGIN_SRC ipython
+lst = [1, 2, 3]
+def foo1():
+    lst.append(5)
+foo1()
+print lst
+#+END_SRC
+
+#+RESULTS:
+: [1, 2, 3, 5]
+
+#+BEGIN_SRC ipython
+lst = [1, 2, 3]
+def foo2():
+    lst += [4]
+foo2()
+print lst
+#+END_SRC
+
+#+RESULTS:
+: UnboundLocalErrorTraceback (most recent call last)
+: <ipython-input-20-c4cdd4b0687e> in <module>()
+:       2 def foo2():
+:       3     lst += [4]
+: ----> 4 foo2()
+:       5 print lst
+
+: <ipython-input-20-c4cdd4b0687e> in foo()
+:       1 lst = [1, 2, 3]
+:       2 def foo2():
+: ----> 3     lst += [4]
+:       4 foo2()
+:       5 print lst
+
+: UnboundLocalError: local variable 'lst' referenced before assignment
+
+为什么函数 foo1 运行正常，foo2 却出现了错误？
+
+答案与上一个示例相同，但是却更难捉摸清楚。
+foo1 函数并没有为 lst 变量进行赋值，但是 foo2 却有赋值。
+我们知道， ~lst += [5]~ 只是 ~lst = lst + [5]~ 的简写，从中我们就可以看出， ~foo2~ 函数在尝试为 lst 赋值（因此，被 Python 解释器认为是函数本地作用域的变量）。
+但是，我们希望为 lst 赋的值却又是基于 lst 变量本身（这时，也被认为是函数本地作用域内的变量），也就是说该变量还没有被定义。这才出现了错误。
+
+* 在遍历列表时更改列表
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+odd = lambda x : bool(x % 2)
+numbers = [n for n in range(10)]
+for i in range(len(numbers)):
+    if odd(numbers[i]):
+        del numbers[i]  # BAD: Deleting item from a list while iterating over it...
+#+END_SRC
+
+#+RESULTS:
+: IndexErrorTraceback (most recent call last)
+: <ipython-input-21-4a2e197bb0f6> in <module>()
+:       2 numbers = [n for n in xrange(10)]
+:       3 for i in xrange(len(numbers)):
+: ----> 4     if odd(numbers[i]):
+:       5         del numbers[i]
+:
+: IndexError: list index out of range
+:
+在遍历列表或数组的同时从中删除元素，是任何经验丰富的 Python 开发人员都会注意的问题。
+但是尽管上面的示例十分明显，资深开发人员在编写更为复杂代码的时候，也很可能会无意之下犯同样的错误。
+幸运的是，Python 语言融合了许多优雅的编程范式，如果使用得当，可以极大地简化代码。
+简化代码还有一个好处，就是不容易出现在遍历列表时删除元素这个错误。
+能够做到这点的一个编程范式就是列表解析式。而且，列表解析式在避免这个问题方面尤其有用，下面用列表解析式重新实现上面代码的功能：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+odd = lambda x : bool(x % 2)
+numbers = [n for n in range(10)]
+numbers[:] = [n for n in numbers if not odd(n)]  # ahh, the beauty of it all
+print(numbers)
+#+END_SRC
+
+#+RESULTS:
+: [0, 2, 4, 6, 8]
+
+* 不理解 Python 在闭包中如何绑定变量
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval
+def create_multipliers():
+    return [lambda x: i * x for i in range(5)]
+
+
+for multiplier in create_multipliers():
+    print multiplier(2), id(multiplier)
+#+END_SRC
+
+#+RESULTS:
+: 8 4338310392
+: 8 4338310512
+: 8 4338310632
+: 8 4338310752
+: 8 4338310872
+
+你可能觉得输出结果应该是这样的：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+0
+2
+4
+6
+8
+#+END_SRC
+
+但是，实际的输出结果却是：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+8
+8
+8
+8
+8
+#+END_SRC
+
+这个结果的出现，主要是因为 Python 中的迟绑定（late binding）机制，即闭包中变量的值只有在内部函数被调用时才会进行查询。
+因此，在上面的代码中，每次 ~create_multipliers()~ 所返回的函数被调用时，都会在附近的作用域中查询变量 i 的值（而到那时，循环已经结束，所以变量 i 最后被赋予的值为 4）。
+
+要解决这个常见 Python 问题的方法中，需要使用一些 hack 技巧：
+- 利用默认参数立即绑定。
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval
+def create_multipliers():
+    return [lambda x, i=i: i * x for i in range(5)]
+
+
+for multiplier in create_multipliers():
+    print multiplier(2), id(multiplier)
+#+END_SRC
+
+#+RESULTS:
+: 0 4553342200
+: 2 4553342320
+: 4 4553342440
+: 6 4553342560
+: 8 4553342680
+
+请注意！我们在这里利用了默认参数来实现这个 lambda 匿名函数。
+有人可能认为这样做很优雅，有人会觉得很巧妙，还有人会嗤之以鼻。但是，如果你是一名 Python 程序员，不管怎样你都应该要了解这种解决方法。
+
+- 利用 Python 生成器。
+
+#+BEGIN_SRC python :results output :exports no-eval
+def create_multipliers():
+    for i in range(4):
+        yield lambda x : i * x
+
+
+for multiplier in create_multipliers():
+    print multiplier(2), id(multiplier)
+#+END_SRC
+
+#+RESULTS:
+: 0 4389620984
+: 2 4389621104
+: 4 4389620984
+: 6 4389621104
+
+- 利用偏函数。
+
+#+BEGIN_SRC python :results output :exports no-eval
+from functools import partial
+from operator import mul
+
+
+def create_multipliers():
+    return [partial(mul, i) for i in range(4)]
+
+
+for multiplier in create_multipliers():
+    print multiplier(2), id(multiplier)
+#+END_SRC
+
+#+RESULTS:
+: 0 4336932304
+: 2 4336934328
+: 4 4336956440
+: 6 4336957144
+
+* 模块之间出现循环依赖（circular dependencies）
+假设你有两个文件，分别是 a.py 和 b.py，二者相互引用，如下所示：
+a.py 文件中的代码:
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import b
+
+
+def f():
+    return b.x
+
+
+print f()
+#+END_SRC
+
+b.py 文件中的代码：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import a
+x = 1
+
+
+def g():
+    print a.f()
+#+END_SRC
+
+首先，我们尝试导入 a.py 模块：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import a
+#+END_SRC
+
+代码运行正常。也许这出乎了你的意料。毕竟，我们这里存在循环引用这个问题，想必应该是会出现问题的，难道不是吗？
+答案是，仅仅存在循环引用的情况本身并不会导致问题。
+如果一个模块已经被引用了，Python 可以做到不再次进行引用。
+但是如果每个模块试图访问其他模块定义的函数或变量的时机不对，那么你就很可能陷入困境。
+
+那么回到我们的示例，当我们导入 a.py 模块时，它在引用 b.py 模块时是不会出现问题的，因为 b.py 模块在被引用时，并不需要访问在 a.py 模块中定义的任何变量或函数。
+b.py 模块中对 a 模块唯一的引用，就是调用了 a 模块的 ~foo()~ 函数。
+但是那个函数调用发生在 ~g()~ 函数当中，而 a.py 或 b.py 模块中都没有调用 ~g()~ 函数。所以，不会出现问题。
+
+但是，如果我们试着导入 b.py 模块呢（即之前没有引用 a.py 模块的前提下）：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import b
+#+END_SRC
+
+#+RESULTS:
+: Traceback (most recent call last):
+: File "<stdin>", line 1, in <module>
+: File "b.py", line 1, in <module>
+: import a
+: File "a.py", line 8, in <module>
+: print f()
+: File "a.py", line 5, in f
+: return b.x
+: AttributeError: 'module' object has no attribute 'x'
+
+糟糕。情况不太妙！这里的问题是，在导入 b.py 的过程中，它试图引用 a.py 模块，而 a.py 模块接着又要调用 ~foo()~ 函数， 这个 ~foo()~ 函数接着又试图去访问 b.x 变量。
+但是这个时候， ~b.x~ 变量还没有被定义，所以才出现了 ~AttributeError~ 异常。
+
+解决这个问题有一种非常简单的方法，就是简单地修改下 b.py 模块，在 g()函数内部才引用 a.py：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+x = 1
+
+
+def g():
+    import a  # This will be evaluated only when g() is called
+    print a.f()
+#+END_SRC
+
+现在我们再导入 b.py 模块的话，就不会出现任何问题了：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import b
+b.g()
+#+END_SRC
+
+#+RESULTS:
+: 1 # Printed a first time since module 'a' calls 'print f()' at the end
+: 1 # Printed a second time, this one is our call to 'g'
+
+* 模块命名与 Python 标准库模块名冲突
+Python 语言的一大优势，就是其本身自带的强大标准库。
+但是，正因为如此，如果你不去刻意注意的话，你也是有可能为自己的模块取一个和 Python 自带标准库模块相同的名字（例如，如果你的代码中有一个模块叫 email.py，那么这就会与 Python 标准库中同名的模块相冲突。）
+这很可能会给你带来难缠的问题。
+举个例子，在导入模块 A 的时候，假如该模块 A 试图引用 Python 标准库中的模块 B，但却因为你已经有了一个同名模块 B，模块 A 会错误地引用你自己代码中的模块 B，而不是 Python 标准库中的模块 B。
+这也是导致一些严重错误的原因。
+
+因此，Python 程序员要格外注意，避免使用与 Python 标准库模块相同的名称。毕竟，修改自己模块的名称比提出 PEP 提议修改上游模块名称且让提议通过，要来得容易的多。
+
+* 未能处理好 Python 2 与 Python 3 之间的差异
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import sys
+
+
+def bar(i):
+    if i == 1:
+        raise KeyError(100)
+    if i == 2:
+        raise ValueError(200)
+
+
+def bad():
+    e = None
+    try:
+        bar(int(sys.argv[1]))
+    except KeyError as e:
+        print('key error')
+        print(e)
+    except ValueError as e:
+        print('value error')
+        print(e)
+
+
+bad()
+#+END_SRC
+
+如果是 Python 2，那么代码运行正常：
+
+#+BEGIN_SRC sh :results values :exports no-eval
+$ python foo.py 1
+key error
+100
+#+END_SRC
+
+#+BEGIN_SRC sh :results values :exports no-eval
+$ python foo.py 2
+value error
+200
+#+END_SRC
+
+但是现在，我们换成 Python 3 再运行一遍：
+
+#+BEGIN_SRC sh :results values :exports no-eval
+$ python3 foo.py 1
+key error
+Traceback (most recent call last):
+  File "foo.py", line 19, in <module>
+    bad()
+  File "foo.py", line 17, in bad    print(e)
+UnboundLocalError: local variable 'e' referenced before assignment
+#+END_SRC
+
+这到底是怎么回事？这里的“问题”是，在 Python 3 中，异常对象在 except 代码块作用域之外是无法访问的。
+（这么设计的原因在于，如果不这样的话，堆栈帧中就会一直保留它的引用循环，直到垃圾回收器运行，将引用从内存中清除。）
+
+避免这个问题的一种方法，就是在 except 代码块的作用域之外，维持一个对异常对象的引用（reference），这样异常对象就可以访问了。
+下面这段代码就使用了这种方法，因此在 Python 2 和 Python 3 中的输出结果是一致的：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import sys
+
+
+def bar(i):
+    if i == 1:
+        raise KeyError(100)
+    if i == 2:
+        raise ValueError(200)
+
+
+def good():
+    exception = None
+    try:
+        bar(int(sys.argv[1]))
+    except KeyError as e:
+        exception = e
+        print('key error')
+        print(exception)
+    except ValueError as e:
+        exception = e
+        print('value error')
+        print(exception)
+
+
+good()
+#+END_SRC
+
+在 Python 3 下运行代码：
+
+#+BEGIN_SRC sh :results values :exports no-eval
+$ python3 foo.py 1
+key error
+100
+$ python3 foo.py 2
+value error
+200
+#+END_SRC
+
+* 错误使用 del 方法
+假设你在 mod.py 的文件中编写了下面的代码：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import foo
+
+
+class Bar(object):
+        ...
+    def __del__(self):
+        foo.cleanup(self.myhandle)
+#+END_SRC
+
+之后，你在 another_mod.py 文件中进行如下操作：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import mod
+
+
+mybar = mod.Bar()
+#+END_SRC
+
+如果你运行 another_mod.py 模块的话，将会出现 AttributeError 异常。
+为什么？因为当解释器结束运行的时候，该模块的全局变量都会被设置为 None。
+因此，在上述示例中，当 ~__del__~ 方法被调用之前，foo 已经被设置成了 None。
+要想解决这个有点棘手的 Python 编程问题，其中一个办法就是使用 ~atexit.register()~ 方法。
+这样的话，当你的程序执行完成之后（即正常退出程序的情况下），你所指定的处理程序就会在解释器关闭之前运行。
+应用了上面这种方法，修改后的 mod.py 文件可能会是这样子的：
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+import foo
+import atexit
+
+
+def cleanup(handle):
+    foo.cleanup(handle)
+
+
+class Bar(object):
+    def __init__(self):
+        ...
+        atexit.register(cleanup, self.myhandle)
+#+END_SRC
+
+这种实现支持在程序正常终止时干净利落地调用任何必要的清理功能。很明显，上述示例中将会由 ~foo.cleanup~ 函数来决定如何处理 ~self.myhandle~ 所绑定的对象。
+
+* Python 不要求声明变量，但是假定在函数定义体中赋值的变量是局部变量
+
+#+BEGIN_SRC python :results output :exports no-eval
+
+x = 2
+
+
+def f():
+    print(x)
+
+
+def g():
+    print(x)
+    x = 3
+
+
+def h():
+    print(x)
+    exec ('x = 3')
+
+
+try:
+    f()
+except:
+    print('Oops')
+try:
+    g()
+except Exception as e:
+    print(e, 'Oops')
+try:
+    h()
+except:
+    print('Oops')
+#+END_SRC
+
+#+RESULTS:
+: 2
+: (UnboundLocalError("local variable 'x' referenced before assignment",), 'Oops')
+: 2

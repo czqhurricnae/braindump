@@ -1,0 +1,55 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/各种速度的定义/")); -*-
+:PROPERTIES:
+:ID:       73962678-1FEC-410E-A505-82F599064A7F
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-29 Fri 15:13>
+#+TITLE: 各种速度的定义
+
+* V_{s}
+Stalling speed 失速速度
+
+* VS_{1}
+特定构型下的失速速度
+
+* VS_{0}
+着陆形态下的失速速度
+
+* V_{REF}
+Reference landing speed，基准着陆速度通常是 1.3*VS_{0}
+
+* V_{1}
+Takeoff decisionspeed 起飞决断速度
+
+V_{1} 是在起飞滑跑过程汇中, 出现关键发动机停车等故障时飞行员决定中断起飞或继续起飞的重要依据。
+
+* V_{R}
+V_{R} 是飞机的抬前轮速度，在该速度抬前轮能使飞机在起飞终点高于起飞表面并使速度达到 V2，VR 在继续起飞和终端起飞过程中决定，并以校正空速表示。
+
+* V_{2}
+Takeoff climb speed 起飞爬升速度,（起飞安全速度）
+
+V_{2} 是起飞场道阶段重点应达到的速度，以校正空速表示。
+
+* V_{APP}
+Final approachspeed 最后进近速度（进近速度）
+
+* V_{EF}
+Engine failure speed 发动机失效速度
+
+* V_{FE}
+Maximum flap extended speed 最大带襟翼飞行速度
+
+* V_{LE}
+Landing gear extended speed 起落架放出后的最大速度
+
+* V_{LO}
+Landing gear operating speed 起落架操作速度，允许收放起落架的最大速度
+
+* V_{LOF}
+Lift Off speed 离地速度
+
+#+CAPTION: 飞机的起飞剖面图
+#+NAME: Figure 1
+[[file:./static/各种速度的定义/2021-01-30_10-01-30_screenshot.jpg]]

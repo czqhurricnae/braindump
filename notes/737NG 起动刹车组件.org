@@ -1,0 +1,91 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 起动刹车组件/")); -*-
+:PROPERTIES:
+:ID:       1D6928D0-6F61-4BD4-A363-AADF92D5D580
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-31 Sun 21:14>
+#+TITLE: 737NG 起动刹车组件
+#+FILETAGS: :M1825:M1824:
+
+[[file:./static/737NG 起动刹车组件/2021-02-14_12-03-57_Image13.jpg]]
+
+以左发为例。
+- S1026：HMU 中 HPSOV 控制和燃油控制面板 ENG VALVE 灯指示。
+- S595：翼梁活门控制和燃油控制面板 SPAR VALVE 灯指示。
+- S88：EEC 左点火电源控制。
+- S89：EEC 右点火电源控制。
+- S1024：通过 R566 继电器提供起动手柄位置信号给 EEC A 通道，给 DEU 和 DFDAU 提供发动机慢车或关断信号。
+- S1025：通过 R565 继电器提供起动手柄位置信号给 EEC B 通道，用于 IDG 预位脱开电路和当前[[id:5E98E768-E584-42AB-BEEA-DAE114ED7712][控制通道切换]]。
+
+[[file:./static/737NG 起动刹车组件/2021-07-02_01-01-40_screenshot.jpg]]
+
+* 关车时出现 ENG FAIL，S1024（1 发）或 S1027（2 发）电门没有改变
+During normal engine shutdown, the ENG FAIL message shows in the EGT gage of the primary engine display on CDS.
+EEC fault message 74–x097y and 74–x098y THE APL(airplane) INPUT VOLTAGE FOR THE R/L EXCITER (IGN 1/2) IS OUT OF RANGE is stored in the EEC bite memory.
+This anomaly can be caused by the S1024 for engine 1 or S1027 for engine 2 not changing position when the start lever is moved from the idle position to the cutoff position.
+
++----------------------------------+-------------------------------+
+| 故障代码 74-x097y 和 74-x098y，  | 故障代码 74-x136y START LEVER |
+| THE APL INPUT VOLTAGE FOR THE    | SIGNALS DISAREE。             |
+| R/L EXCITER (IGN 1/2) IS OUT OF  |                               |
+| RANGE。                          | A，B 通道的起动手柄位置信号不 |
+|                                  | 一致。对于 1 发就是 S1024 和  |
+| EEC 检测到起动手柄在慢车位时，左 | S1025 不一致。                |
+| 右点火电源小于 89 V 或大于 141 V | 对于 2 发就是 S1027 和 S1028  |
+| 。                               | 不一致。                      |
++----------------------------------+-------------------------------+
+
+* 点火故障 ：S88/S89 （ 1 发 L/R ）或 S90/S91（ 2 发 L/R ）电门没有改变位置
+Engine shutdown normally but EEC fault message 74–x099y or 74–x100y THE APL INPUT VOLTAGE FOR THE R/L EXCITER(IGN 1/2) IS ALWAYS ON is stored in the EEC bite memory.
+This anomaly can be caused by the S88 or S89 for engine 1 or S90 or S91 for engine 2 not changing position when the start lever is moved from the idle position to the cutoff position.
+
++------------------------------------+---------------------------------+
+| 故障代码 74-x099y 或 74-x100y ：   | 故障代码 74-x095y 或 74-x096y： |
+| THE APLINPUT VOLTAGE FOR THE       | IGN L/R(IGN 1/2) IS FAILED。    |
+| LVR EXCITER (IGN 1V2) IS ALWAYS    |                                 |
+| ON。                               | S88：1 发左点火。               |
+|                                    | S89：1 发右点火。               |
+| EEC 检测到启动手柄在关断位时，左、 | S90：2 发左点火。               |
+| 右点火电源大于等于 89V。           | S91：2 发右点火。               |
++------------------------------------+---------------------------------+
+
+* Engine does not start when using the left ignitor
+This anomaly can be caused by the S88 for engine 1 or S90 for engine 2 not changing position when the start lever is moved from the cutoff position to the idle position.
+
+* Engine does not start when using the right ignitor
+This anomaly can be caused by the S89 for engine 1 or S91 for engine 2 not changing position when the start lever is moved from the cutoff position to the idle position.
+
+Engine does not start with no EGT rise, no fuel flow and no fault message stored in EEC BITE memory.
+This anomaly can be caused by the S1024 for engine 1 or S1027 for engine 2 not changing position when the start lever is moved from the cutoff position to the idle position.
+
+为什么无 EGT，无 FF，无故障信息与 S1024 电门有关系？
+S1024 给 DEU 和 DFDAU 提供发动机慢车或关断信号。
+难道 DEU 中给起动电门保持接地信号与 S1024 右关？
+在 [[id:6210AE6D-B34B-4C64-A0CC-97765259B904][737NG 起动活门打开灯 START VALVE OPEN 亮]] SSM DEU 中描述：“ENG 2 RELAY ENERGIZES WHEN: N2 < 55.5% RPM OR THE EEC STARTER CUTOFF DISCRECTE OS RESET”。
+
+Engine does not start with no EGT rise and no fuel flow or engine uncommanded shutdown.
+The ENG VALVE CLOSED light or SPARVALVE CLOSED light indications do not agree with the start lever position.
+This anomaly can be caused by the S595 or S1026 for engine1 S596 or S1029 for engine 2 not changing position or operating intermittently
+when the start lever is moved from the cutoff position to the idle position.
+
+* 供油故障：S595/S596（HPSOV）或 S1026/S1029（翼梁活门）没有改变位置
+燃油面板上有 ENG VALVE 或 SPAR VALVE 位置指示 ：
+
++-----------------------------------+------------------------------------+
+| 发动机启动失败，启动过程中没有 FF | 发动机关车时，转速不能立即下降 ，  |
+| 流量 ， EGT 不上升，ENG VALVE     | 大约会延迟 5 种钟左右，ENGINE      |
+| CLOSED 灯或 SPAR VALVE CLOSED     | VALVE CLOSED 灯明亮。              |
+| 灯不熄灭。                        |                                    |
+|                                   |                                    |
+|                                   | S1026 或 S1029 电门卡在 IDLE 位 ， |
+| S595 ：1 发翼梁活门。             | HMU 里的 HPSOV 没有关闭 ，供油管   |
+| S1026 ：1 发 HPSOV。              | 路里的油能使发动机继续运转一定时   |
+| S596 ：2 发翼梁活门。             | 间。                               |
+| S1029 ：2 发 HPSOV。              |                                    |
++-----------------------------------+------------------------------------+
+
+Engine starts but EEC fault message 76–x136y START LEVERSIGNALS DISAGREE is stored in EEC BITE memory.
+This anomaly can be caused by switches S1024 and S1025 for engine 1 or switches S1027 and S1028 for engine 2 not agreeing.
+
+Engine shutdown time, time from start lever to cutoff and engine spool down, increase by approximately 5 seconds and the ENGINEVALVE CLOSED light is on bright.
+This anomaly can be caused by switch S1026 for engine 1 or switch S1029 for engine 2 being stuck in the idle position.

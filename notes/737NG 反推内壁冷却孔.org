@@ -1,0 +1,42 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 反推内壁冷却孔/")); -*-
+:PROPERTIES:
+:ID:       3EE0E1C4-EF07-49C9-87DF-1B340B25B5E4
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-26 Mon 14:06>
+#+TITLE: 737NG 反推内壁冷却孔
+
+引用自：[fn:1]
+#+BEGIN_QUOTE
+Thrust reversers that are the current production configuration are P/N 315A2295-219, -220, -221, -222 and all future production units (-229 through -500).
+SB 737-78-1079 or SB 737-78-1088 modifies all previous thrust reversers with P/N 315A2295-3 to -202 to the current production configuration and changes the part numbers to P/N 315A2295-503 to -702.
+These thrust reversers include sealing around the insulation blanket perimeter, have a cooling hole through the inner wall behind the upper No.3 compression fitting and include an additional upper fire seal flange insulation.
+Refer to AMM 78-31-13/401 for information on the blanket sealing and fire seal flange insulation that may be necessary.
+#+END_QUOTE
+
+* 冷却孔维护注意事项
+根据 SB 737-78-1090 及 737NG-FTD-78-12001 描述，此冷却孔有出现堵塞的情况，堵塞可能会导致反推内壁热损伤。
+堵塞物可能是 BMS5-63 或者 BMS 5-141，BMS5-63 用来安装热保护罩，BMS 5-141 用来安装冷却孔衬套。
+线号 2230 -3156 的飞机或者反推备件上的反推冷却孔衬套出现堵塞的可能性最大，因为这些反推安装了件号为 15A2112-30 的热保护罩。
+如果衬套堵塞在 50% 以下，通过清洁后不需要做其它工作。
+堵塞超过 50% 的反推需要特别标记，可能需要根据 SB 737-78-1091 完成 NDT 检查。
+然而，波音和厂家调查分析认为反推内壁热损伤并不影响到安全并反馈 FAA，FAA 审核后没有要求附加的 AD，因此波音在重新评估是否需要发布 SB 737-78-1091。
+冷却孔衬套件号 315A2137-2 或 315A2137-1，通过 BMS 5-141 胶固定在反推冷却孔上，安装步骤请查阅 SB737-78-1088。
+
+* 参考资料
+737NG-FTD-78-11001
+
+737NG-FTD-78-12001
+
+SB 737-78-1079
+
+SB 737-78-1082
+
+SB 737-78-1088
+
+SB 737-78-1090
+
+* Footnotes
+
+[fn:1] AMM 78-31-01-400-801-F00

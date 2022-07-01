@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/DEU 输出模拟离散数据/")); -*-
+:PROPERTIES:
+:ID:       89DC06C9-F97B-483F-A09A-0F3690429259
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-08 Mon 15:40>
+#+TITLE: DEU 输出模拟离散数据
+
+DEU 输出下列模拟离散数据：
+- 传给 TCAS 计算机的 TCAS 显示状态。
+- 传给 WXR 控制面板的 WXR 开/关信号。
+- GCU 启用信号。
+- 传送给燃油系统面板的[[id:EFF69C45-F8C6-4638-8A4D-F6D6D004496E][燃油滤旁通]]指示信号。
+- 传送到 APU ECU 的 BITE 启动信号。
+- 传到发动机起动电门的发动机起动电门保持信号。
+- 传到发动机控制组件的发动机控制指示信号。
+- 传到发动机备用电源继电器的离散信号。
+- 传到发动机运转继电器的离散信号(当发动机处于运转状态或起动手柄放在“IDLE”位超过 5 分钟时)。

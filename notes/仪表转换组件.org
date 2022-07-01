@@ -1,0 +1,66 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/仪表转换组件/")); -*-
+:PROPERTIES:
+:ID:       35A7A208-5BE3-45E7-99CE-43BED85175E3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-30 Tue 15:30>
+#+TITLE: 仪表转换组件
+
+* Instrument switching module 仪表转换组件
+** 显示源控制面板
+[[eww:marginnote3app://note/40CA7E1F-7EE2-4BAD-AE63-F7D9BBF9884E][显示源控制面板]]
+*** Display source select switch 显示源选择电门
+[[file:./static/仪表转换组件/2021-03-30_15-24-54_screenshot.jpg]]
+
+*** EFIS control panel select switch EFIS 控制面板选择电门
+[[file:./static/仪表转换组件/2021-03-30_15-25-16_screenshot.jpg]]
+
+
+ | 系统 | NORMAL                     | BOTH ON 1                                                   | BOTH ON 2                                             |
+ |------+----------------------------+-------------------------------------------------------------+-------------------------------------------------------|
+ | DEU  | DEU 1 使用 1，DEU 2 使用 2 | 两个 DEU 使用 VOR/MB 接收机 1 来的 VOR 数据作为显示源[fn:3] | 两个 DEU 使用 VOR/MB 接收机 2 来的 VOR 数据作为显示源 |
+
+** 导航控制面板 Navigation select panel
+*** IRS TRANSFER SWITCH
+    - Note taken on [2021-03-28 Sun 22:17] \\
+      TCAS 计算机只能从左 IRS 获取航向、姿态数据，左惯导失效会导致 TCAS FAIL，IRS 源转换电门对 TCAS 无效。另外惯导失效会使自动刹车无法预位[fn:5]。
+    - Note taken on [2021-01-24 Sun 12:44] \\
+      转换电门不影响大气数据基准（ADR） 信号的输出。
+    - Note taken on [2021-01-24 Sun 12:43] \\
+      当 IRS 转换开关在全左或全右位时，CDS 显示电子组 件（DEU）在显示组件上显示 [[id:655B08FB-ABF2-4C60-A9C0-6BAEF78F545C][INSTR SWITCH]] 信息。
+
+ | 系统 | NORMAL                          | BOTH ON L                       | BOTH ON R                       |
+ |------+---------------------------------+---------------------------------+---------------------------------|
+ | RMI  | RMI 接收左 ADIRU 的航向数据     | RMI 接收左 ADIRU 的航向数据     | RMI 接收右 ADIRU 的航向数据     |
+ | WXR  | 依靠左 ADIRU 的姿态数据稳定天线 | 依靠左 ADIRU 的姿态数据稳定天线 | 依靠右 ADIRU 的姿态数据稳定天线 |
+ | FCC  |                                 | BOV F/D 横滚显示                | BOV F/D 横滚显示                |
+ |      |                                 | 自动驾驶将脱开且无法重新衔接    | 自动驾驶将脱开且无法重新衔接    |
+
+*** VHF navigation transfer switch
+ 在 NORMAL 位，机长显示数据源为 MMR 1、 VOR 1、DME 1；副驾驶显示数据源为 MMR 2、 VOR 2、DME 2[fn:6]。
+ | 系统 | NORMAL                                                    | BOTH ON 1                                                          | BOTH ON 2                                               |
+ |------+-----------------------------------------------------------+--------------------------------------------------------------------+---------------------------------------------------------|
+ | FCC  |                                                           | FCC B 将收到一个 VOR/ILS 转换[fn:1][fn:2]和 VOR/ILS 仪表转换的信号 | FCC A 将收到 一个 VOR/ILS 转换和 VOR/ILS 仪表转换的信号 |
+ |      |                                                           | B 通道 A/P 脱开                                                    | A 通道 A/P 脱开                                         |
+ |      |                                                           | 两个 A/P 都不在 CMD，双 F/D 接通，则 F/D B 将 BOV                  | 两个 A/P 都不在 CMD，双 F/D 接通，则 F/D A 将 BOV       |
+ | DEU  | MMR1 提供机长显示器的数据，MMR 2 提供到副驾驶显示器的数据 | DEU 用 MMR1 作为机长和副驾驶显示的数据源[fn:4]                     | DEU 用 MMR2 作为机长和副驾驶显示的数据源                |
+
+* Footnotes
+
+[fn:6]
+[[file:./static/仪表转换组件/2021-03-30_15-43-04_screenshot.jpg]]
+
+[fn:5]
+[[file:./static/仪表转换组件/2021-03-28_23-33-28_screenshot.jpg]]
+
+[fn:4]
+[[file:./static/仪表转换组件/2021-01-24_11-50-05_screenshot.jpg]]
+
+[fn:3]
+[[file:./static/仪表转换组件/2021-01-24_11-26-54_screenshot.jpg]]
+
+[fn:2]每个 MMR 有两条输出数据总线。输出数据总线 1 送到 FCC，输出数据总线 2 送到许多部件。
+[[file:./static/仪表转换组件/2021-01-24_11-38-24_screenshot.jpg]]
+
+[fn:1]VOR/MB 接收机利用两条输出总线输出 VOR 方位和接收机状态。输出总线 1 到本边的 FCC，输出总线 2 到下列部件：飞行数据采集组件（FDAU），无线电磁指示器（RMI），飞行管理计算机（FMC），显示电子组件（DEU）（每个 VOR/MB 都会送到 DEU1 和 DEU2）。
+[[file:./static/仪表转换组件/2021-01-24_10-16-27_screenshot.jpg]]

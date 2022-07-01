@@ -1,0 +1,173 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Initial Server Setup with Ubuntu 14/")); -*-
+:PROPERTIES:
+:ID:       5B226944-0189-45C2-A191-50409495EC42
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-19 Wed 11:27>
+#+TITLE: Initial Server Setup with Ubuntu 14
+
+* 创建新用户
+#+BEGIN_SRC awk
+adduser demo
+#+END_SRC
+
+* 为普通账户设置 root 特权
+使用以下命令添加新用户至 =sudo group= 。
+
+#+BEGIN_SRC awk
+gpasswd -a demo sudo
+#+END_SRC
+
+* 切换至用户
+#+BEGIN_SRC awk
+su - demo
+#+END_SRC
+
+* 配置基本的防火墙
+Ubuntu 使用 ufw 来配置防火墙策略。
+
+Before we enable or reload our firewall, we will create the rules that define the exceptions to our policy.
+First, we need to create an exception for SSH connections so that we can maintain access for remote administration.
+The SSH daemon runs on port 22 by default and ufw can implement a rule by name if the default has not been changed.
+ So if you have not modified SSH port, you can enable the exception by typing:
+
+#+BEGIN_SRC awk
+sudo ufw allow ssh
+#+END_SRC
+
+If you have modified the port that the SSH daemon is listening on, you will have to allow it by specifying the actual port number, along with the TCP protocol:
+
+#+BEGIN_SRC awk
+sudo ufw allow 4444/tcp
+#+END_SRC
+
+This is the bare minimum firewall configuration. It will only allow traffic on your SSH port and all other services will be inaccessible.
+If you plan on running additional services, you will need to open the firewall at each port required.
+
+#+BEGIN_QUOTE
+If you plan on running a conventional HTTP web server, you will need to allow access to port 80:
+#+END_QUOTE
+
+#+BEGIN_SRC awk
+sudo ufw allow 80/tcp
+#+END_SRC
+
+If you plan to run a web server with SSL/TLS enabled, you should allow traffic to that port as well:
+
+#+BEGIN_SRC awk
+sudo ufw allow 443/tcp
+#+END_SRC
+
+If you need SMTP email enabled, port 25 will need to be opened:
+
+#+BEGIN_SRC awk
+sudo ufw allow 25/tcp
+#+END_SRC
+
+After you've finished adding the exceptions, you can review your selections by typing:
+
+#+BEGIN_SRC awk
+sudo ufw show added
+#+END_SRC
+
+If everything looks good, you can enable the firewall by typing:
+
+#+BEGIN_SRC awk
+sudo ufw enable
+#+END_SRC
+
+You will be asked to confirm your selection, so type "y" if you wish to continue.
+This will apply the exceptions you made, block all other traffic, and configure your firewall to start automatically at boot.
+
+Remember that you will have to explicitly open the ports for any additional services that you may configure later.
+For more in-depth information, check out our article on [[https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server][configuring the ufw firewall]].
+
+* 配置时区，配置 Network Time Protocol Synchronization
+The next step is to set the localization settings for your server and configure the Network Time Protocol (NTP) synchronization.
+The first step will ensure that your server is operating under the correct time zone.
+The second step will configure your system to synchronize its system clock to the standard time maintained by a global network of NTP servers.
+This will help prevent some inconsistent behavior that can arise from out-of-sync clocks.
+
+** Configure Timezones
+ Our first step is to set our server's timezone. This is a very simple procedure that can be accomplished by reconfiguring the tzdata package:
+
+ #+BEGIN_SRC awk
+ sudo dpkg-reconfigure tzdata
+ #+END_SRC
+
+ You will be presented with a menu system that allows you to select the geographic region of your  server:
+
+ [[file:./static/Initial Server Setup with Ubuntu 14/2021-05-19_11-28-23_0.7467334085144564.png]]
+
+ After selecting an area, you will have the ability to choose the specific time zone that is appropriate for your server:
+
+ [[file:./static/Initial Server Setup with Ubuntu 14/2021-05-19_11-28-48_0.10657974775619028.png]]
+
+ Your system will be updated to use the selected timezone, and the results will be printed to the screen:
+
+ #+BEGIN_SRC awk
+ Current default time zone: 'America/New_York'
+ Local time is now:      Mon Nov  3 17:00:11 EST 2014.
+ Universal Time is now:  Mon Nov  3 22:00:11 UTC 2014.
+ #+END_SRC
+
+ Next, we will move on to configure NTP.
+
+** Configure NTP Synchronization
+ Now that you have your timezone set, we should configure NTP. This will allow your computer to stay in sync with other servers,
+ leading to more predictability in operations that rely on having the correct time.
+ For NTP synchronization, we will use a service called ntp, which we can install from Ubuntu's default repositories:
+
+ #+BEGIN_SRC awk
+ sudo apt-get update
+ #+END_SRC
+
+ #+BEGIN_SRC awk
+ sudo apt-get install ntp
+ #+END_SRC
+
+ This is all that you have to do to set up NTP synchronization on Ubuntu.
+ The daemon will start automatically each boot and will continuously adjust the system time to be in-line with the global NTP servers throughout the day.
+ Click here if you wish to learn more about [[https://www.digitalocean.com/community/tutorials/how-to-set-up-time-synchronization-on-ubuntu-12-04][NTP servers]].
+
+* 创建交换文件
+Adding "swap" to a Linux server allows the system to move the less frequently accessed information of a running program from RAM to a location on disk.
+Accessing data stored on disk is much slower than accessing RAM,
+but having swap available can often be the difference between your application staying alive and crashing.
+This is especially useful if you plan to host any databases on your system.
+
+Although swap is generally recommended for systems utilizing traditional spinning hard drives, using swap with SSDs can cause issues with hardware degradation over time.
+Due to this consideration, we do not recommend enabling swap on DigitalOcean or any other provider that utilizes SSD storage.
+Doing so can impact the reliability of the underlying hardware for you and your neighbors.
+
+If you need to improve the performance of your server, we recommend upgrading your Droplet.
+This  will lead to better results in general and will decrease the likelihood of contributing to hardware issues that can affect your service.
+
+Advice about the best size for a swap space varies significantly depending on the source consulted.
+Generally, an amount equal to or double the amount of RAM on your system is a good starting point.
+
+Allocate the space you want to use for your swap file using the fallocate utility.
+For example, if we need a 4 Gigabyte file, we can create a swap file located at /swapfile by typing:
+
+#+BEGIN_SRC awk
+sudo fallocate -l 4G /swapfile
+#+END_SRC
+
+After creating the file, we need to restrict access to the file so that other users or processes cannot see what is written there:
+
+#+BEGIN_SRC awk
+sudo chmod 600 /swapfile
+#+END_SRC
+
+We now have a file with the correct permissions. To tell our system to format the file for swap, we can type:
+
+#+BEGIN_SRC awk
+sudo swapon /swapfile
+#+END_SRC
+
+Our system is using the swap file for this session, but we need to modify a system file so that our server will do this automatically at boot.
+You can do this by typing:
+
+#+BEGIN_SRC shell
+sudo sh -c 'echo "/swapfile none swap sw 0 0" >> /etc/fstab'
+#+END_SRC

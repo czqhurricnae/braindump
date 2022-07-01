@@ -1,0 +1,16 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 减速板中断起飞电门/")); -*-
+:PROPERTIES:
+:ID:       0527B2DF-BEF8-4ED3-A381-4709AD8F23AA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-18 Thu 19:52>
+#+TITLE: 737NG 减速板中断起飞电门
+#+FILETAGS: :提升摇臂:S650:
+
+[[file:./static/737NG 减速板中断起飞电门/2021-02-18_19-53-21_screenshot.jpg]]
+
+当反推手柄移动到反推位置时，减速板 RTO 电门作动。
+反推手柄使反推凸轮（THRUST REVERSER CAM）运动。
+凸轮带动凸轮从动齿轮（CAM FOLLOWER）转动。
+凸轮从动齿轮又带动提升摇臂（LIFTING ARM）同时作动减速板 RTO 电门。
+提升摇臂碰撞提升接头（LIFTING TAB），从而使减速板手柄提升起来，移出下卡位置。

@@ -1,0 +1,147 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React bookList 小的示例/")); -*-
+:PROPERTIES:
+:ID:       E57F44B6-34A7-49CA-A990-16E320AE1373
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:51>
+#+TITLE: React bookList 小的示例
+
+#+CAPTION: src/actions/index.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+export function selectBook (book) {
+  return {
+    type: 'BOOK_SELECTED',
+    payload: book
+  }
+}
+#+END_SRC
+<<src/actions/index.jsx>>
+
+#+CAPTION: src/reducers/reducers_book.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+export default function () {
+  return [
+    { title: 'JavaScript' },
+    { title: 'Harry Potter' },
+    { title: 'The Dark Tower' }
+  ]
+}
+#+END_SRC
+<<src/reducers/reducers_book.jsx>>
+
+#+CAPTION: src/reducers/reducer_active_book.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+export default function (state = null, action) {
+  switch (action.type) {
+    case 'BOOK_SELECTED':
+      return action.payload
+  }
+
+  return state
+}
+#+END_SRC
+<<src/reducers/reducer_active_book.jsx>>
+
+#+CAPTION: src/reducers/index.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+import { combineReducers } from 'redux'
+import BooksReducer from './reducer_books'
+import ActiveBook from './reducer_active_book'
+
+const rootReducer = combineReducers({
+  books: BooksReducer,
+  activeBook: ActiveBook
+})
+
+export default rootReducer
+#+END_SRC
+<<src/reducers/index.jsx>>
+
+#+CAPTION: src/containers/book-list.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+import React, {Component} from 'react'
+import { selectBook } from '../actions/index'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+class BookList extends Component{
+  renderList () {
+    return this.props.books.map((book) => {
+      <li key={book.title}
+          onClick={() => this.props.selectBook(book)}
+          className='list-group-item'
+      >
+        {book.list}
+      </li>
+    })
+  }
+
+  render () {
+    return (
+      <ul className='list-group col-sm-4'>
+        {this.renderList()}
+      </ul>
+    )
+  }
+}
+
+function mapStateToProps (state) {
+  return {
+    books: state.books
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators({ selectBook: selectBook }, dispatch)
+}
+
+export default connect(mapStateToprops, mapDispatchToProps)(BookList)
+#+END_SRC
+<<src/containers/book-list.jsx>>
+
+#+CAPTION: src/containers/book-detail.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+class BookDetail extends Component {
+  render () {
+    if (!this.props.book) {
+      return <div>Select a book to get start.</div>
+    }
+
+    return (
+      <div>
+        <h3>Details for:</h3>
+        <div>{this.props.book.title}</div>
+      </div>)
+  }
+}
+
+function mapStateToProps (state) {
+  return {
+    book: state.activeBook
+  }
+}
+
+export default connect(mapStateToProps)(BookDetail)
+#+END_SRC
+<<src/containers/book-detail.jsx>>
+
+#+CAPTION: src/component/app.jsx
+#+BEGIN_SRC javascript :results values list :exports both
+import React, {Component} from 'react'
+import BookList from '../containers/book-list'
+import BookDetail from '../containers/book-detail'
+
+export default class App extends Component {
+  render () {
+    return (
+      <div>
+        <BookList/>
+        <BookDetail/>
+      </div>
+    )
+}
+#+END_SRC
+<<src/component/app.jsx>>

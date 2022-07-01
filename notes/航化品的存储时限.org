@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/航化品的存储时限")); -*-
+:PROPERTIES:
+:ID:       47406310-1DBA-42BD-99D3-EA678DC7A5A3
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-02 Fri 01:18>
+#+TITLE: 航化品的存储时限
+
+[[file:./static/航化品的存储时限/航化品的存储时限.JPG]]

@@ -1,0 +1,53 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Electronic Flight Instrument System/")); -*-
+:PROPERTIES:
+:ID:       A750585D-FE99-44C6-A118-BCE8CD7FF7EC
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-03-26 Fri 18:44>
+#+TITLE: Electronic Flight Instrument System
+
+[[id:73962678-1FEC-410E-A505-82F599064A7F][各种速度的定义]]
+* Maximum Speed
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_03_12.jpg]]
+
+* Maximum Maneuvering Speed
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_03_26.jpg]]
+
+* Next Flap Position Limit Speed
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_03_50.jpg]]
+
+* Minimum Speed
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_03_58.jpg]]
+
+* Minimum Maneuvering Speed
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_04_11.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_05_05.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_05_17.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_05_21.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_05_34.jpg]]
+
+** Flap Up Maneuvering Speed
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_05_42.jpg]]
+
+* Airspeed Indicator, Preflight through Takeoff
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_03.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_16.jpg]]
+按选 V1 对应的行选键。
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_21.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_32.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_50.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_53.jpg]]
+Turn the IAS/MACH selector on the mode control panel to set V2 on the airspeed indicator.
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_06_59.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_07_09.jpg]]
+The magenta airspeed cursor parks at the top of the airspeed indicator.
+The V2 + 15 bug is set and is out of view.
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_09_13.jpg]]
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_07_16.jpg]]
+A bug is set for the first flap retraction after takeoff.
+Right now this bug is off scale.
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_07_20.jpg]]
+
+* A failure of the EFIS contorl panel
+[[file:./static/Electronic Flight Instrument System/Electronic_Flight_Instrument_System-0_23_46.jpg]]

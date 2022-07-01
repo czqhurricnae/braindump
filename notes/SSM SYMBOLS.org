@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/SSM SYMBOLS/")); -*-
+:PROPERTIES:
+:ID:       2ABD3F5A-FFD5-4BBF-93E9-DFC0C2AC1366
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-26 Fri 08:15>
+#+TITLE: SSM SYMBOLS
+
+[[file:./static/SSM SYMBOLS/2021-03-26_08-15-36_SSM 00-00-00.jpeg]]
+
+[[file:./static/SSM SYMBOLS/2021-03-26_08-15-43_SSM 00-00-00 2.jpeg]]

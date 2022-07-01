@@ -1,0 +1,1626 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Let's_build_a_web_server/")); -*-
+:PROPERTIES:
+:ID:       F9B23E08-D963-454C-BFF0-DC02607096AF
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-09 Tue 23:49>
+#+TITLE: Let's_build_a_web_server
+
+* What is a Web server
+In a nutshell it’s a networking server that sits on a physical server (oops, a server on a server) and waits for a client to send a request.
+When it receives a request, it generates a response and sends it back to the client.
+The communication between a client and a server happens using HTTP protocol.
+A client can be your browser or any other software that speaks HTTP.
+
+What would a very simple implementation of a Web server look like?
+Here is my take on it.
+The example is in Python but even if you don’t know Python (it’s a very easy language to pick up, try it!) you still should be able to understand concepts from the code and explanations below:
+
+#+BEGIN_SRC python
+import socket
+
+HOST, PORT = '', 8888
+
+listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+listen_socket.bind((HOST, PORT))
+listen_socket.listen(1)
+print "Serving HTTP on port %s ..." % PORT
+while True:
+    client_connection, client_address = listen_socket.accept()
+    request = client_connection.recv(1024)
+    print request
+
+    http_response = """\
+HTTP/1.1 200 OK
+
+Hello, World!
+"""
+    client_connection.sendall(http_response)
+    client_connection.close()
+#+END_SRC
+
+Save the above code as webserver1.py or download it directly from GitHub and run it on the command line like this
+
+#+BEGIN_SRC sh
+$ python webserver1.py
+Serving HTTP on port 8888 …
+#+END_SRC
+
+Now type in the following URL in your Web browser’s address bar http://localhost:8888/hello, hit Enter, and see magic in action.
+You should see "Hello, World!" displayed in your browser like this:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part1/browser_hello_world.png @ 2019-06-29 20:14:55
+[[file:./static/Let's_build_a_web_server/browser_hello_world_2019-06-29_20-14-55.png]]
+
+Just do it, seriously. I will wait for you while you’re testing it.
+
+Done? Great. Now let’s discuss how it all actually works.
+
+First let’s start with the Web address you’ve entered. It’s called an URL and here is its basic structure:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part1/LSBAWS_URL_Web_address.png @ 2019-06-29 20:16:22
+[[file:./static/Let's_build_a_web_server/LSBAWS_URL_Web_address_2019-06-29_20-16-22.png]]
+
+
+This is how you tell your browser the address of the Web server it needs to find and connect to and the page (path) on the server to fetch for you.
+Before your browser can send a HTTP request though, it first needs to establish a TCP connection with the Web server.
+Then it sends an HTTP request over the TCP connection to the server and waits for the server to send an HTTP response back.
+And when your browser receives the response it displays it, in this case it displays "Hello, World!"
+
+Let’s explore in more detail how the client and the server establish a TCP connection before sending HTTP requests and responses.
+To do that they both use so-called sockets.
+Instead of using a browser directly you are going to simulate your browser manually by using telnet on the command line.
+
+On the same computer you’re running the Web server fire up a telnet session on the command line specifying a host to connect to localhost and the port to connect to 8888 and then press Enter:
+
+#+BEGIN_SRC sh
+$ telnet localhost 8888
+Trying 127.0.0.1 …
+Connected to localhost.
+#+END_SRC
+
+At this point you’ve established a TCP connection with the server running on your local host and ready to send and receive HTTP messages.
+In the picture below you can see a standard procedure a server has to go through to be able to accept new TCP connections.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part1/LSBAWS_socket.png @ 2019-06-29 20:18:46
+[[file:./static/Let's_build_a_web_server/LSBAWS_socket_2019-06-29_20-18-46.png]]
+
+In the same telnet session type /*GET /hello HTTP/1.1*/ and hit Enter:
+
+#+BEGIN_SRC sh
+$ telnet localhost 8888
+Trying 127.0.0.1 …
+Connected to localhost.
+GET /hello HTTP/1.1
+
+HTTP/1.1 200 OK
+Hello, World!
+#+END_SRC
+
+You’ve just manually simulated your browser!
+You sent an HTTP request and got an HTTP response back.
+This is the basic structure of an HTTP request:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part1/LSBAWS_HTTP_request_anatomy.png @ 2019-06-29 20:22:45
+[[file:./static/Let's_build_a_web_server/LSBAWS_HTTP_request_anatomy_2019-06-29_20-22-45.png]]
+
+
+The HTTP request consists of the line indicating the HTTP method (GET, because we are asking our server to return us something),
+the path /hello that indicates a "page" on the server we want and the protocol version.
+
+For simplicity’s sake our Web server at this point completely ignores the above request line.
+You could just as well type in any garbage instead of "GET /hello HTTP/1.1" and you would still get back a "Hello, World!" response.
+
+Once you’ve typed the request line and hit Enter the client sends the request to the server, the server reads the request line, prints it and returns the proper HTTP response.
+
+Here is the HTTP response that the server sends back to your client (telnet in this case):
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part1/LSBAWS_HTTP_response_anatomy.png @ 2019-06-29 20:24:05
+[[file:./static/Let's_build_a_web_server/LSBAWS_HTTP_response_anatomy_2019-06-29_20-24-05.png]]
+
+Let’s dissect it. The response consists of a status line HTTP/1.1 200 OK, followed by a required empty line,
+and then the HTTP response body.
+
+The response status line HTTP/1.1 200 OK consists of the HTTP Version, the HTTP status code and the HTTP status code reason phrase OK. When the browser gets the response, it displays the body of the response and that’s why you see "Hello, World!" in your browser.
+
+And that’s the basic model of how a Web server works. To sum it up: The Web server creates a listening socket and starts accepting new connections in a loop. The client initiates a TCP connection and, after successfully establishing it, the client sends an HTTP request to the server and the server responds with an HTTP response that gets displayed to the user. To establish a TCP connection both clients and servers use sockets.
+
+Now you have a very basic working Web server that you can test with your browser or some other HTTP client.
+As you’ve seen and hopefully tried, you can also be a human HTTP client too, by using telnet and typing HTTP requests manually.
+
+Here’s a question for you: "How do you run a Django application, Flask application, and Pyramid application under your freshly minted Web server without making a single change to the server to accommodate all those different Web frameworks?"
+
+I will show you exactly how in Part 2 of the series. Stay tuned.
+
+* WSGI server
+Remember, in Part 1 I asked you a question: "How do you run a Django application, Flask application, and Pyramid application under your freshly minted Web server without making a single change to the server to accommodate all those different Web frameworks?" Read on to find out the answer.
+
+In the past, your choice of a Python Web framework would limit your choice of usable Web servers, and vice versa.
+If the framework and the server were designed to work together, then you were okay:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_before_wsgi.png @ 2019-06-29 20:35:39
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_before_wsgi_2019-06-29_20-35-39.png]]
+
+But you could have been faced (and maybe you were) with the following problem when trying to combine a server and a framework that weren’t designed to work together:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_after_wsgi.png @ 2019-06-29 20:37:13
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_after_wsgi_2019-06-29_20-37-13.png]]
+
+Basically you had to use what worked together and not what you might have wanted to use.
+
+So, how do you then make sure that you can run your Web server with multiple Web frameworks without making code changes either to the Web server or to the Web frameworks?
+And the answer to that problem became the Python Web Server Gateway Interface (or WSGI for short, pronounced "wizgy").
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_wsgi_idea.png @ 2019-06-29 20:38:29
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_wsgi_idea_2019-06-29_20-38-29.png]]
+
+WSGI allowed developers to separate choice of a Web framework from choice of a Web server.
+Now you can actually mix and match Web servers and Web frameworks and choose a pairing that suits your needs. You can run Django, Flask, or Pyramid, for example, with Gunicorn or Nginx/uWSGI or Waitress. Real mix and match, thanks to the WSGI support in both servers and frameworks:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_wsgi_interop.png @ 2019-06-29 20:39:17
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_wsgi_interop_2019-06-29_20-39-17.png]]
+
+So, WSGI is the answer to the question I asked you in Part 1 and repeated at the beginning of this article.
+Your Web server must implement the server portion of a WSGI interface and all modern Python Web Frameworks already implement the framework side of the WSGI interface,
+which allows you to use them with your Web server without ever modifying your server’s code to accommodate a particular Web framework.
+
+Now you know that WSGI support by Web servers and Web frameworks allows you to choose a pairing that suits you,
+but it is also beneficial to server and framework developers because they can focus on their preferred area of specialization and not step on each other’s toes.
+Other languages have similar interfaces too: Java, for example, has Servlet API and Ruby has Rack.
+
+It’s all good, but I bet you are saying: "Show me the code!" Okay, take a look at this pretty minimalistic WSGI server implementation:
+
+#+CAPTION: WSGIServer
+#+BEGIN_SRC python
+import socket
+import StringIO
+import sys
+
+
+class WSGIServer(object):
+
+    address_family = socket.AF_INET
+    socket_type = socket.SOCK_STREAM
+    request_queue_size = 1
+
+    def __init__(self, server_address):
+        # Create a listening socket
+        self.listen_socket = listen_socket = socket.socket(
+            self.address_family, self.socket_type)
+        # Allow to reuse the same address
+        listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Bind
+        listen_socket.bind(server_address)
+        # Activate
+        listen_socket.listen(self.request_queue_size)
+        # Get server host name and port
+        host, port = self.listen_socket.getsockname()[:2]
+        self.server_name = socket.getfqdn(host)
+        self.server_port = port
+        # Return headers set by Web framework/Web application
+        self.headers_set = []
+
+    def set_app(self, application):
+        self.application = application
+
+    def serve_forever(self):
+        listen_socket = self.listen_socket
+        while True:
+            # New client connection
+            self.client_connection, client_address = listen_socket.accept()
+            # Handle one request and close the client connection. Then
+            # loop over to wait for another client connection
+            self.handle_one_request()
+
+    def handle_one_request(self):
+        self.request_data = request_data = self.client_connection.recv(1024)
+        # Print formatted request data a la 'curl -v'
+        print(''.join('< {line}\n'.format(line=line)
+                      for line in request_data.splitlines()))
+
+        self.parse_request(request_data)
+
+        # Construct environment dictionary using request data
+        env = self.get_environ()
+
+        # It's time to call our application callable and get
+        # back a result that will become HTTP response body
+        result = self.application(env, self.start_response)
+
+        # Construct a response and send it back to the client
+        self.finish_response(result)
+
+    def parse_request(self, text):
+        request_line = text.splitlines()[0]
+        request_line = request_line.rstrip('\r\n')
+        # Break down the request line into components
+        (
+            self.request_method,  # GET
+            self.path,  					# /hello
+            self.request_version  # HTTP/1.1
+        ) = request_line.split()
+
+    def get_environ(self):
+        env = {}
+        # The following code snippet does not follow PEP8 conventions
+        # but it's formatted the way it is for demonstration purposes
+        # to emphasize the required variables and their values
+        #
+        # Required WSGI variables
+        env['wsgi.version'] = (1, 0)
+        env['wsgi.url_scheme'] = 'http'
+        env['wsgi.input'] = StringIO.StringIO(self.request_data)
+        env['wsgi.errors'] = sys.stderr
+        env['wsgi.multithread'] = False
+        env['wsgi.multiprocess'] = False
+        env['wsgi.run_once'] = False
+        # Required CGI variables
+        env['REQUEST_METHOD'] = self.request_method  # GET
+        env['PATH_INFO'] = self.path  # /hello
+        env['SERVER_NAME'] = self.server_name  # localhost
+        env['SERVER_PORT'] = str(self.server_port)  # 8888
+        return env
+
+    def start_response(self, status, response_headers, exc_info=None):
+        # Add necessary server headers
+        server_headers = [
+            ('Date', 'Tue, 31 Mar 2015 12:54:48 GMT'),
+            ('Server', 'WSGIServer 0.2'),
+        ]
+        self.headers_set = [status, response_headers + server_headers]
+        # To adhere to WSGI specification the start_response must return
+        # a 'write' callable. We simplicity's sake we'll ignore that detail
+        # for now.
+        # return self.finish_response
+
+    def finish_response(self, result):
+        try:
+            status, response_headers = self.headers_set
+            response = 'HTTP/1.1 {status}\r\n'.format(status=status)
+            for header in response_headers:
+                response += '{0}: {1}\r\n'.format(*header)
+            response += '\r\n'
+            for data in result:
+                response += data
+            # Print formatted response data a la 'curl -v'
+            print(''.join('> {line}\n'.format(line=line)
+                          for line in response.splitlines()))
+            self.client_connection.sendall(response)
+        finally:
+            self.client_connection.close()
+
+
+SERVER_ADDRESS = (HOST, PORT) = '', 8888
+
+
+def make_server(server_address, application):
+    server = WSGIServer(server_address)
+    server.set_app(application)
+    return server
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        sys.exit('Provide a WSGI application object as module:callable')
+    app_path = sys.argv[1]
+    module, application = app_path.split(':')
+    module = __import__(module)
+    application = getattr(module, application)
+    httpd = make_server(SERVER_ADDRESS, application)
+    print('WSGIServer: Serving HTTP on port {port} ...\n'.format(port=PORT))
+    httpd.serve_forever()
+#+END_SRC
+
+#+RESULTS:
+
+<<WSGIServer>>
+
+在 flaskapp.py 文件中写入:
+
+#+BEGIN_SRC python
+from flask import Flask
+from flask import Response
+flask_app = Flask('flaskapp')
+
+
+@flask_app.route('/hello')
+def hello_world():
+    return Response('Hello world from Flask!\n', mimetype='text/plain')
+
+
+app = flask_app.wsgi_app
+#+END_SRC
+
+或者使用 Pyramid, 在 pyramidapp.py 文件中写入:
+
+#+BEGIN_SRC python
+from pyramid.config import Configurator
+from pyramid.response import Response
+
+
+def hello_world(request):
+    return Response(
+        'Hello world from Pyramid!\n',
+        content_type='text/plain',
+    )
+
+
+config = Configurator()
+config.add_route('hello', '/hello')
+config.add_view(hello_world, route_name='hello')
+app = config.make_wsgi_app()
+#+END_SRC
+
+或者使用 Django, 在 Djangoapp.py 文件中写入:
+
+#+BEGIN_SRC python
+import sys
+sys.path.insert(0, './helloworld')
+from helloworld import wsgi
+
+app = wsgi.application
+#+END_SRC
+
+这时在终端上运行命令 ~python web_server3.py flaskapp:app~ ，再访问 =http://127.0.0.1:8888/hello= 。
+
+#+BEGIN_SRC sh
+python web_server3.py flaskapp:app
+WSGIServer: Serving HTTP on port 8888 ...
+
+< GET /hello HTTP/1.1
+< Host: 127.0.0.1:8888
+< Connection: keep-alive
+< User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
+< Upgrade-Insecure-Requests: 1
+< Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+< DNT: 1
+< Accept-Encoding: gzip, deflate, br
+< Accept-Language: zh,zh-CN;q=0.9,en;q=0.8
+<
+
+> HTTP/1.1 200 OK
+> Content-Type: text/plain; charset=utf-8
+> Content-Length: 24
+> Date: Tue, 31 Mar 2015 12:54:48 GMT
+> Server: WSGIServer 0.2
+>
+> Hello world from Flask!
+#+END_SRC
+
+Here is how it works:
+
+- The framework provides an ‘application’ callable (The WSGI specification doesn’t prescribe how that should be implemented)
+- The server invokes the ‘application’ callable for each request it receives from an HTTP client. It passes a dictionary ‘environ’ containing WSGI/CGI variables and a ‘start_response’ callable as arguments to the ‘application’ callable.
+- The framework/application generates an HTTP status and HTTP response headers and passes them to the ‘start_response’ callable for the server to store them. The framework/application also returns a response body.
+- The server combines the status, the response headers, and the response body into an HTTP response and transmits it to the client (This step is not part of the specification but it’s the next logical step in the flow and I added it for clarity)
+
+And here is a visual representation of the interface:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_wsgi_interface.png @ 2019-06-29 20:47:04
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_wsgi_interface_2019-06-29_20-47-04.png]]
+
+* WSGI Web framework
+So far, you’ve seen the Pyramid, Flask, and Django Web applications and you’ve seen the server code that implements the server side of the WSGI specification. You’ve even seen the barebones WSGI application code snippet that doesn’t use any framework.
+
+The thing is that when you write a Web application using one of those frameworks you work at a higher level and don’t work with WSGI directly, but I know you’re curious about the framework side of the WSGI interface, too because you’re reading this article. So, let’s create a minimalistic WSGI Web application/Web framework without using Pyramid, Flask, or Django and run it with your server:
+
+#+BEGIN_SRC python
+def app(environ, start_response):
+    """A barebones WSGI application.
+
+    This is a starting point for your own Web framework :)
+    """
+    status = '200 OK'
+    response_headers = [('Content-Type', 'text/plain')]
+    start_response(status, response_headers)
+    return ['Hello world from a simple WSGI application!\n']
+#+END_SRC
+
+Again, save the above code in wsgiapp.py file or download it from GitHub directly and run the application under your Web server as:
+
+#+BEGIN_SRC python
+$ python webserver2.py wsgiapp:app
+WSGIServer: Serving HTTP on port 8888 ...
+#+END_SRC
+
+Type in the following address and press Enter. This is the result you should see:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_browser_simple_wsgi_app.png @ 2019-06-29 21:27:32
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_browser_simple_wsgi_app_2019-06-29_21-27-31.png]]
+
+You just wrote your very own minimalistic WSGI Web framework while learning about how to create a Web server! Outrageous.
+
+Now, let’s get back to what the server transmits to the client. Here is the HTTP response the server generates when you call your Pyramid application using an HTTP client:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_http_response.png @ 2019-06-29 21:28:28
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_http_response_2019-06-29_21-28-28.png]]
+
+The response has some familiar parts that you saw in Part 1 but it also has something new. It has, for example,
+four HTTP headers that you haven’t seen before: Content-Type, Content-Length, Date, and Server.
+Those are the headers that a response from a Web server generally should have.
+None of them are strictly required, though.
+The purpose of the headers is to transmit additional information about the HTTP request/response.
+
+Now that you know more about the WSGI interface,
+here is the same HTTP response with some more information about what parts produced it:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_http_response_explanation.png @ 2019-06-29 21:29:58
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_http_response_explanation_2019-06-29_21-29-58.png]]
+
+I haven’t said anything about the ‘environ’ dictionary yet, but basically it’s a Python dictionary that must contain certain WSGI and CGI variables prescribed by the WSGI specification.
+The server takes the values for the dictionary from the HTTP request after parsing the request.
+This is what the contents of the dictionary look like:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part2/lsbaws_part2_environ.png @ 2019-06-29 21:30:38
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_environ_2019-06-29_21-30-38.png]]
+
+A Web framework uses the information from that dictionary to decide which view to use based on the specified route, request method etc., where to read the request body from and where to write errors, if any.
+
+By now you’ve created your own WSGI Web server and you’ve made Web applications written with different Web frameworks. And, you’ve also created your barebones Web application/Web framework along the way.
+It’s been a heck of a journey.
+Let’s recap what your WSGI Web server has to do to serve requests aimed at a WSGI application:
+First, the server starts and loads an ‘application’ callable provided by your Web framework/application
+Then, the server reads a request
+Then, the server parses it
+Then, it builds an ‘environ’ dictionary using the request data
+Then, it calls the ‘application’ callable with the ‘environ’ dictionary and a ‘start_response’ callable as parameters and gets back a response body.
+Then, the server constructs an HTTP response using the data returned by the call to the ‘application’ object and the status and response headers set by the ‘start_response’ callable.
+And finally, the server transmits the HTTP response back to the client.
+
+[[file:./static/Let's_build_a_web_server/lsbaws_part2_server_summary.png]]
+
+That’s about all there is to it.
+You now have a working WSGI server that can serve basic Web applications written with WSGI compliant Web frameworks like Django, Flask, Pyramid, or your very own WSGI framework.
+The best part is that the server can be used with multiple Web frameworks without any changes to the server code base. Not bad at all.
+
+Before you go, here is another question for you to think about, "How do you make your server handle more than one request at a time?"
+
+* Socket pair
+In Part 2 you created a minimalistic WSGI server that could handle basic HTTP GET requests.
+And I asked you a question, "How can you make your server handle more than one request at a time?" In this article you will find the answer.
+So, buckle up and shift into high gear. You’re about to have a really fast ride.
+Have your Linux, Mac OS X (or any *nix system) and Python ready. All source code from the article is available on GitHub.
+
+First let’s remember what a very basic Web server looks like and what the server needs to do to service client requests.
+The server you created in Part 1 and Part 2 is an iterative server that handles one client request at a time.
+It cannot accept a new connection until after it has finished processing a current client request.
+Some clients might be unhappy with it because they will have to wait in line, and for busy servers the line might be too long.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it1.png @ 2019-06-29 21:38:18
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it1_2019-06-29_21-38-18.png]]
+
+Here is the code of the iterative server webserver3a.py:
+
+
+#+BEGIN_SRC python
+#####################################################################
+# Iterative server - webserver3a.py                                 #
+#                                                                   #
+# Tested with Python 2.7.9 & Python 3.4 on Ubuntu 14.04 & Mac OS X  #
+#####################################################################
+import socket
+
+SERVER_ADDRESS = (HOST, PORT) = '', 8888
+REQUEST_QUEUE_SIZE = 5
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print(request.decode())
+    http_response = b"""\
+HTTP/1.1 200 OK
+
+Hello, World!
+"""
+    client_connection.sendall(http_response)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+
+    while True:
+        client_connection, client_address = listen_socket.accept()
+        handle_request(client_connection)
+        client_connection.close()
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+To observe your server handling only one client request at a time, modify the server a little bit and add a 60 second delay after sending a response to a client.
+The change is only one line to tell the server process to sleep for 60 seconds.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it2.png @ 2019-06-29 21:40:57
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it2_2019-06-29_21-40-57.png]]
+
+And here is the code of the sleeping server webserver3b.py:
+
+
+#+BEGIN_SRC python
+#########################################################################
+# Iterative server - webserver3b.py                                     #
+#                                                                       #
+# Tested with Python 2.7.9 & Python 3.4 on Ubuntu 14.04 & Mac OS X      #
+#                                                                       #
+# - Server sleeps for 60 seconds after sending a response to a client   #
+#########################################################################
+import socket
+import time
+
+SERVER_ADDRESS = (HOST, PORT) = '', 8888
+REQUEST_QUEUE_SIZE = 5
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print(request.decode())
+    http_response = b"""\
+HTTP/1.1 200 OK
+
+Hello, World!
+"""
+    client_connection.sendall(http_response)
+    time.sleep(60)  # sleep and block the process for 60 seconds
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+
+    while True:
+        client_connection, client_address = listen_socket.accept()
+        handle_request(client_connection)
+        client_connection.close()
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+Start the server with:
+
+#+BEGIN_SRC sh
+$ python webserver3b.py
+#+END_SRC
+
+Now open up a new terminal window and run the curl command.
+You should instantly see the "Hello, World!" string printed on the screen:
+
+#+BEGIN_SRC sh
+$ curl http://localhost:8888/hello
+Hello, World!
+#+END_SRC
+
+And without delay open up a second terminal window and run the same curl command:
+
+#+BEGIN_SRC sh
+$ curl http://localhost:8888/hello
+#+END_SRC
+
+If you’ve done that within 60 seconds then the second curl should not produce any output right away and should just hang there.
+The server shouldn’t print a new request body on its standard output either. Here is how it looks like on my Mac (the window at the bottom right corner highlighted in yellow shows the second curl command hanging, waiting for the connection to be accepted by the server):
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it3.png @ 2019-06-29 21:44:51
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it3_2019-06-29_21-44-51.png]]
+
+After you’ve waited long enough (more than 60 seconds) you should see the first curl terminate and the second curl print "Hello, World!" on the screen, then hang for 60 seconds, and then terminate:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it4.png @ 2019-06-29 21:46:11
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it4_2019-06-29_21-46-11.png]]
+
+The way it works is that the server finishes servicing the first curl client request and then it starts handling the second request only after it sleeps for 60 seconds.
+It all happens sequentially, or iteratively, one step, or in our case one client request, at a time.
+
+Let’s talk about the communication between clients and servers for a bit.
+In order for two programs to communicate with each other over a network, they have to use sockets.
+And you saw sockets both in Part 1 and Part 2. But what is a socket?
+
+A socket is an abstraction of a communication endpoint and it allows your program to communicate with another program using file descriptors.
+In this article I’ll be talking specifically about TCP/IP sockets on Linux/Mac OS X. An important notion to understand is the TCP socket pair.
+
+#+BEGIN_QUOTE
+The socket pair for a TCP connection is a 4-tuple that identifies two endpoints of the TCP connection: the local IP address,
+local port, foreign IP address, and foreign port.
+A socket pair uniquely identifies every TCP connection on a network.
+The two values that identify each endpoint, an IP address and a port number, are often called a socket.
+#+END_QUOTE
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_socketpair.png @ 2019-06-29 21:48:46
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_socketpair_2019-06-29_21-48-46.png]]
+
+当客户端发起一个连接请求时, 客户端套接字地址中的端口是由内核自动分配的, 称为临时端口(ephemeral port).
+服务器套接字地址中的端口通常是某个知名端口, 是和这个服务相对应的.
+
+So, the tuple {10.10.10.2:49152, 12.12.12.3:8888} is a socket pair that uniquely identifies two endpoints of the TCP connection on the client and the tuple {12.12.12.3:8888, 10.10.10.2:49152} is a socket pair that uniquely identifies the same two endpoints of the TCP connection on the server.
+The two values that identify the server endpoint of the TCP connection, the IP address 12.12.12.3 and the port 8888, are referred to as a socket in this case (the same applies to the client endpoint).
+
+The standard sequence a server usually goes through to create a socket and start accepting client connections is the following:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_server_socket_sequence.png @ 2019-06-29 21:51:08
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_server_socket_sequence_2019-06-29_21-51-08.png]]
+
+- The server creates a TCP/IP socket. This is done with the following statement in Python:
+
+#+BEGIN_SRC python
+listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#+END_SRC
+
+The server might set some socket options (this is optional, but you can see that the server code above does just that to be able to re-use the same address over and over again if you decide to kill and re-start the server right away).
+
+
+#+BEGIN_SRC python
+listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#+END_SRC
+
+Then, the server binds the address. The bind function assigns a local protocol address to the socket.
+With TCP, calling bind lets you specify a port number, an IP address, both, or neither.1
+
+#+BEGIN_SRC python
+listen_socket.bind(SERVER_ADDRESS)
+#+END_SRC
+
+Then, the server makes the socket a listening socket
+
+#+BEGIN_SRC python :results values list :exports no-eval
+listen_socket.listen(REQUEST_QUEUE_SIZE)
+#+END_SRC
+
+The listen method is only called by servers. It tells the kernel that it should accept incoming connection requests for this socket.
+
+After that’s done, the server starts accepting client connections one connection at a time in a loop.
+When there is a connection available the accept call returns the connected client socket.
+Then, the server reads the request data from the connected client socket, prints the data on its standard output and sends a message back to the client.
+Then, the server closes the client connection and it is ready again to accept a new client connection.
+
+Here is what a client needs to do to communicate with the server over TCP/IP:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_client_socket_sequence.png @ 2019-06-29 22:07:12
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_client_socket_sequence_2019-06-29_22-07-11.png]]
+
+Here is the sample code for a client to connect to your server,
+send a request and print the response:
+
+#+BEGIN_SRC python
+import socket
+
+# create a socket and connect to a server
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(('localhost', 8888))
+
+# send and receive some data
+sock.sendall(b'test')
+data = sock.recv(1024)
+print(data.decode())
+#+END_SRC
+
+After creating the socket, the client needs to connect to the server.
+This is done with the connect call:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+sock.connect(('localhost', 8888))
+#+END_SRC
+
+The client only needs to provide the remote IP address or host name and the remote port number of a server to connect to.
+
+You’ve probably noticed that the client doesn’t call bind and accept.
+/*The client doesn’t need to call bind because the client doesn’t care about the local IP address and the local port number.
+The TCP/IP stack within the kernel automatically assigns the local IP address and the local port when the client calls connect.
+The local port is called an ephemeral port, i.e. a short-lived port.*/
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_ephemeral_port.png @ 2019-06-29 22:11:11
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_ephemeral_port_2019-06-29_22-11-11.png]]
+
+A port on a server that identifies a well-known service that a client connects to is called a well-known port (for example, 80 for HTTP and 22 for SSH). Fire up your Python shell and make a client connection to the server you run on localhost and see what ephemeral port the kernel assigns to the socket you’ve created (start the server webserver3a.py or webserver3b.py before trying the following example):
+
+#+BEGIN_SRC sh
+>>> import socket
+>>> sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+>>> sock.connect(('localhost', 8888))
+>>> host, port = sock.getsockname()[:2]
+>>> host, port
+('127.0.0.1', 60589)
+#+END_SRC
+
+In the case above the kernel assigned the ephemeral port 60589 to the socket.
+
+There are some other important concepts that I need to cover quickly before I get to answer the question from Part 2. You will see shortly why this is important. The two concepts are that of a process and a file descriptor.
+
+What is a process? A process is just an instance of an executing program. When the server code is executed, for example, it’s loaded into memory and an instance of that executing program is called a process. The kernel records a bunch of information about the process - its process ID would be one example - to keep track of it. When you run your iterative server webserver3a.py or webserver3b.py you run just one process.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_server_process.png @ 2019-06-29 22:33:47
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_server_process_2019-06-29_22-33-47.png]]
+
+Start the server webserver3b.py in a terminal window:
+
+#+BEGIN_SRC python
+$ python webserver3b.py
+#+END_SRC
+
+And in a different terminal window use the ps command to get the information about that process:
+
+#+BEGIN_SRC sh
+$ ps | grep webserver3b | grep -v grep
+7182 ttys003    0:00.04 python webserver3b.py
+#+END_SRC
+
+The ps command shows you that you have indeed run just one Python process webserver3b.
+When a process gets created the kernel assigns a process ID to it, PID.
+In UNIX, every user process also has a parent that, in turn, has its own process ID called parent process ID, or PPID for short.
+I assume that you run a BASH shell by default and when you start the server, a new process gets created with a PID and its parent PID is set to the PID of the BASH shell.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_ppid_pid.png @ 2019-06-29 22:35:45
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_ppid_pid_2019-06-29_22-35-45.png]]
+
+Try it out and see for yourself how it all works.
+Fire up your Python shell again, which will create a new process, and then get the PID of the Python shell process and the parent PID (the PID of your BASH shell) using os.getpid() and os.getppid() system calls.
+Then, in another terminal window run ps command and grep for the PPID (parent process ID, which in my case is 3148).
+In the screenshot below you can see an example of a parent-child relationship between my child Python shell process and the parent BASH shell process on my Mac OS X:
+
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_pid_ppid_screenshot.png @ 2019-06-29 22:38:09
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_pid_ppid_screenshot_2019-06-29_22-38-09.png]]
+
+Another important concept to know is that of a file descriptor.
+So what is a file descriptor? A file descriptor is a non-negative integer that the kernel returns to a process when it opens an existing file, creates a new file or when it creates a new socket.
+You’ve probably heard that in UNIX everything is a file.
+The kernel refers to the open files of a process by a file descriptor.
+When you need to read or write a file you identify it with the file descriptor.
+Python gives you high-level objects to deal with files (and sockets) and you don’t have to use file descriptors directly to identify a file but, under the hood, that’s how files and sockets are identified in UNIX: by their integer file descriptors.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_process_descriptors.png @ 2019-06-29 22:39:06
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_process_descriptors_2019-06-29_22-39-06.png]]
+
+By default, UNIX shells assign file descriptor 0 to the standard input of a process, file descriptor 1 to the standard output of the process and file descriptor 2 to the standard error.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_it_default_descriptors.png @ 2019-06-29 22:40:10
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_it_default_descriptors_2019-06-29_22-40-10.png]]
+
+As I mentioned before, even though Python gives you a high-level file or file-like object to work with, you can always use the fileno() method on the object to get the file descriptor associated with the file.
+Back to your Python shell to see how you can do that:
+
+#+BEGIN_SRC python
+>>> import sys
+>>> sys.stdin
+<open file '<stdin>', mode 'r' at 0x102beb0c0>
+>>> sys.stdin.fileno()
+0
+>>> sys.stdout.fileno()
+1
+>>> sys.stderr.fileno()
+2
+#+END_SRC
+
+And while working with files and sockets in Python, you’ll usually be using a high-level file/socket object, but there may be times where you need to use a file descriptor directly. Here is an example of how you can write a string to the standard output using a write system call that takes a file descriptor integer as a parameter:
+
+#+BEGIN_SRC python
+>>> import sys
+>>> import os
+>>> res = os.write(sys.stdout.fileno(), 'hello\n')
+hello
+#+END_SRC
+
+下面的例子是在 Python 3 中运行的.
+#+BEGIN_SRC python
+>>> res = os.write(sys.stdout.fileno(), "hello\n")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+
+>>> res = os.write(sys.stdout.fileno(), b"hello\n")
+hello
+#+END_SRC
+
+And here is an interesting part - which should not be surprising to you anymore because you already know that everything is a file in Unix - your socket also has a file descriptor associated with it.
+Again, when you create a socket in Python you get back an object and not a non-negative integer, but you can always get direct access to the integer file descriptor of the socket with the fileno() method that I mentioned earlier.
+
+#+BEGIN_SRC python
+>>> import socket
+>>> sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+>>> sock.fileno()
+3
+#+END_SRC
+
+One more thing I wanted to mention: have you noticed that in the second example of the iterative server webserver3b.py, when the server process was sleeping for 60 seconds you could still connect to the server with the second curl command? Sure, the curl didn’t output anything right away and it was just hanging out there but how come the server was not accept ing a connection at the time and the client was not rejected right away, but instead was able to connect to the server? The answer to that is the listen method of a socket object and its BACKLOG argument, which I called REQUEST_QUEUE_SIZE in the code.
+The BACKLOG argument determines the size of a queue within the kernel for incoming connection requests.
+When the server webserver3b.py was sleeping, the second curl command that you ran was able to connect to the server because the kernel had enough space available in the incoming connection request queue for the server socket.
+
+While increasing the BACKLOG argument does not magically turn your server into a server that can handle multiple client requests at a time,
+it is important to have a fairly large backlog parameter for busy servers so that the accept call would not have to wait for a new connection to be established but could grab the new connection off the queue right away and start processing a client request without delay.
+
+Whoo-hoo! You’ve covered a lot of ground. Let’s quickly recap what you’ve learned (or refreshed if it’s all basics to you) so far.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_checkpoint.png @ 2019-06-29 22:47:12
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_checkpoint_2019-06-29_22-47-12.png]]
+
+#+BEGIN_QUOTE
+- Iterative server
+- Server socket creation sequence (socket, bind, listen, accept)
+- Client connection creation sequence (socket, connect)
+- Socket pair
+- Socket
+- Ephemeral port and well-known port
+- Process
+- Process ID (PID), parent process ID (PPID), and the parent-child relationship.
+- File descriptors
+- The meaning of the BACKLOG argument of the listen socket method
+#+END_QUOTE
+
+Now I am ready to answer the question from Part 2: "How can you make your server handle more than one request at a time?" Or put another way, "How do you write a concurrent server?"
+
+* How do you make your server handle more than one requests at a time?
+The simplest way to write a concurrent server under Unix is to use a fork() system call.
+** Web server handle multiple requests and bot processs close descriptor
+Here is the code of your new shiny concurrent server webserver3c.py that can handle multiple client requests at the same time (as in our iterative server example webserver3b.py, every child process sleeps for 60 secs):
+
+#+CAPTION: fork
+#+BEGIN_SRC python
+import os
+import socket
+import time
+
+SERVER_ADDRESS = (HOST, PORT) = "", 8888
+REQUEST_QUEUE_SIZE = 5
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print("Child PID: {pid}. Paren PID: {ppid}".format(pid=os.getpid(),
+                                                       ppid=os.getppid()))
+    print(request.decode())
+    http_response = b"""
+HTTP/1.1 200 OK
+
+Hello, world!
+"""
+    client_connection.sendall(http_response)
+    time.sleep(60)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+    print('Parent PID (PPID): {pid}\n'.format(pid=os.getpid()))
+
+    while True:
+        client_connection, client_address = listen_socket.accept()
+        pid = os.fork()
+        if pid == 0:  # child
+            listen_socket.close()  # close child copy
+            handle_request(client_connection)
+            client_connection.close()
+            os._exit(0)  # child exits here
+        else:  # parent
+            client_connection.close()  # close parent copy and loop over
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+<<fork>>
+
+Before diving in and discussing how fork works, try it, and see for yourself that the server can indeed handle multiple client requests at the same time, unlike its iterative counterparts webserver3a.py and webserver3b.py.
+Start the server on the command line with:
+
+#+BEGIN_SRC python
+$ python webserver3c.py
+#+END_SRC
+
+And try the same two curl commands you’ve tried before with the iterative server and see for yourself that, now, even though the server child process sleeps for 60 seconds after serving a client request, it doesn’t affect other clients because they are served by different and completely independent processes.
+You should see your curl commands output "Hello, World!" instantly and then hang for 60 secs.
+You can keep on running as many curl commands as you want (well, almost as many as you want :) and all of them will output the server’s response "Hello, World" immediately and without any noticeable delay.
+Try it.
+
+The most important point to understand about fork() is that you call fork once but it returns twice: once in the parent process and once in the child process.
+When you fork a new process the process ID returned to the child process is 0. When the fork returns in the parent process it returns the child’s PID.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc2_how_fork_works.png @ 2019-06-29 22:56:42
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc2_how_fork_works_2019-06-29_22-56-42.png]]
+
+I still remember how fascinated I was by fork when I first read about it and tried it. It looked like magic to me. Here I was reading a sequential code and then "boom!": the code cloned itself and now there were two instances of the same code running concurrently. I thought it was nothing short of magic, seriously.
+
+When a parent forks a new child, the child process gets a copy of the parent’s file descriptors:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc2_shared_descriptors.png @ 2019-06-29 22:57:33
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc2_shared_descriptors_2019-06-29_22-57-33.png]]
+
+You’ve probably noticed that the parent process in the code above closed the client connection:
+
+#+BEGIN_SRC python
+  else:    # parent
+      client_connection.close()    # close parent copy and loop over
+#+END_SRC
+
+So how come a child process is still able to read the data from a client socket if its parent closed the very same socket? The answer is in the picture above.
+The kernel uses descriptor reference counts to decide whether to close a socket or not.
+It closes the socket only when its descriptor reference count becomes 0.
+When your server creates a child process, the child gets the copy of the parent’s file descriptors and the kernel increments the reference counts for those descriptors.
+In the case of one parent and one child, the descriptor reference count would be 2 for the client socket and when the parent process in the code above closes the client connection socket,
+it merely decrements its reference count which becomes 1, not small enough to cause the kernel to close the socket.
+The child process also closes the duplicate copy of the parent’s listen_socket because the child doesn’t care about accepting new client connections,
+it cares only about processing requests from the established client connection:
+
+#+BEGIN_SRC python
+  listen_socket.close()    # close child copy
+#+END_SRC
+
+I’ll talk about what happens if you do not close duplicate descriptors later in the article.
+
+[[fork][See fork]]
+
+As you can see from the source code of your concurrent server, the sole role of the server parent process now is to accept a new client connection, fork a new child process to handle that client request,
+and loop over to accept another client connection, and nothing more.
+The server parent process does not process client requests - its children do.
+
+A little aside. What does it mean when we say that two events are concurrent?
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc2_concurrent_events.png @ 2019-06-29 23:05:14
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc2_concurrent_events_2019-06-29_23-05-14.png]]
+
+When we say that two events are concurrent we usually mean that they happen at the same time.
+As a shorthand that definition is fine, but you should remember the strict definition:
+#+BEGIN_QUOTE
+Two events are concurrent if you cannot tell by looking at the program which will happen first.2
+#+END_QUOTE
+
+Again, it’s time to recap the main ideas and concepts you’ve covered so far.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_checkpoint.png @ 2019-06-29 23:06:19
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_checkpoint_2019-06-29_23-06-19.png]]
+
+#+BEGIN_QUOTE
+- The simplest way to write a concurrent server in Unix is to use the fork() system call
+- When a process forks a new process it becomes a parent process to that newly forked child process.
+- Parent and child share the same file descriptors after the call to fork.
+- The kernel uses descriptor reference counts to decide whether to close the file/socket or not
+- The role of a server parent process: all it does now is accept a new connection from a client, fork a child to handle the client re
+#+END_QUOTE
+
+** Dont't close duplicate socket descriptors in the parent and child processes
+Let’s see what is going to happen if you don’t close duplicate socket descriptors in the parent and child processes.
+Here is a modified version of the concurrent server where the server does not close duplicate descriptors, webserver3d.py:
+
+#+BEGIN_SRC python
+import os
+import socket
+
+SERVER_ADDRESS = (HOST, PORT) = "", 8888
+REQUEST_QUEUE_SIZE = 5
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print("Child PID: {pid}. Paren PID: {ppid}".format(pid=os.getpid(),
+                                                       ppid=os.getppid()))
+    print(request.decode())
+    http_response = b"""
+HTTP/1.1 200 OK
+
+Hello, world!
+"""
+    client_connection.sendall(http_response)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+    print('Parent PID (PPID): {pid}\n'.format(pid=os.getpid()))
+
+    clients = []
+    while True:
+        client_connection, client_address = listen_socket.accept()
+        # store the reference otherwise it's garbage collected
+        # on the next loop run
+        clients.append(client_connection)
+        pid = os.fork()
+        if pid == 0:  # child
+            listen_socket.close()  # close child copy
+            handle_request(client_connection)
+            client_connection.close()
+            os._exit(0)  # child exits here
+        else:  # parent
+            # client_connection.close()  # close parent copy and loop over
+            print(len(clients))
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+Start the server with:
+
+#+BEGIN_SRC sh
+$ python webserver3d.py
+#+END_SRC
+
+Use curl to connect to the server:
+
+#+BEGIN_SRC sh
+$ curl http://localhost:8888/hello
+Hello, World!
+#+END_SRC
+
+Okay, the curl printed the response from the concurrent server but it did not terminate and kept hanging.
+What is happening here? The server no longer sleeps for 60 seconds: its child process actively handles a client request, closes the client connection and exits, but the client curl still does not terminate.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc3_child_is_active.png @ 2019-06-29 23:24:51
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc3_child_is_active_2019-06-29_23-24-51.png]]
+
+So why does the curl not terminate?
+The reason is the duplicate file descriptors.
+When the child process closed the client connection, the kernel decremented the reference count of that client socket and the count became 1.
+The server child process exited, but the client socket was not closed by the kernel because the reference count for that socket descriptor was not 0,
+and, as a result, the termination packet (called FIN in TCP/IP parlance) was not sent to the client and the client stayed on the line,
+so to speak. There is also another problem.
+If your long-running server doesn’t close duplicate file descriptors, it will eventually run out of available file descriptors:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc3_out_of_descriptors.png @ 2019-06-29 23:25:46
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc3_out_of_descriptors_2019-06-29_23-25-46.png]]
+
+Stop your server webserver3d.py with Control-C and check out the defautl resources available to your server process.
+#+BEGIN_SRC sh
+  ➜ ulimit -a
+  -t: cpu time (seconds)              unlimited
+  -f: file size (blocks)              unlimited
+  -d: data seg size (kbytes)          unlimited
+  -s: stack size (kbytes)             8192
+  -c: core file size (blocks)         0
+  -v: address space (kbytes)          unlimited
+  -l: locked-in-memory size (kbytes)  unlimited
+  -u: processes                       709
+  -n: file descriptors                4864
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ ulimit -a
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 3842
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 3842
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+#+END_SRC
+
+As you can see above, the maximum number of open file descriptors (open files) available to the server process on my Ubuntu box is 1024.
+
+Now let’s see how your server can run out of available file descriptors if it doesn’t close duplicate descriptors.
+In an existing or new terminal window, set the maximum number of open file descriptors for your server to be 256:
+
+#+BEGIN_SRC sh
+  ~/Python on  master [!?]
+  ➜ ulimit -n 256
+#+END_SRC
+
+#+BEGIN_SRC python
+import os
+import socket
+
+SERVER_ADDRESS = (HOST, PORT) = "", 8888
+REQUEST_QUEUE_SIZE = 5
+
+
+def handle_request(client_connection):
+    # request = client_connection.recv(1024)
+    # print("Child PID: {pid}. Paren PID: {ppid}".format(
+    #     pid=os.getpid(), ppid=os.getppid()))
+    # print(request.decode())
+    http_response = b"""
+HTTP/1.1 200 OK
+
+Hello, world!
+"""
+    client_connection.sendall(http_response)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+    print('Parent PID (PPID): {pid}\n'.format(pid=os.getpid()))
+
+    clients = []
+    while True:
+        client_connection, client_address = listen_socket.accept()
+        # store the reference otherwise it's garbage collected
+        # on the next loop run
+        clients.append(client_connection)
+        pid = os.fork()
+        if pid == 0:  # child
+            listen_socket.close()  # close child copy
+            handle_request(client_connection)
+            client_connection.close()
+            os._exit(0)  # child exits here
+        else:  # parent
+            # client_connection.close()  # close parent copy and loop over
+            print(len(clients))
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+在终端上运行 web_server_run_out_of_available_file_descriptors.py 和 web_server_handle_multiple_requests_but_do_not_close_socket_descriptors.py
+
+Start the server webserver3d.py in the same terminal where you’ve just run the $ ulimit -n 256 command:
+
+#+BEGIN_SRC sh
+$ python webserver3d.py
+#+END_SRC
+
+and use the following client client3.py to test the server.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+#####################################################################
+# Test client - client3.py                                          #
+#                                                                   #
+# Tested with Python 2.7.9 & Python 3.4 on Ubuntu 14.04 & Mac OS X  #
+#####################################################################
+import argparse
+import errno
+import os
+import socket
+
+
+SERVER_ADDRESS = 'localhost', 8888
+REQUEST = b"""\
+GET /hello HTTP/1.1
+Host: localhost:8888
+
+"""
+
+
+def main(max_clients, max_conns):
+    socks = []
+    for client_num in range(max_clients):
+        pid = os.fork()
+        if pid == 0:
+            for connection_num in range(max_conns):
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.connect(SERVER_ADDRESS)
+                sock.sendall(REQUEST)
+                socks.append(sock)
+                print(connection_num)
+                os._exit(0)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Test client for LSBAWS.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        '--max-conns',
+        type=int,
+        default=1024,
+        help='Maximum number of connections per client.'
+    )
+    parser.add_argument(
+        '--max-clients',
+        type=int,
+        default=1,
+        help='Maximum number of clients.'
+    )
+    args = parser.parse_args()
+    main(args.max_clients, args.max_conns)
+#+END_SRC
+
+In a new terminal window, start the client3.py and tell it to create 300 simultaneous connections to the server:
+
+#+BEGIN_SRC sh :results values list :exports no-eval
+$ python client3.py --max-clients=300
+#+END_SRC
+
+Soon enough your server will explode. Here is a screenshot of the exception on my box:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc3_too_many_fds_exc.png @ 2019-06-29 23:33:23
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc3_too_many_fds_exc_2019-06-29_23-33-23.png]]
+
+The lesson is clear - your server should close duplicate descriptors.
+But even if you close duplicate descriptors, you are not out of the woods yet because there is another problem with your server,
+and that problem is zombies!
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc3_zombies.png @ 2019-06-29 23:34:25
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc3_zombies_2019-06-29_23-34-25.png]]
+
+Yes, your server code actually creates zombies.
+Let’s see how. Start up your server again:
+
+#+BEGIN_SRC sh
+  python web_server_handle_multiple_requests_but_do_not_close_socket_descriptors.py
+#+END_SRC
+
+Run the following curl command in another terminal window:
+
+#+BEGIN_SRC sh
+  ➜ curl http://localhost:8888/hello
+#+END_SRC
+
+And now run the ps command to show running Python processes. This the example of ps output on my Ubuntu box:
+
+#+BEGIN_SRC sh
+➜ ps auxw | grep -i python | grep -v grep
+c                26879   0.0  0.1  2455676   5108 s004  S+   10:05 下午   0:00.03 python web_server_handle_multiple_requests_but_do_not_close_socket_descriptors.py
+c                21964   0.0  0.8  2506628  49720 s001  Ss+   9:31 下午   0:02.91 /usr/bin/python /usr/local/bin/ipython -c \012import sys, site\012site.addsitedir('.')\012import anaconda_mode\012anaconda_mode.main(sys.argv[1:])\012
+#+END_SRC
+
+#+BEGIN_SRC sh
+$ ps auxw | grep -i python | grep -v grep
+vagrant   9099  0.0  1.2  31804  6256 pts/0    S+   16:33   0:00 python webserver3d.py
+vagrant   9102  0.0  0.0      0     0 pts/0    Z+   16:33   0:00 [python] <defunct>
+#+END_SRC
+
+Do you see the second line above where it says the status of the process with PID 9102 is Z+ and the name of the process is <defunct>? That’s our zombie there.
+The problem with zombies is that you can’t kill them.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc3_kill_zombie.png @ 2019-06-29 23:36:58
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc3_kill_zombie_2019-06-29_23-36-57.png]]
+
+
+Even if you try to kill zombies with $ kill -9 , they will survive.
+Try it and see for yourself.
+
+What is a zombie anyway and why does our server create them?
+A zombie is a process that has terminated, but its parent has not waited for it and has not received its termination status yet.
+When a child process exits before its parent, the kernel turns the child process into a zombie and stores some information about the process for its parent process to retrieve later.
+The information stored is usually the process ID, the process termination status, and the resource usage by the process.
+Okay, so zombies serve a purpose, but if your server doesn’t take care of these zombies your system will get clogged up.
+Let’s see how that happens.
+First stop your running server and, in a new terminal window, use the ulimit command to set the max user processess to 400(make sure to set open files to a high number, let’s say 500 too):
+
+#+BEGIN_SRC sh
+  $ ulimit -u 400
+  $ ulimit -n 500
+#+END_SRC
+
+Start the server in the same terminal where you’ve just run the `$ ulimit -u 400` command:
+
+#+BEGIN_SRC sh
+  ➜ python web_server_handle_multiple_requests_but_do_not_close_socket_descriptors.py
+#+END_SRC
+
+In a new terminal window, start the client and tell it to create 500 simultaneous connections to the server:
+
+#+BEGIN_SRC sh
+  ➜ python web_server_run_out_of_available_file_descriptors.py --max-clients=500
+#+END_SRC
+
+And, again, soon enough your server will blow up with an OSError:
+Resource temporarily unavailable exception when it tries to create a new child process,
+but it can’t because it has reached the limit for the maximum number of child processes it’s allowed to create.
+Here is a screenshot of the exception on my box:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc3_resource_unavailable.png @ 2019-06-29 23:42:36
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc3_resource_unavailable_2019-06-29_23-42-36.png]]
+
+Let’s recap the main points you’ve covered so far:
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_checkpoint.png @ 2019-06-29 23:43:44
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_checkpoint_2019-06-29_23-43-44.png]]
+
+#+BEGIN_QUOTE
+- If you don’t close duplicate descriptors, the clients won’t terminate because the client connections won’t get closed.
+- If you don’t close duplicate descriptors, your long-running server will eventually run out of available file descriptors (max open files).
+- When you fork a child process and it exits and the parent process doesn’t wait for it and doesn’t collect its termination status, it becomes a zombie.
+- Zombies need to eat something and, in our case, it’s memory. Your server will eventually run out of available processes (max user processes) if it doesn’t take care of zombies.
+- You can’t kill a zombie, you need to wait for it.
+- So what do you need to do to take care of zombies? You need to modify your server code to wait for zombies to get their termination status. You can do that by modifying your server to call a wait system call. Unfortunately, that’s far from ideal because if you call wait and there is no terminated child process the call to wait will block your server, effectively preventing your server from handling new client connection requests. Are there any other options? Yes, there are, and one of them is the combination of a signal handler with the wait system call.
+- Here is how it works. When a child process exits, the kernel sends a SIGCHLD signal. The parent process can set up a signal handler to be asynchronously notified of that SIGCHLD event and then it can wait for the child to collect its termination status, thus preventing the zombie process from being left around.
+#+END_QUOTE
+
+So what do you need to do to take care of zombies? You need to modify your server code to wait for zombies to get their termination status.
+You can do that by modifying your server to call a wait system call.
+Unfortunately, that’s far from ideal because if you call wait and there is no terminated child process the call to wait will block your server, effectively preventing your server from handling new client connection requests.
+Are there any other options? Yes, there are, and one of them is the combination of a signal handler with the wait system call.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc4_signaling.png @ 2019-06-29 23:45:48
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc4_signaling_2019-06-29_23-45-48.png]]
+
+Here is how it works.
+When a child process exits, the kernel sends a SIGCHLD signal.
+The parent process can set up a signal handler to be asynchronously notified of that SIGCHLD event and then it can wait for the child to collect its termination status, thus preventing the zombie process from being left around.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part_conc4_sigchld_async.png @ 2019-06-29 23:47:16
+[[file:./static/Let's_build_a_web_server/lsbaws_part_conc4_sigchld_async_2019-06-29_23-47-16.png]]
+
+By the way, an asynchronous event means that the parent process doesn’t know ahead of time that the event is going to happen.
+
+#+BEGIN_SRC python
+import os
+import signal
+import socket
+import time
+
+SERVER_ADDRESS = (HOST, PORT) = '', 8888
+REQUEST_QUEUE_SIZE = 5
+
+
+def grim_reaper(signum, frame):
+    pid, status = os.wait()
+    print('Child {pid} terminated with status {status}'
+          '\n'.format(pid=pid, status=status))
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print(request.decode())
+    http_response = b"""\
+HTTP/1.1 200 OK
+
+Hello, World!
+"""
+    client_connection.sendall(http_response)
+    # sleep to allow the parent to loop over to 'accept' and block there
+    time.sleep(3)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+
+    signal.signal(signal.SIGCHLD, grim_reaper)
+
+    while True:
+        client_connection, client_address = listen_socket.accept()
+        pid = os.fork()
+        if pid == 0:  # child
+            listen_socket.close()  # close child copy
+            handle_request(client_connection)
+            client_connection.close()
+            os._exit(0)
+        else:  # parent
+            client_connection.close()
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+Start the server:
+
+#+BEGIN_SRC sh
+➜ curl http://localhost:8888/hello
+Hello, World!
+#+END_SRC
+
+Look at the the server:
+
+#+BEGIN_SRC sh
+  ➜ python web_server_SIGCHLD_event_handler.py
+  Serving HTTP on port 8888 ...
+  GET /hello HTTP/1.1
+  Host: localhost:8888
+  User-Agent: curl/7.54.0
+  Accept: */*
+
+
+  Child 29847 terminated with status 0
+
+  Traceback (most recent call last):
+  File "web_server_SIGCHLD_event_handler.py", line 51, in <module>
+  serve_forever()
+  File "web_server_SIGCHLD_event_handler.py", line 39, in serve_forever
+  client_connection, client_address = listen_socket.accept()
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/socket.py", line 206, in accept
+  sock, addr = self._sock.accept()
+  socket.error: [Errno 4] Interrupted system call
+#+END_SRC
+
+What just happened? The call to accept failed with the error EINTR.
+The parent process was blocked in accept call when the child process exited which caused SIGCHLD event,
+which in turn activated the signal handler and when the signal handler finished the accept system call got interrupted:
+Don’t worry, it’s a pretty simple problem to solve, though. All you need to do is to re-start the accept system call.
+
+#+BEGIN_SRC python
+import errno
+import os
+import signal
+import socket
+
+SERVER_ADDRESS = (HOST, PORT) = '', 8888
+REQUEST_QUEUE_SIZE = 1024
+
+
+def grim_reaper(signum, frame):
+    pid, status = os.wait()
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print(request.decode())
+    http_response = b"""\
+HTTP/1.1 200 OK
+
+Hello, World!
+"""
+    client_connection.sendall(http_response)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+
+    signal.signal(signal.SIGCHLD, grim_reaper)
+
+    while True:
+        try:
+            client_connection, client_address = listen_socket.accept()
+        except IOError as e:
+            code, msg = e.args
+            # restart 'accept' if it was interrupted
+            if code == errno.EINTR:
+                continue
+            else:
+                raise
+
+        pid = os.fork()
+        if pid == 0:  # child
+            listen_socket.close()  # close child copy
+            handle_request(client_connection)
+            client_connection.close()
+            os._exit(0)
+        else:  # parent
+            client_connection.close()  # close parent copy and loop over
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+#+BEGIN_SRC sh
+➜ python web_server_SIGCHLD_event_handler_be_interrupted_handled.py
+Serving HTTP on port 8888 ...
+GET /hello HTTP/1.1
+Host: localhost:8888
+User-Agent: curl/7.54.0
+Accept: */*
+#+END_SRC
+
+#+BEGIN_SRC sh
+➜ curl http://localhost:8888/hello
+Hello, World!
+#+END_SRC
+
+See? No EINTR exceptions any more.
+Now, verify that there are no more zombies either and that your SIGCHLD event handler with wait call took care of terminated children.
+To do that, just run the ps command and see for yourself that there are no more Python processes with Z+ status (no more <defunct> processes).
+Great! It feels safe without zombies running around.
+
+#+BEGIN_SRC sh
+  ➜ python web_server_run_out_of_available_file_descriptors.py --max-clients 128
+#+END_SRC
+
+Now run the ps command again
+
+#+BEGIN_SRC sh
+  ➜ ps auxw | grep -i python | grep -v grep
+  c                30828   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30816   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30810   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30806   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30610   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30601   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30595   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30597   0.0  0.0        0      0 s002  Z+   11:10 下午   0:00.00 (Python)
+  c                30498   0.0  0.1  2447484   5136 s002  S+   11:06 下午   0:00.14 python web_server_SIGCHLD_event_handler_be_interrupted_handled.py
+  c                30090   0.0  1.3  2539800  84152 s001  Ss+  10:54 下午   0:06.21 /usr/bin/python /usr/local/bin/ipython -c \012import sys, site\012site.addsitedir('.')\012import anaconda_mode\012anaconda_mode.main(sys.argv[1:])\012
+#+END_SRC
+
+and see that, oh boy, zombies are back again!
+What went wrong this time? When you ran 128 simultaneous clients and established 128 connections, the child processes on the server handled the requests and exited almost at the same time causing a flood of SIGCHLD signals being sent to the parent process.
+The problem is that the signals are not queued and your server process missed several signals, which left several zombies running around unattended.
+
+#+DOWNLOADED: https://ruslanspivak.com/lsbaws-part3/lsbaws_part3_conc5_signals_not_queued.png @ 2019-06-29 23:54:51
+[[file:./static/Let's_build_a_web_server/lsbaws_part3_conc5_signals_not_queued_2019-06-29_23-54-51.png]]
+
+The solution to the problem is to set up a SIGCHLD event handler but instead of wait use a waitpid system call with a WNOHANG option in a loop to make sure that all terminated child processes are taken care of.
+
+#+BEGIN_SRC python
+import errno
+import os
+import signal
+import socket
+
+SERVER_ADDRESS = (HOST, PORT) = '', 8888
+REQUEST_QUEUE_SIZE = 1024
+
+
+def grim_reaper(signum, frame):
+    while True:
+        try:
+            pid, status = os.waitpid(
+                -1,  # Wait for any child process
+                os.WNOHANG  # Do not block and return EWOULDBLOCK error
+            )
+        except OSError:
+            return
+
+        if pid == 0:  # no more zombies
+            return
+
+
+def handle_request(client_connection):
+    request = client_connection.recv(1024)
+    print(request.decode())
+    http_response = b"""\
+HTTP/1.1 200 OK
+
+Hello, World!
+"""
+    client_connection.sendall(http_response)
+
+
+def serve_forever():
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind(SERVER_ADDRESS)
+    listen_socket.listen(REQUEST_QUEUE_SIZE)
+    print('Serving HTTP on port {port} ...'.format(port=PORT))
+
+    signal.signal(signal.SIGCHLD, grim_reaper)
+
+    while True:
+        try:
+            client_connection, client_address = listen_socket.accept()
+        except IOError as e:
+            code, msg = e.args
+            # restart 'accept' if it was interrupted
+            if code == errno.EINTR:
+                continue
+            else:
+                raise
+
+        pid = os.fork()
+        if pid == 0:  # child
+            listen_socket.close()  # close child copy
+            handle_request(client_connection)
+            client_connection.close()
+            os._exit(0)
+        else:  # parent
+            client_connection.close()  # close parent copy and loop over
+
+
+if __name__ == '__main__':
+    serve_forever()
+#+END_SRC
+
+#+BEGIN_SRC sh
+➜ ps auxw | grep -i python | grep -v grep
+c                31618   0.0  0.1  2463868   5256 s002  S+   11:19 下午   0:00.14 python web_server_SIGCHLD_event_handler_using_a_waitpid_system_call.py
+c                30090   0.0  1.3  2539800  84240 s001  Ss+  10:54 下午   0:06.25 /usr/bin/python /usr/local/bin/ipython -c \012import sys, site\012site.addsitedir('.')\012import anaconda_mode\012anaconda_mode.main(sys.argv[1:])\012
+#+END_SRC
+
+And now verify that there are no more zombies. Yay! Life is good without zombies :)

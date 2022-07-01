@@ -1,0 +1,26 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/维 a 酸使用注意事项/")); -*-
+:PROPERTIES:
+:ID:       4009A4E1-E481-47F9-B17F-5D6BD4F4EC5C
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-09 Tue 01:25>
+#+TITLE: 维 a 酸使用注意事项
+
+* 以下情况禁止使用
+- pregnancy 妊娠
+- breastfeeding 哺乳
+
+* 不可与含以下物质的药物同时使用
+- corticosteroids 类固醇，皮质类固醇
+- ethanol 乙醇，酒精
+- petrolatum 凡士林
+- psoriasis 牛皮癣
+- moisturiser 润肤霜
+- topical grenadine 外用肾上腺素
+
+* 有以下症状停止使用
+- redness leading to itching 发红导致瘙痒
+- flaking skin 皮肤剥落
+- swellng 肿胀
+- dizziness feeling faint for low blood pressure 眩晕感

@@ -1,0 +1,18 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/人为差错分析模型/")); -*-
+:PROPERTIES:
+:ID:       D54C3A8A-8699-49DC-B480-278256578BF2
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-02 Sun 23:14>
+#+TITLE: 人为差错分析模型
+ 人为差错
+#+ROAM_KEY: 
+ 
+#+FILETAGS: :风险: :隐患:
+
+结合人为差错分析模型和维修单位安全质量系统卓越度标准，
+建立更加精准的风险清单和隐患清单。
+
+* SHELL 模型
+* 故障树模型
+* 亚当斯模型

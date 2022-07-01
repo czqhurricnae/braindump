@@ -1,0 +1,266 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/从开源项目中学习 Python 高级编程/")); -*-
+:PROPERTIES:
+:ID:       180EB179-EBD4-4285-B2E3-C125598F7FC3
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-04-18 Sun 21:34>
+#+TITLE: 从开源项目中学习 Python 高级编程
+在这篇文章中，将会讨论著名开源项目对 Python 内置 dict 的几种扩展。这些扩展本身是出于特定目的而开发，应用范围不如 Python 内置的 dict 广泛。
+但是，由于这些扩展本身很“小”，所以它的应用范围也不仅限于特定的开源项目，我们完全可以将这些扩展拿过来应用到自己的项目之中。
+
+通过学习这些优秀开源项目的源码，不但可以开阔自己视野，还能达到提高 Python 编码水平的目的。
+
+本文将依次介绍以下几个对 Python 字典的扩展：
+
+-  Storage 封装字典操作提供便利性。
+-  ImmutiDict 一旦赋值、不可修改的字典。
+-  CaseSentiveDict Key 大小写不敏感的通用字典。
+
+* Storage
+[[http://link.zhihu.com/?target=https://github.com/webpy/webpy/blob/master/web/utils.py#L48-L84][Storage]]是 web.py 的作者为了更方便的使用字典，进行的简单封装。封装完成以后，既可以通过点运算符（d.a）访问字典的项，也可以通过 Python 内置的方式（d['a']）访问字典项。
+显然，使用 Storage 进行封装以后，访问字典可以少敲很多字符，这就是 Storage 提供的便利性。
+
+** Storage 的源码
+Storage 的具体实现如下，为了便于大家更直观的感受 Storage 的用法，我对 Storage 的文档进行了简单修改：
+
+#+BEGIN_SRC python
+class Storage(dict):
+    """
+    A Storage object is like a dictionary except `obj.foo` can be used
+    in addition to `obj['foo']`.
+
+        o = Storage(a=1, b=2, c=3)
+        >>> print o
+        <Storage {'a': 1, 'c': 3, 'b': 2}>
+
+        >>> o.a = 2
+        >>> print o
+        <Storage {'a': 2, 'c': 3, 'b': 2}>
+
+        >>> o.d = 4
+        >>> print o
+        <Storage {'a': 2, 'c': 3, 'b': 2, 'd': 4}>
+
+        >>> del o.b
+        >>> print o
+        <Storage {'a': 2, 'c': 3, 'd': 4}>
+
+        >>> o.b
+        Traceback (most recent call last):
+            ...
+        AttributeError: 'b'
+    """
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError as k:
+            raise AttributeError(k)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def __delattr__(self, key):
+        try:
+            del self[key]
+        except KeyError as k:
+            raise AttributeError(k)
+
+    def __repr__(self):
+        return '<Storage ' + dict.__repr__(self) + '>'
+#+END_SRC
+
+** Storage 的实现解析
+Storage 的实现非常简单，除去为了友好的显示提供的 ~__repr__~ 函数以外，仅包含三个与属性相关的特殊函数，分别是 ~__getattr__~,
+~__setattr__~ ， ~__delattr__~ 。显然，这三个特殊函数就是实现字典的增删改查操作的特殊函数。Storage 拦截了这三个操作，并重新应用到内置字典的操作中，以此来提供一个操作更加方便的字典。
+
+可以看到，Storage 的实现非常简单，但是，Storage 确是一个 很好的教学项目：
+1）可以通过 Storage 了解如何扩展内置字典；
+2）通过 Storage 了解 Python 的运算符重载的应用。
+
+* ImmutableDict
+ImmutableDict 是 werkzeug 中的实现的不可变字典。werkzeug 是 WSGI 工具集，也是 Flask 的依赖，由 Flask 的作者实现。Flask 是目前 Python 生态中最流行的 Web 框架（之一？）。
+
+** ImmutableDict 的使用
+ImmutableDict 的使用很简单也很直接，就是创建一个不可修改的字典。字典一旦创建成功，就只能访问，不能进行任何修改操作，也不能删除字典中的元素。如下所示：
+
+#+BEGIN_SRC python
+    def main():
+        d = ImmutableDict(a=1, b=2, c=3)
+        print(d) # ImmutableDict({'a': 1, 'c': 3, 'b': 2})
+        # d['d'] = 4 # TypeError: 'ImmutableDict' objects are immutable
+
+
+    if __name__ == '__main__':
+        main()
+#+END_SRC
+
+** ImmutableDict 的实现
+
+#+BEGIN_SRC python
+from __future__ import print_function
+
+
+def is_immutable(self):
+    raise TypeError('%r objects are immutable' % self.__class__.__name__)
+
+
+class ImmutableDictMixin(object):
+
+    """Makes a :class:`dict` immutable.
+    .. versionadded:: 0.5
+    :private:
+    """
+    _hash_cache = None
+
+    @classmethod
+    def fromkeys(cls, keys, value=None):
+        instance = super(cls, cls).__new__(cls)
+        instance.__init__(zip(keys, repeat(value)))
+        return instance
+
+    def __reduce_ex__(self, protocol):
+        return type(self), (dict(self),)
+
+    def _iter_hashitems(self):
+        return iteritems(self)
+
+    def __hash__(self):
+        if self._hash_cache is not None:
+            return self._hash_cache
+        rv = self._hash_cache = hash(frozenset(self._iter_hashitems()))
+        return rv
+
+    def setdefault(self, key, default=None):
+        is_immutable(self)
+
+    def update(self, *args, **kwargs):
+        is_immutable(self)
+
+    def pop(self, key, default=None):
+        is_immutable(self)
+
+    def popitem(self):
+        is_immutable(self)
+
+    def __setitem__(self, key, value):
+        is_immutable(self)
+
+    def __delitem__(self, key):
+        is_immutable(self)
+
+    def clear(self):
+        is_immutable(self)
+
+
+class ImmutableDict(ImmutableDictMixin, dict):
+
+    """An immutable :class:`dict`.
+    .. versionadded:: 0.5
+    """
+
+    def __repr__(self):
+        return '%s(%s)' % (
+            self.__class__.__name__,
+            dict.__repr__(self),
+        )
+
+    def copy(self):
+        """Return a shallow mutable copy of this object.  Keep in mind that
+        the standard library's :func:`copy` function is a no-op for this class
+        like for any other python immutable type (eg: :class:`tuple`).
+        """
+        return dict(self)
+
+    def __copy__(self):
+        return self
+#+END_SRC
+
+** ImmutableDict 源码解析
+首先，ImmutableDict 用到了一个辅助函数，即 is_immutable。这个函数的作用很简单，就是抛出异常，提示使用者 ImmutableDict 是不可修改的字典。
+
+然后，读者可以看到，这里定义了两个类，分别是 ImmutableDictMixin 和 ImmutableDict，其中，ImmutableDict 继承自 ImmutableDictMixin 和 Dict（注意继承的顺序）。
+
+ImmutableDictMixin 的实现也很简单，就是拦截所有对字典的修改操作，并且抛出异常。
+
+ImmutableDict 继承自 ImmutableDictMixin 和内置的 dict，它就同时拥有了 ImmutableDictMixin 的功能和 Python 内置 dict 的功能。
+例如，对 ImmutableDict 执行一个删除操作，这个删除操作将首先在 ImmutableDict 中查找 ~__delitem__~ 函数。
+显然，ImmutableDict 并没有提供这样一个函数。因此，Python 会从上到下、从左往右继续进行查找。
+接下来将在 ImmutableDictMixin 类里面查找 ~__delitem__~ 的实现，如果还找不到，再到 dict 中去查找。
+由于 ImmutableDictMixin 实现了 ~__delitem__~ ，拦截了删除操作，而 ~__delitem__~ 的实现中，是抛出一个异常，所以，ImmutableDict 成为了一个不可变的字典。
+
+这种实现方式，在 Python 是一种广泛的设计方案，称之为 Mix-in 组件。Mix-in 主要用以解决多重继承的问题，它定义了其他类可能需要的一套附加方法，稍后再将其应用到其他类上即可。
+灵活的使用 Mix-in 类，可以减少重复代码，提高代码复用。
+
+Python 语言虽然支持多重继承，但是，一般都不推荐使用。在 Python 中，我们会将简单的行为封装到 mix-in 组件里，然后通过继承多个 mix-in 的方式来实现复杂的功能。
+
+* CaseInsentiveDict
+CaseInsentiveDict 是著名开源项目 requests 中的一个数据结构，顾名思义，它是一个大小写不明感的字典。如果存入字典的两个 key，除了大小写不一样，其他都一样，则会被认为是相同的 key。
+
+** CaseInsensitiveDict 的作用
+CaseInsentiveDict 除了 key 大小写不敏感以外，其他地方和 Python 内置的字典一模一样。下面是一个 CaseInsensitiveDict 使用的例子：
+
+#+BEGIN_SRC python
+def main():
+    d = CaseInsensitiveDict()
+    d['Key1'] = 'val1'
+    d['KEY2'] = 'val2'
+    d['key2'] = 'val3'
+
+    print(d['Key1']) # val1
+    print(d['key1']) # val1
+    print(d['KEY2']) # val2
+    print(d['key2']) # val2
+
+
+if __name__ == '__main__':
+    main()
+#+END_SRC
+
+** CaseInsensitiveDict 的实现
+下面是 CaseInsensitiveDict 的实现，为了便于阅读，删除了两个无关痛痒的函数。CaseInsensitiveDict 的实现中，重点是 ~__setitem__~ 、 ~__getitem__~ 和 ~__delitem__~ 这几个函数的实现。
+
+#+BEGIN_SRC python
+import collections
+from collections import OrderedDict
+
+"""
+requests.structures
+"""
+class CaseInsensitiveDict(collections.MutableMapping):
+
+    def __init__(self, data=None, **kwargs):
+        self._store = OrderedDict()
+        if data is None:
+            data = {}
+        self.update(data, **kwargs)
+
+    def __setitem__(self, key, value):
+        self._store[key.lower()] = (key, value)
+
+    def __getitem__(self, key):
+        return self._store[key.lower()][1]
+
+    def __delitem__(self, key):
+        del self._store[key.lower()]
+
+    def __iter__(self):
+        return (casedkey for casedkey, mappedvalue in self._store.values())
+
+    def __len__(self):
+        return len(self._store)
+#+END_SRC
+
+** CaseInsensitiveDict 源码解析
+CaseInsensitiveDict 的实现思想是这样的，对于一对(key, value)，实际保存的是 (key.lower(), (key, value))，如下图所示：
+
+[[file:./static/从开源项目中学习 Python 高级编程/v2-e63c4ab3aa7b13c1a9f080d8688c97ab_hd.jpg]]
+
+CaseInsensitiveDict 拦截了字典操作，并在字典操赋值时，实际保存了以 key 的小写形式为 key，以(key, value)这个二元组为 value。
+在获取一个元素的时候，先将 key 转换为小写，然后再去读取原始的(key, value)二元组。
+
+在 CaseInsensitiveDict 的实现中，还继承了 collections.MutableMapping，这是 Python 标准库中的一个抽象类。
+通过继承这个类，工程师在实现一个字典的时候，如果没有实现重要的成员函数，Python 将会提示工程师去实现它。
+
+可以看到，要实现一个大小写不敏感的字典是如此的简单。其实，如果读者自己去实现一个大小写不明感的字典，或许并不简单。
+在 requests 的早期版本中，以另外一种完全不同的方式实现了大小写不敏感的字典，那个实现就不是特别直观，感兴趣的读者可以去看一下。

@@ -1,0 +1,271 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/航空维修系统危险源识别和风险分析方法/")); -*-
+#+filetags: :模糊综合:
+:PROPERTIES:
+:ID:       51261E3B-2B7D-4C25-9D4A-82ED05B5B81F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-15 Sat 02:39>
+#+TITLE: 航空维修系统危险源识别和风险分析方法
+
+#+ROAM_KEY:
+
+
+* 引言
+:PROPERTIES:
+:ID:       6E75D9D1-05C0-48D0-BDD7-0E953EF12D2E
+:END:
+
+在中国民航局的法规要求和指导下, 中国民航业近年来正在全面开展安全管理体系 (Safety Management System, 以下简称 SMS) 的建设工作。
+风险管理是 SMS 的核心, 危险源识别和风险分析又是风险管理的核心[1,2]。
+
+但是如何结合实际工作有效地进行危险源识别和风险分析工作, 是目前航空维修单位普遍遇到的难点和关键问题。
+由于 SMS 在国内外民航业尚处于起步和摸索阶段, 作者目前还未发现民航维修系统危险源识别和风险分析问题的有效解决方法。
+
+化工业、核工业等经常采用危险与可操作性 (HAZOP) 方法或预先危险分析 (PHA) 方法开展危险源识别工作[3,4]。
+分析人员在一些危险源关键词的引导下, 开展危险源的识别和分析工作。
+但目前尚未发现在维修系统中的应用。
+
+本文试图将该方法应用于维修系统中, 以规范危险源识别工作。
+所谓危险源“引导词”, 实际上指的是有关维修系统危险源分类的抽象描述, 但没有涉及到具体的维修环境和维修任务。
+
+危险源“引导词”应该能够反映维修系统特点, 应能对分析人员具有较强的指导意义, 数量不能太大, 否则影响其可用性。
+因此设计的危险源引导词应能够体现全面性、适应性、可用性。
+
+借鉴文献[5]对 *维修系统要素* 的分类方法和文献[6,7]对航空承运人运行系统的系统构建方法, 
+本文设计了危险源引导词和危险源导致的潜在不良后果引导词, 并给出结合具体维修环境和任务场景对危险源的描述方法和识别流程。
+航空维修中的风险一般用危险源导致潜在不良后果发生的可能性和严重性来评价[2,8,9,10]。
+
+由于中国民航风险管理工作刚刚起步, 积累的风险数据数量和质量都不能满足定量计算风险的需要, 所以, 
+目前只能通过德尔斐法 (专家咨询法) 或问卷调查法这种定量与定性相结合的方法综合评价风险。
+
+风险是预计将要发生的, 该问题具有很强的模糊性。
+文献[11]结合航空维修实际, 提出运用群组模糊层次分析法(FAHP) 对人为差错影响因素进行量化排序和分类。
+FAHP 通过元素两两比较构造模糊一致判断矩阵, 由模糊一致矩阵计算各元素的相对重要性, 以计算权重。
+本文在借鉴 FAHP 的基本原理的基础上首次提出模糊综合评价法, 即根据专家对风险评判的差异计算专家的权重。
+因为专家之间的差异最终会表现在各个专家的评价体系中, 所以, 可以由各个专家给出的风险向量之间的差异来确定专家的权重。
+
+这样可以解决在风险评判过程中, 由于受到知识结构、评判水平和自身偏好等众多因素的影响, 各个专家所作出的评判质量的差异问题。
+同时该方法比目前维修单位普遍采用的“头脑风暴法”更加科学合理。
+
+* 危险源引导词
+:PROPERTIES:
+:ID:       25457890-1BDF-424C-8415-65B69ABB8A90
+:END:
+危险源引导词是对危险源的抽象描述，不涉及具体维修环境和任务。危险源引导词的目的是帮助维修单位全面、规范、快捷地找到危险源， 
+并能有利于危险源数据的积累、分享、分析与预测。
+同时设计的危险源引导词应能够体现全面性、适应性、可用性。
+基于以上原则，本文首先将维修系统分为
+民用航空产品和零部件、持续适航文件、适航性资料、器材、工具设备、维修工作环境、工作任务、人员、人的因素、计划和监管、信息沟通、组织管理等 12 个方面，
+将 12 个方面可能存在的不良状况定义为危险源引导词。表 1 给出了危险源引导词样例和编码。
+即[[x-devonthink-item://E0C80FEE-BF64-47F6-BBFB-0F391F8AEA23?page=12][厦航维修差错（MEDA）调查表]]第四部分 诱因分析。
+
+表 1 危险源引导词样例和编码 
+
+| 维修系统分类           | 危险源引导词和编码                                  |
+| A 民用航空产品和零部件 | A-01 构型复杂或存在缺陷                             |
+|                        | A-02 可达性差                                       |
+|                        | A-03 结构改变                                       |
+|                        | A-04 零部件标识存在缺陷                             |
+|                        | A-05 防差错设计不够充分                             |
+|                        | A-06 其他                                           |
+| F 维修工作环境         | F-01 噪音控制不合要求                               |
+|                        | F-02 温湿度控制无效                                 |
+|                        | F-03 防尘措施没有无效                               |
+|                        | F-04 水、电和气源不满足要求                         |
+|                        | F-05 照明不足                                       |
+|                        | F-06 对于静电、辐射、尘埃等没有控制、保护和急救设施 |
+|                        | F-07 对易造成伤害的维修工作没有控制、保护和急救设施 |
+|                        | F-08 受到雨、雪、冰、雹、风及尘土等环境的影响       |
+|                        | F-09 其他                                           |
+
+* 危险源的描述方法和识别流程
+:PROPERTIES:
+:ID:       FF7E48D0-FF3C-499D-800F-3ACF2763D2DF
+:END:
+危险源引导词不是危险源, 维修单位需要根据危险源引导词结合工作场景对危险源进行描述。
+描述中应该具体该危险源的发生的场景 (包括时机、环境、任务等因素) , 描述程度应足以对危险源发生的可能性和潜在不良后果进行分析。
+
+危险源识别流程如下：首先在危险源引导词的指引下，分析人员以自问自答的方式识别可能出现的危险源，然后结合工作场景对识别的危险源进行具体描述。
+
+* 危险源潜在不良后果引导词
+:PROPERTIES:
+:ID:       9012400B-06EC-4956-887C-CC92D89AE8AA
+:END:
+危险源潜在不良后果引导词是将维修工作中经常出现的不良后果进行合理归类。
+设计的危险源潜在不良后果引导词应考虑到维修系统的不良后果特点, 
+应能覆盖可能的所有不良后果, 应有利于评判不良后果发生的严重性和可能性。
+基于以上要求, 本文设计的危险源潜在不良后果引导词分为
+安装不当、
+放行前或工作后遗漏、
+检查/测试/故障隔离欠妥、
+损坏飞机/发动机/附件、
+外来物影响安全、
+勤务缺陷、
+修理不当、
+人员受伤、
+等 8 类。
+
+* 用模糊综合评价法计算危险源导致的风险
+:PROPERTIES:
+:ID:       A9EAAA3F-5F9C-4732-B9ED-6994DFDAB97B
+:END:
+假设通过前面方法识别出系统的 n 个危险源，记为 W1， W2， …， Wn；识别出危险源可能导致的 m 个潜在不良后果记为：H1， H2， …， Hm。
+这里，1 个危险源可能对应多个潜在不良后果。
+由 X 个专家或者经验丰富的人士，就每个危险源导致潜在不良后果发生的可能性和严重性进行打分。
+假设第 i 个危险源 Wi 导致的潜在不良后果 H 有 t 个， 由每个专家分别对 t 个潜在不良后果的可能性和严重性分别打分，
+对应每个潜在不良后果只有 1 个可能性分值和 1 个严重性分值，则 *第 i 个危险源可能计算出 t 个风险值* 。
+鉴于风险评估中以最严重情况作为评判准则，因此，每个危险源取多个风险值中的最大值。即
+
+\begin{equation}
+\label{1} 
+F i=\max _{j \in[1, t]}\left(F_{i j}\right),(\forall i \in[1, n]) 
+\end{equation}
+
+这样每个专家将给出每个危险源的风险向量，设第 K 位专家的评价 *风险向量* 为
+
+$$
+F^{(k)}=\left[F_{1}(k), F_{2}(k), \ldots F_{n}(k)\right]
+$$
+
+在评判过程中，由于受到知识结构、评判水平和自身偏好等众多因素的影响，各个专家所作出的评判质量必然存在差异， 
+根据这个差异对专家进行赋权必然优于对专家的主观赋权。
+因为专家之间的差异最终会表现在各个专家的评价体系中, 所以, 可以 *由各个专家给出的风险向量之间的差异来确定专家的权重* 。
+
+设有 X 位专家参与风险的评判；
+
+现定义 $$\theta _{k}{ _{l} }$$ 为 $$F^{(k)}$$ 和 $$F^{(l)}$$ *向量夹角* ，那么：
+
+$$
+C_{k l}=\cos \theta_{k l}=\frac{F^{(k)} F^{(l)}}{\left\|F^{(k)}\right\| \cdot\left\|F^{(l)}\right\|}=\frac{\sum_{i=1}^{n} F_{i}^{(k)} \cdot F_{i}^{(l)}}{\sqrt{\left(\sum_{i=1}^{n} F_{i}^{(k) 2}\right) \cdot\left(\sum_{i=1}^{n} F_{i}^{(l) 2}\right)}}
+$$
+
+\begin{equation}
+\label{2}
+\forall k, l \in[1, X]
+\end{equation}
+
+$$C_{k l}$$ 表示风险向量 $$F^{(k)}$$ 和 $$F^{(l)}$$ 相似程度, $$C_{k}{_{l}}\in \left [ -1,1 \right ] $$, 相似程度越大 $$C_{k l}$$ 越大。
+
+计算所有专家的风险向量可得到如下矩阵:
+
+$$
+C=\left(C_{k l}\right)_{X \times X}=\left[\begin{array}{ccccc}
+1 & C_{12} & \cdots & \cdots & C_{1 X} \\
+C_{21} & 1 & & & \\
+\cdots & & \cdots & & \\
+\cdots & & & \cdots & \\
+C_{X 1} & & & & 1
+\end{array}\right]
+$$
+
+式中, C 为对称矩阵, 定义 $$C_{k}=\sum_{i=1}^{X}C_{k i}$$, 它反映了 $$F^{(k)}$$ *与其他风险向量总的相似度* ，且 $$C_{k}$$ 越大，相似度越大。
+因此可以用 $$\alpha_{k}$$ 表示第 k 位专家权重，那么：
+
+\begin{equation}
+\label{3}
+\alpha_{k}=\frac{C_{k}}{\sum_{i=1}^{X} C_{i}} \quad(\forall k \in[1, X])
+\end{equation}
+
+将各专家权重结合每个专家所作出的风险向量, 利用下式可计算出集结各专家评判给出的每个危险源导致潜在不良后果的风险:
+
+\begin{equation}
+\label{4}
+F_{i}=\sum_{k=1}^{X} \alpha_{k} F_{i}^{(k)}
+\end{equation}
+
+$$F_{i}$$ 为第 i 个危险源导致潜在不良后果的风险最终值。
+
+* 应用举例
+:PROPERTIES:
+:ID:       756C60BC-8EEA-44F3-B578-5F6106B4178D
+:END:
+某航线维修单位新购入一辆双头飞机牵引车（原牵引车都为单头），在新设备投入运营前需要进行危险源识别和风险计算工作。
+
+根据本文的危险源识别流程，在危险源引导词的引导下维修单位能够快捷地识别出由于新增设备所带来的新的危险源， 
+即：
+[[id:25457890-1BDF-424C-8415-65B69ABB8A90][危险源引导词]]
+W1 设备构造发生变化、
+W2 设备较为复杂、
+W3 任务安排不妥当、
+W4 任务知识或者技能培训不足、
+W5 人员资格不满足要求。
+
+按照文中方法对每个危险源结合工作场景进行危险源描述。
+例如：对于“W1 设备构造发生变化”的危险源描述为：双头牵引车车身长度、宽度、高度尺寸都加大，对司机操控技能和机坪运行环境要求比单头牵引车要高，
+在行驶、转弯、停放过程中可能发生与人员、其他车辆和机坪设施设备发生刮碰。
+然后，在危险源导致潜在不良后果引导词的引导下可以快捷地识别每个危险源的潜在不良后果， 
+例如：对于“W1 设备构造发生变化”的危险源导致潜在不良后果为：H1 损坏飞机、H2 人员受伤、H3 其他（车辆、机坪设施设备等损坏）。
+
+本次风险分析中请 3 位专家对以上 5 个危险源分别打分, 对每个危险源取最高分值, 
+得到 3 位专家的评判风险向量为：$$F^{(1)}=[9, 9, 12, 12, 16]$$，$$F^{(2)}=[9, 9, 12, 12, 12]$$，$$F^{(3)}=[12, 12, 9, 9, 9]$$。
+
+按照前面式计算得到如下矩阵：
+
+$$
+C=\left(C_{k l}\right)_{3 \times 3}=\left[\begin{array}{lll}
+1.000 & 0.991 & 0.941 \\
+0.991 & 1.000 & 0.962 \\
+0.941 & 0.962 & 1.000
+\end{array}\right]
+$$
+
+C1=2.932
+
+C2=2.953
+
+C3=2.903
+
+$$
+\alpha_{1}=\frac{C_{1}}{C_{1}+C_{2}+C_{3}}=0.334
+$$
+
+α2=0.336
+
+α3=0.330
+
+F=0.334⋅[9 9 12 12 16]+0.336⋅[9 9 12 12 12]+0.33⋅[12 12 9 9 9]=[9.99 9 11.01 11.01 12.346]
+
+从危险源导致潜在不良后果的风险最终值 F 可以看出，人员资格不满足要求风险值最大，其次是任务安排不妥当、任务知识或者技能培训不足。
+
+* 结论
+:PROPERTIES:
+:ID:       F19979EB-AF1C-42FF-9F89-F9576A97324E
+:END:
+本文设计的危险源引导词和危险源潜在不良后果引导词，不需要识别人员具有专门的知识，能够帮助维修单位快速、全面、规范地找到危险源和危险源潜在不良后果。
+将危险源和危险源潜在不良后果标准化， 将识别过程规范化。
+
+危险源引导词和危险源潜在不良后果引导词能够有助于危险源和风险数据的积累、分享、分析与预测，为计算机管理危险源和风险奠定基础。
+
+模糊综合评价法计算危险源导致的风险，能够解决专家知识水平差异的问题，也可以解决目前行业风险数据积累不足、无法定量计算风险的问题，为风险计算找到一种更可靠的方法。
+
+
+* 参考文献
+:PROPERTIES:
+:ID:       A3D773A2-A929-476B-8719-415BFA416D44
+:END:
+[1] 中国民用航空局.飞行标准司.关于航空航空营运人安全管理系统的要求[S].AC-121/135-FS-2008-26, 2008 
+
+[2] 中国民用航空局.飞行标准司.维修单位的安全管理体系[S].AC-145-15, 2009 
+
+[[https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&filename=HGSZ200801020&v=MzI0NTR2Z1U3M0FMU3JZZExHNEh0bk1ybzlIWklRS0RIODR2UjRUNmo1NE8zenFxQnRHRnJDVVI3aWZadWRxRmk=&uid=WEEvREcwSlJHSldSdmVqMVc3NWZPemExOXVOOTlNTFhJeDhqYmFHMEFGVT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!][[3] 赵劲松, 赵利华, 崔林, 等.基于案例推理的HAZOP分析自动化框架[J].化工学报, 2008, 59 (1) :92-98ZHAO Jing-song, ZHAO Li-hua, CUI Lin, et al.Casebased reasoning framework for automating HAZOP analy-sis[J].Journal of Chemical Industry and Engineering, 2008, 59 (1) :92-98]] 
+
+[[https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&filename=ZAQK201202016&v=MzE0MTdCdEdGckNVUjdpZlp1ZHFGaXZnVTczQVB5emFaYkc0SDlQTXJZOUVZb1FLREg4NHZSNFQ2ajU0TzN6cXE=&uid=WEEvREcwSlJHSldSdmVqMVc3NWZPemExOXVOOTlNTFhJeDhqYmFHMEFGVT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!][[4] 李政仪, 花迎春, 孙志强, 等.基于差错分类框架识别人为差错[J].中国安全科学学报, 2012, 22 (2) :94-99LI Zheng-yi, HUA Ying-chun, SUN Zhi-qiang, et al.Human error idengification guided by error classificationframeworks[J].China Safety Science Journal, 2012, 22 (2) :94-99]] 
+
+[5] 中国民用航空局.飞行标准司.航空人员的维修差错管理[S].AC-121-007, 2002 
+
+[[https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&filename=LDBK201108028&v=MDIzOTZVNzNBS1NuSlpiRzRIOURNcDQ5SGJJUUtESDg0dlI0VDZqNTRPM3pxcUJ0R0ZyQ1VSN2lmWnVkcUZpdmc=&uid=WEEvREcwSlJHSldSdmVqMVc3NWZPemExOXVOOTlNTFhJeDhqYmFHMEFGVT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!][[6] 谢智辉, 张玉萍.航空承运人审定监察系统研究[J].中国安全生产科学技术, 2011, 7 (8) :141-146XIE Zhi-hui, ZHANG Yu-ping.Study on air carrier certi-fication and surveillance system[J].Journal of Safety andTechnology, 2011, 7 (8) :141-146
+]] 
+
+[7] 美国联邦航空局.8900.1.飞行标准信息管理系统, 2009 
+
+
+[[https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&filename=LDBK201005034&v=MjAzOTFxRml2Z1U3M0FLU25KWmJHNEg5SE1xbzlHWUlRS0RIODR2UjRUNmo1NE8zenFxQnRHRnJDVVI3aWZadWQ=&uid=WEEvREcwSlJHSldSdmVqMVc3NWZPemExOXVOOTlNTFhJeDhqYmFHMEFGVT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!][[8] 李敬, 何佩.中国民航业可接受的安全水平研究[J].中国安全生产科学技术, 2010, 6 (5) :137-142LI Jing, HE Pei.Study on acceptable level of safety in civ-il aviation industry of China[J].Journal of Safety andTechnology, 2010, 6 (5) :137-142
+]] 
+
+[[http://scholar.cnki.net/result.aspx?q=Safety%20manage-ment%20manual][[9] International Civil Aviation Organization.Safety manage-ment manual[S].DOC 9859-AN/460, 2006
+]] 
+
+[[https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CBBD&filename=9787801109910001&v=MTg4OTdPc1BEUk04enhVU21EZDlTSDduM3hFOWZidm5LcmlmWmVSdkZ5amhVcnpOSUZ3Y1hGcXpHYnU0SDlETXBvWkVa&uid=WEEvREcwSlJHSldSdmVqMVc3NWZPemExOXVOOTlNTFhJeDhqYmFHMEFGVT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!][[10] 花迎春.航空维修中的人为因素及应用[M], 北京:中国民航出版社, 2010
+]] 
+
+[[https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&filename=ZAQK200807007&v=MDg1NDVSNFQ2ajU0TzN6cXFCdEdGckNVUjdpZlp1ZHFGaXZnVTczQVB5emFaYkc0SHRuTXFJOUZZNFFLREg4NHY=&uid=WEEvREcwSlJHSldSdmVqMVc3NWZPemExOXVOOTlNTFhJeDhqYmFHMEFGVT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!][[11] 刘凤强, 孙志强, 谢红卫, 等.航空维修人为差错影响因素分析中的模糊层次分析法[J].中国安全科学学报, 2008, 18 (7) :43-48LIU Feng-qiang, SUN Zhiqiang, XIE Hong-wei, et al.Analysis of human error influence factors in aviation ma-intenance based on group fuzzy analytical hierarchyprocess[J].China Safety Science Journal, 2008, 18 (7) :43-48]] 

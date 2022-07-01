@@ -1,0 +1,64 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/WDM 符号说明/")); -*-
+:PROPERTIES:
+:ID:       40B3D8E3-02A7-4305-8DEB-2B80DA1A63BC
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-09-08 Tue 23:04>
+#+TITLE: WDM 符号说明
+
+参考文件：WDM chapter 00。
+* Amplifier 放大器
+
+[[file:./static/WDM 符号说明/2020-09-08_23-15-48_screenshot.jpg]]
+
+* Antenna 天线
+
+[[file:./static/WDM 符号说明/2020-09-08_23-17-22_screenshot.jpg]]
+
+* Battery 电池
+
+[[file:./static/WDM 符号说明/2020-09-08_23-18-39_screenshot.jpg]]
+
+* Bus 汇流条
+
+[[file:./static/WDM 符号说明/2020-09-08_23-19-34_screenshot.jpg]]
+
+* Capacitor 电容
+
+[[file:./static/WDM 符号说明/2020-09-08_23-32-41_screenshot.jpg]]
+
+曲线元素
+
+1. 固定纸质和陶瓷介电电容器中的外电极。
+
+2. 电解电容器中的负极。
+
+3. 变量电容器中的动元件和馈通电容器中的低电位元件。
+
+* Circuit breaker 跳开关
+
+#+DOWNLOADED: screenshot @ 2020-09-08 23:41:07
+[[file:./static/WDM 符号说明/2020-09-08_23-41-07_screenshot.jpg]]
+
+* Connector 连接件
+
+[[file:./static/WDM 符号说明/2020-09-08_23-42-53_screenshot.jpg]]
+
+- terminal
+接线端子
+
+- solder point
+焊点
+
+- separate connectors engaged (one connector shown)
+单独接头
+
+* Plug and receptacle 插头和插座
+
+[[file:./static/WDM 符号说明/2020-09-08_23-47-52_screenshot.jpg]]
+
+- broken connector
+部分插头
+
+- coaxial-outside conductor carried through
+同轴电缆外导体穿过接头

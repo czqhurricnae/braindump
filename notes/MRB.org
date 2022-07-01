@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/MRB/")); -*-
+:PROPERTIES:
+:ID:       ED0FFAE5-DD2E-4981-B7DA-C76DB7623EB9
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 22:15>
+#+TITLE: MRB
+
+#+ROAM_KEY:
+
+
+维修大纲

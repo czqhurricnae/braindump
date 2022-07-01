@@ -1,0 +1,19 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/质量调查/")); -*-
+:PROPERTIES:
+:ID:       6BE00C46-0EAE-4B2B-984A-B81166AFAD34
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-14 Fri 05:51>
+#+TITLE: 质量调查
+
+#+ROAM_KEY:
+
+
+* 质量调查准备
+* 质量调查实施
+- 厦航维修差错（MEDA）调查表
+* 质量调查报告编制
+* 措施跟踪验证
+* 质量调查工作记录
+
+

@@ -1,0 +1,61 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 设备冷却/")); -*-
+:PROPERTIES:
+:ID:       C0BE28C8-BA27-40D1-9CF9-55F2AE7FF0B0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-24 Sat 18:01>
+#+TITLE: 737NG 设备冷却
+
+* 供气风扇工作条件
+
+[[file:./static/737NG 设备冷却/2021-07-24_18-06-01_ES  3.jpeg]]
+
+[[file:./static/737NG 设备冷却/2021-07-24_18-38-01_ES  3.jpeg]]
+
+- 驾驶舱供气风扇电门在 NORMAL 位。
+- 正常供气风扇控制继电器 R347 闭合，为风扇提供 3 相 115V AC 交流电。
+- 风扇过热电门闭合（未发生过热） 。
+- 供气系统控制中断继电器 [[id:CC5E3594-6261-48A6-9DD4-A2D1DC34D3F1][R645]] 在 NORMAL 位（未闭合）。
+
+* 供气 OFF 灯亮
+
+[[file:./static/737NG 设备冷却/2021-07-24_18-07-30_screenshot.jpg]]
+
+[[file:./static/737NG 设备冷却/2021-07-24_18-07-44_screenshot.jpg]]
+
+[[file:./static/737NG 设备冷却/2021-07-24_18-38-13_ES  4.jpeg]]
+
+- 按压 OFF 灯组件时，本体的地（GROUND）信号接通，如绿色线路。
+- 低流量传感器发出低警告地信号，这里包含两种情况，第一种情况是 传感器真实传感到低流量时给出低警告地信号，第二种情况是执行驾驶舱灯光测试时，传感器接收到测试指令时输出地信号使 OFF 灯点亮，如绿色线路。
+- 正常/备用供气风扇同时断电时， 正常/备用供气风扇控制继电器 R347 和 R373 同时在 OFF 位，灯组件从 D11452 插头 PIN7 线路获得地信号使 OFF 灯点亮，如橙色线路。
+- 供气系统控制中断继电器 R645 在 SMOKE 位（闭合位）会发送抑制信号给低流量传感器。
+  但是，若是在低流量传感器上电初期执行本体功能以及警告电路的自检时，抑制信号的存在将会导致自检失败，
+  自检失败将输出地信号点亮 OFF 灯。
+  R645 是延时继电器，在 5 min 内 R645 保持闭合，持续输出抑制信号，这段时间内复位低流量传感器跳开关，仍然会自检失败，
+  OFF 灯无法熄灭，5 min 后 R645 断开，抑制信号消失，此时去复位低流量传感器的跳开关，传感器上电自检通过，则 OFF 灯熄灭。
+
+* OEV
+
+[[file:./static/737NG 设备冷却/2021-07-24_22-55-18_screenshot.jpg]]
+
+* OEV 正常模式
+- 组件电门都在 AUTO/OFF 位。
+- 右再循环风扇在 AUTO 位。
+
+OEV 在 NORMAL 位，活门保持关闭。
+
+* OEV 高流量模式
+- 任一组件电门 high 位。
+- 右再循环风扇 AUTO 位。
+- R592 在空中 AIR 位。
+
+在高流量模式下，OEV 接收后排气活门的位置信号来控制开关：
+- 当 OFV 离关位 2.0+/-1.5° 时 --> K1 继电器激励 --> R649 激励（OPEN 位）5 分钟后断电 --> R650 不激励（NORMAL 位） --> OEV 在 NORMAL 位（关位）。
+- 当 OFV 离关位 8.5+/-1.5° 时 --> K1 继电器断电 --> R649 不激励（NORMAL 位） --> R650 激励（SMOKE 位） --> OEV 在 SMOKE（开位）。
+
+[[file:./static/737NG 设备冷却/2021-07-24_21-12-08_screenshot.jpg]]
+
+* OEV 除烟模式
+#+transclude: [[file:R648 SMOKE CONTROL RELAY.org::*R648 激励的条件][R648 激励的条件]] :only-contents
+#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R645 供气系统控制中断继电器激励的条件][R645 供气系统控制中断继电器激励的条件]]
+#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R645 供气系统控制中断继电器激励的后果][R645 供气系统控制中断继电器激励的后果]]

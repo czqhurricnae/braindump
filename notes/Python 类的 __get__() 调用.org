@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 类的 __get__() 调用/")); -*-
+:PROPERTIES:
+:ID:       D1AA4AE4-F3BD-4C94-BA62-264AE6D68827
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-10 Sat 14:42>
+#+TITLE: Python 类的 __get__() 调用
+
+#+DOWNLOADED: screenshot @ 2020-10-10 14:43:03
+[[file:./static/Python 类的 __get__() 调用/2020-10-10_14-43-03_screenshot.jpg]]

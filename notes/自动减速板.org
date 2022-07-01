@@ -1,0 +1,69 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/自动减速板/")); -*-
+:PROPERTIES:
+:ID:       F3F33525-40BF-4018-A505-BEE9F727843D
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-07 Fri 15:02>
+#+TITLE: 自动减速板
+
+* SPEEDBRAKE DO NOT ARM 灯亮
+** R708 继电器故障
+A1 和 A2 被错误的接通。
+
+[[file:./static/自动减速板/11.jpg]]
+
+** 无线电高度继电器信号不一致
+   #+BEGIN_QUOTE
+   The Flight Control Computer, M1876 does not operate correctly.
+   The Low Range Radio Altimeter (LRRA) does not operate correctly.
+   #+END_QUOTE
+
+[[file:./static/自动减速板/1.jpg]]
+
+[[file:./static/自动减速板/2.jpg]]
+
+** 自动减速板作动器未收回
+
+同时：
+- 必须满足：减速板预位电门在 ARM 位，或中断起飞电门闭合（这点和油门手柄前推矛盾）
+- 或右外，左内轮速小于 60 节，飞机在地面超过 4 秒
+- 或左外，右内轮速小于 60 节，飞机在地面超过 4 秒
+- 或任意油门手柄前推
+
+参考文件：FIM 27-62 TASK 802, SPEED BRAKE DO NOT ARM Light is ON - Fault Isolation
+
+#+BEGIN_QUOTE
+On landing, if the wheel speed is less than 60 knots and the speedbrake lever is not in the DOWN (stowed ) position,
+the Speedbrake Do Not Arm light will come on.
+The light will stay on until the speedbrake lever is stowed,
+either manually or using the autostow feature.
+This is considered normal operation of the SPEED BRAKE DO NOT ARM light and does not indicate a system problem.
+#+END_QUOTE
+
+若左外，右内轮速小于 60 节，而另一侧右外，左内轮速大于 60 节（或者相反），是会出现上述引用描述的状况。
+
+[[file:./static/自动减速板/3.jpg]]
+
+[[file:./static/自动减速板/4.jpg]]
+
+典型的场景：飞机落地，滑行一段时间后，机组前推油门手柄，SPEEDBRAKE DO NOT ARM 灯亮。
+
+** 内侧和外侧防滞同时故障
+
+[[file:./static/自动减速板/7.jpg]]
+
+[[file:./static/自动减速板/8.jpg]]
+
+** 图中黄，绿两路信号相反
+例如黄路信号为 1，绿路信号为 0。
+
+[[file:./static/自动减速板/9.jpg]]
+
+[[file:./static/自动减速板/10.jpg]]
+
+* SPEEDBRAKE ARM 灯亮
+
+[[file:./static/自动减速板/5.jpg]]
+
+[[file:./static/自动减速板/6.jpg]]

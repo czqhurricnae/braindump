@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/建立人员技术档案/")); -*-
+:PROPERTIES:
+:ID:       104B1C7D-CBD1-4C8F-BA72-87F6CCF1BDB6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:51>
+#+TITLE: 建立人员技术档案
+#+ROAM_KEY:
+

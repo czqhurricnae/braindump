@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/备用液压系统压力组件/")); -*-
+:PROPERTIES:
+:ID:       C695F652-33A7-4E90-AC90-CCDD715681C8
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-03-30 Tue 23:18>
+#+TITLE: 备用液压系统压力组件
+
+[[file:./static/备用液压系统压力组件/2021-03-30_23-19-58_screenshot.jpg]]

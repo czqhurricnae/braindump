@@ -1,0 +1,418 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/align-content 和 align-items 之间的区别/")); -*-
+:PROPERTIES:
+:ID:       544BEA1D-FDE7-4F2B-AE94-23C07D8E99E9
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-23 Wed 20:06>
+#+TITLE: align-content 和 align-items 之间的区别
+* align-content
+** 作用
+ 会设置自由盒内部所有行作为一个整体在垂直方向排列方式。针对多行作为一个整体在纵轴上的排列方式，该属性对单行无效。
+
+** 条件
+ 必须对父元素设置自由盒属性 display:flex;，并且设置排列方式为横向排列 flex-direction:row; 并且设置换行，flex-wrap:wrap; 这样这个属性的设置才会起作用。
+
+** 设置对象
+ 这个属性是对她容器内部的项目起作用，对父元素进行设置。
+
+ #+BEGIN_QUOTE
+ 该属性对单行弹性盒子模型无效。该属性定义了当有多根主轴时，即 item 不止一行时，多行（所有行作为一个整体）在交叉轴（即非主轴）轴上的对齐方式。
+ align-content 可能值含义如下（假设主轴为水平方向）：
+ 　　　　　　flex-start：左对齐
+ 　　　　　　flex-end：右对齐
+ 　　　　　　center：居中对齐
+ 　　　　　　space-between：两端对齐
+ 　　　　　　space-around：沿轴线均匀分布
+ 　　　　　　stretch： 默认值。各行将根据其 flex-grow 值伸展以充分占据剩余空间。会拉伸容器内每行占用的空间，填充方式为给每行下方增加空白，该属性对单行弹性盒子模型无效。拉伸所有行来填满剩余空间。剩余空间平均的再分配给每一行。
+ #+END_QUOTE
+
+** 取值
+ stretch：默认设置，会拉伸容器内每一行的占用的空间，填充方式为给每一行的下方增加空白。第一行默认从容器顶端开始排列。
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-9716f1f9665c7a838622f8354bfd6cc0.jpg]]
+
+ #+BEGIN_SRC html
+  <!DOCTYPE=html>
+  <html lang="zh-cn">
+  <head>
+  <meta charset="UTF-8">
+  <title>
+  Align-content
+  </title>
+  <style>
+
+  #father{
+      width:200px;
+      display:flex;
+      flex-direction:row;
+      flex-wrap:wrap;
+      align-content:strech;
+      height:200px;
+      background-color:grey;
+  }
+
+  .son1{
+      height:30px;
+      width:100px;
+      background-color:orange;
+  }
+
+  .son2{
+      height:30px;
+      width:100px;
+      background-color:red;
+  }
+
+  .son3{
+      height:30px;
+      width:100px;
+      background-color:#08a9b5;
+  }
+
+
+  </style>
+  </head>
+  <body>
+
+  <div id="father">
+
+  <div class="son1">
+  q
+  </div>
+
+  <div class="son2">
+  w
+  </div>
+
+  <div class="son3">
+  e
+  </div>
+  <div class="son3">
+  e
+  </div>
+  <div class="son3">
+  e
+  </div>
+
+
+
+  </div>
+
+  </body>
+  </html>
+ #+END_SRC
+
+ Center：这个会取消行与行之间的空白并把所有行作为一个整体在纵轴的方向上垂直居中。
+
+ #+BEGIN_SRC css
+ <!DOCTYPE=html>
+ <html lang="zh-cn">
+ <head>
+ <meta charset="UTF-8">
+ <title>
+ 关于文档元素测试
+ </title>
+ <style>
+
+ #father{
+     width:200px;
+     display:flex;
+     flex-direction:row;
+     flex-wrap:wrap;
+     align-content:center;
+     height:200px;
+     background-color:grey;
+ }
+ .son1{
+     height:30px;
+     width:100px;
+     background-color:orange;
+ }
+
+ .son2{
+     height:30px;
+     width:100px;
+     background-color:red;
+ }
+
+ .son3{
+     height:30px;
+     width:100px;
+     background-color:#08a9b5;
+ }
+
+
+ .son4{
+     height:30px;
+     width:100px;
+     background-color:#9ad1c3;
+ }
+
+ .son5{
+     height:30px;
+     width:100px;
+     background-color:rgb(21,123,126);
+ }
+ </style>
+ </head>
+ <body>
+
+ <div id="father">
+
+ <div class="son1">
+ q
+ </div>
+
+ <div class="son2">
+ w
+ </div>
+
+ <div class="son3">
+ e
+ </div>
+ <div class="son4">
+ e
+ </div>
+ <div class="son5">
+ e
+ </div>
+
+
+
+ </div>
+
+ </body>
+ </html>
+ #+END_SRC
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-ff497b2919aba0881c4b1668b9983527.jpg]]
+
+ Flex-start：这个会取行之间的空白，并把所有行作为一个整体放在容器顶部。
+
+ #+BEGIN_SRC css
+ <!DOCTYPE=html>
+ <html lang="zh-cn">
+ <head>
+ <meta charset="UTF-8">
+ <title>
+ 关于文档元素测试
+ </title>
+ <style>
+
+ #father{
+     width:200px;
+     display:flex;
+     flex-direction:row;
+     flex-wrap:wrap;
+     align-content:flex-start;
+     height:200px;
+     background-color:grey;
+ }
+
+ .son1{
+     height:30px;
+     width:100px;
+     background-color:orange;
+ }
+
+ .son2{
+     height:30px;
+     width:100px;
+     background-color:red;
+ }
+
+ .son3{
+     height:30px;
+     width:100px;
+     background-color:#08a9b5;
+ }
+
+
+ .son4{
+     height:30px;
+     width:100px;
+     background-color:#9ad1c3;
+ }
+
+ .son5{
+     height:30px;
+     width:100px;
+     background-color:rgb(21,123,126);
+ }
+ </style>
+ </head>
+ <body>
+
+ <div id="father">
+
+ <div class="son1">
+ q
+ </div>
+
+ <div class="son2">
+ w
+ </div>
+
+ <div class="son3">
+ e
+ </div>
+ <div class="son4">
+ e
+ </div>
+ <div class="son5">
+ e
+ </div>
+
+
+
+ </div>
+
+ </body>
+ </html>
+ #+END_SRC
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-6aca48e26ff4f4e8dd1affc431b8feba.jpg]]
+
+ flex-end：这个会取消行之间的空白并把所有行作为一个整体在纵轴方向上，放在容器底部。
+
+ align-content:flex-end;
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-91985e256e7dd2b00eb798f0ff5e2590.jpg]]
+
+ space-between 这个会使行在垂直方向两端对齐。即上面的行对齐容器顶部，最下面行对齐容器底部。留相同间隔在每个行之间。
+
+ align-content:space-between;
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-fca93e309b7dd822e1c433fa86645fdb.jpg]]
+
+ Space-around：这个会使每一行的上下位置保留相同长度空白，使得行之间的空白为两倍的单行空白。
+
+ align-content:space-around;
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-7369a9e8a0d3d68b9ddb4d80d0d61eea.jpg]]
+
+ Inherit:使得元素的这个属性继承自它的父元素。
+ innitial:使元素这个属性为默认初始值。
+
+* align-items
+ #+BEGIN_QUOTE
+  指定了当前 Flex 容器的每一行中的 items 项目在此行上在交叉轴上的对齐方式。
+  指定了每一行内 items 相对彼此自身的在交叉轴上的对齐方式。可能的值有 flex-start|flex-end|center|baseline|stretch，当主轴水平时，其具体含义为
+  　　　flex-start：当 items 设置了高度时的默认值。顶端对齐。（针对设置了高度的 items）
+  　　　flex-end：底部对齐。（针对 items 设置了高度）
+  　　　center：竖直方向上居中对齐（同上）
+  　　　baseline：item 第一行文字的底部对齐（同上）
+  　　　stretch：默认值。（针对没有设置高度的 items）当 item 都未设置高度，而且是单行时，item 将和容器等高对齐。当 item 都设置了高度时，设置 stretch 与 flex-start 的效果
+  　　　一样。当 items 有的设置了高度，有的没有设置高度，并且是单行。如下图：
+ #+END_QUOTE
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-0cd9de592783e1b4236431b86c63111a.png]]
+
+  因为单行设置 align-content 无效，所以如果 items 有设置高度，并且 align-items 设置为 align-items：center 的效果如下图
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-7c7d390c833522ce86241f7649d452e6.png]]
+
+ 因为单行设置 align-content 无效，所以如果 items 有设置高度，并且 align-items 设置为 align-items：flex-start 的效果如下图.
+
+ 在 items 设置了高度时，flex-start 和 stech 的样式一样。
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-68cb45d4ffd80d3a86e3dd65cab77309.png]]
+
+ 因为单行设置 align-content 无效，所以如果 items 有设置高度，并且 align-items 设置为 align-items：flex-end 的效果如下图
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-292ce37c8752badb593d0db5de064d4f.png]]
+
+ 总结两者的区别：
+
+ 首先：
+
+ #+BEGIN_SRC css
+ #container {
+     display: flex;
+     height: 200px;
+     width: 240px;
+     flex-wrap: wrap;
+     align-content: center;
+     align-items: center;
+     background-color: #8c8c8c;
+     justify-content: center;
+ }
+ #+END_SRC
+
+ 效果图如下：
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-a1ff0bf057e042c9b1646cfe23026994.png]]
+
+ #+BEGIN_SRC css
+ #container {
+     display: flex;
+     height: 200px;
+     width: 240px;
+     flex-wrap: wrap;
+     align-content: flex-start;
+     align-items: flex-start;
+     background-color: #8c8c8c;
+     justify-content: flex-start;
+ }
+ #+END_SRC
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-4733e4ff5b1ed11fd20a9814b3a799db.png]]
+
+ 以上可知，在没有设置 align-content 为 strech 时，既没有把父容器的多余的空间分配每行时，在每个 item 之间和行与行之间存在默认的距离值。
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-90f1019bf806493fa617862fa6bbb884.png]]
+
+ 设置父容器
+
+ #+BEGIN_SRC css
+  #container {
+     display: flex;
+     height:200px;
+     width: 240px;
+     flex-wrap: wrap;
+     align-content:center;
+     align-items: center;
+     background-color: #8c8c8c;
+     justify-content: center
+   }
+ #+END_SRC
+
+ 效果如下
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-a903b3992cc82211fb4198eb3f9fb25a.png]]
+
+ 设置父容器：
+
+ #+BEGIN_SRC css
+ #container {
+     display: flex;
+     height:200px;
+     width: 240px;
+     flex-wrap: wrap;
+     align-content: flex-start;
+     align-items: center;
+     background-color: #8c8c8c;
+     justify-content: center
+   }
+ #+END_SRC
+
+  效果如下：
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-fd55d4a96ec310e8c96fda68d737ac80.png]]
+
+ 设置父容器
+
+ #+BEGIN_SRC css
+ #container {
+     display: flex;
+     height:200px;
+     width: 240px;
+     flex-wrap: wrap;
+     align-content:center;
+     align-items: flex-start;
+     background-color: #8c8c8c;
+     justify-content: flex-end
+   }
+ #+END_SRC
+
+ [[file:./static/align-content 和 align-items 之间的区别/1624435701-2d47d6e95c4993d0517d048e3f1bf6a8.png]]

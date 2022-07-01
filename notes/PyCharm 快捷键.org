@@ -1,0 +1,51 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/PyCharm 快捷键/")); -*-
+:PROPERTIES:
+:ID:       DEA44D06-3746-4DDC-8155-12ED0833A878
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-26 Sun 23:22>
+#+TITLE: PyCharm 快捷键
+
+* keymap
+
+#+DOWNLOADED: https://pic1.zhimg.com/63462831483f43aa017eaac9d4d58484_r.jpg @ 2019-07-04 14:29:33
+[[file:./static/PyCharm 快捷键/63462831483f43aa017eaac9d4d58484_r_2019-07-04_14-29-33.jpg]]
+
+* “F1” <- 光标处函数文档
+* “Command + Shift + -” <- 展开收缩代码
+* “Command + J” <- 输入常用代码
+* “ctrl+alt+L” <- 格式化代码
+* “alt+enter” <- 万能键
+不同场景有不同的表现方式，在还没 import（install） 模块名上使用会 import（install） 相对应的模块，在方法名上使用补注释，在测试中使用帮你补充断言代码。
+* “ctrl+space” <- 万能提示键
+* “ctrl+f” <- 搜索
+* “ctrl+shift+f10” <- 运行当前文件
+* “ctrl+w” <- 扩展选取
+* “ctrl+shift+w” <- 缩减选区
+* “ctrl+alt+shift+T” <- 重构选区
+* “ctrl+q” <- 查注释
+* “ctrl+shift+i” <- 查源码
+* “ctrl+p” <- 调用方法时查看参数，在括号内按下，就知道当前位置该给啥参数，不过由于是 Python，这里使用 “ctrl+space” 也可以达到很好的效果
+* “shift+enter” <- 另起一行，光标在行内任意位置都能另起一行，且不破坏当行结构
+* “ctrl+alt+enter” <- 向上另起一行
+* “ctrl+shift+数字键” 与 “ctrl+数字键” <- 书签功能
+* “ctrl+shift+a” <- 搜索 IDE 功能
+* 双击 “shift” <- 搜索一切
+* “Command + b” <- 跳转到源码
+* “Command + Shift + O” <- 项目中查找
+* “Command + Option + Shift + 【” + “Command + /” <- 注释代码块
+* 修改数据表的定义
+选择修要修改的表，右击
+
+#+DOWNLOADED: screenshot @ 2019-12-02 18:37:31
+[[file:./static/PyCharm 快捷键/2019-12-02_18-37-31_screenshot.jpg]]
+
+双击 ~time~
+
+#+DOWNLOADED: screenshot @ 2019-12-02 18:38:49
+[[file:./static/PyCharm 快捷键/2019-12-02_18-38-49_screenshot.jpg]]
+改为 =taskTime= ：
+
+#+DOWNLOADED: screenshot @ 2019-12-02 18:39:33
+[[file:./static/PyCharm 快捷键/2019-12-02_18-39-33_screenshot.jpg]]

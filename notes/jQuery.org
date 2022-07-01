@@ -1,0 +1,87 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/jQuery/")); -*-
+:PROPERTIES:
+:ID:       595813F6-47D0-4331-B67B-7D8206053F58
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-09 Tue 06:05>
+#+TITLE: jQuery
+
+* jQuery 转换为原生, 通过索引获取对应的元素
+
+  #+BEGIN_SRC js :results values list :exports no-eval
+  $oDiv[0].getAttribute("xxx");
+  $oDiv.get(0);
+  #+END_SRC
+
+* jQuery 选择器
+** 基本选择器
+- #id
+- element
+- .class
+- *
+- selector1，selector2，selectorN
+
+** 层次选择器
+- ancestor descendant
+- parent > child ：所有子元素
+- prev + ：下一个弟弟元素
+- prev + next ：下一个弟弟元素，并且标签名为 next
+- prev ~  ：所有弟弟元素
+- prev ~ next ：所有弟弟元素，并且标签名为 next
+
+** 基本过滤选择器
+- :first
+- :last
+- :not
+- :even ：偶数
+- :odd ：奇数
+- :eq ：通过索引获取集合中一个, 结果是 jQuery 对象
+- :gt
+- :lt
+- :header
+- :animated
+
+** 内容过滤选择器
+- :contains(string)
+- :empty
+- :has(element)
+- :parent
+
+** 可见性过滤选择器
+- :hidden
+- :visible
+
+** 属性过滤选择器
+- [attr] ：$("#div1>*[id]") 所有子元素中有 id 属性的集合
+- [attr=value]
+- [attr!=value]
+- [attr^=value] ：$("#div1>*[id^div]") 所有子元素中以 div 为开头的属性的元素的集合
+- [attr$=value]
+- [attr*=value] ：$("#div1>*[id*1]") 所有子元素中包含 1 的属性的元素的集合
+- [attrSel1][attrSel2][attrSelN]
+
+** 子元素过滤器选择器
+- :nth-child ：$("#div1>*:nth-child(1)") 等效于 $("#div1>*:eq(0)")
+- :first-child
+- :last-child
+- :only-child
+
+** 表单选择器
+- :input
+- :text
+- :password
+- :radio
+- :checkbox
+- :submit
+- :image
+- :reset
+- :button
+- :file
+- :hidden
+
+** 表单过滤选择器
+- :enabled ：可编辑的
+- :disabled ：不可编辑的
+- :checked
+- :selected

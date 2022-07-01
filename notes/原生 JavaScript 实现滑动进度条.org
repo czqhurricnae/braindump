@@ -1,0 +1,154 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/原生 JavaScript 实现滑动进度条/")); -*-
+:PROPERTIES:
+:ID:       F44A50A4-562A-47CB-9DDB-CA705518A406
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-08 Mon 23:59>
+#+TITLE: 原生 JavaScript 实现滑动进度条
+
+实现原理：
+
+#+BEGIN_QUOTE
+首先是用 touchmove()时间获取到移动端事件参数，保存下进度条的最大长度，可理解为滑块可移动的距离，
+滑块滑动到最左边与最右边就滑不动，我们假设触摸区域在滑块的正中间，那么我们触摸的点与滑块的最左边相差值为滑块宽度的一半。
+
+在按住移动的同时去改变精度条的长度和按钮的相对左部的距离。
+
+然后就是距离的计算，主要利用的就是 pageX() 属性。pageX 是鼠标指针相对于文档的左边缘的位置。在触摸按下是就记录相对位置，在按住移动后就可求出手指移动的距离。从而改变按钮位置和进度条长度。
+#+END_QUOTE
+
+实现效果：
+
+#+DOWNLOADED: screenshot @ 2020-06-09 00:05:59
+[[file:./static/原生 JavaScript 实现滑动进度条/2020-06-09_00-05-59_screenshot.jpg]]
+
+贴上代码：
+
+#+BEGIN_SRC html :results values list :exports no-eval
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>手动滑动进度条</title>
+        <style type="text/css">
+            .editItem {
+                background-color: #fff;
+                min-height: 2.475rem;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+            }
+            .editItem.between{
+                justify-content: space-between;
+            }
+            .editItem.budget{
+                margin-top:-0.6rem;
+            }
+            .budgetItem{
+                height: 5.45rem;
+                margin: 20px 20px;
+            }
+            .color9{
+                color: #999;
+            }
+            .size14{
+                font-size: 14px;
+            }
+            .defaultLine{
+                height: 2.5px;
+                border-radius: 5px;
+                background-color: #DADCDD;
+                margin: 17px 0 11px;
+                position: relative;
+                display: flex;
+            }
+            .defaultLine .bar{
+                width: 24px;
+                height: 24px;
+                background-color: #fff;
+                border-radius: 50%;
+                position: absolute;
+                left: 12px;
+                top: -11px;
+                margin-left: -12px;
+                box-shadow: 0px 3px 10px rgba(1,50,79,.15);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .chooseBudget{
+                font-size: 13px;
+                color: #666;
+                margin-bottom: -4px;
+            }
+            .blueLine{
+                height: 2.5px;
+                width:12px;
+                background-color: #28AbFF;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+    <body style="margin: 0;">
+        <div class="budgetItem">
+            <p class="color9 size14 title">人均预算(元)</p>
+            <p class="defaultLine">
+                <span class="blueLine"></span>
+                <span class="bar">
+
+                </span>
+            </p>
+            <div class="editItem between budget">
+                <span class="chooseBudget">1 千</span>
+                <span class="chooseBudget">3 千</span>
+                <span class="chooseBudget">5 千</span>
+                <span class="chooseBudget semi">1 万</span>
+                <span class="chooseBudget">2 千+</span>
+                <span class="chooseBudget">不限</span>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        window.onload = function(){
+
+        var line = document.getElementsByClassName("defaultLine")[0];
+        var bar = document.getElementsByClassName("bar")[0];
+        var progress = document.getElementsByClassName("blueLine")[0];
+
+
+
+        //滑动进度条
+        bar.addEventListener('touchmove', function(event){
+            event.preventDefault();
+
+            console.log(event.targetTouches)
+            var styles = window.getComputedStyle(line,null);
+            var width=parseInt(styles.width);
+
+            if (event.targetTouches.length == 1) {
+
+                var touch = event.targetTouches[0];
+                moveleft = touch.pageX - 12;
+
+                if( moveleft <= 12){
+                    moveleft = 12 ;
+                };
+                if( moveleft >= parseInt(width)-12){
+                    moveleft = parseInt(width)-12;
+                }
+                bar.style.left = moveleft + "px";//最后把 left 值附上。
+                progress.style.width = moveleft + 12 + "px";
+                console.log(bar.style.left)
+                console.log(touch.pageX)
+            };
+
+        })
+
+    }
+    </script>
+</html>
+#+END_SRC

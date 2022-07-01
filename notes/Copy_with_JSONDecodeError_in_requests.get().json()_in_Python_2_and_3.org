@@ -1,0 +1,53 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Copy_with_JSONDecodeError_in_requests.get().json()_in_Python_2_and_3/")); -*-
+:PROPERTIES:
+:ID:       44985663-BB0A-4E49-8C14-F112BAE6E4FC
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-08 Wed 19:30>
+#+TITLE: Copy_with_JSONDecodeError_in_requests.get().json()_in_Python_2_and_3
+
+Suppose you don't know with a hundred percent certainty that an API will respond in with a JSON payload you need to protect yourself.
+
+This is how you do it in Python 3:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+import json
+import requests
+
+response = requests.get(url)
+try:
+    print(response.json())
+except json.decoder.JSONDecodeError:
+    print("N'est pas JSON")
+#+END_SRC
+
+This is how you do it in Python 2:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+import requests
+
+response = requests.get(url)
+try:
+    print response.json()
+except ValueError:
+    print "N'est pas JSON"
+#+END_SRC
+
+Here's how you make the code work across both:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+import json
+import requests
+
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
+
+response = requests.get(url)
+try:
+    print(response.json())
+except JSONDecodeError:
+    print("N'est pas JSON")
+#+END_SRC

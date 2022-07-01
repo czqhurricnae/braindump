@@ -1,0 +1,164 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python mock/")); -*-
+:PROPERTIES:
+:ID:       18F418D9-9E35-4210-9A8F-80502946A8A0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-02 Fri 21:38>
+#+TITLE: Python mock
+
+* mock 对象方法中的返回数据
+我们经常会需要这样的场景，a 系统跟 b 系统联调，b 系统开发人员进度较慢，有些 a 需要调用 b 系统 api 的返回数据没办法拿到，这时候，不改变原来的代码，但联调需要保证 a 系统这边功能完全 ok 的场景就可以用到 mock 这个模块了。
+
+在这里，我们假设 b 系统完成时是以下这个样子
+
+=system_b.py=
+
+#+BEGIN_EXAMPLE
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+    import json
+    import requests
+
+    def send_request(url):
+        r = requests.get(url)
+        return json.loads(r.text)
+
+
+    def visit_ustack():
+        return send_request('http://api.kanzhihu.com/getposts')
+
+    if __name__ == '__main__':
+        content = visit_ustack()
+        print content
+#+END_EXAMPLE
+
+我们通过调用 ~visit_ustack()~ 这个入口，可以得到 =http://api.kanzhihu.com/getposts= 这个接口返回的 json 数据。理想测试情况下，a系统这边的测试代码是这样的：
+
+=system_a.py=
+
+#+BEGIN_EXAMPLE
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+
+    import system_b
+
+    def system_b_test():
+        if system_b.visit_ustack()['count'] == 10:
+            print "system b正常,测试通过"
+        else:
+            print "system b异常,测试失败"
+
+
+    system_b_test()
+#+END_EXAMPLE
+
+结果显而易见是这样的
+
+#+BEGIN_EXAMPLE
+    /System/Library/Frameworks/Python.framework/Versions/2.7/bin/python /Users/lsf/PycharmProjects/py_pattern/test.py
+    system b正常,测试通过
+
+    Process finished with exit code 0
+#+END_EXAMPLE
+
+但现在糟糕的是，系统 b 的主体函数 send_request 还没开发，我们没办法获取 json 格式的数据，当然，现实中可以通过很多其他的办法来解决，但为了最大程度仿真 b 系统，现在可以通过 mock 来完成这项工作。
+
+现实中功能未完成的 b 系统
+
+=system_b.py=
+
+#+BEGIN_EXAMPLE
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+
+
+    def send_request(url):
+        pass
+
+
+    def visit_ustack():
+        return send_request('http://api.kanzhihu.com/getposts')
+
+    if __name__ == '__main__':
+        content = visit_ustack()
+        print content
+#+END_EXAMPLE
+
+=system_a.py=
+
+#+BEGIN_EXAMPLE
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+
+    import mock
+    import system_b
+
+
+    def system_b_test():
+        mock_result = {u'count': 1000, u'publishtime': u'1470798000', u'date': u'2016-08-10', u'id': u'2375'}], u'error': u''}
+        system_b.send_request = mock.Mock(return_value=mock_result)
+        if system_b.visit_ustack()['count'] == 1000:
+            print "system b正常,测试通过"
+        else:
+            print "system b异常,测试失败"
+
+
+    system_b_test()
+#+END_EXAMPLE
+
+结果是
+
+#+BEGIN_EXAMPLE
+    /System/Library/Frameworks/Python.framework/Versions/2.7/bin/python /Applications/PyCharm.app/Contents/helpers/pycharm/utrunner.py /Users/lsf/PycharmProjects/py_pattern/test.py true
+    Testing started at 15:24 ...
+    system b正常,测试通过
+
+    Process finished with exit code 0
+    Empty test suite.
+#+END_EXAMPLE
+
+在这里，我们通过直接 mock 一个 json 数据，来达到 b 系统返回数据的目的，甚至我们调用的依然是 b 系统的接口，区别已用红色字体标出，这个就是 mock 的操作了。
+
+- mock_result:准备需要的 mock 数据
+- 用 mock.Mock(return_value=mock_result)将 mock 对象设置给系统 b 对应的返回方法中
+
+值得注意的是，~mock.Mock(return_value=mock_result)~ 是一个对象，但为什么 ~system_b.send_request = mock.Mock(return_value=mock_result)~ 返回的是数据而不是对象的其他属性跟方法呢，
+在这里，是因为 mock 对象中有一个 side_effect 属性，如果这个属性为 None,就会将 return_value 设置的值返回。
+
+* mock 对象中的方法： ~mock.patch~ 跟 ~mock.patch.object~
+
+#+BEGIN_EXAMPLE
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+
+    import mock
+
+    class By(object):
+
+        def add(self, a, b):
+            return a + b + self.multiply(a,b)
+
+        def multiply(self, a, b):
+            pass
+
+    b  = By()
+
+    class MockDemo(object):
+        def __init__(self):
+            self.b  = b
+
+        @mock.patch.object(b,'multiply')
+        def test_add(self,mock_multiply):
+            a = 3
+            b = 5
+            mock_multiply.return_value = 15
+            if self.b.add(a,b) == 23:
+                print "mock成功"
+            else:
+                print "mock失败"
+
+    if __name__ == '__main__':
+        MockDemo().test_add()
+#+END_EXAMPLE
+
+如果 mock 的是一个函数，则可以用 ~@mock.patch(target='module.func')~ 来实现。

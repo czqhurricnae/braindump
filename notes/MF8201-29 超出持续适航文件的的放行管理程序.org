@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/MF8201-29 超出持续适航文件的的放行管理程序/")); -*-
+:PROPERTIES:
+:ID:       B20147E8-672B-4E4A-A749-1E03F4B4566A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-06 Tue 09:46>
+#+TITLE: MF8201-29 超出持续适航文件的的放行管理程序
+
+[[file:./static/MF8201-29 超出持续适航文件的的放行管理程序/2021-07-06_09-46-12_screenshot.jpg]]

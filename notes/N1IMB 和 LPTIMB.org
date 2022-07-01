@@ -1,0 +1,25 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/N1IMB 和 LPTIMB/")); -*-
+:PROPERTIES:
+:ID:       BCC5A7F0-F040-4BA5-829C-19698985B416
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-23 Fri 22:33>
+#+TITLE: N1IMB 和 LPTIMB
+
+[[file:./static/N1IMB 和 LPTIMB/2021-07-23_22-33-35_screenshot.jpg]]
+
+N1IMB 和 LPTIMB 表示的是不平衡量的角度。
+
+| 参数   | 描述                                 | 单位    |
+|--------+--------------------------------------+---------|
+| VIBN1C | CN1 tracked vibration                | Unit    |
+|--------+--------------------------------------+---------|
+| VIBN1T | TN1 tracked vibration                | Unit    |
+|--------+--------------------------------------+---------|
+| VIBN2C | CN2 tracked vibration                | Unit    |
+|--------+--------------------------------------+---------|
+| VIBN2T | TN2 tracked vibration                | Unit    |
+|--------+--------------------------------------+---------|
+| N1IMB  | N1 imbalance angle                   | Degrees |
+|--------+--------------------------------------+---------|
+| LPTIMB | Low pressure turbine imbalance angle | Degrees |

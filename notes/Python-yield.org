@@ -1,0 +1,181 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python yield/")); -*-
+:PROPERTIES:
+:ID:       DB3ACA2F-74A3-44B8-8F3D-631E0B4E7F64
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-03 Sat 20:42>
+#+TITLE: Python-yield
+
+#+begin_example
+>>> def simple_coro2(a):
+...     print('-> Started: a =', a)
+...     b = yield a
+...     print('-> Received: b =', b)
+...     c = yield a +b
+...     print('-> Received: c =', c)
+...
+>>> my_coro2 = simple_coro2(14)
+>>> from inspect import getgeneratorstate
+>>> getgeneratorstate(my_coro2)
+'GEN_CREATED'
+>>> my_coro2
+<generator object simple_coro2 at 0x10e9d0c50>
+>>> next(my_coro2)
+-> Started: a = 14
+14
+>>> getgeneratorstate(my_coro2)
+'GEN_SUSPENDED'
+>>> my_coro2.send(28)
+-> Received: b = 28
+42
+>>> my_coro2
+<generator object simple_coro2 at 0x10e9d0c50>
+>>> my_coro2.send(99)
+-> Received: c = 99
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> getgeneratorstate(my_coro2)
+'GEN_CLOSED'
+>>>
+#+end_example
+
+* 协程的四种状态
+- GEN_CREATED 等待开始执行
+- GEN_RUNNING 解释器正在执行，只有在多线程应用中才能看到这个状态，此外，生成器对象在自己身上调用 ~getgeneratorstate~ 函数也行
+- GEN_SUSPENDED 在 ~yield~ 表达式处暂停
+- GEN_CLOSED 执行结束
+
+* yield 的理解
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session yield_test
+def test():
+    i = 0
+    a = 4
+    while i < a:
+        x = yield i
+        i += 1
+
+
+for i in test():
+    print(i)
+#+END_SRC
+
+#+RESULTS:
+: 0
+: 1
+: 2
+: 3
+
+#+BEGIN_SRC python :exports no-eval
+t = test()
+print(t)
+print(t.next())
+print(t.next())
+print(t.next())
+print(t.next())
+#+END_SRC
+
+#+RESULTS:
+: <generator object test at 0x103667640>
+: 0
+: 1
+: 2
+: 3
+: StopIterationTraceback (most recent call last)
+: python-input-2-a8e2c17b3394> in <module>()
+:       5 print(t.next())
+:       6 print(t.next())
+: ----> 7 print(t.next())
+:
+: StopIteration:
+
+#+BEGIN_SRC python :exports no-eval
+def test():
+    x = yield "第一次yield的值"
+    print(x)
+    x = yield "第二次yield的值"
+    print(x)
+    x = yield
+
+
+gen = test()
+print(gen.send("第一次send的值"))
+#+END_SRC
+
+#+RESULTS:
+: TypeErrorTraceback (most recent call last)
+: <ipython-input-3-a13210904ae1> in <module>()
+:       8
+:       9 gen = test()
+: ---> 10 print(gen.send(" 第一次 send 的值"))
+:
+: TypeError: can't send non-None value to a just-started generator
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session yield_send
+def test():
+    x = yield "第一次yield的值"
+    print(x)
+    x = yield "第二次yield的值"
+    print(x)
+    x = yield
+
+
+gen = test()
+print(gen.next())
+#+END_SRC
+
+#+RESULTS:
+: 第一次 yield 的值
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session yield_send
+print(gen.send("第一次send的值"))
+#+END_SRC
+
+#+RESULTS:
+: 第一次 send 的值
+: 第二次 yield 的值
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session yield_send
+print(gen.send("第二次send的值"))
+#+END_SRC
+
+#+RESULTS:
+: 第二次 send 的值
+: None
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+i = 0
+seq = ["one", "two", "three"]
+for element in seq:
+    seq[i] = "%d: %s" % (i, seq[i])
+    i += 1
+print seq
+#+END_SRC
+
+#+RESULTS:
+: ['0: one', '1: two', '2: three']
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+seq = ["one", "two", "three"]
+for i, element in enumerate(seq):
+    seq[i] = "%d: %s" % (i, element)
+print seq
+#+END_SRC
+
+#+RESULTS:
+: ['0: one', '1: two', '2: three']
+
+或者使用列表解析式进行重构:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  def _treatment(pos, element):
+      return "%d: %s" % (pos, element)
+
+  seq = ["one", "two", "three"]
+  print [_treatment(i, el) for i, el in enumerate(seq)]
+#+END_SRC
+
+#+RESULTS:
+: ['0: one', '1: two', '2: three']

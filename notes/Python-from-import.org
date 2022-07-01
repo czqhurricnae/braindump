@@ -1,0 +1,59 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-from-import")); -*-
+:PROPERTIES:
+:ID:       7B5F4FE1-04FD-4AC8-98D9-8F2DC00FAB4A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-22 Thu 14:17>
+#+TITLE: Python-from-import
+
+#+BEGIN_QUOTE
+调用 from-import 可以把名字导入当前的名称空间里去, 这意味着你不需要使用属性/句点属性标识来访问模块的标识符。
+
+只从模块导入名字的另一个副作用是那些名字会成为局部名称空间的一部分。
+这可能导致覆盖一个已经存在的具有相同名字的对象。
+而且对这些变量的改变只影响它的局部拷贝而不是所导入模块的原始名称空间。
+也就是说, 绑定只是局部的而不是整个名称空间。
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+In Python 2.5, you must enable the new absolute import behavior with
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+from __future__ import absolute_import
+#+END_SRC
+
+You may use relative imports freely.
+In Python 2.6, any import statement that results in an intra-package import will raise DeprecationWarning (this also applies to from <> import that fails to use the relative import syntax).
+#+END_QUOTE
+
+- ~from A import a~ ，会在内存创建一个 ~a~ 的副本（或引用），如果 ~a~ 是 ~A~ 模块下的一个变量，对 ~a~ 的修改不会影响原文件。所以多个文件的引用和修改不会互相影响。
+- 从上面引用的描述来看，似乎更希望是 ~from A import a~ 先使用的是相对导入，而后是[[id:91B0F184-FB7B-4804-A94E-D19A090A411D][绝对导入]]。
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+# datetime.py
+datetime = "My datetime"
+
+# demo.py
+from datetime import datetime
+
+print(datetime)
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+~/test:master*? λ python demo.py
+My datetime
+~/test:master*? λ python3 demo.py
+My datetime
+~/test:master*? λ rm datetime.py datetime.pyc
+~/test:master*? λ python demo.py
+<type 'datetime.datetime'>
+~/test:master*? λ python3 demo.py
+<class 'datetime.datetime'>
+#+END_SRC
+
+[[id:509F375C-DC86-408E-B5ED-0938E5926A6E][See：Python-import xx.xx.xx]]
+[[id:3ACB6261-EBF4-4846-B8F2-BFC06ADC4833][See：PEP 328: Absolute and Relative Imports]]
+
+这个示例摘抄自 《Python 核心编程（第二版）》，书中的 Python 版本只到 2.5。
+#+DOWNLOADED: screenshot @ 2020-10-22 14:18:20
+[[file:./static/Python-from-import/2020-10-22_14-18-20_screenshot.jpg]]

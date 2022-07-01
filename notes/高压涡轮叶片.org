@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/高压涡轮叶片/")); -*-
+:PROPERTIES:
+:ID:       AE425049-6D83-4664-944C-6F49144BF9E7
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-17 Wed 23:27>
+#+TITLE: 高压涡轮叶片
+
+[[file:./static/高压涡轮叶片/2021-03-17_23-28-03.jpg][file:./static/高压涡轮叶片/2021-03-17_23-28-03.jpg]]
+[[file:./static/高压涡轮叶片/2021-03-17_23-28-15.jpg][file:./static/高压涡轮叶片/2021-03-17_23-28-15.jpg]]
+[[file:./static/高压涡轮叶片/2021-03-17_23-28-31.jpg][file:./static/高压涡轮叶片/2021-03-17_23-28-31.jpg]]

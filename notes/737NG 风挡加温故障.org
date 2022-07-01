@@ -1,0 +1,63 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 风挡加温故障/")); -*-
+:PROPERTIES:
+:ID:       83FA403F-9D3F-459D-9235-1C30E742C550
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-24 Sat 14:01>
+#+TITLE: 737NG 风挡加温故障
+
+[[file:./static/737NG 风挡加温故障/2021-07-24_14-02-39_2021-07-24_11-57-40_screenshot.jpg]]
+
+* ON 灯亮，OVHEAT 灯不亮
+
+[[file:./static/737NG 风挡加温故障/2021-07-24_14-09-30_screenshot.jpg]]
+
+- 蓝色线路：电门在 ON 位，WHCU control circuits 电路没有发出 OVHT 信号，K1 继电器作动。
+- 红色线路：115V AC 通过 WHCU control circuits 电路接地，为接线柱输出电流。
+- 绿色线路：WHCU power demand detector 电路通过感应探测到输出电流，28V DC 通过 WHCU power demand detector 电路接地点亮 ON 灯。
+
+[[file:./static/737NG 风挡加温故障/2021-07-24_14-24-07_screenshot.jpg]]
+
+- 蓝色线路：电门在 ON 位，WHCU control circuits 电路没有发出 OVHT 信号，K1 继电器作动。
+- 绿色线路：WHCU control circuits 电路供电，K2 继电器作动。
+- 红色线路：OVHEAT 灯接地被断开，不会点亮。
+
+* OVERHEAT 灯点亮，ON 灯不亮
+
+[[file:./static/737NG 风挡加温故障/2021-07-24_14-30-57_screenshot.jpg]]
+
+- 蓝色线路：电门在 ON 位，WHCU control circuits 电路发出 OVHT 信号，K1 继电器断开。此时 WHCU 没有输出加热电流，ON 灯不亮。
+- 绿色线路：WHCU 断开 K2 继电器电源，K2 断开。
+- 红色线路：28V DC 通过 OVERHEAT 灯获得接地，点亮 OVERHEAT 灯。
+
+同时也可以看出当加温控制电门在 OFF 位，而 K2 继电器错误的激励作动时，OVERHEAT 灯也会点亮。
+
+* 短停反映加温控制电门在 ON 位，ON 灯不亮
+该情况多发生于夏季，因夏季气温较高，阳光直射强烈，当飞机在地面长时间停场时，极易造成风挡表面温度超过 110F。
+此时 WHCU 会截止加温电源，导致虽然电门置于 ON 位，但 ON 灯不亮情况。
+如机组有异议，地面可通过对相关风挡使用遮光板或者浇冷水进行降温。
+也可通过将 TEST 电门置于 PWR 位（加温控制电门置于 ON 位）使风挡强制加温，确保四个 ON 灯点亮，然后马上松手，确保回到测试前状态，
+将 TEST 电门置于 OVHT 位 1 秒，确保四个 OVHT 灯和 P7 板 CAUTION 灯和 ANTI-ICE 灯点亮，测试 WHCU 无故障灯点亮，说明风挡加温供电正常。
+
+- 首先可执行灯光测试，验证灯泡是否工作正常。
+- 其次可将控制面板 TEST 电门置于 PWR 位强制对风挡加温，观察 ON 灯是否燃亮，判断风挡加温供电是否正常。
+- 将加温控制电门置于 OFF 位，待风挡冷却后重新接通电门。
+
+* 短停反映加温控制电门在 ON 位，OVERHEAT 灯点亮
+依据波音 737-MT-30-002，对于 PN：83000-27901 WHCU 可能在飞机电源转换时会燃亮风挡 OVERHEAT 灯、MASTER CAUTION 灯以及 ANTI-ICE 灯。
+可参照 QRH 手册将风挡加温电门置于 OFF 位并再次切换至 ON 位，如 OVERHEAT 灯熄灭，可正常放行，如下一段 WHCU BITE 代码为：WHCU-LRU，则该 WHCU 无需更换。
+
+- 首先可通过触摸或测温的方法，判断是否为风挡真实过热，还是只是因传感器故障造成的假过热。
+- 如风挡无明显温升，而 OVERHEAT 灯点亮，可判断为假过热。
+  假过热一般多为温度传感器、跳开关、WHCU 故障导致，对于 2 号风挡加温电阻丝断丝也会导致 OVERHEAT 灯燃亮。
+  对于 2 号风挡还需检查风挡电源螺旋线外观和电插头是否正常。
+- 检查跳开关 C228（L1），C393（R2），C394（R1），C392（L2）是否跳出[fn:1]。
+  当以上任一跳开关跳出时，会导致通过 WHCU power supply 电路向 WHCU control circuits 供电断开，进而导致 K2 继电器断开，OVERHEAT 灯点亮。
+- 对串 WHCU 或执行 WHCU 自检，确认 WHCU 是否工作正常。
+  新老构型的 WHCU 执行自检时，均需要确认相关跳开关闭合，加温控制电门置于 ON 位。新构型的 WHCU 额外需要将故障侧的风挡加温控制电门执行 ON – OFF – ON 循环，解锁故障。
+- 通过切换风挡温度传感器的方法，尝试故障修复。在切换风挡温度传感器前，需要对风挡进行目视检查，检查是否存在潮气入侵或分层导致传感器、传感器接线桩及两者之间线路阻值异常。
+
+* Footnotes
+
+[fn:1] 根据波音 737NG-FTD-30-09001 分析认为跳开关处导线接耳表面的镀锡层，在长时间电流负载的情况下存在被氧化的可能，再加上跳开关与接耳和螺丝之间材料的不匹配，长时间工作后接触电阻产生的热量不断增加，最终导致跳开关跳出。
+波音建议用户在风挡加温系统故障时，须先检查 C228，C393，C394 和 C392 四个跳开关是否跳开，之后再执行 WHCU 自检工作。

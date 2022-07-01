@@ -1,0 +1,75 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python Interpreter on macOS/")); -*-
+:PROPERTIES:
+:ID:       AC1682DC-4381-4E69-8874-9DEE8C33ECC5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-17 Sat 17:45>
+#+TITLE: Python Interpreter on macOS
+
+Python has made life extremely easy for developers and data scientists, at least most of the time. One exception that ruins their life is dealing with Python versions. There would sometimes be lots of Pythons
+existing on a Mac at the same time. Where are they from? Are they provided by Apple? Which one am I using? Where did the packages I installed go? This article would give some insights into those questions.
+This article is NOT for beginners and DO NOT teach you how to install Python. It aims to give you a better understanding of all the Python interpreters you may have on your Mac.
+
+* What is Python?
+Sure, Python is undoubtedly a programming language, but it is not only a programming language. The name "Python" frequently used in this article would refer to the Python interpreter program most of the time.
+Unlike C language, which is compiled to machine code and executed by the processor directly, Python is not compiled but interpreted. It means when your Python program is running, there needs to be another
+program running at the same time, interpreting every line of your Python code to your processor, and the program is THE Python we are talking about in this article.
+
+* Which Python am I using?
+More specifically, this title means "Which python interpreter program am I using to run my Python program?".
+Most of the time, you use one of the interpreter programs with the command python or python3.
+However, it's good to know how many interpreters you have and which one you are currently using with the python command.
+Here are some ways that help you to find out which python you are using.
+
+** The type command
+type command tells you how your shell resolves a command, in this case, the command python or python3.
+It gives the path to the program that is directly involved with a command. In my system, you would see the following outputs.
+
+ #+BEGIN_SRC python
+ frost@ccsmac ~ % type python
+ python is /usr/bin/python
+ #+END_SRC
+
+Take python as an example. It tells you ~/usr/bin/python~ is called when you use the command python.
+However, the path is not necessarily your interpreter's real path: it may be an alias or a trampoline.
+To see the actual path of the interpreter, you need other commands.
+
+** The sys.executable variable
+~sys.executable~ gives the absolute path of the executable binary for the Python interpreter you're currently using.
+
+ #+BEGIN_SRC python
+ >>> import sys
+ >>> sys.executable
+ /Library/Frameworks/Python.framework/Versions/3.7/bin/python3'
+ #+END_SRC
+
+** The sys.path variable
+It's common for beginners to install the wrong interpreter package and ends up being unable to import the desired package.
+~sys.path~ is a list of strings that specifies the search path for modules, and it tells where the packages you installed (typically with pip) go.
+
+ #+BEGIN_SRC python
+ >>> import sys
+ >>> sys.path
+ ['', '/Library/Frameworks/Python.framework/Versions/3.7/lib/python37.zip', '/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7', '/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/lib-dynload', '/Users/frost/Library/Python/3.7/lib/python/site-packages', '/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages']
+ #+END_SRC
+
+* How many Python do I have?
+As far as I know, there is currently not an efficient way to find all Python interpreter programs that now exist on your Mac.
+However, I could still give the common interpreter paths you may expect on your Mac.
+If you come to find a way to list all interpreters or find a new Python interpreter path that is not mentioned, you are more than welcomed to [[mailto:contact.FrostLee@gmail.com][share it with me]].
+
+** Built-in Interpreters
+Even if you don't install Python explicitly, there may be more than one Python interpreter available on your Mac already. It is not wise to remove or modify these interpreters, and you can only install packages with
+pip command for the user, not globally. Python you found under /usr/bin is usually system built-in interpreters, files under this path cannot be modified by users without modifying SIP, and it is strongly suggested
+not to do so. As far as I know, there may be 3 interpreters that are provided by the system.
+
+-  /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7: the Python 2.7 interpreter. Almost all Macs have this interpreter, its alias is located in /usr/bin/python
+-  /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.7/lib/python3.7: the Python 3.7 interpreter. From macOS Catalina ([[https://apple.stackexchange.com/a/376081/391169][reference here]]), the system gives this interpreter and prompts a deprecation warning when you use the system Python 2.7. It's by default /usr/bin/python3.
+-  /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8: a Python interpreter installed by Xcode somehow. As far as I've observed, it overwrites /usr/bin/python3, after that, deleting the Xcode app cause /usr/bin/python3 malfunctions.
+
+** User InstalledInterpreters
+
+As the built-in interpreters may serve some system functionalities, I prefer to install another interpreter to separate my stuff from the system's interpreter. To install a Python interpreter, you can use Homebrew or
+install it from python.org. Here are the possible locations of the Python interpreterinstalled by the user.
+
+-  /Library/Frameworks/Python.framework/Versions/3.7/bin/python3.7: the Python interpreter I installed from python.org. One of its aliases is located at /usr/local/bin/python3, and it is what my python3 command refers to.

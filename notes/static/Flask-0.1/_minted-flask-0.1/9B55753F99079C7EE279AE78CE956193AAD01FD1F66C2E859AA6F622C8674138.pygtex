@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Flask}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{route}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rule}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}A decorator that is used to register a view function for a}
+\PYG{l+s+sd}{        given URL rule.  Example::}
+
+\PYG{l+s+sd}{            @app.route(\PYGZsq{}/\PYGZsq{})}
+\PYG{l+s+sd}{            def index():}
+\PYG{l+s+sd}{                return \PYGZsq{}Hello World\PYGZsq{}}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def} \PYG{n+nf}{decorator}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}\PYG{p}{:}
+            \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{endpoint}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{options}\PYG{p}{:}
+                \PYG{n}{options}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{endpoint}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{f}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}map}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Rule}\PYG{p}{(}\PYG{n}{rule}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}\PYG{p}{)}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{view\PYGZus{}functions}\PYG{p}{[}\PYG{n}{options}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{endpoint}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{]} \PYG{o}{\PYGZti{}} \PYG{n}{f}
+            \PYG{k}{return} \PYG{n}{f}
+
+        \PYG{k}{return} \PYG{n}{decorator}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

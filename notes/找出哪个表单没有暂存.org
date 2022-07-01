@@ -1,0 +1,43 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/找出哪个表单没有暂存/")); -*-
+:PROPERTIES:
+:ID:       9459BEA9-4B55-4A51-AEEB-B5854097D968
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:59>
+#+TITLE: 找出哪个表单没有暂存
+
+
+#+BEGIN_SRC js :results output list :exports both
+const timesheets = [
+    {
+        stashed: false,
+        formID: 1,
+        task: "737-12 更换机组氧气瓶",
+        kind: "非例行排故",
+        calculatedTime: "1.0"
+    },
+    {
+        stashed: false,
+        formID: 2,
+        task: "787-21 更换CAC(单个)",
+        kind: "非例行排故",
+        calculatedTime: "10.0"
+    }
+];
+
+const newData = {};
+
+for (let item of timesheets) {
+    if (newData[item.stashed] === undefined) {
+        newData[item.stashed] = [];
+    }
+    newData[item.stashed].splice(newData[item.stashed].length, 0, item.formID);
+}
+
+console.log(newData['false'].length)
+#+END_SRC
+
+#+RESULTS:
+: - 2
+
+

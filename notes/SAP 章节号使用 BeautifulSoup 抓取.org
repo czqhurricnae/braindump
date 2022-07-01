@@ -1,0 +1,42 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/SAP 章节号使用 BeautifulSoup 抓取/")); -*-
+:PROPERTIES:
+:ID:       963A1A18-E517-4FA4-B872-C4414B8D8FB1
+:END:
+
+#+DATE: <2020-03-20 Fri 15:04>
+#+TITLE: SAP 章节号使用 BeautifulSoup 抓取
+
+* 脚本
+
+  #+BEGIN_SRC python
+  # -*- coding: utf-8 -*-
+  import unicodecsv as csv
+  import io
+  import re
+  from bs4 import BeautifulSoup, NavigableString
+
+  if __name__ == '__main__':
+      file = open('/Users/c/SAP.html').read()
+      soup = BeautifulSoup(file, 'html.parser')
+      tr_list = soup.find_all('tr')
+      with open('/Users/c/SAP.csv', 'w+') as f:
+          writer = csv.writer(f)
+          for tr in tr_list:
+              data = []
+              for tag in tr.descendants:
+                  if isinstance(tag, NavigableString):
+                      pass
+                  elif tag.name == u'span':
+                      data.append(re.sub(r'\s{2,}', ' ', tag.string).lower())
+              writer.writerow(data)
+  #+END_SRC
+
+** 正则
+[[file:./static/SAP 章节号使用 BeautifulSoup 抓取/SAP 章节号爬取结果后正则匹配.png]]
+
+* 附件
+[[file:./static/SAP 章节号使用 BeautifulSoup 抓取/SAP.py][SAP.py]]
+
+[[file:./static/SAP 章节号使用 BeautifulSoup 抓取/SAP.html][SAP.html]]
+
+[[file:./static/SAP 章节号使用 BeautifulSoup 抓取/SAP.csv][SAP.csv]]

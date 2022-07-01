@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/CDCCL/")); -*-
+:PROPERTIES:
+:ID:       D1E6298B-D83A-4DC8-ACC9-7B62AD7D67E5
+:ROAM_ALIASES: 关键设计构型控制限制 "Critical Design Control Configuration Limitations"
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 20:35>
+#+TITLE: CDCCL
+#+ROAM_KEY:
+
+它没有间隔，但设立了构型限制以维持并保护 CDCCL 中定义的“关键设计特性”。
+CDCCL 也包括在飞机上设置关键特性信息标牌的要求。
+在持续适航维修方案中，必须包括全部的适航性限制项目，并对这些项目加以特殊标志，按规定管理，严格执行。
+同时进行检查或其它维修作业时，应按照适航性限制规定进行检查或维修。
+严格按照 Boeing AMM 或 CMM 执行所有的维护工作，工作者就能符合 CDCCL 的要求。
+

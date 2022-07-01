@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/一致性矩阵/")); -*-
+:PROPERTIES:
+:ID:       B2BB3670-BFC8-4383-A227-B588C8EDC056
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-13 Sun 00:50>
+#+TITLE: 一致性矩阵
+
+#+ROAM_KEY:
+
+
+以矩阵 A 的元素满足 $\alpha_{i j} \cdot \alpha_{j k} = \alpha_{i k}$ ，则称矩阵 A 具有一致性（Consistency）。

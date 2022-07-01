@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/核心机导线 MW0325 MW0326 与风扇导线 MW0315 MW0316 相连的支架/")); -*-
+:PROPERTIES:
+:ID:       08EF2E4F-FA8A-4ED5-B171-DE11130A190B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-11-15 Sun 18:14>
+#+TITLE: 核心机导线 MW0325 MW0326 与风扇导线 MW0315 MW0316 相连的支架
+
+[[file:./static/核心机导线 MW0325 MW0326 与风扇导线 MW0315 MW0316 相连的支架/2020-11-15_18-14-59_22372.jpeg]]
+
+MW0315/MW0316 上标有 MW0325/MW0326 的标牌，指的是其导线的此处与 MW0325/MW0326 相连。

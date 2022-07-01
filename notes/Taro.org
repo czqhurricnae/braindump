@@ -1,0 +1,52 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Taro/")); -*-
+:PROPERTIES:
+:ID:       AFD314C6-DA46-470E-8179-8B1B97A4FE6A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-09 Tue 05:36>
+#+TITLE: Taro
+
+* 生命周期对应关系
+程序生命周期与小程序生命周期对应关系：
+| 程序               | 小程序                                |
+|--------------------+---------------------------------------|
+| componentWillMount | onLaunch                              |
+| componentDidMount  | onLaunch 在 componentWillMount 后执行 |
+| componentDidShow   | onShow                                |
+| componentDidHide   | onHide                                |
+
+页面生命周期与小程序页面生命周期对应关系：
+| 程序                 | 小程序   | 如何触发                    |
+|----------------------+----------+-----------------------------|
+| componentWillMount   | onLoad   |                             |
+| componentDidShow     | onShow   |                             |
+| componentDidMount    | onReady  |                             |
+| componentWillUnmount | onUnload | redirectTo，navigateBack    |
+| componentDidHide     | onHide   | navigateTo，tab 栏切换页面  |
+|                      |          |                             |
+
+* 在 Taro 中可以通过任何一个生命周期或函数通过 ~this.$router.params~ 来访问当前页面的路径和 query
+
+[[file:./static/Taro/2019-12-11_21-32-42_20181102151811362.png]]
+
+[[file:./static/Taro/2019-12-11_21-59-53_2018110216054352.png.png]]
+
+* 小程序中的一些专属方法
+| 方法                 | 作用                                  |
+|----------------------+---------------------------------------|
+| onPullDownRefresh    | 页面相关事件处理函数–监听用户下拉动作 |
+| onReachBottom        | 页面上拉触底事件的处理函数            |
+| onShareAppMessage    | 用户点击右上角转发                    |
+| onPageScroll         | 页面滚动触发事件的处理函数            |
+| onTabItemTap         | 当前是 tab 页时， 点击 tab 时触发     |
+| componentWillPreload | 预加载，只在微信小程序中可用          |
+
+* 组件可以统一放到 src/components 目录下
+与页面解构一样，每一个组件包含一个 js 文件和样式文件。组件没有 config， 只有页面才有，组件多一个 componentWillReceiveProps 生命周期函数。
+
+[[file:./static/Taro/2019-12-11_21-53-46_20181102154257736.png.png]]
+
+* 不能在 ~componentWillUpdate/componentDidUpdate/render~ 中调用 ~this.setState~
+* 组件中最好定义 ~defaultProps~
+
+[[file:./static/Taro/2019-12-11_22-01-06_20181212105717557.png.png]]

@@ -1,0 +1,2788 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/JavaScript-basic/")); -*-
+:PROPERTIES:
+:ID:       C1147128-6A51-4964-BF3C-09692C2156D8
+:END:
+#+DATE: <2020-09-29 Tue 19:23>
+#+TITLE: JavaScript-basic
+
+* 定义变量
+
+#+BEGIN_SRC js
+  var var1 = 3;
+  var var2;
+
+  if (var1 == undefined) {
+      console.log("var1 is undefin");
+  }
+  console.dir(var1);
+
+  if (var2 == undefined) {
+      console.log("var2 is undefinded");
+  }
+  console.dir(var2);
+#+END_SRC
+
+#+RESULTS:
+: 3
+: var2 is undefinded
+: undefined
+: undefined
+如果一个变量只定义但未初始化, 就是 undefined.
+
+* control flow for loop
+
+#+BEGIN_SRC js
+var myNumbers = [3, 4, 5];
+for (var i in myNumbers) {
+    console.log(i, myNumbers[i]);
+}
+
+var man = {
+    hands : 2,
+    legs : 2,
+    heads : 1
+};
+
+for (var i in man) {
+    console.log(i, ":", man[i]);
+}
+
+for (var i in man) {
+    if (man.hasOwnProperty(i)) {
+        console.log(i, ":", man[i]);
+    }
+}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+0 3
+1 4
+2 5
+hands : 2
+legs : 2
+heads : 1
+hands : 2
+legs : 2
+heads : 1
+undefined
+#+end_example
+
+第一个 for 循环例子是 antipattern 的, 没有检查 hasOwnProperty().
+
+* control flow throw
+#+BEGIN_SRC html
+<!DOCType html public "-//w3c//dtd html 4.01 transitional//en" "http://www.w3.org/tr/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<title></title>
+</head>
+<body>
+    <h3>open javascript console by pressing f12 key</h3>
+    <script type="text/javascript">
+        var x = prompt("enter a number between 5 and 10:", "");
+        try {
+            if (x > 10) {
+                throw "err1";
+            } else if (x < 5) {
+                throw "err2";
+            } else if (isnan(x)) {
+                throw "err3";
+            }
+        } catch (err) {
+            if (err == "err1") {
+                document.write("error! the value is too high.");
+            }
+            if (err == "err2") {
+                document.write("error! the value is too low.");
+            }
+            if (err == "Err3") {
+                document.write("Error! The value is not a number.");
+            }
+        }
+    </script>
+</body>
+</html>
+#+END_SRC
+* control flow try catch
+
+  #+BEGIN_SRC js
+    var txt = ""
+    function message() {
+        try {
+            addAlert("Welcome guest!");
+        } catch (err) {
+            txt += "There was an error on this page.\n";
+            txt += "Error description: " + err.message;
+            txt += "\nClick OK to continue.\n\n";
+            console.log(txt);
+        }
+    }
+    message();
+  #+END_SRC
+
+  #+RESULTS:
+  : There was an error on this page.
+  : Error description: addAlert is not defined
+  : Click OK to continue.
+  :
+  :
+  : undefined
+
+* function definitions
+
+#+BEGIN_SRC js
+// #1: Declare a named function
+function myNamedFunction(something) {
+    console.log(something);
+}
+
+// #2: Create an anonymous function through function expression
+// and assign it to myFunction1 variable.
+var myFunction1 = function (something) {
+    console.log(something);
+}
+
+// Inspect the owning object of the functions,
+// the global object in this example since the
+// functions are declared in the global scope.
+console.dir(this);
+
+var myVar = myNamedFunction;
+
+// #3: Create a function through Function constructor
+var myFunction3 = new Function("x", "y", "return x+y");
+
+// Invoke functions
+myNamedFunction("Life is good!");
+myFunction1("Hello!");
+myVar("Goodbye!");
+console.log(myFunction3(3, 5));
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{ DTRACE_NET_SERVER_CONNECTION: [Function],
+  DTRACE_NET_STREAM_END: [Function],
+  DTRACE_HTTP_SERVER_REQUEST: [Function],
+  DTRACE_HTTP_SERVER_RESPONSE: [Function],
+  DTRACE_HTTP_CLIENT_REQUEST: [Function],
+  DTRACE_HTTP_CLIENT_RESPONSE: [Function],
+  global: [Circular],
+  process:
+   process {
+     title: 'node',
+     version: 'v6.11.3',
+     moduleLoadList:
+      [ 'Binding contextify',
+        'Binding natives',
+        'Binding config',
+        'NativeModule events',
+        'NativeModule util',
+        'Binding uv',
+        'NativeModule buffer',
+        'Binding buffer',
+        'Binding util',
+        'NativeModule internal/util',
+        'NativeModule timers',
+        'Binding timer_wrap',
+        'NativeModule internal/linkedlist',
+        'NativeModule assert',
+        'NativeModule internal/process',
+        'NativeModule internal/process/warning',
+        'NativeModule internal/process/next_tick',
+        'NativeModule internal/process/promises',
+        'NativeModule internal/process/stdio',
+        'Binding constants',
+        'NativeModule path',
+        'NativeModule module',
+        'NativeModule internal/module',
+        'NativeModule vm',
+        'NativeModule fs',
+        'Binding fs',
+        'NativeModule stream',
+        'NativeModule internal/streams/legacy',
+        'NativeModule _stream_readable',
+        'NativeModule internal/streams/BufferList',
+        'NativeModule _stream_writable',
+        'NativeModule _stream_duplex',
+        'NativeModule _stream_transform',
+        'NativeModule _stream_passthrough',
+        'Binding fs_event_wrap',
+        'NativeModule sys',
+        'NativeModule console',
+        'Binding tty_wrap',
+        'NativeModule net',
+        'NativeModule internal/net',
+        'Binding cares_wrap',
+        'Binding tcp_wrap',
+        'Binding pipe_wrap',
+        'Binding stream_wrap' ],
+     versions:
+      { http_parser: '2.7.0',
+        node: '6.11.3',
+        v8: '5.1.281.107',
+        uv: '1.11.0',
+        zlib: '1.2.11',
+        ares: '1.10.1-DEV',
+        icu: '58.2',
+        modules: '48',
+        openssl: '1.0.2l' },
+     arch: 'x64',
+     platform: 'darwin',
+     release:
+      { name: 'node',
+        lts: 'Boron',
+        sourceUrl: 'https://nodejs.org/download/release/v6.11.3/node-v6.11.3.tar.gz',
+        headersUrl: 'https://nodejs.org/download/release/v6.11.3/node-v6.11.3-headers.tar.gz' },
+     argv:
+      [ '/usr/local/bin/node',
+        '/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-80034K8/js-script-8003KIk' ],
+     execArgv: [],
+     env:
+      { DISPLAY: 'cdeMacBook-Air.local',
+        TERM: 'dumb',
+        MANPATH: '',
+        LANG: 'zh_CN.UTF-8',
+        XPC_FLAGS: '0x0',
+        SECURITYSESSIONID: '186a7',
+        USER: 'c',
+        XPC_SERVICE_NAME: 'org.gnu.Emacs.9748',
+        LOGNAME: 'c',
+        PATH: '/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin',
+        SSH_AUTH_SOCK: '/private/tmp/com.apple.launchd.kiDtt421OE/Listeners',
+        Apple_PubSub_Socket_Render: '/private/tmp/com.apple.launchd.N2iUJ8UBjd/Render',
+        SHELL: '/bin/zsh',
+        HOME: '/Users/c',
+        __CF_USER_TEXT_ENCODING: '0x1F5:0x19:0x34',
+        TMPDIR: '/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/',
+        SHLVL: '0',
+        PWD: '/Users/c/JavaScript',
+        OLDPWD: '/Users/c/JavaScript',
+        _: '/usr/local/bin/node' },
+     pid: 8508,
+     features:
+      { debug: false,
+        uv: true,
+        ipv6: true,
+        tls_npn: true,
+        tls_alpn: true,
+        tls_sni: true,
+        tls_ocsp: true,
+        tls: true },
+     _needImmediateCallback: false,
+     execPath: '/usr/local/bin/node',
+     debugPort: 5858,
+     _startProfilerIdleNotifier: [Function: _startProfilerIdleNotifier],
+     _stopProfilerIdleNotifier: [Function: _stopProfilerIdleNotifier],
+     _getActiveRequests: [Function: _getActiveRequests],
+     _getActiveHandles: [Function: _getActiveHandles],
+     reallyExit: [Function: reallyExit],
+     abort: [Function: abort],
+     chdir: [Function: chdir],
+     cwd: [Function: cwd],
+     umask: [Function: umask],
+     getuid: [Function: getuid],
+     geteuid: [Function: geteuid],
+     setuid: [Function: setuid],
+     seteuid: [Function: seteuid],
+     setgid: [Function: setgid],
+     setegid: [Function: setegid],
+     getgid: [Function: getgid],
+     getegid: [Function: getegid],
+     getgroups: [Function: getgroups],
+     setgroups: [Function: setgroups],
+     initgroups: [Function: initgroups],
+     _kill: [Function: _kill],
+     _debugProcess: [Function: _debugProcess],
+     _debugPause: [Function: _debugPause],
+     _debugEnd: [Function: _debugEnd],
+     hrtime: [Function: hrtime],
+     cpuUsage: [Function: cpuUsage],
+     dlopen: [Function: dlopen],
+     uptime: [Function: uptime],
+     memoryUsage: [Function: memoryUsage],
+     binding: [Function: binding],
+     _linkedBinding: [Function: _linkedBinding],
+     _setupDomainUse: [Function: _setupDomainUse],
+     _events:
+      { warning: [Function],
+        newListener: [Function],
+        removeListener: [Function] },
+     _rawDebug: [Function],
+     _eventsCount: 3,
+     domain: null,
+     _maxListeners: undefined,
+     _fatalException: [Function],
+     _exiting: false,
+     assert: [Function],
+     config: { target_defaults: [Object], variables: [Object] },
+     emitWarning: [Function],
+     nextTick: [Function: nextTick],
+     _tickCallback: [Function: _tickCallback],
+     _tickDomainCallback: [Function: _tickDomainCallback],
+     stdout: [Getter],
+     stderr: [Getter],
+     stdin: [Getter],
+     openStdin: [Function],
+     exit: [Function],
+     kill: [Function],
+     argv0: 'node',
+     mainModule:
+      Module {
+        id: '.',
+        exports: {},
+        parent: null,
+        filename: '/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-80034K8/js-script-8003KIk',
+        loaded: false,
+        children: [],
+        paths: [Object] } },
+  Buffer:
+   { [Function: Buffer]
+     poolSize: 8192,
+     from: [Function],
+     alloc: [Function],
+     allocUnsafe: [Function],
+     allocUnsafeSlow: [Function],
+     isBuffer: [Function: isBuffer],
+     compare: [Function: compare],
+     isEncoding: [Function],
+     concat: [Function],
+     byteLength: [Function: byteLength] },
+  clearImmediate: [Function],
+  clearInterval: [Function],
+  clearTimeout: [Function],
+  setImmediate: [Function],
+  setInterval: [Function],
+  setTimeout: [Function],
+  console: [Getter] }
+Life is good!
+Hello!
+Goodbye!
+8
+undefined
+#+end_example
+
+* calling a function via event
+
+#+BEGIN_SRC html
+<input type="button" value="Click me" onclick="displayMessage()">
+#+END_SRC
+
+* JavaScript 类型
+** primitive types
+- Boolean
+- Numberic
+- String
+- Boolean
+- undefined
+- null
+
+#+BEGIN_SRC js :results output list :exports no-eval
+var a;
+
+console.log(a, a===undefined, typeof a === "undefined");
+#+END_SRC
+
+#+RESULTS:
+: - undefined true true
+
+#+BEGIN_SRC js :results output list :exports no-eval
+var a = 1;
+
+console.log(typeof a === 'number');
+#+END_SRC
+
+#+RESULTS:
+: - true
+
+#+BEGIN_SRC js :results output list :exports no-eval
+var a = 'hello, world';
+
+console.log(typeof a === 'string');
+#+END_SRC
+
+#+RESULTS:
+: - true
+
+#+BEGIN_SRC js :results output list :exports no-eval
+var a = false;
+
+console.log(typeof a === 'boolean');
+#+END_SRC
+
+#+RESULTS:
+: - true
+
+
+判断对象是不是 ~null~ 类型, 使用 ~typeof a === b~ 无法满足需求.
+直接使用 ~===~ 进行判断.
+#+BEGIN_SRC js :results output list :exports no-eval
+var a = null;
+
+console.log(typeof a, a === null);
+#+END_SRC
+
+#+RESULTS:
+: - object true
+
+The primitive types are treated by JavaScript as value types and when you pass them around they go as values.
+** Complex types
+- Array
+- Object
+- Function
+
+A complex type is an object, be it either standard or custom mode.
+Its home is the heap and goes everywhere by reference.
+注意: 原始类型和复合类型传递值的不同之处, 一个是传递值, 一个是传递引用.
+
+#+DOWNLOADED: /var/folders/2h/_7667pjd23s4wd9mpdwy401w0000gn/T/screenshot.jpg @ 2019-10-21 22:22:39
+[[file:./static/JavaScript-basic/screenshot_2019-10-21_22-22-39.jpg]]
+
+* global object
+In browsers, the window object is the global object.
+All global variables and functions become properties of the global object.
+
+* create javascript object
+** create javascript object as a Hash Literal
+
+#+BEGIN_SRC js
+ var personObj = {
+     firstname: "John",
+     lastname: "Doe",
+     age: 50,
+     tellYourAge: function() {
+         console.log("The age is " + this.age);
+     },
+     tellSomething: function(something) {
+         console.log(something);
+     }
+ }
+
+ personObj.tellYourAge();
+ personObj.tellSomething("Life is good!");
+#+END_SRC
+
+#+RESULTS:
+: The age is 50
+: Life is good!
+: undefined
+
+* function object as first class object
+** function object can be assigned to a variable
+** function object can be passed as an argument to another function
+
+   #+BEGIN_SRC js
+     function myMethod(x) {
+         console.log("mymethod is invoked with " + x);
+     }
+
+     function yourMethod(y) {
+         y("Function as an argument");
+     }
+
+     yourMethod(myMethod);
+   #+END_SRC
+
+   #+RESULTS:
+   : mymethod is invoked with Function as an argument
+   : undefined
+
+** function object can be returned as a return value
+   #+BEGIN_SRC js
+     function myMethod(x) {
+         console.log("mymethod is invoked with " + x);
+     }
+
+     function hisMethod() {
+         return myMethod;
+     }
+
+     var z = hisMethod();
+     z("Function as a return value");
+
+     var y = hisMethod;
+     y("Function as a return value");
+     console.log(y);
+
+   #+END_SRC
+
+   #+RESULTS:
+   : mymethod is invoked with Function as a return value
+   : [Function: hisMethod]
+   : undefined
+
+* self-invoking function
+** what is a self-invoking function
+self-invoking function lets you define and invoke a function
+at the same time.
++ self-invoking function is typically anonymous (because you
+don't need to reference it by name).
++ sometimes called immediately-invoked function.
+
+#+BEGIN_SRC js
+  // Self-invoking anonymous function-define and invoke function
+  // at the same time
+  (function(something) {
+      console.log("Hello, " + something);
+  })("World!");
+#+END_SRC
+
+#+RESULTS:
+: Hello, World!
+: undefined
+
+** usage 1: to substitute "setInterval(...)"
+
+   #+BEGIN_SRC js
+     var counter = 0;
+
+     (function doSomething() {
+         console.log(counter++);
+
+         setTimeout(doSomething, 3000);
+     })();
+   #+END_SRC
+
+   #+RESULTS:
+** usage 2: to avoid global variables conflict
+problem colde: $ is used both in jquery.js and prototype.js
+code that solves global conflict of $ between jquery.js and prototype.js
+
+#+BEGIN_SRC js
+  <script type="text/javascript" src="jquery-1.7.2.js"></script>
+  <script type="text/javascript" src="prototype.js"></script>
+  <script type="text/javascript">>
+      //Create a plugin-there is no $ namespace conflict with
+      //prototype.js since $ is used in private scope here.
+      (function($) {
+          $.fn.sayGreeting = function() {
+              this.prepend("Hello, ");
+          };
+      })(jQuery);
+#+END_SRC
+
+#+RESULTS:
+
+* function scope
+
+  #+BEGIN_SRC js
+    // Declare a variable in global scope
+    var myVar;
+
+    function myFunction() {
+        myVar = "I am visiable!";
+    }
+
+    console.log("myVar: " + myVar);
+    console.log("this.myVar: " + myVar);
+    console.log("this.myFunction: " + myFunction);
+
+    console.log("----------");
+
+    myFunction();
+
+    console.log("myVar: " + myVar);
+    console.log("this.myVar: " + myVar);
+    console.log("this.myFunction: " + myFunction);
+
+  #+END_SRC
+
+  #+RESULTS:
+  #+begin_example
+  myVar: undefined
+  this.myVar: undefined
+  this.myFunction: function myFunction() {
+      myVar = "I am visiable!";
+  }
+  ----------
+  myVar: I am visiable!
+  this.myVar: I am visiable!
+  this.myFunction: function myFunction() {
+      myVar = "I am visiable!";
+  }
+  undefined
+  #+end_example
+
+  #+BEGIN_SRC js
+    // Declare a variable in global scope
+    var myVar;
+
+    function myFunction() {
+        var myVar = "I am visiable!";
+    }
+
+    console.log("myVar: " + myVar);
+    console.log("this.myVar: " + myVar);
+    console.log("this.myFunction: " + myFunction);
+
+    console.log("----------");
+
+    myFunction();
+
+    console.log("myVar: " + myVar);
+    console.log("this.myVar: " + myVar);
+    console.log("this.myFunction: " + myFunction);
+  #+END_SRC
+
+  #+RESULTS:
+  #+begin_example
+  myVar: undefined
+  this.myVar: undefined
+  this.myFunction: function myFunction() {
+      var myVar = "I am visiable!";
+  }
+  ----------
+  myVar: undefined
+  this.myVar: undefined
+  this.myFunction: function myFunction() {
+      var myVar = "I am visiable!";
+  }
+  undefined
+  #+end_example
+注意这两个例子中, myFunction() 函数中 myVar 变量前一个有加关键字 var, 一个没有,
+因此产生的差异.
+
+#+BEGIN_SRC js
+var myVar = function myFunction() {
+
+}
+try {
+    console.log("this.myFunction" + myFunction);
+} catch (err) {
+    console.log(err);
+}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+ReferenceError: myFunction is not defined
+    at /private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-596V_N/js-script-596WfA:6:37
+    at Object.<anonymous> (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-596V_N/js-script-596WfA:10:2)
+    at Module._compile (module.js:570:32)
+    at Object.Module._extensions..js (module.js:579:10)
+    at Module.load (module.js:487:32)
+    at tryModuleLoad (module.js:446:12)
+    at Function.Module._load (module.js:438:3)
+    at Module.runMain (module.js:604:10)
+    at run (bootstrap_node.js:389:7)
+    at startup (bootstrap_node.js:149:9)
+undefined
+#+end_example
+
+为什么会出现 myFunction 是 undefined 是因为在全局对象中是没有'myFunction'这个属性的.
+
+* closure
+
+#+BEGIN_SRC js
+  function foo() {
+      var x = 10;
+      function bar() {
+          console.log(x);
+      }
+      return bar;
+  }
+
+  // "foo" returns inner function
+  // "bar" and this returned function can
+  // access variable "x", which is set to 10
+
+  var returnedFunction = foo();    // outer function foo() gets executed
+
+  // let's define a global variable "x"
+  var x = 20
+
+  // execution of the returned function
+  returnedFunction();
+#+END_SRC
+
+#+RESULTS:
+: 10
+: undefined
+
+When the inner function bar() is declared, which occurs
+when outer function foo() gets executed, a closure is formated,
+in which when the inner function bar() gets executed, it can
+access variable x that is declared in the same scope of bar().
+** usage 1
+JavaScript doesn't have special syntax for private members, but you can make variables private using a closure.
+
+#+BEGIN_SRC js
+  function Person() {
+      // private properties and methods
+      var name = "jPassion";
+      var myPrivateGetAgeMethod = function() {
+          return 20;
+      }
+
+      this.getPersonAllInfo = function() {
+          return name + "is " + myPrivateGetAgeMethod();
+      }
+  }
+
+  var myPerson = new Person();
+
+  console.dir(myPerson);
+
+  // "name" is undefined, it's private
+  console.log(myPerson.name);
+
+  // "myPrivateGetAgeMethod" is undefined, it's private
+  try {
+      console.log(myPerson.myPrivateGetAgeMethod());
+  } catch(err) {
+      console.log(err);
+  }
+
+  // public method has access to private members
+  console.log(myPerson.getPersonAllInfo());
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+Person { getPersonAllInfo: [Function] }
+undefined
+TypeError: myPerson.myPrivateGetAgeMethod is not a function
+    at /private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-596V_N/js-script-596x7H:23:26
+    at Object.<anonymous> (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-596V_N/js-script-596x7H:30:2)
+    at Module._compile (module.js:570:32)
+    at Object.Module._extensions..js (module.js:579:10)
+    at Module.load (module.js:487:32)
+    at tryModuleLoad (module.js:446:12)
+    at Function.Module._load (module.js:438:3)
+    at Module.runMain (module.js:604:10)
+    at run (bootstrap_node.js:389:7)
+    at startup (bootstrap_node.js:149:9)
+jPassionis 20
+undefined
+#+end_example
+
+name and myPrivateGetAgeMethod properties can not be
+accessed directory.
+** usage 2
+
+   #+BEGIN_SRC html
+     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+     <html>
+     <head>
+         <title></title>
+     </head>
+     <body>
+         <h3>(Press F12 to display console.) Click one of the links below.
+         </h3>
+         <script type="text/javascript">
+             // Each "a" element gets the correct text,
+             // i.e. "Link 0", "Link 1" and so on. But whichever
+             // link you click, it always alerts the number "5".
+             // Why? (The reason is explained below.)
+
+             // Declare a outer function.  Note that anonymous
+             // inner functions are being registered as event
+             // handlers for "link" (see line #29)
+             function addLinksExample1() {
+                 for (var i = 0, link; i < 5; i++) {
+
+                     // Create an anchor and add it to the <body> element
+                     link = document.createElement("a");
+                     link.innerHTML = "LinkWithoutClosure " + i + "<br/>";
+
+                     // function is defined - in other words, a function object is
+                     // created.
+                     link.onclick = function () {
+                         alert(i);
+                         console.log(i);
+                     };
+                     document.body.appendChild(link);
+                 }
+                 // When addLinksWithoutClosure() outer
+                 // function's execution is done, the value
+                 // of "i" is set to 5.
+             }
+
+             // Invoke the outer function.  Now the inner function
+             // is defined with its function scope - the variable i,
+             // which is set to 5.  When link is clicked, the inner
+             // function gets executed with value of 5.
+             addLinksExample1();
+         </script>
+
+         <br/>
+
+         <script type="text/javascript">
+             //
+             // Use Closure to the solve the problem above
+             //
+
+             function addLinksExample2() {
+                 for (var i = 0, link; i < 5; i++) {
+                     link = document.createElement("a");
+                     link.innerHTML = "LinkWithClosure " + i + "<br/>";
+
+                     // Note that self-invoking function is used here.
+                     // The correct value of "i" is passed to the
+                     // self-invoking "function(value){..}", which
+                     // provides the correct value to its own
+                     // internal function.
+                     link.onclick = (function (value) {
+                         return function () {
+                             alert(value);
+                             console.log(i);
+                         }
+                     })(i);
+                     document.body.appendChild(link);
+                 }
+             }
+             addLinksExample2();
+         </script>
+     </body>
+     </html>
+   #+END_SRC
+
+* what does "this" refer to?
+#+BEGIN_SRC js
+var personObj = {
+    fisrtname: "John",
+    lastname: "Doe",
+    age: 50,
+    tellYourAge: function() {
+        console.log("The age is " + this.age);
+        console.dir(this);
+    }
+}
+
+console.log(personObj.fisrtname);
+personObj.tellYourAge();
+#+END_SRC
+
+#+RESULTS:
+: John
+: The age is 50
+: { fisrtname: 'John',
+:   lastname: 'Doe',
+:   age: 50,
+:   tellYourAge: [Function: tellYourAge] }
+: undefined
+
+In JavaScript, "this" refers to the object that a function is a method of.
+In global scope, it refers to global object.
+
+* inheritance
+#+BEGIN_SRC js
+  var a = {
+      x: 10,
+      calculate: function(z) {
+          return this.x + this.y + z;
+      }
+  }
+
+  var b = {
+      y: 20,
+      __proto__: a
+  }
+
+  var c = {
+      y:30,
+      __proto__: a
+  }
+
+  console.log(b.calculate(30));
+  console.log(c.calculate(40));
+#+END_SRC
+
+#+RESULTS:
+: 60
+: 80
+: undefined
+
+** object.getPrototypeOf(obj)
+#+BEGIN_SRC js
+ var a = {
+     x: 10,
+     calculate: function(z) {
+         return this.x + this.y + z;
+     }
+ }
+
+ var b = {
+     y: 20,
+     __proto__: a
+ }
+
+ var c = {
+     y:30,
+     __proto__: a
+ }
+
+ console.log(Object.getPrototypeOf(a));
+ console.log(a.__proto__);
+ console.log(Object.getPrototypeOf(b));
+ console.log(b.__proto__);
+ console.log(Object.getPrototypeOf(c));
+ console.log(c.__proto__);
+#+END_SRC
+
+#+RESULTS:
+: {}
+: {}
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: { x: 10, calculate: [Function: calculate] }
+: undefined
+__proto__ field is not standard event through it is supported by most JavsScript implementations.
+ECMAScript 5+ compliant engines now provide a standard way to access internal prototype of a JavaScript object through getPrototypeOf()
+method.
+
+** ConstructorFunction.prototype
+Besides creation of objects, a constructor function does another useful thing — it automatically sets a "function prototype" object for newly created objects.
+- Thisfunction prototype object is stored in the <Constructor Function>.prototype property
+- This is different from__proto__ property
+When a JavaScript object is created from the Constructor Function, the __proto__ property of the resulting object points to the function prototype object
+- In other words,any properties and methods added to the function prototype object are available to the resulting object
+
+#+BEGIN_SRC js
+  // Function constructor
+  function Foo(y) {
+      this.y = y;
+  }
+
+  // Add property "x" to function prototype
+  Foo.prototype.x = 10;
+
+  // Add method "calculate" to function prototype
+  Foo.prototype.calculate = function(z) {
+      return this.x + this.y + z;
+  }
+
+  // Now create our "b" and "c" objects are created from "Foo"
+  var b = new Foo(20);
+  var c = new Foo(30);
+
+  // Call the inherited method
+  console.log(b.calculate(30));
+  console.log(c.calculate(40));
+
+  console.dir(Foo);
+  console.dir(Foo.prototype);
+  console.log(Foo.prototype.__proto__ == Object.prototype);
+  console.log(Foo.__proto__ == Function.prototype);
+  console.log(Foo.__proto__);
+  console.log(Foo.__proto__.__proto__ == Object.prototype);
+  console.log(Foo.__proto__.__proto__);
+  console.log(Foo.__proto__.__proto__.__proto__ == null);
+  console.log(Foo.__proto__.__proto__.__proto__);
+  console.log(b.__proto__);
+  console.log(c.__proto__);
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+60
+80
+[Function: Foo]
+Foo { x: 10, calculate: [Function] }
+true
+true
+[Function]
+true
+{}
+true
+null
+Foo { x: 10, calculate: [Function] }
+Foo { x: 10, calculate: [Function] }
+undefined
+#+end_example
+
+[[file:./static/JavaScript-basic/javascript_inheritance_1.png]]
+
+[[file:./static/JavaScript-basic/javascript_inheritance.png]]
+
+修改 Foo() 构造器中"this.y = y" 为"var y = y", 看看结果有何不同?
+#+BEGIN_SRC js
+  // Function constructor
+  function Foo(y) {
+      var y = y;
+  }
+
+  // Add property "x" to function prototype
+  Foo.prototype.x = 10;
+
+  // Add method "calculate" to function prototype
+  Foo.prototype.calculate = function(z) {
+      return this.x + this.y + z;
+  }
+
+  // Now create our "b" and "c" objects are created from "Foo"
+  var b = new Foo(20);
+  var c = new Foo(30);
+
+  // Call the inherited method
+  console.log(b.calculate(30));
+  console.log(c.calculate(40));
+
+  console.log(Foo.prototype);
+  console.log(Foo.__proto__);
+  console.log(Foo.__proto__.__proto__);
+  console.log(Foo.__proto__.__proto__.__proto__);
+  console.log(b.__proto__);
+  console.log(c.__proto__);
+
+  console.log(b.y);
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+NaN
+NaN
+Foo { x: 10, calculate: [Function] }
+[Function]
+{}
+null
+Foo { x: 10, calculate: [Function] }
+Foo { x: 10, calculate: [Function] }
+undefined
+undefined
+#+end_example
+可见"b.calculate(30), c.calculate(40)" 的结果都是"NaN".
+因为"b.y" 是"undefined".
+这就关系到"scope" 作用域的概念了, 继续修改"Foo()" 构造函数.
+#+BEGIN_SRC js
+
+  // Function constructor
+  function Foo(y) {
+      var y = y;
+      this.calculate = function(z) {
+          return this.x + y + z;
+      }
+  }
+
+  // Add property "x" to function prototype
+  Foo.prototype.x = 10;
+
+  // Add method "calculate" to function prototype
+  // Foo.prototype.calculate = function(z) {
+  //     return this.x + this.y + z;
+  // }
+
+  // Now create our "b" and "c" objects are created from "Foo"
+  var b = new Foo(20);
+  var c = new Foo(30);
+
+  // Call the inherited method
+  console.log("b.y: " + b.y);
+  console.log(b.calculate(30));
+  console.log(c.calculate(40));
+
+  console.log(Foo.prototype);
+  console.log(Foo.__proto__);
+  console.log(Foo.__proto__.__proto__);
+  console.log(Foo.__proto__.__proto__.__proto__);
+  console.log(b.__proto__);
+  console.log(c.__proto__);
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+b.y: undefined
+60
+80
+Foo { x: 10 }
+[Function]
+{}
+null
+Foo { x: 10 }
+Foo { x: 10 }
+undefined
+#+end_example
+
+
+#+BEGIN_SRC js
+  function SuperType() {
+      this.property = true;
+  }
+
+  function SubType() {
+      this.subproperty = false;
+  }
+
+  SuperType.prototype.getSuperValue = function() {
+      return this.property;
+  }
+
+  SubType.prototype.getSubValue = function() {
+      return this.subproperty;
+  }
+
+  SubType.prototype = new SuperType();
+
+  var instance = new SubType();
+  console.log(instance.getSuperValue());
+  console.log(instance instanceof Object);
+  console.log(instance instanceof SuperType);
+  console.log(instance instanceof SubType);
+
+  console.log(Object.prototype.isPrototypeOf(instance));
+  console.log(SuperType.prototype.isPrototypeOf(instance));
+  console.log(SubType.prototype.isPrototypeOf(instance));
+#+END_SRC
+
+#+RESULTS:
+: true
+: true
+: true
+: true
+: true
+: true
+: true
+: undefined
+
+* 非捕获组(nocapturing)
+#+BEGIN_SRC js :results output list :exports no-eval
+var url = "http://www.ora.com:80/goodparts?q#fragment";
+var parse_url = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+var result = parse_url.exec(url);
+console.log(result);
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+- [
+- 'http://www.ora.com:80/goodparts?q#fragment',
+- 'http',
+- '//',
+- 'www.ora.com',
+- '80',
+- 'goodparts',
+- 'q',
+- 'fragment',
+- index: 0,
+- input: 'http://www.ora.com:80/goodparts?q#fragment',
+- groups: undefined
+- ]
+#+end_example
+
+非捕获性分组定义子表达式可以作为整体被修饰但是子表达式匹配结果不会被存储.
+非捕获性分组通过将子表达式放在"?:" 符号后.
+
+#+BEGIN_SRC js :results values list :exports no-eval
+str = "img1.jpg,img2.jpg,img3.bmp";
+reg = /(?:\w*)(?=\.gif)/;
+arr_m = str.match(reg);//arr_m = ["img1","img2"]
+#+END_SRC
+* es6
+** 数据类型
+JavaScript 中的类型应该包括这些:
+Number(数字)
+String(字符串)
+Boolean(布尔)
+Symbol(符号)(第六版新增)
+Object(对象):
+  Function(函数)
+  Array(数组)
+  Date(日期)
+  RegExp(正则表达式)
+Null(空)
+Undefined(未定义)
+JavaScript 还有一种内置 Error(错误) 类型.
+
+JavaScript 中的字符串是一串 Unicode 字符序列.
+这对于那些需要和多语种网页打交道的开发者来说是个好消息.
+更准确地说, 它们是一串 UTF-16 编码单元的序列, 每一个编码单元由一个 16 位二进制数表示.
+每一个 Unicode 字符由一个或两个编码单元来表示.
+** var 和 let
+#+BEGIN_SRC js
+function setUp(){
+    console.log(x);
+    let x = 100;
+    console.log(x);
+}
+
+setUp()
+#+END_SRC
+
+#+RESULTS:
+:ReferenceError: x is not defined
+:    at setUp (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-676r5Q/js-script-676cUF:2:17)
+:    at Object.<anonymous> (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-676r5Q/js-script-676cUF:7:1)
+:    at Module._compile (module.js:570:32)
+:    at Object.Module._extensions..js (module.js:579:10)
+:    at Module.load (module.js:487:32)
+:    at tryModuleLoad (module.js:446:12)
+:    at Function.Module._load (module.js:438:3)
+:    at Module.runMain (module.js:604:10)
+:    at run (bootstrap_node.js:389:7)
+:    at startup (bootstrap_node.js:149:9)
+
+#+BEGIN_SRC js
+function setUp(){
+    console.log(x);
+    var x = 100;
+    console.log(x);
+}
+
+setUp()
+#+END_SRC
+
+#+RESULTS:
+: undefined
+: 100
+: undefined
+
+#+BEGIN_SRC js
+function setUp(){
+    let x;
+    console.log(x);
+    x = 100;
+    console.log(x);
+}
+
+setUp()
+#+END_SRC
+
+#+RESULTS:
+: - undefined
+: - 100
+
+var 是 function scope, let 是 block scope.
+
+#+BEGIN_SRC js
+function setUp() {
+    for (var i = 0; i < 100; i++) {
+        continue;
+    }
+    console.log(i);
+}
+setUp()
+#+END_SRC
+
+#+RESULTS:
+: 100
+
+#+BEGIN_SRC js
+function setUp() {
+    for (let i = 0; i < 100; i++) {
+        continue;
+    }
+    console.log(i);
+}
+setUp()
+#+END_SRC
+
+#+RESULTS:
+:ReferenceError: i is not defined
+:    at setUp (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-676r5Q/js-script-676RTB:5:17)
+:    at Object.<anonymous> (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-676r5Q/js-script-676RTB:7:1)
+:    at Module._compile (module.js:570:32)
+:    at Object.Module._extensions..js (module.js:579:10)
+:    at Module.load (module.js:487:32)
+:    at tryModuleLoad (module.js:446:12)
+:    at Function.Module._load (module.js:438:3)
+:    at Module.runMain (module.js:604:10)
+:    at run (bootstrap_node.js:389:7)
+:    at startup (bootstrap_node.js:149:9)
+
+** const
+#+BEGIN_SRC js :results values list :exports no-eval
+const y = 50;
+y = 100;
+#+END_SRC
+
+#+RESULTS:
+:TypeError: Assignment to constant variable.
+:    at /private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-676r5Q/js-script-676F8Z:3:3
+:    at Object.<anonymous> (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-676r5Q/js-script-676F8Z:4:2)
+:    at Module._compile (module.js:570:32)
+:    at Object.Module._extensions..js (module.js:579:10)
+:    at Module.load (module.js:487:32)
+:    at tryModuleLoad (module.js:446:12)
+:    at Function.Module._load (module.js:438:3)
+:    at Module.runMain (module.js:604:10)
+:    at run (bootstrap_node.js:389:7)
+:    at startup (bootstrap_node.js:149:9)
+
+对使用 const 的对象, 可以增加或改变其内部属性, 因为内部属性不是 const.
+
+#+BEGIN_SRC js
+const particle = {
+    x : 50,
+    y : 100,
+}
+particle.z = 150;
+console.log(particle.z)
+particle.x =90;
+console.log(particle.x)
+#+END_SRC
+
+#+RESULTS:
+: 150
+: 90
+: undefined
+
+** =>
+#+BEGIN_SRC js
+class Counter {
+    constructor(start, time) {
+        this.count = start;
+        this.wait = time;
+        setInterval(countIt, this.wait);
+    }
+
+    countIt() {
+        this.count ++;
+        console.log(this.count);
+    }
+}
+
+let counter = new Counter(100, 1000);
+#+END_SRC
+
+#+RESULTS:
+: VM373:5 Uncaught ReferenceError: countIt is not defined
+:     at new Counter (<anonymous>:5:21)
+:     at <anonymous>:14:15
+
+#+BEGIN_SRC js
+class Counter {
+    constructor(start, time) {
+        this.count = start;
+        this.wait = time;
+        setInterval(countIt, this.wait);
+        function countIt() {
+            this.count ++;
+            console.log(this.count);
+        }
+    }
+}
+
+let counter = new Counter(100, 1000);
+#+END_SRC
+
+#+RESULTS:
+
+结果是 NaN, 说明 this.count 的值没有被读取到.
+看看 function countIt 中 this 指向什么?
+
+#+BEGIN_SRC js
+class Counter {
+    constructor(start, time) {
+        this.count = start;
+        this.wait = time;
+        setInterval(countIt, this.wait);
+        function countIt() {
+            console.log(this);
+        }
+    }
+}
+
+let counter = new Counter(100, 1000);
+
+#+END_SRC
+
+#+RESULTS:
+[[file:./static/JavaScript-basic/setInterval_functions_this_point_to.png]]
+
+指向全局变量 Window.
+
+在 setInterval 中使用匿名函数.
+#+BEGIN_SRC js
+class Counter {
+    constructor(start, time) {
+        this.count = start;
+        this.wait = time;
+        setInterval(function () {
+            this.count ++;
+            console.log(this.count);
+        }, this.wait);
+    }
+}
+
+let counter = new Counter(100, 1000);
+#+END_SRC
+
+#+RESULTS:
+
+结果还是 NaN.
+
+#+BEGIN_SRC js
+class Counter {
+    constructor(start, time) {
+        this.count = start;
+        this.wait = time;
+        setInterval( () => {
+            this.count ++;
+            console.log(this.count);
+        }, this.wait);
+    }
+}
+
+let counter = new Counter(100, 1000);
+
+#+END_SRC
+:101
+:102
+
+能够正确输出结果. 可见 => 的作用是在 setInterval 中的回调函数中正确保存上下文变量.
+
+#+BEGIN_SRC js
+class Counter {
+    constructor (start, wait) {
+        this.count = start;
+        this.wait = wait;
+    }
+
+    countIt() {
+        this.count ++;
+        console.log(this.count);
+    }
+
+    start() {
+        setInterval(function() {this.countIt();}, this.wait);
+    }
+}
+
+const counter = new Counter(100, 1000);
+counter.start()
+#+END_SRC
+
+修改如下也能得到正确结果.
+
+#+BEGIN_SRC js :results values list :exports no-eval
+class Counter {
+    constructor (start, wait) {
+        this.count = start;
+        this.wait = wait;
+    }
+
+    countIt() {
+        this.count ++;
+        console.log(this.count);
+    }
+
+    start() {
+        setInterval(() => {this.countIt();}, this.wait);
+    }
+}
+
+const counter = new Counter(100, 1000);
+counter.start()
+#+END_SRC
+** for ... of loop
+
+#+BEGIN_SRC js :results values list :exports no-eval
+for (let bubble of bubbles) {
+   bubble.move();
+   bubble.show();
+}
+#+END_SRC
+** higher order functions
+
+#+BEGIN_SRC js
+function multiplier(factor) {
+    return function (x) {
+        return x * factor;
+    }
+}
+console.log(multiplier(2));
+#+END_SRC
+
+#+RESULTS:
+: - [Function]
+
+使用 arrow 进行重写,
+
+#+BEGIN_SRC js
+function multiplier(factor) {
+    return x => x * factor;
+}
+console.log(multiplier(2));
+
+#+END_SRC
+
+#+RESULTS:
+: - [Function]
+** map()
+
+想要将 fill 作为一个 higher order function 使用, 传入一个生成随机数函数, 让其为数组的每个元素
+随机生成一个数字.
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+vals.fill(Math.floor(Math.random() * 10));
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+: - [7 (\, 7) (\, 7) (\, 7) (\, 7) (\, 7) (\, 7) (\, 7) (\, 7) (\, 7)]
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+vals.fill(x => Math.floor(Math.random() * 10));
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+: - [[Function] (\, [Function]) (\, [Function]) (\, [Function]) (\, [Function]) (\, [Function]) (\, [Function]) (\, [Function]) (\, [Function]) (\, [Function])]
+
+使用自调用函数还是未能成功.
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+// self-invoked function
+// vals.fill(() => Math.floor(Math.random() * 10);
+vals.fill((function () {
+    return Math.floor(Math.random() * 10);
+})());
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+: - [4 (\, 4) (\, 4) (\, 4) (\, 4) (\, 4) (\, 4) (\, 4) (\, 4) (\, 4)]
+
+可以看出 fill 并不是一个 higher order function.
+改用 map() 方法.
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+vals.map(Math.floor(Math.random() * 10));
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+:/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-814g-j/js-script-814HSn:3
+:vals.map(Math.floor(Math.random() * 10));
+:     ^
+:
+:TypeError: 7 is not a function
+:    at Array.map (native)
+:    at /private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-814g-j/js-script-814HSn:3:6
+:    at Object.<anonymous> (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-814g-j/js-script-814HSn:5:2)
+:    at Module._compile (module.js:570:32)
+:    at Object.Module._extensions..js (module.js:579:10)
+:    at Module.load (module.js:487:32)
+:    at tryModuleLoad (module.js:446:12)
+:    at Function.Module._load (module.js:438:3)
+:    at Module.runMain (module.js:604:10)
+:    at run (bootstrap_node.js:389:7)
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+// vals = vals.map(() => Math.floor(Math.random() * 10));
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+:org-babel-read: Invalid read syntax: "]"
+
+#+BEGIN_SRC js
+let vals = [4, 8, 1, 2, 9];
+vals = vals.map(() => Math.floor(Math.random() * 10));
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+: - [8 (\, 1) (\, 2) (\, 3) (\, 4)]
+
+必须先填充再使用 map() 方法.
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+vals = vals.fill(0).map(() => Math.floor(Math.random() * 10));
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+: - [7 (\, 7) (\, 3) (\, 0) (\, 9) (\, 5) (\, 4) (\, 3) (\, 3) (\, 8)]
+
+在 map() 方法里使用未经调用的 Math.random() 方法.
+
+#+BEGIN_SRC js
+let vals = new Array(10);
+vals = vals.fill(0).map(Math.random);
+console.log(vals);
+#+END_SRC
+
+#+RESULTS:
+: - [0.18113236110799336 (\, 0.9912790869396235) (\, 0.9754828038086591) (\, 0.8592534221518766) (\, 0.370411694855006) (\, 0.8669747595097035) (\, 0.8259519865163496) (\, 0.7052420086990379) (\, 0.9587686972669456) (\, 0.6814110754938096)]
+** reduce()
+#+BEGIN_SRC js
+let vals = [5, 4, 1, 2, 9];
+let sum = vals.reduce((accumulator, value) => accumulator += value);
+console.log(sum);
+#+END_SRC
+
+#+RESULTS:
+: 21
+
+reduce() 方法除了第一个参数外, 还能传入第二个参数, 此时 accumulator 默认就不是 vals 数组的第一个元素了.
+
+#+BEGIN_SRC js
+   let vals = [5, 4, 1, 2, 9];
+   let sum = vals.reduce((accumulator, value) => {console.log(accumulator); accumulator += value; return accumulator;}, 10);
+   console.log(sum);
+#+END_SRC
+
+#+RESULTS:
+: 10
+: 15
+: 19
+: 20
+: 22
+: 31
+
+reduce() 方法还能用来比较大小.
+
+#+BEGIN_SRC js
+let vals = [5, 4, 1, 2, 9];
+function findMax(acc, val) {
+    if (val > acc) {
+        acc = val;
+    }
+    return acc;
+}
+
+let biggest = vals.reduce(findMax, 10);
+console.log(biggest);
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+换种写法.
+
+#+BEGIN_SRC js
+let vals = [5, 4, 1, 2, 9];
+function findMax(acc, val) {
+    if (val > acc) {
+        return val;
+    }
+    else {
+    return acc;
+   }
+}
+
+let biggest = vals.reduce(findMax, 10);
+console.log(biggest);
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+更简便的写法.
+
+#+BEGIN_SRC js
+let vals = [5, 4, 1, 2, 9];
+let biggest = vals.reduce((acc, val) => (acc > val) ? acc : val, 10);
+console.log(biggest);
+#+END_SRC
+
+#+RESULTS:
+: 10
+
+** this
+
+#+BEGIN_SRC js
+function func(param1, param2){
+   "use strict"
+   console.log(this)
+}
+
+const objA = {
+   test(){
+       console.log(this)
+   }
+}
+func()
+objA.test()
+#+END_SRC
+
+#+RESULTS:
+: undefined
+: { test: [Function: test] }
+
+在 func 函数中 this 的值为 undefined, 这是因为启用了严格模式, 本来是应该返回全局变量, 在浏览器中为 window.
+
+#+BEGIN_SRC js
+const objA = {
+    test(){
+        console.log(this)
+        console.log(this === objA) //true
+        console.log(objA)
+    }
+}
+
+objA.test()
+#+END_SRC
+
+#+RESULTS:
+: { test: [Function: test] }
+: true
+: { test: [Function: test] }
+
+#+BEGIN_SRC js
+var module = {
+  x: 42,
+  getX: function() {
+    return this.x;
+  }
+}
+
+var unboundGetX = module.getX;
+console.log(unboundGetX()); // The function gets invoked at the global scope
+// expected output: undefined
+
+var boundGetX = unboundGetX.bind(module);
+console.log(boundGetX());
+// expected output: 42
+#+END_SRC
+
+证明对象中 this 指向对象本身, 对象中的方法可以获取到对象本身.
+
+#+BEGIN_SRC js
+//注意: 浏览器可能挂掉
+const objA = {
+    test(){
+        objA.test()
+    }
+}
+
+objA.test()
+#+END_SRC
+
+#+RESULTS:
+:/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:4
+:    test(){
+:        ^
+:
+:RangeError: Maximum call stack size exceeded
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:4:9)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+:    at Object.test (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506jBF:5:14)
+
+在函数内部也可以调用函数本身.
+
+#+BEGIN_SRC js
+function func(param1, param2){
+    func()
+}
+
+func()
+#+END_SRC
+
+#+RESULTS:
+:/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3
+:    func()
+:    ^
+
+:RangeError: Maximum call stack size exceeded
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+:    at func (/private/var/folders/p4/c46ctx5d3y31rmx696_vnyn40000gn/T/babel-2506AWN/js-script-2506Xqd:3:5)
+
+**** 函数中 this 是何时产生的
+函数中 this 是在函数调用执行时产生的.
+当函数被调用时, 产生一个新对象, 里面包含一些信息, 如传入的参数, 函数是如何被调用的, 函数是被谁调用的.
+该对象里有个属性 this, 指向调用这个函数的对象.
+
+#+BEGIN_SRC js
+var obj = {
+    someData: "a string"
+};
+
+function myFun() {
+    this.aNum = 1; // What is `this` here?
+    console.log(this === obj);
+}
+
+obj.staticFunction = myFun;
+obj.staticFunction();
+console.log(obj);
+
+#+END_SRC
+
+#+RESULTS:
+: true
+: { someData: 'a string',
+:   staticFunction: [Function: myFun],
+:   aNum: 1 }
+
+**** 数组中的 this
+#+BEGIN_SRC js
+aArr = [
+   {"a": 1},
+   {"a": 2},
+   {"a": 3}
+];
+
+aArr.map(function(value, index) {
+   console.log(this);
+   console.log(this === aArr);
+}, aArr);
+#+END_SRC
+
+#+RESULTS:
+: [ { a: 1 }, { a: 2 }, { a: 3 } ]
+: true
+: [ { a: 1 }, { a: 2 }, { a: 3 } ]
+: true
+: [ { a: 1 }, { a: 2 }, { a: 3 } ]
+: true
+
+#+BEGIN_SRC js
+const a = [];
+const func = function() { console.log(this);};
+
+a.push(func);
+a[0](); //指向 a
+#+END_SRC
+
+#+RESULTS:
+: [[Function: func]]
+
+因为 const a = [] 相当于 const a = new Array(), Array 实例 a 中的方法执行时 this 指向 a.
+
+验证了无论是使用字面量还是构造函数创建的对象, 两者结果是相同的.
+
+#+BEGIN_SRC js
+const e = { func: function(){ console.log(this);}
+e.func(); //指向
+
+const f = new Object(
+f.func = function(){ console.log(this);}
+f.func(); //指向
+#+END_SRC
+
+#+RESULTS:
+
+**** arguments 中的 this
+#+BEGIN_SRC js
+function func(fc) {
+   arguments[0]();    // 指向 arguments 本身
+
+   fc();    // 指向 Window
+}
+
+func(function() {console.log(this);});
+#+END_SRC
+
+#+RESULTS:
+: - { '0': [Function] }
+
+**** this 的分界
+#+BEGIN_SRC js
+"use strict";
+
+const obj = {a:1};
+
+function outter() {
+
+   function inner(){
+       console.log(this);
+   }
+
+   inner();
+}
+
+outter.call(obj); //undefined
+#+END_SRC
+
+#+RESULTS:
+: undefined
+
+执行上下文是以函数调用为区分, this 值在不同的函数调用时, 表现不同, 称为 this 或 Context 的分界.
+
+解决方式一: 利用作用域链(Scope Chain)
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function outter() {
+    //暫存 outter 的 this 值
+    const that = this;
+
+    function inner(){
+        console.log(that); //用作用域链取 outter 中的 that 值
+    }
+
+    inner();
+}
+
+outter.call(obj); //Object {a: 1}
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+解决方式二: 使用 call() 调用函数
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function outter() {
+
+    function inner(){
+        console.log(this);
+    }
+
+    inner.call(this); //用 outter 中的 this 值來调用內部函数的 inner
+}
+
+outter.call(obj); //Object {a: 1}
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+解决方式三: 使用 bind
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function outter() {
+
+    const inner = function(){
+        console.log(this);
+    }.bind(this);
+
+    inner();
+}
+
+outter.call(obj); //Object {a: 1}
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+因为 bind 会返回新的函数, 所以使用匿名函数绑定并返回给变量名 inner.
+
+*** 函数
+**** 函数的调用
+所有的函数在调用时, 都有一个拥有者进行调用, 所以可以说, 所有函数都是对象中的方法. 所有的函数执行都是以 object.method() 方式进行调用.
+
+#+BEGIN_SRC js
+function func(param){
+    console.log(this)
+}
+
+window.func() //只能在不是 strict mode 下執行
+this.func()  //只能在不是 strict mode 下執行
+func()
+#+END_SRC
+
+#+RESULTS:
+
+[[file:./static/JavaScript-basic/函数都是被对象调用的.png]]
+
+**** call, bind, apply
+#+BEGIN_QUOTE
+call: 单独提供 this 与参数值来调用函数
+bind: 绑定新的函数, 新函数在调用时以提供的 this 值和传入的参数值进行调用
+apply: 与 call 一样, 指示传入参数值使用列表
+#+END_QUOTE
+
+#+BEGIN_SRC js
+function func(param1){
+    console.log('func', this);
+}
+
+const objA = {
+    methodA: function (){
+        console.log('objA methodA', this);
+    }
+};
+
+const objB = { a:1, b:2 };
+
+func.call(objB); //func Object {a: 1, b: 2}
+objA.methodA.call(objB); //objA methodA Object {a: 1, b: 2}
+#+END_SRC
+
+#+RESULTS:
+: func { a: 1, b: 2 }
+: objA methodA { a: 1, b: 2 }
+: undefined
+
+this 值被绑定到 call 中的第一个传入参数.
+
+#+BEGIN_SRC js
+function funcA(param1, param2){
+    "use strict"
+    console.log(this, param1, param2);
+}
+
+const objB = { a: 1, b: 2 };
+
+funcA(); //undefined undefined undefined
+
+const funcB = funcA.bind(objB, objB.a);
+
+funcB(); //Object {a: 1, b: 2} 1 undefined
+funcB(objB.b); //Object {a: 1, b: 2} 1 2
+#+END_SRC
+
+#+RESULTS:
+: undefined undefined undefined
+: { a: 1, b: 2 } 1 undefined
+: { a: 1, b: 2 } 1 2
+: undefined
+
+#+BEGIN_SRC js
+"use strict";
+const objA = {
+    methodA : function(param1, param2) {
+        console.log('objA methodA', this, param1, param2);
+    }
+};
+
+const objB = { a: 1, b: 2 };
+
+objA.methodA();
+
+const methodB = objA.methodA.bind(objB, objB.a);
+methodB();
+methodB(objB.b);
+#+END_SRC
+
+#+RESULTS:
+: objA methodA { methodA: [Function: methodA] } undefined undefined
+: objA methodA { a: 1, b: 2 } 1 undefined
+: objA methodA { a: 1, b: 2 } 1 2
+: undefined
+
+#+BEGIN_SRC js
+const objA = {
+    a: 8,
+    b: 7,
+    methodA(){
+        console.log(this, this.a, this.b);
+    }
+};
+
+const objB = { a: 1, b: 2 };
+
+objA.methodA();
+
+const methodB = objA.methodA.bind(objB, objB.a);
+
+methodB();
+methodB(objB.b);
+
+objC = {a: "good"};
+const methodC = objA.methodA.bind(objC);
+methodC()
+#+END_SRC
+
+#+RESULTS:
+: { a: 8, b: 7, methodA: [Function: methodA] } 8 7
+: { a: 1, b: 2 } 1 2
+: { a: 1, b: 2 } 1 2
+: { a: 'good' } 'good' undefined
+
+在 bind 绑定 objC 时没有显式传入 objC.a 和 objC.b, 但是调用 methodC 时却能读取到 objC.a 的值, 是因为在调用方法的内部使用了
+this.a, this.b, 而此时 this 为 objC.
+
+bind 方法产生部分套用的新函数(Partially applied).
+
+**** call 调用在回调函数中存在缺陷
+#+BEGIN_SRC js
+"use strict";
+const obj = {a:1};
+
+function funcCb(x, cb){
+   cb(x);
+}
+
+const callback = function(x){ console.log(this) };
+
+funcCb.call(obj, 1, callback); //undefined
+#+END_SRC
+
+#+RESULTS:
+: undefined
+
+可以看到在回调函数 callback 中 this 值是全局变量(在非严格模式下).
+这是因为函数作为参数出入了, 也是位于全局作用域下的.
+解决的办法是回调函数也使用 call.
+
+#+BEGIN_SRC js
+"use strict";
+const obj = {a:1};
+
+function funcCb(x, cb){
+    cb.call(this, x);
+}
+
+const callback = function(x){ console.log(this);};
+
+funcCb.call(obj, 1, callback); //undefined
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+**** 带有回调函数为参数的函数调用
+以 setTimeout 为例.
+
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function func(){
+    setTimeout(
+        function(){
+            console.log(this);
+        }, 2000);
+}
+
+func.call(obj); //window 物件
+#+END_SRC
+
+#+RESULTS:
+: Window
+
+解决方法一: 使用作用域链
+
+#+BEGIN_SRC js
+const obj = {a: 1};
+
+function func() {
+    const that = this;
+
+    setTimeout(function() {
+        console.log(that);
+    }, 2000);
+}
+
+func.call(obj);
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+解决方法二: 使用 bind 方法, 将匿名的回调函数绑定到 this, 并适合用 call, 因为 call 适合在最外层使用.
+
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function func(){
+    setTimeout(
+        function() {
+            console.log(this);
+        }.bind(this), 2000);
+}
+
+func.call(obj); //window 物件
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function func(){
+    cb = function() {
+            console.log(this);
+        };
+
+    setTimeout(
+        cb.bind(this), 2000);
+}
+
+func.call(obj); //window 物件
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+这个说明了 bind 的好处, 可以作为新的回调函数使用.
+
+解决方式三: 使用=>
+Arrow Function 有绑定 this 值的功能.
+
+#+BEGIN_SRC js
+const obj = {a:1};
+
+function func(){
+    setTimeout(() =>  console.log(this), 2000);
+}
+
+func.call(obj);
+#+END_SRC
+
+#+RESULTS:
+: { a: 1 }
+
+**** 函数定义是定义, 调用是调用
+#+BEGIN_SRC js
+"use strict";
+const objA = {a:1};
+
+const objB = {
+   a: 10,
+   methodB: function (){
+       console.log(this);
+   }
+
+};
+
+const funcA = objB.methodB;
+
+objB.methodB(); //objB
+funcA(); //undefined, 也就 window
+objB.methodB.call(objA); //objA
+#+END_SRC
+
+#+RESULTS:
+: { a: 10, methodB: [Function: methodB] }
+: undefined
+: { a: 1 }
+
+**** 函数调用的四种方式
+#+BEGIN_QUOTE
+一般的函数调用
+对象的函数调用
+构建函数的函数调用 new function ()
+apply, call, bind 函数调用
+#+END_QUOTE
+
+** 浅拷贝和深拷贝
+如何进行深拷贝
+
+#+BEGIN_SRC js
+var obj1 = { a: 10, b: 20, c: 30 };
+var obj2 = { a: obj1.a, b: obj1.b, c: obj1.c };
+obj2.b = 100;
+
+console.log(obj1); // { a: 10, b: 20, c: 30 } <-- 沒被改到
+console.log(obj2); // { a: 10, b: 100, c: 30 }
+#+END_SRC
+
+#+RESULTS:
+: { a: 10, b: 20, c: 30 }
+: { a: 10, b: 100, c: 30 }
+
+有弊端
+
+#+BEGIN_SRC js
+var obj1 = { body: { a: 10 } };
+var obj2 = { body: obj1.body };
+obj2.body.a = 20;
+
+console.log(obj1); // { body: { a: 20 } } <-- 被改到了
+console.log(obj2); // { body: { a: 20 } }
+console.log(obj1 === obj2); // false
+console.log(obj1.body === obj2.body); // true
+#+END_SRC
+
+#+RESULTS:
+: { body: { a: 20 } }
+: { body: { a: 20 } }
+: false
+: true
+*** 使用 Object.assign
+
+#+BEGIN_SRC js
+    var obj1 = {a: 10, b: 20, c: 30};
+    var obj2 = Object.assign({}, obj1);
+    obj2.b = 100;
+
+    console.log(obj1);
+    console.log(obj2);
+#+END_SRC
+
+#+RESULTS:
+: { a: 10, b: 20, c: 30 }
+: { a: 10, b: 100, c: 30 }
+
+
+#+BEGIN_SRC js
+Object.assign({}, [1, "a", 3], {b: 2, d: 4})
+{0: 1, 1: "a", 2: 3, b: 2, d: 4}
+#+END_SRC
+
+不必都是对象, 数组也可以.
+
+Object.assign 和上面手动复制效果一样, 只能处理深度只有一层的对象, 没办法做到真正的深拷贝,
+但是如果只处理一层的对象可以考虑使用.
+*** 使用 JSON 转换
+
+#+BEGIN_SRC js
+    var obj1 = {body: {a: 10}};
+    var obj2 =JSON.parse(JSON.stringify(obj1));
+    obj2.body.a = 100;
+
+    console.log(obj1);
+    console.log(obj2);
+#+END_SRC
+
+#+RESULTS:
+: { body: { a: 10 } }
+: { body: { a: 100 } }
+
+这样是真正的深拷贝, 但是只有可以转成 JSON 格式的对象才能使用, function 就无法转成 JSON.
+
+#+BEGIN_SRC js
+var obj1 = { fun: function(){ console.log(123) } };
+var obj2 = JSON.parse(JSON.stringify(obj1));
+
+console.log(typeof obj1.fun); // 'function'
+console.log(typeof obj2.fun); // 'undefined' <-- 没复制
+#+END_SRC
+
+#+RESULTS:
+: function
+: undefined
+*** 使用 Jquery 的$.extend 方法
+
+#+BEGIN_SRC js
+var $ = require('jquery');
+
+var obj1 = {
+    a: 1,
+    b: { f: { g: 1 } },
+    c: [1, 2, 3]
+};
+
+var obj2 = $.extend(true, {}, obj1);
+console.log(obj1.b.f === obj2.b.f); // false
+#+END_SRC
+*** 使用 lodash 库
+
+#+BEGIN_SRC js :results values list :exports no-eval
+   var _ = require('lodash');
+
+   var obj1 = {
+       a: 1,
+       b: { f: { g: 1 } },
+       c: [1, 2, 3]
+   };
+#+END_SRC
+
+** 对象初始化简写
+ES5 我们对于对象都是以键值对的形式书写, 是有可能出现键值对重名的. 例如:
+
+#+BEGIN_SRC js
+function people(name, age) {
+    return {
+        name: name,
+        age: age
+    };
+}
+#+END_SRC
+
+键值对重名,ES6 可以简写如下:
+
+#+BEGIN_SRC js
+function people(name, age) {
+    return {
+        name,
+        age
+    };
+}
+#+END_SRC
+
+ES6 同样改进了为对象字面量方法赋值的语法.ES5 为对象添加方法:
+
+#+BEGIN_SRC js
+const people = {
+    name: 'lux',
+    getName: function() {
+        console.log(this.name)
+    }
+}
+
+#+END_SRC
+
+ES6 通过省略冒号与 function 关键字, 将这个语法变得更简洁
+
+#+BEGIN_SRC js
+const people = {
+    name: 'lux',
+    getName () {
+        console.log(this.name)
+    }
+}
+#+END_SRC
+** 解构
+
+数组和对象是 JS 中最常用也是最重要表示形式. 为了简化提取信息,ES6 新增了解构, 这是将一个数据结构分解为更小的部分的过程
+ES5 我们提取对象中的信息形式如下:
+
+#+BEGIN_SRC js
+const people = {
+    name: 'lux',
+    age: 20
+}
+const name = people.name
+const age = people.age
+console.log(name + ' --- ' + age)
+#+END_SRC
+
+是不是觉得很熟悉, 没错, 在 ES6 之前我们就是这样获取对象信息的, 一个一个获取. 现在, 解构能让我们从对象或者数组里取出数据存为变量, 例如
+
+#+BEGIN_SRC js
+//对象
+const people = {
+    name: 'lux',
+    age: 20
+}
+const { name, age } = people
+console.log(`${name} --- ${age}`)
+//数组
+const color = ['red', 'blue']
+const [first, second] = color
+console.log(first) //'red'
+console.log(second) //'blue'
+#+END_SRC
+
+In combination with destructuring, you can also use default assignments, as follows:
+
+#+BEGIN_SRC js
+const { type, user = 'anon' } = action // instead of
+const type = action.type
+const user = action.user || 'anon'
+#+END_SRC
+
+In this example, if action.user is undefined, it will be set to 'anon'. It is also possible to rename properties, as follows:
+
+#+BEGIN_SRC js
+const { type: actionType } = action // instead of
+const actionType = action.type
+#+END_SRC
+
+The preceding code will store action.type in the actionType constant.
+
+To turn our little snippet into a React component,
+we need to turn the simple constant into a function.
+We will pass a name to the function and then output hello {name}!:
+
+#+BEGIN_SRC js
+const Greeting = ({ name }) => (
+    <h1>
+        hello {name}!
+    </h1>
+)
+#+END_SRC
+Note how instead of passing name as a single argument,
+we are expecting an object with a name property to be passed.
+React passes all properties as an object via the first argument.
+Then we use de-structuring to pull out the name from the object.
+If we wanted to process the input before rendering JSX (for example, to make the name
+uppercase), we could do the following:
+
+#+BEGIN_SRC js :results values list :exports no-eval
+const Greeting = ({ name }) => {
+    const uppercaseName = name.toUpperCase();
+    return (
+        <h1>
+            hello {uppercaseName}!
+        </h1>
+    );
+}
+
+注意=>后如果是跟着() 就不用加 return, 如果是{}就需要加 return.
+#+END_SRC
+
+** Spread Operator 展开运算符
+组装对象或者数组
+
+#+BEGIN_SRC js
+//数组
+const color = ['red', 'yellow']
+const colorful = [...color, 'green', 'pink']
+console.log(colorful) //[red, yellow, green, pink]
+
+//对象
+const alp = { fist: 'a', second: 'b'}
+const alphabets = { ...alp, third: 'c' }
+console.log(alphabets) //{ "fist": "a", "second": "b", "third": "c"
+}
+#+END_SRC
+
+有时候我们想获取数组或者对象除了前几项或者除了某几项的其他项
+
+#+BEGIN_SRC js
+//数组
+const number = [1,2,3,4,5]
+const [first, ...rest] = number
+console.log(rest) //2,3,4,5
+//对象
+const user = {
+    username: 'lux',
+    gender: 'female',
+    age: 19,
+    address: 'peking'
+}
+const { username, ...rest } = user
+console.log(rest) //{"address": "peking", "age": 19, "gender": "female"
+}
+
+#+END_SRC
+
+对于 Object 而言, 还可以用于组合成新的 Object .(ES2017 stage-2 proposal) 当然如果有重复的属性名, 右边覆盖左边
+
+#+BEGIN_SRC js
+const first = {
+    a: 1,
+    b: 2,
+    c: 6,
+}
+const second = {
+    c: 3,
+    d: 4
+}
+const total = { ...first, ...second }
+console.log(total) // { a: 1, b: 2, c: 3, d: 4 }
+#+END_SRC
+
+Finally, we define the tick() method we referenced earlier.
+In this method, we will update the state by increasing seconds by one.
+React provides the this.setState(state) method,
+which works similarly to using spread syntax to update objects.
+Only the properties passed to this.setState will be updated/overwritten.
+For example, if we consider this snippet:
+
+#+BEGIN_SRC js :results values list :exports no-eval
+// in constructor() method:
+this.state = { seconds: 0, somethingElse: true }
+// in tick() method:
+this.setState({ seconds: this.state + 1 })
+#+END_SRC
+
+The resulting state will be as follows:
+
+#+BEGIN_SRC js :results values list :exports no-eval
+{ seconds: 1, somethingElse: true }
+#+END_SRC
+
+It works similar to the following code using the spread operator:
+
+#+BEGIN_SRC js :results values list :exports no-eval
+const state = { seconds: 0, somethingElse: true }
+const newState = { seconds: state.seconds + 1 }
+const resultingState = { ...state, ...newState }
+#+END_SRC
+** ES6 写的 React 组件类如何绑定内部方法                                           :React:
+一. 使用 Function.prototype.bind()
+#+BEGIN_SRC js
+class CartItem extends React.Component {
+    render() {
+        return (
+            <p className="large-4 column">
+                <button onClick={this.increaseQty.bind(this)} className="button success">+</button>
+                <button onClick={this.decreaseQty.bind(this)} className="button alert">-</button>
+            </p>
+        );
+    }
+}
+#+END_SRC
+
+ES6 的类本质就是 Javascript 方法, 从 Function 的 prototype 里继承了 bind() 方法. 所以当我们调用 increaseQty() 方法的时候,this 指向了类的实例.
+
+二. 使用在 constructor 里定义的方法
+#+BEGIN_SRC js
+export default class CartItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.increaseQty = this.increaseQty.bind(this);
+    }
+
+    render() {
+        <button onClick={this.increaseQty} className="button success">+</button>
+    }
+}
+#+END_SRC
+
+三. 使用箭头方法和构造函数
+ES6 的胖箭头方法被调用的时候保留了 this 指向的上下文. 我们可以使用这一特性在构造函数里重新定义 increaseQty() 方法.
+
+#+BEGIN_SRC js
+export default class CartItem extends React.Component {
+    constructor(props) {
+        super(props);
+        // this.state = {
+        //     qty: props.initialQty,
+        //     total: 0
+        // };
+        this._increaseQty = () => this.increaseQty();
+    }
+
+    render() {
+        <button onClick={_this.increaseQty} className="button success">+</button>
+    }
+}
+#+END_SRC
+
+四. 使用胖箭头方法和 ES2015 的 class property
+#+BEGIN_SRC js
+export default class CartItem extends React.Component {
+
+    increaseQty = () => this.increaseQty();
+
+    render() {
+        <button onClick={this.increaseQty} className="button success">+</button>
+    }
+#+END_SRC
+
+类属性不是当前 Javascript 的标准, 但是 Babel 已经支持这个功能(stage 0).
+
+五. 使用 ES2015 的方法绑定语法
+Babel 又加入了对一个语法糖的支持
+
+#+BEGIN_SRC js
+Function.prototype.bind():::
+#+END_SRC
+
+#+BEGIN_SRC js
+export default class CartItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.increaseQty = ::this.increaseQty;
+    }
+
+    render() {
+        <button onClick={this.increaseQty} className="button success">+</button>
+    }
+}
+#+END_SRC
+** 箭头函数
+ ES6 允许使用" 箭头"(=>) 定义函数.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ var f = v => v;
+ #+END_SRC
+
+ 上面的箭头函数等同于:
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ var  f = function (v) {
+     return v;
+ }
+ #+END_SRC
+
+ 如果箭头函数 =不需要参数或需要多个参数=, 就使用 =一个圆括号= 代表参数部分(=一个参数时可以不需要括号=).
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ var f = () => 5;
+ //等价于
+ var f = function () {
+     return 5;
+ };
+
+ var sum = (num1, num2) => num1 + num2;
+ //等价于
+ var sum = function (num1, num2) {
+     return num1 + num2;
+ }
+ #+END_SRC
+
+ 如果箭头函数的代码块部分多于一条语句, 就要使用大括号将它们括起来, 并且使用 return 语句返回.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ var sum = (num1, num2) => {return num1 + num2};
+ #+END_SRC
+
+ 由于大括号被解释为代码块, 所以如果箭头函数直接返回一个对象, 必须在对象外面加上括号, 否则会报错.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ //不报错
+ var getTmpItem = id => ({id: id, name: 'Tmp'})
+
+ //报错
+ var getTmpItem = id => {id: id, name: 'Tmp'};
+ #+END_SRC
+
+ 如果箭头函数只有一行语句, 且不需要返回值, 可以采用下面的写法, 就不用写大括号了.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ let fn = () => void doesNotReturn();
+ #+END_SRC
+
+ 箭头函数可以与变量解构结合使用.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ const full = ({first, last}) => first + ' ' + last;
+
+ //等价于
+ const full = function (person) {
+     return person.first + ' ' + person.last;
+ }
+ #+END_SRC
+
+ 箭头函数使得表达更加简洁.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ const isEven = n => n % 2 === 0;
+
+ //箭头函数写法
+ var result = values.sort((a, b) => a - b)
+ #+END_SRC
+
+ 下面是 rest 参数与箭头函数结合的例子.
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ const numbers = (...nums) => nums;
+ numbers(1,2,3,4,5);   //[1,2,3,4,5]
+
+ const headAndTail = (head,...tail) => [head,tail];
+ headAndTail(1,2,3,4,5);  //[1,[2,3,4,5]]
+ #+END_SRC
+
+** 使用注意点
+
+ - 函数体内的 this 对象, 就是定义时所在的对象, 而不是使用时所在的对象.
+
+ - 不可以当作构造函数, 也就是说, 不可以使用 new 命令, 否则会抛出一个错误.
+
+ - 不可以使用 arguments 对象, 该对象在函数体内不存在. 如果要用, 可以用 Rest 参数代替.
+
+ - 不可以使用 yield 命令, 因此箭头函数不能用作 Generator 函数.
+
+ this 指向的固定化, 并不是因为箭头函数内部有绑定 this 的机制, 实际原因是箭头函数根本没有自己的 this, 导致内部的 this 就是外层代码块的 this. 正是因为它没有 this, 所以也就不能用作构造函数.
+
+** 箭头函数的 this
+
+ - 箭头函数没有自己的 this，其内部的 this 绑定到它的外围作用域。对象内部的箭头函数若有 this， 则指向对象的外围作用域。
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ window.color = "red";
+ //let 声明的全局变量不具有全局属性, 即不能用 window. 访问
+ let color = "green";
+ let obj = {
+     color: "blue",
+ 　　 getColor: () => {
+ 　　　　 return this.color;//this 指向 window
+ 　　 }
+ };
+ let sayColor = () => {
+     return this.color;//this 指向 window
+ };
+ obj.getColor();//red
+ sayColor();//red
+ #+END_SRC
+
+ - 箭头函数无法使用 ~call()~ 或 ~apply()~ 来改变其运行的作用域。
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ window.color = "red";
+ let color = "green";
+ let obj = {
+     　　color: "blue"
+ };
+ let sayColor = () => {
+     　　return this.color;
+};
+ sayColor.apply(obj);//red
+ #+END_SRC

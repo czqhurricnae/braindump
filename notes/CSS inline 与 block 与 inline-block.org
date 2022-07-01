@@ -1,0 +1,353 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/CSS inline 与 block 与 inline-block/")); -*-
+:PROPERTIES:
+:ID:       CA84A083-FE9E-482B-9F12-3B70A1E9B9FC
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-03 Thu 21:09>
+#+TITLE: CSS inline 与 block 与 inline-block
+
+* 基本知识点
+行内元素一般是内容的容器，而块级元素一般是其他容器的容器，行内元素适合显示具体内容，而块级元素适合做布局。
+
+- 块级元素(block)：独占一行，对宽高的属性值生效；如果不给宽度，块级元素就默认为浏览器的宽度，即就是 100% 宽。
+- 行内元素(inline)：可以多个标签存在一行，对宽高属性值不生效，完全靠内容撑开宽高。
+- 行内块元素(inline-block)：结合的行内和块级的优点，既可以设置长宽，可以让 padding 和 margin 生效，又可以和其他行内元素并排。
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-12-29_bVbbW3s.png]]
+
+其中 img 和 input 为行内块元素。
+
+* 行内元素与块级元素之间的转换
+- float：当把行内元素设置完 float:left/right 后，该行内元素的 display 属性会被赋予 block 值，且拥有浮动特性。
+行内元素去除了之间的莫名空白。
+
+#+BEGIN_SRC css
+<head>
+<meta charset="UTF-8">
+<title>测试</title>
+<style type="text/css">
+p{
+    background-color: red;
+    height: 500px;
+    width: 30%;
+    padding: 20px;
+    margin: 20px;
+    float: left;}
+div{
+    background-color: green;
+    height: 50px;
+    width: 40%;
+    padding: 20px;
+    margin: 20px;}
+span{
+    background-color: gray;
+    height: 70px;
+    padding: 40px;
+    margin: 20px;
+    float:left;
+    width:200px;}
+strong{
+    background-color: blue;
+    height: 70px;
+    padding: 40px;
+    margin: 20px;}
+</style>
+<!--<p>块级元素一</p>-->
+<div>块级元素一</div>
+<span>行内元素一</span>
+<strong>行内元素二</strong>
+</body>
+#+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-14-55_bVbbW3u.png]]
+
+如图，当把行内元素一设为左浮动时，就可以为其设置宽度了，说明它已经变成了块级元素。
+
+- position：当为行内元素进行定位时， ~position:absolute~ 与 ~position:fixed~ 都会使得原先的行内元素变为块级元素。
+
+- display：
+  - 块级标签转换为行内标签：display:inline。
+  - 行内标签转换为块级标签：display:block。
+  - 转换为行内块标签：display：inline-block。
+
+** 常用的 display 可能的值：
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-32-07_bVbbW3F.png]]
+
+* 特性
+** text-align 属性对块级元素起作用，对行内元素不起作用：
+原因是块级标签如果不给宽度，块级元素就默认为浏览器的宽度，即就是 100% 宽，那么在 100%的宽度中居中生效；但是行内元素的宽完全是靠内容撑开，所以宽度就是内容撑开的宽：
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-34-43_bVbbW3I.png]]
+
+所以块级是在盒子中间居中了，但是因为行内元素的宽就是内容宽，没有可居中的空间，所以 ~text-align:center~ 就没有作用；但是如果给 font 转换为块级就不一样了：
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-35-01_bVbbW3J.png]]
+
+** 块级元素独自占一行且宽度会占满父元素宽度，行内元素不会独占一行，相邻行内元素可以排在同一行。
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-35-49_bVbbW3R.png]]
+
+** 块级元素可以设置 width 和 height，行内元素设置 width 和 height 无效，而且块级元素即使设置宽度也还是独占一行。注意但块级元素当没有明确指定 width 和 height 值时，块级元素尺寸由内容确定，当指定了 width 和 height 的值时，内容超出块级元素的尺寸就会溢出，这时块级元素要呈现什么行为要看其 overflow 的值（visible，hidden，overflow，scroll）。
+
+** 块级元素可以设置 margin 和 padding 属性，行内元素水平方向的 margin 和 padding 如 margin-left、padding-right 可以产生边距效果，但是竖直方向的 margin-top、margin-bottom 不起作用。
+
+** 行内元素的 padding-top 和 padding-bottom 会起作用，不过就像脱离了标准流一样（即 padding-left 和 padding-right 的层级比其他元素高），并不会占据位置，并且还把其他元素给盖住了。但是，假如 inline 的元素没有内容，“padding-top、padding-bottom”将不起作用。如果想要起作用，只需要给 padding-left 或者 padding-right 设置一个值，或者当 inline 的元素有内容时就会起作用。
+
+#+BEGIN_SRC css
+<style type="text/css">
+div{
+     background-color: green;
+     height: 50px;
+     width: 40%;;
+     padding: 20px;
+     margin: 20px;
+}
+
+span{
+     background-color:gray;
+     height: 70px;
+     padding: 40px;
+     margin: 20px;
+}
+
+strong{
+     background-color: blue;
+     height: 70px;
+     padding: 40px;
+     margin: 20px;
+     float: left;
+}
+</style>
+<div>块级元素一</div>
+<span>行内元素一</span>
+<strong>行内元素二</strong>
+#+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_21-47-12_bVbbW3T.png]]
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_23-38-51_bVbbW3V.png]]
+
+如图所示，当我们改变 padding 值时，效果是背景向四个方向扩展，padding-top 和 padding-bottom 是增大的，但是对于块状元素一是没有影响的（在竖直方向上），不然行内元素一也不会挤入块状元素了。
+
+下面的实例可以看到如果 inline 的元素没有内容，“padding-top、padding-bottom"将不起作用
+
+#+BEGIN_SRC css
+<style>
+   body, div {
+       margin: 0;
+       padding:0;
+   }
+
+  .item1 {
+      height:100px;
+      background-color: red;
+  }
+
+  .item2 {
+      display: inline;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      background-color: pink;
+  }
+</style>
+<div class="item1"></div>
+<div class="item2"></div>
+#+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_23-39-41_bVbbW33.png]]
+
+
+如果想让 padding-top 或者 padding-bottom 起作用，只需要给 padding-left 或者 padding-right 设置一个值，或者当 inline 的元素有内容时就会起作用。
+
+#+BEGIN_SRC css
+<style>
+   body, div {
+       margin: 0;
+       padding:0;
+   }
+
+    .item1 {
+        height:100px;
+        background-color: red;
+    }
+
+    .item2 {
+        display: inline;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        padding-left: 50px;
+        background-color: pink;
+    }
+</style>
+<div class="item1"></div>
+<div class="item2"></div>
+#+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_23-53-19_a971c33f-5cc0-4299-a681-aae77383268f.jpg]]
+
+** 当 inline-block 碰到同类（inline，inline-block)时，谁的上下 margin、paddin 或 line-height 大，就听谁的。除非它是 inline，因为 inline 的 margin 是不起作用的。且 inline 的 padding 是不占空间的。
+
+#+BEGIN_SRC css
+<style>
+   body,div {
+       margin: 0;
+       padding:0;
+   }
+    .item1 {
+        display: inline-block;
+        width: 100px;
+        height:100px;
+        margin-top: 20px;
+        background-color: red;
+    }
+    .item2 {
+        margin-top: 100px;
+        display: inline-block;
+        background-color: pink;
+    }
+</style>
+<div class="item1">item1</div>
+<div class="item2">item2</div>
+#+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_23-57-13_bVbbW4f.png]]
+
+
+#+BEGIN_SRC css
+<style>
+   body, div {
+       margin: 0;
+       padding:0;
+   }
+    .item1 {
+        display: inline-block;
+        width: 100px;
+        height:100px;
+        line-height: 100px;
+        background-color: red;
+    }
+    .item2 {
+        display: inline-block;
+        background-color: pink;
+    }
+</style>
+<div class="item1">item1</div>
+<div class="item2">item2</div>
+#+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-03_23-58-37_bVbbW4k.png]]
+
+如图所示，inline-block 碰到同类时，行高也会一起使用。其他的 padding-top 和 margin-top 甚至都会一起使用。
+
+** inline 和 inline-block 会引起间距的空格
+
+ #+BEGIN_SRC css
+ <style>
+  body, div{
+      margin: 0;
+      padding:0;
+  }
+   div {
+       display: inline;
+       background-color: #61dafb;
+   }
+ </style>
+ <div class="item1">item1</div>
+ <div class="item2">item2</div>
+ #+END_SRC
+
+[[file:./static/CSS inline 与 block 与 inline-block/2021-06-04_00-01-42_bVbbW4l.png]]
+
+ 可以看到两个 div 之间会有几个像素的间距，这个间距是有换行或回车导致的。有以下解决方法
+
+*** 将空格直接删除，放到一行
+
+ #+BEGIN_SRC css
+  <div class="item1">item1</div><div class="item2">item2</div>
+ #+END_SRC
+
+*** 在空格代码中加入注释
+
+ #+BEGIN_SRC css
+ <div class="item1">item1</div><!--
+ --><div class="item2">item2</div>
+ #+END_SRC
+
+*** 设置 margin-left 为负值，但是每个浏览器的间距不一样，所以基本不用这种方法*
+
+ #+BEGIN_SRC css
+ .item2{
+   margin-left:-8px;
+   display:inline;
+   background-color:pink;
+ }
+ #+END_SRC
+
+*** 给父元素增加“font-size：0px"*
+
+ #+BEGIN_SRC css
+ <style>
+    body, div {
+        margin: 0;
+        padding:0;
+    }
+
+     body {
+         font-size: 0px;
+     }
+
+     .item1 {
+         display: inline-block;
+         width:100px;
+         height:100px;
+         font-size: 20px;
+         background-color: red;
+     }
+
+     .item2 {
+         display:inline-block;
+         font-size: 20px;
+         background-color: pink;
+     }
+ </style>
+ <div class="item1">item1</div>
+ <div class="item2">item2</div>
+ #+END_SRC
+
+*** 给父元素加 letter-spacing 负值，然后通过子元素清除 letter-spacing 值*
+
+ #+BEGIN_SRC css
+ <style>
+  body, div {
+      margin: 0;
+      padding:0;
+  }
+
+   body {
+       letter-spacing: -8px;
+   }
+
+   body *{
+       letter-spacing: 0px;
+   }
+
+   .item1 {
+         display: inline-block;
+         width:100px;
+         height:100px;
+         background-color: red;
+     }
+
+   .item2 {
+         display:inline-block;
+         background-color: pink;
+     }
+ </style>
+ <div class="item1">item1</div>
+ <div class="ite
+ #+END_SRC
+
+* Backlinks                                                        :noexport:
+** No linked reference
+
+** Unlinked references
+[Show unlinked references]

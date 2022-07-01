@@ -1,0 +1,29 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 放泄燃油沉淀/")); -*-
+:PROPERTIES:
+:ID:       8AF1333E-CFA6-4710-877E-56EDF3B0508C
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-08 Mon 16:34>
+#+TITLE: 737NG 放泄燃油沉淀
+
+1#和 2#主油箱沉淀放泄活门位于 5 号翼肋外侧，机翼下表面。
+中央油箱沉淀放泄活门位于油箱中央底部，在机腹下方有一盖板可接近。
+防溢油箱沉淀放泄活门位于 22 号翼肋外侧，机翼下表面。
+
+[[file:./static/737NG 放泄燃油沉淀/2021-02-08_16-34-48_screenshot.jpg]]
+
+对主油箱和防溢油箱进行放[[id:77CC1014-2591-4512-BA59-F2AF7D074FE8][燃油沉淀]]的操作是一样的，通过专用工具将活门顶开进行排放。
+#+transclude: [[id:77CC1014-2591-4512-BA59-F2AF7D074FE8][燃油沉淀]]
+
+[[file:./static/737NG 放泄燃油沉淀/2021-02-08_16-35-40_screenshot.jpg]]
+
+[[file:./static/737NG 放泄燃油沉淀/2021-02-08_16-35-50_screenshot.jpg]]
+
+中央油箱放燃油沉淀无需专用工具，打开放泄活门接近盖板，下拉手柄即可放油。
+
+[[file:./static/737NG 放泄燃油沉淀/2021-02-08_16-36-05_screenshot.jpg]]
+
+更换主油箱的放泄活门主封严仅需将拆除核心插头和活门提升阀，无需放油； 更换整个活门本体需要放油。
+更换中央油箱沉淀放泄组件无需放油。
+
+[[file:./static/737NG 放泄燃油沉淀/2021-02-08_16-37-05_screenshot.jpg]]

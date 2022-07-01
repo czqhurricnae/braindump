@@ -1,0 +1,50 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{x}{class Local(object):}
+\PYG{x}{    \PYGZus{}\PYGZus{}slots\PYGZus{}\PYGZus{} = (\PYGZsq{}\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}\PYGZsq{}, \PYGZsq{}\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}\PYGZsq{})}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}(self):}
+\PYG{x}{        object.\PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}(self, \PYGZsq{}\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}\PYGZsq{}, \PYGZob{}\PYGZcb{})}
+\PYG{x}{        object.\PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}(self, \PYGZsq{}\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}\PYGZsq{}, allocate\PYGZus{}lock())}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}iter\PYGZus{}\PYGZus{}(self):}
+\PYG{x}{        return self.\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}.iteritems()}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}(self, proxy):}
+\PYG{x}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}Create a proxy for a name.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{x}{        return LocalProxy(self, proxy)}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}release\PYGZus{}local\PYGZus{}\PYGZus{}(self):}
+\PYG{x}{        self.\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}.pop(get\PYGZus{}ident(), None)}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}getattr\PYGZus{}\PYGZus{}(self, name):}
+\PYG{x}{        self.\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}.acquire()}
+\PYG{x}{        try:}
+\PYG{x}{            try:}
+\PYG{x}{                return self.\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}[get\PYGZus{}ident()][name]}
+\PYG{x}{            except KeyError:}
+\PYG{x}{                raise AttributeError(name)}
+\PYG{x}{        finally:}
+\PYG{x}{            self.\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}.release()}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}setattr\PYGZus{}\PYGZus{}(self, name, value):}
+\PYG{x}{        self.\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}.acquire()}
+\PYG{x}{        try:}
+\PYG{x}{            ident = get\PYGZus{}ident()}
+\PYG{x}{            storage = self.\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}}
+\PYG{x}{            if ident in storage:}
+\PYG{x}{                storage[ident][name] = value}
+\PYG{x}{            else:}
+\PYG{x}{                storage[ident] = \PYGZob{}name: value\PYGZcb{}}
+\PYG{x}{        finally:}
+\PYG{x}{            self.\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}.release()}
+
+\PYG{x}{    def \PYGZus{}\PYGZus{}delattr\PYGZus{}\PYGZus{}(self, name):}
+\PYG{x}{        self.\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}.acquire()}
+\PYG{x}{        try:}
+\PYG{x}{            try:}
+\PYG{x}{                del self.\PYGZus{}\PYGZus{}storage\PYGZus{}\PYGZus{}[get\PYGZus{}ident()][name]}
+\PYG{x}{            except KeyError:}
+\PYG{x}{                raise AttributeError(name)}
+\PYG{x}{        finally:}
+\PYG{x}{            self.\PYGZus{}\PYGZus{}lock\PYGZus{}\PYGZus{}.release()}
+\end{Verbatim}

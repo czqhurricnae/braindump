@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/翼上应急门窗户灯/")); -*-
+:PROPERTIES:
+:ID:       F9A37968-BD2D-480E-A237-9A55C8D6971E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:52>
+#+TITLE: 翼上应急门窗户灯
+
+BACS38K1
+长度约 20cm。
+

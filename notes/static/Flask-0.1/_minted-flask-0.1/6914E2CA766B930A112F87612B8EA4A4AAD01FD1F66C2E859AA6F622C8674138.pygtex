@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Flask}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+
+    \PYG{k}{def} \PYG{n+nf}{run}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{host}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{localhost}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{port}\PYG{o}{=}\PYG{l+m+mi}{5000}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Runs the application on a local development server\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k+kn}{from} \PYG{n+nn}{werkzeug} \PYG{k+kn}{import} \PYG{n}{run\PYGZus{}simple}
+        \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{debug}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{options}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug} \PYG{o}{=} \PYG{n}{options}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{debug}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{static\PYGZus{}path} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{options}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{static\PYGZus{}files}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{static\PYGZus{}path}\PYG{p}{:} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{package\PYGZus{}name}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{static}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+            \PYG{p}{\PYGZcb{}}
+            \PYG{n}{options}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{use\PYGZus{}reloader}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{)}
+            \PYG{n}{options}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{use\PYGZus{}debugger}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{run\PYGZus{}simple}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}
+
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

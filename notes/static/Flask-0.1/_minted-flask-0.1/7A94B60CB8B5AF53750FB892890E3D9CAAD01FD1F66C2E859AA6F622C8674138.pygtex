@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{def} \PYG{n+nf}{make\PYGZus{}server}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{app}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{threaded}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{processes}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{n}{request\PYGZus{}handler}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{passthrough\PYGZus{}errors}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,}
+                \PYG{n}{ssl\PYGZus{}context}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Create a new server instance that is either threaded, or forks}
+\PYG{l+s+sd}{    or just processes one request after another.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{if} \PYG{n}{threaded} \PYG{o+ow}{and} \PYG{n}{processes} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+        \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cannot have a multithreaded and }\PYG{l+s+s2}{\PYGZdq{}}
+                         \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{multi process server.}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{threaded}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{ThreadedWSGIServer}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{app}\PYG{p}{,} \PYG{n}{request\PYGZus{}handler}\PYG{p}{,}
+                                  \PYG{n}{passthrough\PYGZus{}errors}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{processes} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{ForkingWSGIServer}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{app}\PYG{p}{,} \PYG{n}{processes}\PYG{p}{,} \PYG{n}{request\PYGZus{}handler}\PYG{p}{,}
+                                 \PYG{n}{passthrough\PYGZus{}errors}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{BaseWSGIServer}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{app}\PYG{p}{,} \PYG{n}{request\PYGZus{}handler}\PYG{p}{,}
+                              \PYG{n}{passthrough\PYGZus{}errors}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,121 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Add_annotation_in_PDF_src_block/")); -*-
+:PROPERTIES:
+:ID:       42A18441-46FB-484E-8497-D52F48A6CBF0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-07 Tue 19:45>
+#+TITLE: Add_annotation_in_PDF_src_block.org
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+How to write Org-mode, (maybe need use LaTeX) to archive this effect?
+
+[[file:./static/Add_annotation_in_PDF_src_block/C5GS4.png]]
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+This answer is focused on what I'm interested in, therefore it uses =minted= for source code listings with Org,
+and =tikzmark= as the package that can "mark" a place in your listing so that you can later refer to it from a Tikz picture. Here's a simple example (UPDATED):
+
+#+begin_example
+    #+LATEX_HEADER: \usepackage{tikz}
+    #+LATEX_HEADER: \usepackage{minted}
+    #+LATEX_HEADER: \usetikzlibrary{tikzmark}
+    #+OPTIONS: toc:nil
+
+    * Using minted with tikzmark
+
+    # Org mode sample configuration (in your init.el file):
+    #+BEGIN_SRC emacs-lisp :exports none
+      (setq org-latex-listings 'minted)
+      (setq org-latex-minted-options
+            '(("frame" "lines") ("linenos" "true")))
+    #+END_SRC
+
+    #+ATTR_LATEX: :caption \caption{Yes}\label{lst:code}
+    #+BEGIN_listing
+    #+ATTR_LATEX: :options escapeinside=||
+    #+BEGIN_SRC c
+      #include <stdio.h>
+
+      int main()
+      {
+        // comment
+        printf("hello world\n"); |$\tikzmark{too}$|
+        return 0;
+      }
+    #+END_SRC
+    #+END_listing
+
+    #+BEGIN_LaTeX
+    \begin{tikzpicture}[overlay,remember picture]
+    \draw[dashed,->] (pic cs:too) ++(0,0.25) to[bend left]
+                     ++(5,-1)node[right]{$\bullet$ Here it is too!};
+    \end{tikzpicture}
+    #+END_LaTeX
+
+    As you can see in code listing \ref{lst:code}, \ldots
+#+end_example
+
+... and this is the result (exported to LaTeX - XeLaTeX in my case):
+
+[[file:./static/Add_annotation_in_PDF_src_block/RcVCp.png]]
+
+I edited the original answer to show how to place marks outside comments
+(using the pygments option "escapeinside", instead of the comment-limited "mathescape" option from the original answer)
+and how to set up a caption, a label for this environment, and also how to get a reference to it.
+HTH
+
+------
+
+2ND UPDATE: Here's a version of the same code (same output), that manages to use =#+CAPTION=, =#+LABEL= and =[[lst:ref]]= styles instead of the latex ones,
+/AND/ gets rid of the enveloping listing environment completely:
+
+#+begin_example
+    #+LATEX_HEADER: \usepackage{minted}
+    #+LATEX_HEADER: \usepackage{tikz}
+    #+LATEX_HEADER: \usetikzlibrary{tikzmark}
+    #+OPTIONS: toc:nil
+
+    * Using minted with tikzmark
+
+    # Org mode configuration:
+    #+BEGIN_SRC emacs-lisp :exports none
+      (setq org-latex-listings 'minted)
+      (setq org-latex-minted-options
+            '(("frame" "lines") ("linenos" "true") ("escapeinside" "||")))
+    #+END_SRC
+
+    #+LABEL: lst:code
+    #+CAPTION: Yes
+    #+BEGIN_SRC c
+      #include <stdio.h>
+
+      int main()
+      {
+        // comment
+        printf("hello world\n"); |$\tikzmark{too}$|
+        return 0;
+      }
+    #+END_SRC
+
+    #+BEGIN_LaTeX
+        \begin{tikzpicture}[overlay,remember picture]
+          \draw[dashed,->] (pic cs:too) ++(0,0.25) to[bend left]
+          ++(5,-1)node[right]{$\bullet$ Here it is too!};
+        \end{tikzpicture}
+    #+END_LaTeX
+
+    As you can see in [[lst:code]], \ldots
+#+end_example
+
+This didn't work, until I got rid of the =#+ATTR_LATEX:= line - no matter where I tried to put it, it interfered with the association between caption/label and the source block.
+
+* 附件
+[[id:FF6B3653-A5FB-4764-8C1F-04AE9A53B3EB][Add_annotation_in_PDF_src_block_1ST_version.org]]
+[[id:5C98D8FB-664E-4760-81E0-EF75E8C27E17][Add_annotation_in_PDF_src_block_2ND_update.org]]

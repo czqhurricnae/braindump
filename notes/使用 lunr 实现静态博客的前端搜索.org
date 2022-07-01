@@ -1,0 +1,591 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/使用 lunr 实现静态博客的前端搜索/")); -*-
+:PROPERTIES:
+:ID:       27A0B5C4-E4B0-4257-B7AE-A2B52D3D1C39
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-27 Mon 13:07>
+#+TITLE: 使用 lunr 实现静态博客的前端搜索
+
+因为一直希望使用 Org-mode 写一些博客，或者保存网络上的文章。我选择了[[https://emacs-china.org/t/org-mode-site-v0-0-3/11409][ Org Mode 生成静态站点 Site 项目 V0.0.3 版]] 这篇帖子介绍的方案。
+实现的效果也让我很满意，配合 =prodigy= 这个包，本地预览博客和发布到服务器上都十分便捷，只需要一个按键就可以实现。
+
+静态博客也有个弊端：不能进行全文搜索。（网络上有使用搜索引擎进行站内搜索的，但是据我所知，百度目前关闭了类似功能，而谷歌。。。，不借用梯子是无法使用的。）
+
+我到网络上搜索了一下各种静态博客搜索的方案，于是选择了 [[https://github.com/olivernn/lunr.js][lunr.js]] 方案。
+
+下面我介绍下具体如何实现。
+
+总体分为三步：
+- 对博客生成的 =html= 文件进行索引
+- 对第一步生成的索引文件进行分词
+- 在网页前端引用第二步生成的分词文件，实现搜索
+
+* 介绍博客文件和作用
+我的整个博客文件夹的结构如下：
+
+#+begin_example
+org-notes
+|-- notes
+|   |-- Flask 源码
+|   |   |-- Flask 源码.org
+|   |   `-- ./static
+|   |       |-- HTTP.png
+|   |       |-- WSGI 示意图.jpg
+|   |       |-- WSGI.png
+|   |       |-- obj.png
+|   |       |-- 入栈后.png
+|   |       |-- 正则匹配结果.png
+|   |       `-- 第一入栈时代理访问到 self._local 的 stack 值为空.png
+|   |-- Thread Local
+|   |   `-- Thread Local.org
+|   `-- index.org
+|-- public
+|   |-- Flask 源码
+|   |   |-- Flask 源码.html
+|   |   `-- ./static
+|   |       |-- HTTP.png
+|   |       |-- WSGI 示意图.jpg
+|   |       |-- WSGI.png
+|   |       |-- obj.png
+|   |       |-- 入栈后.png
+|   |       |-- 正则匹配结果.png
+|   |       `-- 第一入栈时代理访问到 self._local 的 stack 值为空.png
+|   |-- Gruntfile.js
+|   |-- Thread Local
+|   |   `-- Thread Local.html
+|   |-- index.html
+|   |-- node_modules
+|   |-- package-lock.json
+|   |-- package.json
+|   `-- static
+|       |-- assets
+|       |   `-- images
+|       |       `-- 2020
+|       |           |-- 2020-blue.png
+|       |           `-- 2020-red.png
+|       `-- vendor
+|           |-- css
+|           |   |-- all.min.css
+|           |   |-- animate.min.css
+|           |   `-- style.css
+|           |-- js
+|           |   |-- darkreader.js
+|           |   |-- jquery.min.js
+|           |   |-- lunr.min.js
+|           |   |-- lunr.stemmer.support.js
+|           |   |-- lunr.zh.js
+|           |   |-- main.js
+|           |   `-- search.js
+|           `-- json
+|               |-- index.json
+|               `-- jieba.json
+`-- theme-rose.setup
+#+end_example
+
+** =blog= 文件夹介绍：
+- =notes= ：存放的是所有使用 Org-mode 写的文章
+- =public= ：存放的是 Org 文件导出生成的 html 文件，也是静态博客的页面文件
+- =theme-rose.setup= ：是用于 Org 导出为 html 文件时，为 html 导入 js、css 头文件
+
+=theme-rose.setup= 文件内容如下：
+
+#+CAPTION: theme-rose.setup
+<<theme-rose.setup>>
+
+#+BEGIN_SRC html :results raw drawer values list :exports no-eval
+# -*- mode: org; -*-
+#+HTML_HEAD: <link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+#+HTML_HEAD: <link href="https://unpkg.com/tippy.js@6.2.3/themes/light.css" rel="stylesheet">
+#+HTML_HEAD: <script src="https://unpkg.com/@popperjs/core@2"></script>
+#+HTML_HEAD: <script src="https://unpkg.com/vis-network@8.2.0/dist/vis-network.min.js"></script>
+#+HTML_HEAD: <script src="https://unpkg.com/@popperjs/core@2"></script>
+#+HTML_HEAD: <script src="https://unpkg.com/tippy.js@6"></script>
+#+HTML_HEAD: <script src="//cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+#+HTML_HEAD:
+#+HTML_HEAD: <link rel="shortcut icon" href="/static/assets/images/2020/2020-blue.png" type="image/x-icon" />
+#+HTML_HEAD: <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.7.2/animate.min.css" />
+#+HTML_HEAD: <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" />
+#+HTML_HEAD:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/static/vendor/css/stylesheet.css"/>
+#+HTML_HEAD:
+#+HTML_HEAD: <script src="/static/vendor/js/darkreader.js"></script>
+#+HTML_HEAD: <script src="/static/vendor/js/main.js"></script>
+#+HTML_HEAD: <script src="/static/vendor/js/lunr.min.js"></script>
+#+HTML_HEAD: <script src="/static/vendor/js/search.js"></script>
+#+HTML_HEAD: <script src="/static/vendor/js/URI.js"></script>
+#+HTML_HEAD: <script src="/static/vendor/js/page.js"></script>
+#+END_SRC
+
+** =public= 文件夹介绍
+接着介绍 =public= 文件夹中的文件：
+- =Gruntfile.js= ：用来生成索引文件和分词文件的脚本
+
+=Gruntfile.js= 文件内容如下：
+
+#+BEGIN_SRC js :results values list :exports no-eval
+var matter = require("gray-matter");
+var S = require("string");
+var conzole = require("conzole");
+var lunr = require("./static/vendor/js/lunr.min.js");
+var jsdom = require("jsdom");
+const {JSDOM} = jsdom;
+const {document} = (new JSDOM("<!doctype html><html><body></body></html>")).window;
+global.document = document;
+const window = document.defaultView;
+var $ = require("jquery")(window);
+require("./static/vendor/js/lunr.stemmer.support.js")(lunr);
+require("./static/vendor/js/lunr.zh.js")(lunr);
+
+
+var CONTENT_PATH_PREFIX = ".";
+
+
+module.exports = function(grunt) {
+
+    grunt.registerTask("search-index", function() {
+
+        grunt.log.ok("Building pages index.");
+
+        var doIndexPages = function() {
+            var pageIndexes = [];
+            grunt.file.recurse(CONTENT_PATH_PREFIX, function(abspath, rootdir, subdir, filename) {
+                grunt.verbose.writeln("Page file: ", abspath);
+                data = processFile(abspath, filename);
+                if (data !== undefined) {
+                    pageIndexes.push(data);
+                }
+            });
+
+            return pageIndexes;
+        };
+
+        var processFile = function(abspath, filename) {
+            var pageIndex;
+
+            if (S(filename).endsWith(".html")) {
+                pageIndex = processHTMLFile(abspath, filename);
+            }
+            else if (S(filename).endsWith(".md")) {
+                pageIndex = processMDFile(abspath, filename);
+                return;
+            }
+
+            return pageIndex;
+        };
+
+        var processHTMLFile = function(abspath, filename) {
+            var content = grunt.file.read(abspath, filename);
+            var pageName = S(filename).chompRight(".html").s;
+            var href = S(abspath).chompLeft(CONTENT_PATH_PREFIX).s;
+
+            if (href == "index.html") {
+                return;
+            }
+
+            if (href.startsWith("node_modules")) {
+                return;
+            }
+
+            return {
+                title: pageName,
+                href: href,
+                content: S(content).trim().stripTags().stripPunctuation().s
+            };
+        };
+
+        var processMDFile = function(abspath, filename) {
+            var content = matter(grunt.file.read(abspath, filename));
+            if (content.data.draft) {
+                conzole.log("Draft; do not index", abspath);
+                return;
+            }
+
+            return {
+                title: content.data.title,
+                categories: content.data.categories,
+                href: content.data.slug,
+                content: S(content.content).trim().stripTags().stripPunctuation().s
+            };
+        };
+
+        grunt.file.write("./static/vendor/json/index.json", JSON.stringify(doIndexPages()));
+        grunt.log.ok("Indexes built.");
+    });
+
+    grunt.registerTask("pre-segment", function() {
+        grunt.log.ok("Pre-building segmentations.");
+
+        var data = grunt.file.readJSON("./static/vendor/json/index.json");
+
+        var segmentations = lunr(function () {
+            this.use(lunr.zh);
+            this.field("title");
+            this.field("content");
+            this.ref("href");
+
+            for (var i = 0; i < data.length; ++i) {
+                this.add(data[i]);
+            }
+        });
+
+        grunt.file.write("./static/vendor/json/jieba.json", JSON.stringify(segmentations));
+        grunt.log.ok("Segmentations built.");
+    });
+};
+#+END_SRC
+
+可以看到脚本中注册了两个命令 ~search-index~ ， ~pre-segment~ 。
+
+~search-index~ ：该命令会递归的搜索当前目录下的所有子目录，并将所有的 =html= 文件的文件名，路径，内容提取出来存放到 =index.json= 文件中。
+
+~pre-segment~ ：该命令会调用 =static/vendor/js/lunr.min.js= ， =static/vendor/js/lunr.zh.js= ， =static/vendor/js/lunr.stemmer.support.js= 调用本地安装的 =nodejieba= 对
+索引文件 =index.json= 进行本地的分词预处理。
+
+具体的可以看：
+
+[[https://github.com/MihaiValentin/lunr-languages/pull/53]]
+
+[[https://github.com/MihaiValentin/lunr-languages/pull/53/commits]]
+
+这两个命令现在还不能运行，需要完成下一步：安装 =package.json= 中的依赖。
+
+- =package.json= ：运行 =Gruntfile.js= 脚本文件需要的 node 依赖
+
+=package.json= 文件内容如下：
+
+#+BEGIN_SRC js :results values list :exports no-eval
+{
+    "private": true,
+    "name": "org-site",
+    "version": "1.0.0",
+    "description": "Used to generate index.json file for org site.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "c",
+    "license": "ISC",
+    "devDependencies": {
+        "conzole": "^0.2.0",
+        "gray-matter": "^4.0.2",
+        "grunt": "^1.2.1",
+        "grunt-contrib-jshint": "^2.1.0",
+        "jquery": "^3.5.1",
+        "jsdom": "^16.3.0",
+        "nodejieba": "^2.4.1",
+        "string": "^3.3.3",
+        "lunr": "^2.3.9"
+    }
+}
+#+END_SRC
+
+可以看到依赖里有 =nodejieba= ，正是使用它来对生成的索引文件 =index.json= 本地进行分词生成 =jieba.json= 。
+你需要在 =public= 文件夹下运行 ~npm install~ 命令安装好 =package.json= 中的依赖。
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+~/org-notes/public:master*? λ npm install
+#+END_SRC
+
+同时可以看到依赖里有 =grunt= ，安装好它之后就可以运行上一步提到的 ~search-index~ ， ~pre-segment~ 这两个命令了。
+
+** =static= 文件夹介绍
+博客页面所需的 css、js、json 文件：
+- =search.js= ：博客前端搜索使用，可以看到：
+
+#+BEGIN_SRC js :results values list :exports no-eval
+$.getJSON("./static/vendor/json/jieba.json", function(data){
+    if (data != null) {
+        searchIndexes = lunr.Index.load(data);
+    }
+    doSearch(query);
+});
+#+END_SRC
+
+正是在此处读取使用结巴分词分词好后生成的 =jieba.json= 文件并调用 =lunr= 进行搜索。
+
+=search.js= 文件内容如下：
+
+#+BEGIN_SRC js :results values list :exports no-eval
+// Case-insensitive alternative to :contains():
+// All credit to Mina Gabriel:
+// http://stackoverflow.com/a/15033857/443373
+$.expr[":"].containsIgnoreCase = function (n, i, m) {
+    return jQuery(n).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+};
+
+$(document).ready(function() {
+    // Handle live search/filtering:
+    var results      = $("#filter-results"),
+        filterInput      = $("#filter-query"),
+        clearFilterInput = $("#filter-clear-query");
+
+    var searchIndexLoaded = 0, searchIndexes = null;
+
+    // Auto-focus the search field:
+    filterInput.focus();
+
+    // Cancels a filtering action and puts everything back in its place:
+    function cancelFilterAction()
+    {
+        filterInput.val("").removeClass("active");
+        results.empty();
+    }
+
+    // Clear the filter input when the X to its right is clicked:
+    clearFilterInput.click(cancelFilterAction);
+
+    // Same thing if the user presses ESC and the filter is active:
+    $(document).keyup(function(e) {
+        e.keyCode == 27 && filterInput.hasClass("active") && cancelFilterAction();
+    });
+
+    function doSearch(query)
+    {
+        if (searchIndexes != null) {
+            var searchResults = searchIndexes.search(query);
+            var stringHtml = "";
+
+            for (var i = 0; i < searchResults.length; i++) {
+                var position = searchResults[i].ref.lastIndexOf(".");
+                console.log(searchResults);
+                console.log(position);
+                stringHtml += "<li class=\"file\"><a href=\"" + searchResults[i].ref + "\" target=\"_blank\">" +  searchResults[i].ref.substr(0, position) + "</a></li>";
+            }
+            results.html(stringHtml);
+        } else {
+            // Sanitize the search query so it won't so easily break
+            // the :contains operator:
+            query = query
+                .replace(/\(/g, "\\(")
+                .replace(/\)/g, "\\)");
+        }
+    }
+
+    // Perform live searches as the user types:
+    // @todo: check support for 'input' event across more browsers?
+    filterInput.bind("input", function() {
+        var value         = filterInput.val(),
+            query         = $.trim(value),
+            isActive      = value != "";
+
+        // Add a visual cue to show that the filter function is active:
+        filterInput.toggleClass("active", isActive);
+
+        // If we have no query, cleanup and bail out:
+        if(!isActive) {
+            cancelFilterAction();
+            return;
+        }
+
+        if (!searchIndexLoaded) {
+            searchIndexLoaded = 1;
+            $.getJSON("./static/vendor/json/jieba.json", function(data){
+                if (data != null) {
+                    searchIndexes = lunr.Index.load(data);
+                }
+                doSearch(query);
+            });
+        } else {
+            doSearch(query);
+        }
+    });
+});
+#+END_SRC
+
+该文件必须在博客的页面中引用具体请看 [[theme-rose.setup][See：theme-rose.setup ]]。
+
+** =index.org= 文件介绍
+=index.org= 文件内容如下：
+
+#+BEGIN_SRC html :results raw drawer values list :exports no-eval
+#+DATE: <2020-03-20 五 15:18>
+#+TITLE: Hurricane
+
+#+HTML_HEAD: <script src="/static/vendor/json/jieba.json"></script>
+#+HTML: <div class="container-fluid">
+#+HTML:   <div class="row">
+#+HTML:     <div class="col-xs-12 col-md-3">
+#+HTML:       <div id="filter" class="input-group">
+#+HTML:         <input type="text" id="filter-query" placeholder="Search file name or content." class="form-control input-sm">
+#+HTML:         <a id="filter-clear-query" title="Clear current search..." class="input-group-addon input-sm">
+#+HTML:           <i class="glyphicon glyphicon-remove">&#x274c;</i>
+#+HTML:         </a>
+#+HTML:       </div>
+#+HTML:     </div>
+#+HTML:   </div>
+#+HTML: </div>
+#+HTML: <ul class="unstyled" id="filter-results"></ul>
+
+A pure site based on org mode.
+
+| Flask      |
+|------------|
+| [[file:Flask 源码/Flask 源码.org][Flask 源码]] |
+
+*Convenient navigation.*
+
+_[[https://emacs-china.org/][Emacs China]]_ _[[https://orgmode.org/org.html][The Org Manual]]_
+#+END_SRC
+
+#+BEGIN_SRC html :results raw drawer values list :exports no-eval
+#+HTML_HEAD: <script src="/static/vendor/json/jieba.json"></script>
+#+END_SRC
+
+这段代码作用就是引用了 =jieba.json= 这个分词文件，为什么不把它放在 =theme-rose.setup= 中呢？
+因为我只打算在博客的首页中有搜索功能，所以只在 =index.org= 中引用它。
+
+#+BEGIN_SRC html :results raw drawer values list :exports no-eval
+#+HTML: <div class="container-fluid">
+#+HTML:   <div class="row">
+#+HTML:     <div class="col-xs-12 col-md-3">
+#+HTML:       <div id="filter" class="input-group">
+#+HTML:         <input type="text" id="filter-query" placeholder="Search file name or content." class="form-control input-sm">
+#+HTML:         <a id="filter-clear-query" title="Clear current search..." class="input-group-addon input-sm">
+#+HTML:           <i class="glyphicon glyphicon-remove">&#x274c;</i>
+#+HTML:         </a>
+#+HTML:       </div>
+#+HTML:     </div>
+#+HTML:   </div>
+#+HTML: </div>
+#+END_SRC
+
+这段代码就是为了在博客首页生成一个搜索框，如图所示：
+
+[[file:./static/使用 lunr 实现静态博客的前端搜索/2020-07-27_17-12-09_screenshot.jpg]]
+
+* 具体操作步骤
+前面介绍了各个文件作用。
+现在介绍具体如何使用。
+** 对博客生成的 =html= 文件进行索引
+只需要在 =public= 文件夹下，运行命令 ~grunt search-index~ ，如下所示：
+
+ #+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+ ~/org-notes/public:master*? λ grunt search-index
+ Running "search-index" task
+ >> Building pages index.
+ >> Indexes built.
+
+ Done.
+ #+END_SRC
+
+就会在 =static/vendor/json= 文件夹下生成索引文件 =index.json= 。
+
+** 对生成的索引文件进行分词
+只需要在 =public= 文件夹下，运行命令 ~grunt pre-segment~ ，如下所示：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+~/org-notes/public:master*? λ  grunt pre-segment
+Running "pre-segment" task
+>> Pre-building segmentations.
+>> Segmentations built.
+
+Done.
+#+END_SRC
+
+就会在 =static/vendor/json= 文件夹下生成分词文件 =jieba.json= 。
+
+** 在网页前端引用第二步生成的分词文件，实现搜索
+接下来就是把生成的 =html= 文件， =jieba.json= 文件等上传到服务器。
+
+推荐使用 =rsync= 这个工具，便捷快速。
+
+ #+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+ ~/org-notes/public:master*? λ rsync -avzt -vvvv ~/org-notes/public/ c@x.x.x.x:/home/c/site/public/
+ #+END_SRC
+
+** 使用 =prodigy= 实现快捷的运行脚本命令
+前面的索引，分词，上传这几个步骤都需要在终端上运行命令。
+
+在 Emacs 中有个 =prodigy= 包，可以实现快捷的运行脚本命令。
+
+具体的 =prodigy= 配置如下：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(defun hurricane-misc/post-init-prodigy ()
+  (progn
+    (prodigy-define-tag
+      :name 'jekyll
+      :env '(("LANG" "en_US.UTF-8")
+             ("LC_ALL" "en_US.UTF-8")))
+
+    ;; Define service.
+    (prodigy-define-service
+      :name "Blog index"
+      :command "grunt"
+      :args '("search-index")
+      :cwd "~/org-notes/public/"
+      :tags '(blog index)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Blog segment"
+      :command "grunt"
+      :args '("pre-segment")
+      :cwd "~/org-notes/public/"
+      :tags '(blog segment)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Blog push"
+      :command "rsync"
+      :args '("-avzt" "--exclude=\"./.DS_Store\"" "." "c@x.x.x.x:/home/c/site/public/")
+      :cwd "~/org-notes/public/"
+      :tags '(blog push)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Blog pull"
+      :command "rsync"
+      :args '("-avzt" "-vvvv" "c@x.x.x.x:/home/c/site/public/" "." )
+      :cwd "~/org-notes/public/"
+      :tags '(blog pull)
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "Blog preview"
+      :command "python"
+      :args '("-m" "SimpleHTTPServer" "8088")
+      :cwd "~/org-notes/public/"
+      :tags '(blog preview)
+      :init (lambda () (browse-url "http://localhost:8088/index.html"))
+      :kill-signal 'sigkill
+      :kill-process-buffer-on-stop t)
+
+    (defun refresh-chrome-current-tab (beg end length-before)
+      (call-interactively 'hurricane/browser-refresh--chrome-applescript))
+      ;; Add watch for prodigy-view-mode buffer change event.
+      (add-hook 'prodigy-view-mode-hook
+                #'(lambda() (set (make-local-variable 'after-change-functions) #'refresh-chrome-current-tab)))))
+#+END_SRC
+
+需要注意的是 ~cwd~ 参数是你希望该命令在哪个目录下运行，很明显在我们这个例子中，就是 =~/org-notes/public/= 。
+
+我个人使用的是 spacemacs，按 =SPACE a t p= 就可以调用 =prodigy= 。
+
+并且将光标移到所要运行的命令的行，按 ~s~ 就能运行预定义好的命令了。
+
+按大写 ~S~ 就可以停止命令运行。
+
+#+DOWNLOADED: screenshot @ 2020-07-27 17:41:06
+[[file:./static/使用 lunr 实现静态博客的前端搜索/2020-07-27_17-41-06_screenshot.jpg]]
+
+接下来我将使用视频演示：
+
+[[video:./static/使用 lunr 实现静态博客的前端搜索/演示.mp4][演示.mp4]]
+
+可以看到当将写好的 Org 文件导出成 html 文件后。
+
+只需先调用 ~prodigy~ 命令，接着分别在 =Blog index= ， =Blog segment= ,  =Blog push= 三个标签对应的行先后按下 ~s~ 运行对应的命令即可。
+省去了在终端中运行命令的麻烦。
+
+* 相关链接
+[[https://bart.degoe.de/searching-your-hugo-site-with-lunr/]]
+
+[[https://zohead.com/archives/wiki-lunr-js/]]
+
+* 附件
+[[file:./static/使用 lunr 实现静态博客的前端搜索/org-notes.zip][org-notes.zip]]

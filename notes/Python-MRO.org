@@ -1,0 +1,143 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-MRO/")); -*-
+:PROPERTIES:
+:ID:       453DDDE1-959C-47C0-A6EA-B97BFBC4A9C7
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-09 Tue 01:25>
+#+TITLE: Python-MRO
+
+MRO（Method Resolution Order）：方法解析顺序。
+
+Python 语言包含了很多优秀的特性，其中多重继承就是其中之一，但是多重继承会引发很多问题，比如二义性，Python 中一切皆引用，这使得他不会像 C++ 一样使用虚基类处理基类对象重复的问题，
+但是如果父类存在同名函数的时候还是会产生二义性，Python 中处理这种问题的方法就是 MRO。
+
+* 历史中的 MRO
+如果不想了解历史，只想知道现在的 MRO 可以直接看最后的 C3 算法，不过 C3 所解决的问题都是历史遗留问题，了解问题，才能解决问题，建议先看历史中 MRO 的演化。
+
+** Python 2.2 以前的版本：金典类（classic class）时代
+金典类是一种没有继承的类，实例类型都是 type 类型，如果经典类被作为父类，子类调用父类的构造函数时会出错。
+
+这时 MRO 的方法为 DFS（深度优先搜索（子节点顺序：从左到右））。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+Class A:
+    def __init__(self):
+        print "这是金典类"
+#+END_SRC
+
+=inspect.getmro(A)= 可以查看金典类的 MRO 顺序：
+
+#+BEGIN_SRC python :results output :exports no-eval
+import inspect
+
+
+class D:
+    pass
+
+class C(D):
+    pass
+
+class B(D):
+    pass
+
+class A(B, C):
+    pass
+
+print inspect.getmro(A)
+#+END_SRC
+
+#+RESULTS:
+: (<class __main__.A at 0x104d45bb0>, <class __main__.B at 0x104d45b48>, <class __main__.D at 0x104d45a78>, <class __main__.C at 0x104d45ae0>)
+
+MRO 的 DFS 顺序如下图：
+
+[[file:./static/Python-MRO/2020-06-09_01-40-04_screenshot.jpg]]
+
+两种继承模式在 DFS 下的优缺点。
+
+第一种，我称为正常继承模式，两个互不相关的类的多继承，这种情况 DFS 顺序正常，不会引起任何问题。
+
+第二种，棱形继承模式，存在公共父类（D）的多继承，这种情况下 DFS 必定经过公共父类（D），这时候想想，如果这个公共父类（D）有一些初始化属性或者方法，但是子类（C）又重写了这些属性或者方法。
+
+那么按照 DFS 顺序必定是会先找到 D 的属性或方法，那么 C 的属性或者方法将永远访问不到，导致 C 只能继承无法重写（override）。
+这也就是为什么新式类不使用 DFS 的原因，因为他们都有一个公共的祖先 =object= 。
+
+[[file:Python 元类.org::* 没有显式指定元类，即 =__metaclass__=][See：Python 元类]]
+
+** Python 2.2 版本：新式类（new-style class）诞生
+为了使类和内置类型更加统一，引入了新式类。
+新式类的每个类都继承于一个基类，可以是自定义类或者其它类，默认承于 =object= 。
+子类可以调用父类的构造函数。
+
+这时有两种 MRO 的方法：
+
+1. 如果是金典类 MRO 为 DFS（深度优先搜索（子节点顺序：从左到右））。
+2. 如果是新式类 MRO 为 BFS（广度优先搜索（子节点顺序：从左到右））。
+
+#+BEGIN_SRC python :results output :exports no-eval
+# -*- coding: utf-8 -*-
+class A(object):
+   def __init__(self):
+       print "this is new type class."
+
+print A.__mro__
+#+END_SRC
+
+#+RESULTS:
+: (<class '__main__.A'>, <type 'object'>)
+
+MRO 的 BFS 顺序如下图：
+
+#+DOWNLOADED: screenshot @ 2020-06-09 01:46:30
+[[file:./static/Python-MRO/2020-06-09_01-46-30_screenshot.jpg]]
+
+两种继承模式在 BFS 下的优缺点。
+
+第一种，正常继承模式，看起来正常，不过实际上感觉很别扭，比如 B 明明继承了 D 的某个属性（假设为 foo），C 中也实现了这个属性 foo，
+那么 BFS 明明先访问 B 然后再去访问 C，但是为什么 foo 这个属性会是 C ？这种应该先从 B 和 B 的父类开始找的顺序，我们称之为单调性。
+
+第二种，棱形继承模式，这种模式下面，BFS 的查找顺序虽然解了 DFS 顺序下面的棱形问题，但是它也是违背了查找的单调性。
+
+因为违背了单调性，所以 BFS 方法只在 Python 2.2 中出现了，在其后版本中用 C3 算法取代了 BFS。
+
+** Python 2.3 到 Python 2.7：金典类，新式类和平发展
+因为之前的 BFS 存在较大的问题，所以从 Python 2.3 开始新式类的 MRO 取而代之的是 [[file:Python 2-MRO_and_super.org::*C3 算法的实现][C3 算法]]，我们可以知道 C3 算法肯定解决了单调性问题，和只能继承无法重写的问题。C3 算法具体实现稍后讲解。
+
+MRO 的 C3 算法顺序如下图：看起简直是 DFS 和 BFS 的合体有木有。但是仅仅是看起来像而已。
+
+#+transclude: t
+[[file:Python 2-MRO_and_super.org::* C3 算法在棱形继承中的表现][C3 算法在棱形继承中的表现]]
+
+[[file:./static/Python-MRO/2020-06-09_01-52-24_screenshot.jpg]]
+
+** Python 3 到至今：新式类一统江湖
+Python 3 开始就只存在新式类了，采用的 MRO 也依旧是 C3 算法。
+
+* 神奇的算法 C3
+C3 算法解决了单调性问题和只能继承无法重写问题，在很多技术文章包括官网中的 C3 算法，都只有那个 merge list 的公式法，想看的话网上很多，自己可以查。但是从公式很难理解到解决这个问题的本质。
+我经过一番思考后，我讲讲我所理解的 C3 算法的本质。如果错了，希望有人指出来。
+
+假设继承关系如下(官网的例子)：
+
+[[file:./static/Python-MRO/2020-06-09_01-53-31_screenshot.jpg]]
+
+首先假设继承关系是一张图（事实上也是），我们按类继承是的顺序（ =class A(B, C)= 括号里面的顺序 B，C），子类指向父类，构一张图。
+
+[[file:./static/Python-MRO/2020-06-09_01-53-51_screenshot.jpg]]
+
+我们要解决两个问题：单调性问题和不能重写的问题。
+
+很容易发现要解决单调性，只要保证从根(A)到叶(object)，从左到右的访问顺序即可。
+
+那么对于只能继承，不能重写的问题呢？先分析这个问题的本质原因，主要是因为先访问了子类的父类导致的。
+那么怎么解决只能先访问子类再访问父类的问题呢？如果熟悉图论的人应该能马上想到拓扑排序，这里引用一下百科的的定义:
+
+#+BEGIN_QUOTE
+对一个有向无环图(Directed Acyclic Graph 简称 DAG)G 进行拓扑排序，是将 G 中所有顶点排成一个线性序列，使得图中任意一对顶点 u 和 v，若边(u,v)∈E(G)，则 u 在线性序列中出现在 v 之前。
+通常，这样的线性序列称为满足拓扑次序(Topological Order)的序列，简称拓扑序列。简单的说，由某个集合上的一个偏序得到该集合上的一个全序，这个操作称之为拓扑排序。
+#+END_QUOTE
+
+因为拓扑排序肯定是根到叶（也不能说是叶了，因为已经不是树了），所以只要满足从左到右，得到的拓扑排序就是结果，关于拓扑排序算法，大学的数据结构有教，这里不做讲解，不懂的可以自行谷歌或者翻一下书，建议了解完算法再往下看。
+
+那么模拟一下例子的拓扑排序：首先找入度为 0 的点，只有一个 A，把 A 拿出来，把 A 相关的边剪掉，再找下一个入度为 0 的点，有两个点（B,C）,取最左原则，拿 B，这是排序是 AB，然后剪 B 相关的边，这时候入度为 0 的点有 E 和 C，取最左。
+这时候排序为 ABE，接着剪 E 相关的边，这时只有一个点入度为 0，那就是 C，取 C，顺序为 ABEC。剪 C 的边得到两个入度为 0 的点（DF），取最左 D，顺序为 ABECD，然后剪 D 相关的边，那么下一个入度为 0 的就是 F，然后是 object。那么最后的排序就为 ABECDF object。

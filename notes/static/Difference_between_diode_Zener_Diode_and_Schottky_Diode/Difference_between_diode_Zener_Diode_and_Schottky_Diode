@@ -1,0 +1,520 @@
+1
+00:00:00,120 --> 00:00:03,539
+hey guys welcome back to another video
+
+2
+00:00:01,889 --> 00:00:03,600
+tutorial now you must be familiar with
+
+3
+00:00:03,658 --> 00:00:07,439
+this symbol and you must have seen it in
+
+4
+00:00:05,490 --> 00:00:09,749
+your books arranged in this manner in a
+
+5
+00:00:07,440 --> 00:00:11,670
+half and pool bridge rectifier yes it's
+
+6
+00:00:09,750 --> 00:00:13,138
+a diode it is a passive device and
+
+7
+00:00:11,669 --> 00:00:15,268
+allows the flow of current in one
+
+8
+00:00:13,138 --> 00:00:17,219
+direction only but since there are so
+
+9
+00:00:15,269 --> 00:00:19,528
+many types of diode how to differentiate
+
+10
+00:00:17,219 --> 00:00:21,179
+between them and most importantly which
+
+11
+00:00:19,528 --> 00:00:23,579
+one to use according to its requirement
+
+12
+00:00:21,179 --> 00:00:24,989
+in our circuit so in this video you are
+
+13
+00:00:23,579 --> 00:00:26,368
+going to see basic difference between
+
+14
+00:00:24,989 --> 00:00:28,888
+three most widely used ioads
+
+15
+00:00:26,368 --> 00:00:31,589
+active fire short key and zener diode
+
+16
+00:00:28,890 --> 00:00:32,689
+and when to use one but before jump into
+
+17
+00:00:31,589 --> 00:00:35,279
+its type let's see some basic
+
+18
+00:00:32,689 --> 00:00:36,929
+specifications of a diode first we have
+
+19
+00:00:35,280 --> 00:00:39,419
+which indicates forward voltage drop
+
+20
+00:00:36,929 --> 00:00:40,978
+when current flows from P terminal to n
+
+21
+00:00:39,420 --> 00:00:43,769
+terminal that's why it's called for
+
+22
+00:00:40,979 --> 00:00:47,519
+voltage drop I am which is the maximum
+
+23
+00:00:43,770 --> 00:00:49,229
+forward current a diode can handle VR it
+
+24
+00:00:47,520 --> 00:00:51,480
+is the reverse breakdown voltage band
+
+25
+00:00:49,229 --> 00:00:54,269
+current flows from n terminal to P
+
+26
+00:00:51,479 --> 00:00:56,459
+terminal that is in reverse direction IR
+
+27
+00:00:54,270 --> 00:00:57,510
+the quantity of current flows when diode
+
+28
+00:00:56,460 --> 00:00:59,609
+is reverse-biased
+
+29
+00:00:57,509 --> 00:01:01,888
+that means when current flows in reverse
+
+30
+00:00:59,609 --> 00:01:04,229
+direction and at last reverse a couple
+
+31
+00:01:01,890 --> 00:01:05,430
+time tell explaining it all so first of
+
+32
+00:01:04,228 --> 00:01:07,858
+all let's talk about the most common
+
+33
+00:01:05,430 --> 00:01:09,299
+diode which is rectified how a rectifier
+
+34
+00:01:07,859 --> 00:01:11,849
+diode is the simplest PN Junction diode
+
+35
+00:01:09,299 --> 00:01:13,290
+used mostly for rectification purposes
+
+36
+00:01:11,849 --> 00:01:15,268
+in a half-witch and full bridge
+
+37
+00:01:13,290 --> 00:01:17,129
+rectifier and that's because of its high
+
+38
+00:01:15,269 --> 00:01:20,158
+breakdown voltage typically in the order
+
+39
+00:01:17,129 --> 00:01:21,959
+of 200 mm volts which is obvious the
+
+40
+00:01:20,159 --> 00:01:23,970
+forward breakdown voltage of a rectifier
+
+41
+00:01:21,959 --> 00:01:26,848
+diode is between point seven two point
+
+42
+00:01:23,969 --> 00:01:28,558
+nine volt as an example let's say you
+
+43
+00:01:26,849 --> 00:01:31,108
+want to design a bridge rectifier for
+
+44
+00:01:28,560 --> 00:01:33,239
+your AC to DC converter project for this
+
+45
+00:01:31,109 --> 00:01:35,698
+project afire diode of one and four
+
+46
+00:01:33,239 --> 00:01:37,349
+active Isis is an optimum choice now
+
+47
+00:01:35,700 --> 00:01:38,909
+short key diode this is the symbol of
+
+48
+00:01:37,349 --> 00:01:40,228
+short key diode now it looks similar to
+
+49
+00:01:38,909 --> 00:01:41,699
+rectify doubt but there are many
+
+50
+00:01:40,228 --> 00:01:44,069
+differences between a short key and
+
+51
+00:01:41,700 --> 00:01:45,839
+rectified unlike rectifier diode
+
+52
+00:01:44,069 --> 00:01:48,088
+junction of short key diode is between
+
+53
+00:01:45,840 --> 00:01:50,070
+n-type semiconductor to metal bit short
+
+54
+00:01:48,090 --> 00:01:51,630
+key diode also known as barrier diode is
+
+55
+00:01:50,069 --> 00:01:53,727
+used mainly in low voltage circuits
+
+56
+00:01:51,629 --> 00:01:55,258
+because 4 volt is drop of short key
+
+57
+00:01:53,728 --> 00:01:57,358
+diode is less than a rectified or
+
+58
+00:01:55,259 --> 00:01:59,279
+typically in the range of 0.25 to 0.5
+
+59
+00:01:57,359 --> 00:02:00,478
+volts whereas in the rectifier diode
+
+60
+00:01:59,280 --> 00:02:04,169
+this range is between
+
+61
+00:02:00,478 --> 00:02:05,428
+0.7 to 0.9 also electron or the majority
+
+62
+00:02:04,170 --> 00:02:08,339
+charge creates on both side of the
+
+63
+00:02:05,430 --> 00:02:09,869
+junction thus it is a unipolar device it
+
+64
+00:02:08,340 --> 00:02:12,270
+is mostly using high frequency
+
+65
+00:02:09,868 --> 00:02:13,928
+applications baikonur snps and this
+
+66
+00:02:12,270 --> 00:02:15,339
+because of less temperature rise
+
+67
+00:02:13,930 --> 00:02:17,530
+and high switching speed pertaining to
+
+68
+00:02:15,340 --> 00:02:19,840
+its small recovery time now what is the
+
+69
+00:02:17,530 --> 00:02:21,879
+recovery time when a diode is suddenly
+
+70
+00:02:19,840 --> 00:02:23,319
+switched off it takes a small amount of
+
+71
+00:02:21,878 --> 00:02:25,328
+time for the forward current flowing
+
+72
+00:02:23,318 --> 00:02:27,399
+through the diode to die down and the
+
+73
+00:02:25,329 --> 00:02:29,529
+time taken for this is called reverse
+
+74
+00:02:27,400 --> 00:02:31,659
+recovery time compared to normal diode
+
+75
+00:02:29,530 --> 00:02:33,579
+reverse recovery time of Schottky diode
+
+76
+00:02:31,658 --> 00:02:35,589
+is much smaller and this is making it
+
+77
+00:02:33,579 --> 00:02:37,598
+suitable to be used in fast switching
+
+78
+00:02:35,590 --> 00:02:39,159
+circuit now disadvantage of short key
+
+79
+00:02:37,598 --> 00:02:41,199
+diode is its low breakdown voltage
+
+80
+00:02:39,158 --> 00:02:43,149
+usually between 20 volt to 40 volt
+
+81
+00:02:41,199 --> 00:02:46,029
+making it unsuitable for a rectifier
+
+82
+00:02:43,150 --> 00:02:47,949
+circuit as an example let's say we are
+
+83
+00:02:46,030 --> 00:02:49,208
+designing a buck converter like we did
+
+84
+00:02:47,949 --> 00:02:50,978
+in one of the previous video
+
+85
+00:02:49,209 --> 00:02:52,079
+now since MOSFET in that circuit
+
+86
+00:02:50,979 --> 00:02:54,848
+switching with a very high frequency
+
+87
+00:02:52,079 --> 00:02:56,888
+diode you need in that circuit must have
+
+88
+00:02:54,848 --> 00:02:58,987
+high switching speed and those short key
+
+89
+00:02:56,889 --> 00:03:00,970
+diode is an optimum choice now Zener
+
+90
+00:02:58,989 --> 00:03:02,590
+diode as in a diode is made of PN
+
+91
+00:03:00,969 --> 00:03:04,719
+Junction but heavily doped compared to a
+
+92
+00:03:02,590 --> 00:03:06,700
+normal diode as a result it can undergo
+
+93
+00:03:04,719 --> 00:03:08,827
+breakdown without being damaged and due
+
+94
+00:03:06,699 --> 00:03:10,478
+to this property only you know used as
+
+95
+00:03:08,829 --> 00:03:12,489
+voltage regulators in electronic circuit
+
+96
+00:03:10,479 --> 00:03:14,438
+what is the voltage accurate oh it's a
+
+97
+00:03:12,489 --> 00:03:16,119
+simple component that helps regulate the
+
+98
+00:03:14,438 --> 00:03:17,978
+voltage between certain limits in an
+
+99
+00:03:16,120 --> 00:03:19,298
+electronic circuit in fact you know
+
+100
+00:03:17,979 --> 00:03:21,789
+diodes are never used for rectification
+
+101
+00:03:19,299 --> 00:03:23,290
+purposes here's a circuit in which Zener
+
+102
+00:03:21,789 --> 00:03:25,529
+diode is used to prevent the MOSFET gate
+
+103
+00:03:23,289 --> 00:03:27,939
+from destruction by clipping off voltage
+
+104
+00:03:25,530 --> 00:03:29,829
+breakdown voltage of this xeno is five
+
+105
+00:03:27,939 --> 00:03:31,929
+point one volt now if accidentally
+
+106
+00:03:29,829 --> 00:03:34,239
+voltage at gate of MOSFET exceeds five
+
+107
+00:03:31,930 --> 00:03:35,889
+volt this diode breakdown and all
+
+108
+00:03:34,239 --> 00:03:37,658
+current flows through the diode to
+
+109
+00:03:35,889 --> 00:03:39,518
+ground and thus preventing the MOSFET
+
+110
+00:03:37,658 --> 00:03:41,048
+here is another circuit in which two
+
+111
+00:03:39,519 --> 00:03:43,658
+diodes are connected facing each of this
+
+112
+00:03:41,049 --> 00:03:45,760
+ptomaine if AC signal is given at input
+
+113
+00:03:43,658 --> 00:03:47,678
+one diode clips of voltage in positive
+
+114
+00:03:45,759 --> 00:03:49,388
+half whereas other in negative how and
+
+115
+00:03:47,680 --> 00:03:51,699
+those we get pulled it under specific
+
+116
+00:03:49,389 --> 00:03:54,249
+limit in both of cycle of AC at output
+
+117
+00:03:51,699 --> 00:03:55,899
+now as an example I use five volts you
+
+118
+00:03:54,250 --> 00:03:57,849
+know in the project digital voltmeter
+
+119
+00:03:55,900 --> 00:03:59,709
+using audio in which it is connected
+
+120
+00:03:57,848 --> 00:04:01,538
+across capacitor to prevent or you know
+
+121
+00:03:59,709 --> 00:04:03,790
+in case voltage additional of pin
+
+122
+00:04:01,539 --> 00:04:05,438
+exceeds five volt and with that being
+
+123
+00:04:03,789 --> 00:04:07,237
+said now you know all the basic
+
+124
+00:04:05,439 --> 00:04:09,399
+differences and when to use rectifier
+
+125
+00:04:07,239 --> 00:04:11,500
+short key and Zener diode you can also
+
+126
+00:04:09,400 --> 00:04:13,120
+check blog post for quick review link is
+
+127
+00:04:11,500 --> 00:04:14,948
+in description and if you liked this
+
+128
+00:04:13,120 --> 00:04:18,509
+video don't forget to subscribe until
+
+129
+00:04:14,949 --> 00:04:18,510
+then I see you next time bye bye
+
+130
+00:04:20,300 --> 00:04:31,850
+[Music]
+

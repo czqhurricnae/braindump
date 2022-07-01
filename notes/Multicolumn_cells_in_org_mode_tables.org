@@ -1,0 +1,60 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Multicolumn_cells_in_org_mode_tables/")); -*-
+:PROPERTIES:
+:ID:       EF94D54C-C1D4-4E07-AC31-F38582DE29F7
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-26 Oct 01:13>
+#+TITLE: Multicolumn_cells_in_org_mode_tables
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+Is it possible to merge two or more cells in an org-mode table like when
+using =\multicolumn{}{}{}= or =\multirow{}{}{}= in LaTeX?
+
+Something like this does not work:
+
+#+BEGIN_EXAMPLE
+    |------------+-----------+----------+----------+-------------|
+    |            |             Singular            | Plural      |
+    |            +-----------+----------+----------+-------------|
+    |            | Masculine | Neuter   | Feminine | All genders |
+    |------------+-----------+----------+----------+-------------|
+    | Nominative | *der*     | *das*    | *die*    | *die*       |
+    | Accusative | *den*     | *das*    | *die*    | *die*       |
+    | Dative     | *dem*     | *dem*    | *der*    | *denen*     |
+    | Genetive   | *dessen*  | *dessen* | *deren*  | *deren*     |
+    |------------+-----------+----------+----------+-------------|
+#+END_EXAMPLE
+
+Is there a way to construct such a table in org-mode?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+As @wvxvw points out, you can use [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Text-Based-Tables.html#Text-Based-Tables][=table.el=]] by Takaaki Ota.
+There is some built-in support for this in org-mode (see [[http://orgmode.org/manual/Cooperation.html#Cooperation][manual]]).
+Your example can be easily translated to =table.el= syntax by replacing some =|= with =+=:
+
+#+BEGIN_EXAMPLE
+    +------------+-----------+----------+----------+-------------+
+    |            |             Singular            | Plural      |
+    |            +-----------+----------+----------+-------------+
+    |            | Masculine | Neuter   | Feminine | All genders |
+    +------------+-----------+----------+----------+-------------+
+    | Nominative | *der*     | *das*    | *die*    | *die*       |
+    | Accusative | *den*     | *das*    | *die*    | *die*       |
+    | Dative     | *dem*     | *dem*    | *der*    | *denen*     |
+    | Genitive   | *dessen*  | *dessen* | *deren*  | *deren*     |
+    +------------+-----------+----------+----------+-------------+
+#+END_EXAMPLE
+
+The table can be edited using =C-c '= and it exports fine with the HTML and LaTeX backends,
+/except/ that org-mode syntax (such as using asterisks for bold) inside the cells is not recognised.
+Here is an example of rendered LaTeX export:
+[[file:./static/Multicolumn_cells_in_org_mode_tables/2432.jpeg]]

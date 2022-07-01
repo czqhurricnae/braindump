@@ -1,0 +1,27 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/unwind-protect")); -*-
+:PROPERTIES:
+:ID:       5C834B64-48D9-4640-8153-412D44945598
+:END:
+
+#+DATE: <2020-12-12 Sat 00:58>
+#+TITLE: unwind-protect
+
+* unwind-protect                                                      :Emacs:
+ 有时, 你希望你的代码能够防止诸如 throws 和 errors 产生的中断.
+ 通过使用 unwind-protect, 你可以保证这样的中断不会把你的程序置于不一致状态.
+ 一个 unwind-protect 接收任意数量的参数, 返回第一个的值. 然而, 如果第一个的求值被中断了, 那么剩下的表达式将会被求值.
+
+ #+BEGIN_SRC emacs-lisp :results values list :exports no-eval
+ > (setf x 1)
+ 1
+ > (catch 'abort
+     (unwind-protect
+       (throw 'abort 99)
+       (setf x 2)))
+ 99
+ > x
+ 2
+ #+END_SRC
+
+这里, 尽管 throw 发送控制给等待的 catch, unwind-protect 保证了第二个表达式的求值.
+在任何时候, 某些操作之后必须被清理或重置, 那么 unwind-protect 可能就是你需要的.

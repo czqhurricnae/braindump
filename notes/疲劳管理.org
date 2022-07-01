@@ -1,0 +1,36 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/疲劳管理/")); -*-
+:PROPERTIES:
+:ID:       6C262DAD-90B7-4622-A98D-394604E3DF3F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-22 Sat 02:41>
+#+TITLE: 疲劳管理
+
+#+ROAM_KEY:
+
+
+* 任务前疲劳风险评估
+:PROPERTIES:
+:ID:       DF1D0D06-009D-4A62-84AB-D49F7B58574A
+:END:
+CASA CAAP 48-1(1) Fatigue Management for Flight Crew Members
+
+* 疲劳教育训练计划与内容
+:PROPERTIES:
+:ID:       D69264DA-E9D3-4865-B7F7-87CCF9C12C5F
+:END:
+- FAA:
+  AC 117-2 Fatigue Education and Awareness Training Program
+  AC 120-100 Basics of Aviation Fatigue
+  AC 117-3 Fitness for Duty
+
+- Transport Canada:
+  FRMS for the Canadian Aviation Industry: Fatigue Management Strategies for Employees, TP 14573E
+  (provides the knowledge and skills required to apply appropriate fatigue management strategies at the individual level)
+
+* 疲劳风险管理计划（FRMP）
+:PROPERTIES:
+:ID:       05627EC0-664E-4F93-BAFC-121D53FB5343
+:END:
+- FAA InFO 10017
+- FAA InFO 10017 SUP - FRMP CHECKLIST

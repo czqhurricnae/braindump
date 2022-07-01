@@ -1,0 +1,17 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/SPAR/")); -*-
+:PROPERTIES:
+:ID:       F171CEE3-ED23-42BE-A78F-D8B399DE7F2D
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :spar_cap:spar_web:
+
+#+DATE: <2021-02-14 Sun 18:40>
+#+TITLE: SPAR
+
+[[file:./static/SPAR/2021-02-14_18-40-45_screenshot.jpg]]
+
+[[file:./static/SPAR/2021-02-14_18-42-50_screenshot.jpg]]
+
+[[file:./static/SPAR/2021-02-14_18-44-09_screenshot.jpg]]
+
+[[file:./static/SPAR/2021-02-14_18-46-30_screenshot.jpg]]

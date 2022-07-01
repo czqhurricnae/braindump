@@ -1,0 +1,139 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/20220701122254-使用 Task 类来和生成器协作/")); -*-
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 12:37>
+#+TITLE: 使用 Task 类来和生成器协作
+
+* 使用 Task 类来和生成器协作                                         :Python:
+:PROPERTIES:
+:ID:       BA6F88FA-A3B4-4F2A-A094-9098676967AC
+:END:
+#+BEGIN_SRC python
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+
+def func(x, y):
+    time.sleep(5)
+    return x + y
+
+pool = ThreadPoolExecutor(8)
+
+class Task(object):
+    def __init__(self, gen):
+        self._gen = gen
+
+    def step(self, value=None):
+        future = self._gen.send(value)
+        future.add_done_callback(self._wakeup)
+
+    def _wakeup(self, future):
+        rt= future.result()
+        self.step(rt)
+
+def run():
+    result = yield pool.submit(func, 2, 3)
+    print("Got:", result)
+
+Task(run()).step()
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+Got: 5
+exception calling callback for <Future at 0x10443ed30 state=finished returned int>
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python/3.6.5/Frameworks/Python.framework/Versions/3.6/lib/python3.6/concurrent/futures/_base.py", line 324, in _invoke_callbacks
+    callback(self)
+  File "<ipython-input-14-22a09b6058d4>", line 21, in _wakeup
+    self.step(rt)
+  File "<ipython-input-14-22a09b6058d4>", line 16, in step
+    future = self._gen.send(value)
+StopIteration
+:END:
+* 适用于多个生成器
+:PROPERTIES:
+:ID:       65C21B80-DC9D-4A0F-A279-D2BD3563558D
+:END:
+
+#+BEGIN_SRC python
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+
+def func(x, y):
+    time.sleep(5)
+    return x + y
+
+pool = ThreadPoolExecutor(8)
+
+class Task(object):
+    def __init__(self, gen):
+        self._gen = gen
+
+    def step(self, value=None):
+        future = self._gen.send(value)
+        future.add_done_callback(self._wakeup)
+
+    def _wakeup(self, future):
+        rt= future.result()
+        self.step(rt)
+
+def run():
+    n = 10
+    while n > 0:
+       result = yield pool.submit(func, n, n)
+       print("Got:", result)
+       n -= 1
+
+Task(run()).step()
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+Got: 20
+Got: 18
+Got: 16
+Got: 14
+Got: 12
+Got: 10
+Got: 8
+Got: 6
+Got: 4
+Got: 2
+exception calling callback for <Future at 0x10437e3c8 state=finished returned int>
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python/3.6.5/Frameworks/Python.framework/Versions/3.6/lib/python3.6/concurrent/futures/_base.py", line 324, in _invoke_callbacks
+    callback(self)
+  File "<ipython-input-15-bb21d594b649>", line 21, in _wakeup
+    self.step(rt)
+  File "<ipython-input-15-bb21d594b649>", line 16, in step
+    future = self._gen.send(value)
+StopIteration
+:END:
+* 异常处理
+:PROPERTIES:
+:ID:       DC8EE9AC-499A-4526-B23A-244F75241BFF
+:END:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports both :session
+class Task(object):
+    def __init__(self, gen):
+        self._gen = gen
+
+    def step(self, value=None, exc=None):
+        try:
+            if exc:
+                future = self._gen.throw(exc)
+            else:
+                future = self._gen.send(value)
+            future.add_done_callback(self._wakeup)
+        except StopIteration as exc:
+            pass
+
+    def _wakeup(self, future):
+        try:
+            result = future.result()
+            self.step(result, None)
+        except Exception as exc:
+            self.step(None, exc)
+#+END_SRC

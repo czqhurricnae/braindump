@@ -1,0 +1,8 @@
+span.cat {
+    display: block;
+    border: 1px solid black;
+    white-space: nowrap;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

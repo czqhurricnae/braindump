@@ -1,0 +1,4 @@
+[submodule "themes/cortex-dark"]
+	path = themes/cortex
+	url =	https://github.com/czqhurricnae/cortex
+	

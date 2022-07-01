@@ -1,0 +1,423 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/How_to_compute_options_of_dropdown_for_column_filter_in_Flask_Adminn/")); -*-
+:PROPERTIES:
+:ID:       D8FCE08C-67CA-44E0-BB7C-D6B1CF8C0C56
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-06 Mon 17:17>
+#+TITLE: How_to_compute_options_of_dropdown_for_column_filter_in_Flask_Admin
+
+In Flask Admin, I got a column of String values (I can't change the DB definition). When
+filtering this column in the index view, the user should be able to select the value from a
+dropdown.
+
+The possible options for the filter should be computed when the user selects the filter. So
+I need a way to set the options based on a custom model query. Querying is rather fast
+as the column is indexed.
+
+The [[https://github.com/flask-admin/flask-admin/blob/master/examples/sqla-custom-filter/app.py][SQLA custom filter example]] only shows how to apply a custom filter, but not how to make the options of a filter dynamic.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from flask_admin.contrib import sqla
+from flask_admin import Admin
+
+# required for creating custom filters
+from flask_admin.contrib.sqla.filters import BaseSQLAFilter, FilterEqual
+
+# Create application
+app = Flask(__name__)
+
+# Create dummy secrey key so we can use sessions
+app.config['SECRET_KEY'] = '123456790'
+
+# Create in-memory database
+app.config['DATABASE_FILE'] = 'sample_db.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config['DATABASE_FILE']
+app.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(app)
+
+
+# Flask views
+@app.route('/')
+def index():
+    return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+# Create model
+class User(db.Model):
+    def __init__(self, first_name, last_name, username, email):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
+        self.email = email
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+
+    # Required for admin interface. For python 3 please use __str__ instead.
+    def __unicode__(self):
+        return self.username
+
+
+# Create custom filter class
+class FilterLastNameBrown(BaseSQLAFilter):
+    def apply(self, query, value, alias=None):
+        if value == '1':
+            return query.filter(self.column == "Brown")
+        else:
+            return query.filter(self.column != "Brown")
+
+    def operation(self):
+        return 'is Brown'
+
+
+# Add custom filter and standard FilterEqual to ModelView
+class UserAdmin(sqla.ModelView):
+    # each filter in the list is a filter operation (equals, not equals, etc)
+    # filters with the same name will appear as operations under the same filter
+    column_filters = [
+        FilterEqual(column=User.last_name, name='Last Name'),
+        FilterLastNameBrown(column=User.last_name, name='Last Name',
+                            options=(('1', 'Yes'), ('0', 'No')))
+    ]
+
+
+admin = Admin(app, template_mode="bootstrap3")
+admin.add_view(UserAdmin(User, db.session))
+
+
+def build_sample_db():
+    db.drop_all()
+    db.create_all()
+    user_obj1 = User("Paul", "Brown", "pbrown", "paul@gmail.com")
+    user_obj2 = User("Luke", "Brown", "lbrown", "luke@gmail.com")
+    user_obj3 = User("Serge", "Koval", "skoval", "serge@gmail.com")
+
+    db.session.add_all([user_obj1, user_obj2, user_obj3])
+    db.session.commit()
+
+
+if __name__ == '__main__':
+    build_sample_db()
+    app.run(port=5000, debug=True)
+#+END_SRC
+
+* Answer 1
+The options parameter can be a callable so do something like the following (using the example you've linked to):
+
+#+BEGIN_SRC python :results values list :exports no-eval
+def get_all_last_names():
+    unique_last_names = User.query.with_entities(User.last_name.distinct().label("last_name")).order_by(User.last_name.asc()).all()
+    return [(user.last_name, user.last_name) for user in unique_last_names]
+
+class UserAdmin(sqla.ModelView):
+
+    column_filters = [
+        FilterEqual(column=User.last_name, name='Last Name', options=get_all_last_names),
+    ]
+
+    # This is probably NOT the correct way to refresh the filters cache
+    @expose('/')
+    def index_view(self):
+        self._refresh_filters_cache()
+        return super(UserAdmin, self).index_view()
+#+END_SRC
+
+See single file demo below. Add new users and they will appear in the 'Last Name' filter.
+As pointed out by @sortas this version doesn't work when using the app factory method.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from flask_admin.contrib import sqla
+from flask_admin import Admin, expose
+
+# required for creating custom filters
+from flask_admin.contrib.sqla.filters import BaseSQLAFilter, FilterEqual
+
+app = Flask(__name__)
+
+# Create dummy secrey key so we can use sessions
+app.config['SECRET_KEY'] = '123456790'
+
+# Create in-memory database
+app.config['DATABASE_FILE'] = 'sample_db.sqlite'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config['DATABASE_FILE']
+app.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(app)
+
+
+# Flask views
+@app.route('/')
+def index():
+    return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+# Create model
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+
+    # Required for admin interface. For python 3 please use __str__ instead.
+    def __unicode__(self):
+        return self.username
+
+
+# Create custom filter class
+class FilterLastNameBrown(BaseSQLAFilter):
+    def apply(self, query, value, alias=None):
+        if value == '1':
+            return query.filter(self.column == "Brown")
+        else:
+            return query.filter(self.column != "Brown")
+
+    def operation(self):
+        return 'is Brown'
+
+
+def get_options():
+    return [('1', 'Yes'), ('0', 'No')]
+
+
+def get_all_last_names():
+    unique_last_names = User.query.with_entities(User.last_name.distinct().label("last_name")).order_by(
+        User.last_name.asc()).all()
+    return [(user.last_name, user.last_name) for user in unique_last_names]
+
+
+# Add custom filter and standard FilterEqual to ModelView
+class UserAdmin(sqla.ModelView):
+
+    column_filters = [
+        FilterEqual(column=User.last_name, name='Last Name', options=get_all_last_names),
+        FilterLastNameBrown(column=User.last_name, name='Last Name', options=(('1', 'Yes'), ('0', 'No')))
+    ]
+
+    # This is probably NOT the correct way to refresh the filters cache
+    @expose('/')
+    def index_view(self):
+        self._refresh_filters_cache()
+        return super(UserAdmin, self).index_view()
+
+
+admin = Admin(app, template_mode="bootstrap3")
+admin.add_view(UserAdmin(User, db.session))
+
+
+def build_sample_db():
+    db.drop_all()
+    db.create_all()
+    user_obj1 = User(first_name="Paul", last_name="Brown", username="pbrown", email="paul@gmail.com")
+    user_obj2 = User(first_name="Luke", last_name="Brown", username="lbrown", email="luke@gmail.com")
+    user_obj3 = User(first_name="Serge", last_name="Koval", username="skoval", email="serge@gmail.com")
+
+    db.session.add_all([user_obj1, user_obj2, user_obj3])
+    db.session.commit()
+
+
+if __name__ == '__main__':
+    build_sample_db()
+    app.run(port=5000, debug=True)
+#+END_SRC
+
+Single file example when using app factory.
+
+
+#+BEGIN_SRC python :results values list :exports no-eval
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from flask_admin.contrib import sqla
+from flask_admin import Admin, expose
+
+# required for creating custom filters
+from flask_admin.contrib.sqla.filters import BaseSQLAFilter, FilterEqual
+
+db = SQLAlchemy()
+
+
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+
+    # Required for admin interface. For python 3 please use __str__ instead.
+    def __unicode__(self):
+        return self.username
+
+
+# Create custom filter class
+class FilterLastNameBrown(BaseSQLAFilter):
+    def apply(self, query, value, alias=None):
+        if value == '1':
+            return query.filter(self.column == "Brown")
+        else:
+            return query.filter(self.column != "Brown")
+
+    def operation(self):
+        return 'is Brown'
+
+
+def get_options():
+    return [('1', 'Yes'), ('0', 'No')]
+
+
+def get_all_last_names():
+    unique_last_names = User.query.with_entities(User.last_name.distinct().label("last_name")).order_by(
+        User.last_name.asc()).all()
+    return [(user.last_name, user.last_name) for user in unique_last_names]
+
+
+# Add custom filter and dynamic FilterEqual to ModelView
+class UserAdmin(sqla.ModelView):
+
+    column_filters = [
+        FilterLastNameBrown(column=User.last_name, name='Last Name', options=(('1', 'Yes'), ('0', 'No')))
+    ]
+
+    def get_filters(self):
+        _dynamic_filters = getattr(self, 'dynamic_filters', None)
+        if _dynamic_filters:
+            return (super(UserAdmin, self).get_filters() or []) + _dynamic_filters
+        else:
+            return super(UserAdmin, self).get_filters()
+
+    @expose('/')
+    def index_view(self):
+        self.dynamic_filters = []
+        self.dynamic_filters.extend([
+            FilterEqual(column=User.last_name, name='Last Name', options=get_all_last_names),
+            # Add further dynamic filters here
+        ])
+        self._refresh_filters_cache()
+        return super(UserAdmin, self).index_view()
+
+
+def create_app():
+
+    app = Flask(__name__)
+
+    # Create dummy secrey key so we can use sessions
+    app.config['SECRET_KEY'] = '123456790'
+
+    # Create in-memory database
+    app.config['DATABASE_FILE'] = 'sample_db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + app.config['DATABASE_FILE']
+    app.config['SQLALCHEMY_ECHO'] = True
+    db.init_app(app)
+    admin = Admin(app, template_mode="bootstrap3")
+    admin.add_view(UserAdmin(User, db.session))
+
+    # Flask views
+    @app.route('/')
+    def index():
+        return '<a href="/admin/">Click me to get to Admin!</a>'
+
+    @app.before_first_request
+    def build_sample_db():
+        db.drop_all()
+        db.create_all()
+        user_obj1 = User(first_name="Paul", last_name="Brown", username="pbrown", email="paul@gmail.com")
+        user_obj2 = User(first_name="Luke", last_name="Brown", username="lbrown", email="luke@gmail.com")
+        user_obj3 = User(first_name="Serge", last_name="Koval", username="skoval", email="serge@gmail.com")
+
+        db.session.add_all([user_obj1, user_obj2, user_obj3])
+        db.session.commit()
+
+    return app
+
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(port=5000, debug=True)
+#+END_SRC
+
+** Mmmh
+   this function gets called when the app is started. Even a page reload doesn'ttrigger it to be loaded again :-(
+** @Sebi
+   You need to update the filters cache - I've updated my answer.
+** @pjcunningham
+   Filters don't refresh even if use with app.app_context(), only manualapp reload. Any ideas? :)
+** @sortas
+   Added a single file demo.
+** @pjcunningham
+   Thanks, tried the same thing, but it looks like it doesn't work with app factories (create_app() and so on). So now I'm trying to override _refresh_filters_cache method to query options from db every page reload.
+
+* Answer 2
+Version for Flask app factories (create_app, current_app, app_context and so on) :)
+
+#+BEGIN_SRC python :results values list :exports no-eval
+# Dynamic filter update method for Flask app factories
+# Override version of base _refresh_filters_cache method
+def update_dynamic_filters(self, dynamic_filters):
+
+    # Get base filters
+    self._filters = self.get_filters()
+
+    # Add dynamic filters (to the beginning)
+    for dft in dynamic_filters:
+        self._filters.insert(0, dft)
+
+    if self._filters:
+        self._filter_groups = OrderedDict()
+        self._filter_args = {}
+
+        for i, flt in enumerate(self._filters):
+            key = as_unicode(flt.name)
+            if key not in self._filter_groups:
+                self._filter_groups[key] = FilterGroup(flt.name)
+                self._filter_groups[key].append(
+                    {
+                        'index': i,
+                        'arg': self.get_filter_arg(i, flt),
+                        'operation': flt.operation(),
+                        'options': flt.get_options(self) or None,
+                        'type': flt.data_type,
+                    }
+                )
+                self._filter_args[self.get_filter_arg(i, flt)] = (i, flt)
+    else:
+        self._filter_groups = None
+        self._filter_args = None
+
+# Update view every page reload (thanks to the @pjcunningham)
+@expose('/')
+def index_view(self):
+    dynamic_filters = []
+    # Working with db in app_context
+    with app.app_context():
+        # Adding dynamic filters
+        dynamic_filters.append(
+            FilterInList(
+                column=Record.record_condition,
+                name='Condition',
+                options=[
+                    (x[0], x[0])
+                    for x in db.session.query(Record.record_condition)
+                    .distinct()
+                    .all()
+                ],
+            )
+        )
+        # Add dynamic filters to view
+    self.update_dynamic_filters(dynamic_filters)
+    return super(RecordView, self).index_view()
+#+END_SRC
+
+** comments
+I think it's better to simply override get_filters rather than repeat the base code.
+Also, isn't the app context already established when index_view is called?
+I've added an app factory example to my answer based on your code.

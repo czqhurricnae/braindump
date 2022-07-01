@@ -1,0 +1,196 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/TypeError: <flask_restful.marshal_with object at 0x11bb91fd0> is not JSON serializable/")); -*-
+:PROPERTIES:
+:ID:       4B68197E-3F32-42F6-AC51-DE89451FF85D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 14:08>
+#+TITLE: TypeError: <flask_restful.marshal_with object at 0x11bb91fd0> is not JSON serializable
+
+#+BEGIN_SRC python :results values list :exports both
+from flask_restful import Resource, fields, marshal_with, reqparse
+from models import Project, Tool
+import jieba
+import json
+
+tools_resource_fields = {
+    'name': fields.String,
+    'size': fields.String,
+    'number': fields.Integer,
+    'description': fields.String,
+}
+
+parser = reqparse.RequestParser()
+parser.add_argument('search')
+
+
+class ToolsAPI(Resource):
+    def post(self):
+        args = parser.parse_args()
+        search = args['search']
+        results = []
+
+        seg_list = jieba.cut(sentence=search)
+        ars_list = []
+        for seg in seg_list:
+            projects = Project.query.whoosh_search(seg, or_=True).all()
+            if len(projects) != 0:
+                ars_list.append(projects)
+        try:
+            projects_set = reduce(lambda x, y: set(x).intersection(set(y)),
+                                  ars_list)
+        except TypeError:
+            projects_set = []
+
+        if len(projects_set) != 0:
+            for project in projects_set:
+                project_tool = dict()
+                project_tool[u'project_id'] = project.id
+                project_tool[u'project_title'] = project.title
+                project_tool[u'tools'] = []
+                tools = Tool.query.filter_by(project_id=project.id).all()
+                for tool in tools:
+                    project_tool[u'tools'].append(
+                        marshal_with(tool, tools_resource_fields))
+                results.append(project_tool)
+        return results
+#+END_SRC
+
+#+DOWNLOADED: screenshot @ 2019-11-19 23:15:00
+[[file:./static/TypeError: <flask_restful.marshal_with object at 0x11bb91fd0> is not JSON serializable/查看 marshal_with 包装过的对象.jpg]]
+
+** 第一次尝试, 想要将 ~Tool~ 对象使用 ~dict~ 进行迭代, 生成一个字典, 然后使用 ~marshal_with~ 抽取所需数据
+#+BEGIN_SRC python :results values list :exports both
+if len(projects_set) != 0:
+    for project in projects_set:
+        project_tool = dict()
+        project_tool[u'project_id'] = project.id
+        project_tool[u'project_title'] = project.title
+        project_tool[u'tools'] = []
+        tools = Tool.query.filter_by(project_id=project.id).all()
+        for tool in tools:
+            project_tool[u'tools'].append(
+                marshal_with(dict(tool), tools_resource_fields))
+        results.append(project_tool)
+return results
+#+END_SRC
+
+出现错误:
+
+#+BEGIN_SRC python :results values list :exports both
+    marshal_with(dict(tool), tools_resource_fields))
+TypeError: 'Tool' object is not iterable
+#+END_SRC
+
+使用 ~dir~ 函数查看 ~Tool~ 对象一些内部属性.
+
+#+BEGIN_SRC python :results values list :exports both
+for tool in tools:
+    print(dir(tool))
+    project_tool[u'tools'].append(
+        marshal_with(dir(tool), tools_resource_fields))
+#+END_SRC
+
+#+BEGIN_SRC python :results values list :exports both
+[
+    '__analyzer__', '__class__', '__delattr__', '__dict__', '__doc__',
+    '__format__', '__getattribute__', '__hash__', '__init__', '__mapper__',
+    '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__',
+    '__searchable__', '__setattr__', '__sizeof__', '__str__',
+    '__subclasshook__', '__table__', '__tablename__', '__weakref__',
+    '_decl_class_registry', '_sa_class_manager', '_sa_instance_state',
+    'belong', 'description', 'id', 'metadata', 'name', 'number', 'project_id',
+    'project_title', 'pure_whoosh', 'query', 'query_class', 'size', 'to_html',
+    'whoosh_primary_key'
+]
+#+END_SRC
+
+可以看到有 ~__dict__~ 属性.
+
+#+BEGIN_QUOTE
+Is there a way to get all attributes/methods/fields/etc. of an object in Python?
+
+vars() is close to what I want, but it doesn't work unless an object has a __dict__, which isn't always true (e.g. it's not true for a list, a dict, etc.).
+#+END_QUOTE
+
+#+BEGIN_SRC python :results values list :exports both
+>>> a = 1
+>>> vars(a)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: vars() argument must have __dict__ attribute
+#+END_SRC
+
+而 ~Tool~ 对象就可以使用 ~vars~ 函数.
+以下即为 ~Tool~ 对象的相关属性.
+
+#+BEGIN_SRC python :results values list :exports both
+{'size': u'', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x1118f5150>, 'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362', 'number': 1, 'name': u'\u4e00\u5b57\u89e3\u5200', 'project_id': 332, 'id': 3111, 'description': u''}
+#+END_SRC
+
+** 第二次尝试, 使用 ~vars~ 将 ~Tool~ 实例对象转换为字典
+#+BEGIN_SRC python :results values list :exports both
+for tool in tools:
+    # project_tool[u'tools'].append(
+    #     (marshal_with(vars(tool), tools_resource_fields)))
+    print(marshal_with(vars(tool), tools_resource_fields))
+#+END_SRC
+
+结果还是不行:
+
+#+BEGIN_SRC python :results values list :exports both
+<flask_restful.marshal_with object at 0x1133e2710>
+<flask_restful.marshal_with object at 0x1133e2710>
+<flask_restful.marshal_with object at 0x1133e2710>
+<flask_restful.marshal_with object at 0x1133e2710>
+<flask_restful.marshal_with object at 0x1133e2710>
+#+END_SRC
+
+继续使用 ~vars~ 函数查看:
+
+#+BEGIN_SRC python :results values list :exports both
+for tool in tools:
+    # project_tool[u'tools'].append(
+    #     (marshal_with(vars(tool), tools_resource_fields)))
+    print(vars(marshal_with(vars(tool),
+                            tools_resource_fields)))
+#+END_SRC
+
+#+BEGIN_SRC python :results values list :exports both
+{'fields': {'size': u'', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x1146e6150>, 'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362', 'number': 1, 'name': u'\u4e00\u5b57\u89e3\u5200', 'project_id': 332, 'id': 3111, 'description': u''}, 'envelope': {'description': <class 'flask_restful.fields.String'>, 'number': <class 'flask_restful.fields.Integer'>, 'name': <class 'flask_restful.fields.String'>, 'size': <class 'flask_restful.fields.String'>}}
+{'fields': {'size': u'5/16', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x11466a950>, 'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362', 'number': 1, 'name': u'\u5957\u5934', 'project_id': 332, 'id': 3112, 'description': u''}, 'envelope': {'description': <class 'flask_restful.fields.String'>, 'number': <class 'flask_restful.fields.Integer'>, 'name': <class 'flask_restful.fields.String'>, 'size': <class 'flask_restful.fields.String'>}}
+{'fields': {'size': u'', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x11466aa50>, 'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362', 'number': 1, 'name': u'\u6447\u628a', 'project_id': 332, 'id': 3113, 'description': u''}, 'envelope': {'description': <class 'flask_restful.fields.String'>, 'number': <class 'flask_restful.fields.Integer'>, 'name': <class 'flask_restful.fields.String'>, 'size': <class 'flask_restful.fields.String'>}}
+{'fields': {'size': u'', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x11466aad0>, 'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362', 'number': 1, 'name': u'\u5341\u5b57\u89e3\u5200', 'project_id': 332, 'id': 3114, 'description': u''}, 'envelope': {'description': <class 'flask_restful.fields.String'>, 'number': <class 'flask_restful.fields.Integer'>, 'name': <class 'flask_restful.fields.String'>, 'size': <class 'flask_restful.fields.String'>}}
+{'fields': {'size': u'', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x11466a990>, 'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362', 'number': 1, 'name': u'\u5de5\u5177\u7bb1', 'project_id': 332, 'id': 3115, 'description': u''}, 'envelope': {'description': <class 'flask_restful.fields.String'>, 'number': <class 'flask_restful.fields.Integer'>, 'name': <class 'flask_restful.fields.String'>, 'size': <class 'flask_restful.fields.String'>}}
+#+END_SRC
+
+返回的还是 ~flask_restful.marshal_with object~.
+
+** 第三次尝试, 不使用 ~marshal_with~ 装饰器, 而直接使用 ~marshal~ 函数
+#+BEGIN_SRC python
+from flask_restful import fields, marshal
+import json
+tool = {
+    'size': u'',
+    'project_title': u'737\u98de\u673a\u6ed1\u884c\u706f\u66f4\u6362',
+    'number': 1,
+    'name': u'\u4e00\u5b57\u89e3\u5200',
+    'project_id': 332,
+    'id': 3111,
+    'description': u''
+}
+
+tools_resource_fields = {
+    'name': fields.String,
+    'size': fields.String,
+    'number': fields.Integer,
+    'description': fields.String,
+}
+
+print(marshal(tool, tools_resource_fields))
+#+END_SRC
+
+#+RESULTS:
+: - OrderedDict([('description', u''), ('number', 1), ('name', u'\u4e00\u5b57\u89e3\u5200'), ('size', u'')])
+
+原来只能使用 ~mashal~ 不能使用 ~mashal_with~.
+

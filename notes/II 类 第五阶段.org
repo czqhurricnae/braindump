@@ -1,0 +1,34 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/II 类 第五阶段/")); -*-
+:PROPERTIES:
+:ID:       EC999E99-9BCD-4CF7-A6AE-7A229184F5B7
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-26 Tue 15:19>
+#+TITLE: II 类 第五阶段
+APU 件号
+进气门的打开，电门 ON 位
+APU 舱的冷却，引射口
+CDU 上可以查看，APU 使用时间在 Ident/Config 页
+孔探的部件，负载压气机，涡轮压气机
+FCU 电磁关断活门
+流量分配器何时提供主油
+主副共用一个喷嘴
+电源 SPC，SCU
+转速节点 0 7 60 70
+引气的部件
+SCV 的作用
+ECU 的作用
+维护灯亮
+EGT 温度探头，两个都失效
+DMM 更换的注意事项
+DMM 读取数据，CDU ，专用工具
+APU 舱的冷却空气通过滑油散热器经涡轮排气管排出
+后整流罩开口的作用
+润滑组件，温控活门的作用
+滑油的冷却，风冷
+滑油温度高导致保护性关车
+滑油压力低导致保护性关车
+滑油量显示 LOW，3.8
+启动 APU 需要开燃油泵？
+直接关电瓶关车危害
+关电瓶的时间

@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/插钉压接/")); -*-
+:PROPERTIES:
+:ID:       89BC77E3-5B96-46F4-B095-6E7E237DDCF8
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-05 Mon 00:11>
+#+TITLE: 插钉压接
+
+施工要求：
+
+[[file:./static/插钉压接/2021-07-05_00-11-27_screenshot.jpg]]
+
+[[file:./static/插钉压接/2021-07-05_00-11-40_screenshot.jpg]]

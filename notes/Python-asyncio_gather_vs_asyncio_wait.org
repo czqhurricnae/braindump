@@ -1,0 +1,211 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-asyncio_gather_vs_asyncio_wait/")); -*-
+:PROPERTIES:
+:ID:       AD417718-3533-4C47-A543-9530B6B11158
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-21 Fri 00:41>
+#+TITLE: Python-asyncio_gather_vs_asyncio_wait
+
+* Question
+[[file:./static/asyncio-task.html#asyncio.gather][=asyncio.gather=]] and [[file:./static/asyncio-task.html#asyncio.wait][=asyncio.wait=]] seem to have similar uses: I have a bunch of async things that I want to
+execute/wait for (not necessarily waiting for one to finish before the next one starts).
+They use a different syntax, and differ in some details, but it seems very un-pythonic to me to have 2 functions that have such a huge overlap in functionality. What am I missing?
+
+* Answer1
+Although similar in general cases ("run and get results for many tasks"), each function has some specific functionality for other cases:
+
+[[https://docs.python.org/3/library/asyncio-task.html#asyncio.gather][=asyncio.gather()=]] Returns a Future instance, allowing high level grouping of tasks:
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output list :exports no-eval :session
+import asyncio
+from pprint import pprint
+
+import random
+
+
+async def coro(tag):
+    print(">", tag)
+    await asyncio.sleep(random.uniform(1, 3))
+    print("<", tag)
+    return tag
+
+
+loop = asyncio.get_event_loop()
+
+group1 = asyncio.gather(*[coro("group 1.{}".format(i)) for i in range(1, 6)])
+group2 = asyncio.gather(*[coro("group 2.{}".format(i)) for i in range(1, 4)])
+group3 = asyncio.gather(*[coro("group 3.{}".format(i)) for i in range(1, 10)])
+
+all_groups = asyncio.gather(group1, group2, group3)
+
+results = loop.run_until_complete(all_groups)
+
+loop.close()
+
+pprint(results)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+- > group 1.1
+- > group 1.2
+- > group 1.3
+- > group 1.4
+- > group 1.5
+- > group 2.1
+- > group 2.2
+- > group 2.3
+- > group 3.1
+- > group 3.2
+- > group 3.3
+- > group 3.4
+- > group 3.5
+- > group 3.6
+- > group 3.7
+- > group 3.8
+- > group 3.9
+- < group 1.5
+- < group 3.4
+- < group 3.7
+- < group 3.3
+- < group 1.3
+- < group 3.6
+- < group 3.1
+- < group 3.5
+- < group 2.3
+- < group 1.4
+- < group 2.2
+- < group 3.8
+- < group 3.2
+- < group 1.2
+- < group 1.1
+- < group 3.9
+- < group 2.1
+- [['group 1.1', 'group 1.2', 'group 1.3', 'group 1.4', 'group 1.5'],
+- ['group 2.1', 'group 2.2', 'group 2.3'],
+- ['group 3.1',
+- 'group 3.2',
+- 'group 3.3',
+- 'group 3.4',
+- 'group 3.5',
+- 'group 3.6',
+- 'group 3.7',
+- 'group 3.8',
+- 'group 3.9']]
+#+end_example
+
+All tasks in a group can be cancelled by calling =group2.cancel()= or
+even =all_groups.cancel()=. See also =.gather(..., return_exceptions=True)=.
+
+[[https://docs.python.org/3/library/asyncio-task.html#asyncio.wait][=asyncio.wait()=]] Supports waiting to be stopped after the first task is done, or after a specified timeout, allowing lower level precision of operations:
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output list :exports no-eval :session
+import asyncio
+import random
+
+
+async def coro(tag):
+    print(">", tag)
+    await asyncio.sleep(random.uniform(0.5, 5))
+    print("<", tag)
+    return tag
+
+
+loop = asyncio.get_event_loop()
+
+tasks = [coro(i) for i in range(1, 11)]
+
+print("Get first result:")
+finished, unfinished = loop.run_until_complete(
+    asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED))
+
+for task in finished:
+    print(task.result())
+print("unfinished:", len(unfinished))
+
+print("Get more results in 2 seconds:")
+finished2, unfinished2 = loop.run_until_complete(
+    asyncio.wait(unfinished, timeout=2))
+
+for task in finished2:
+    print(task.result())
+print("unfinished2:", len(unfinished2))
+
+print("Get all other results:")
+finished3, unfinished3 = loop.run_until_complete(asyncio.wait(unfinished2))
+
+for task in finished3:
+    print(task.result())
+
+loop.close()
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+- Get first result:
+- > 1
+- > 8
+- > 5
+- > 2
+- > 9
+- > 6
+- > 3
+- > 10
+- > 7
+- > 4
+- < 6
+- 6
+- unfinished: 9
+- Get more results in 2 seconds:
+- < 7
+- < 4
+- < 9
+- < 8
+- < 2
+- 7
+- 2
+- 4
+- 8
+- 9
+- unfinished2: 4
+- Get all other results:
+- < 3
+- < 10
+- < 1
+- < 5
+- 3
+- 1
+- 5
+- 10
+#+end_example
+
+* Answer2
+=asyncio.wait= is more low level than =asyncio.gather=.
+
+As the name suggests, =asyncio.gather= mainly focuses on gathering the results. it waits on a bunch of futures and return their results in a given order.
+
+=asyncio.wait= just waits on the futures. and instead of giving you the results directly, it gives done and pending tasks. you have to mannually collect the values.
+
+Moreover, you could specify to wait for all futures to finish or the just the first one with =wait=.
+
+* Answer3
+I also noticed that you can provide a group of coroutines in wait() by simply specifying the list:
+
+#+BEGIN_SRC python
+    result=loop.run_until_complete(asyncio.wait([
+            say('first hello', 2),
+            say('second hello', 1),
+            say('third hello', 4)
+        ]))
+#+END_SRC
+
+Whereas grouping in gather() is done by just specifying multiple coroutines:
+
+#+BEGIN_SRC python
+    result=loop.run_until_complete(asyncio.gather(
+            say('first hello', 2),
+            say('second hello', 1),
+            say('third hello', 4)
+        ))
+#+END_SRC

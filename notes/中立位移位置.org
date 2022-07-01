@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/中立位移位置/")); -*-
+:PROPERTIES:
+:ID:       6501A719-01F5-469C-83CC-E0DAF28F0D6C
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-25 Fri 15:23>
+#+TITLE: 中立位移位置
+水平安定面和升降舵协同工作来控制飞机的俯仰姿态。
+对于水平安定面的每个位置，都有一个升降舵位置与之对应，使得二者如同一个舵面协同工作，这就是中立位移位置。

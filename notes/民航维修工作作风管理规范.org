@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/民航维修工作作风管理规范/")); -*-
+:PROPERTIES:
+:ID:       4726A106-86CB-4D05-AC87-F3BEEBE77EA4
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 00:06>
+#+TITLE: 民航维修工作作风管理规范
+
+#+ROAM_KEY:
+
+

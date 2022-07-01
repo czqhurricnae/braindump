@@ -1,0 +1,70 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/sae 部署/")); -*-
+:PROPERTIES:
+:ID:       382C17A5-AE2F-446C-BA52-56481A7F7F77
+:END:
+
+#+DATE: <2020-03-17 Tue 21:25>
+#+TITLE: sae 部署
+
+* clone 新浪云分配的仓库到本地
+
+  #+BEGIN_SRC sh
+  $ git clone https://git.sinacloud.com/forwxcontainer forwxcontainer
+  #+END_SRC
+
+* 拉取 github 上的另一个仓库并转推送到新浪云远程仓库
+
+  #+BEGIN_SRC sh
+  $ git remote add github-container https://github.com/czqhurricnae/container.git
+  #+END_SRC
+
+  #+BEGIN_SRC sh
+  $ git remote -v
+  forwxcontainer  https://git.sinacloud.com/forwxcontainer (fetch)
+  forwxcontainer  https://git.sinacloud.com/forwxcontainer (push)
+  origin  https://github.com/czqhurricnae/container.git (fetch)
+  origin  https://github.com/czqhurricnae/container.git (push)
+  #+END_SRC
+
+  切换到 github-container 远程分支.
+
+  #+BEGIN_SRC sh
+  $ git fetch github-container
+  #+END_SRC
+
+  #+BEGIN_SRC sh
+  $ git pull github-container master --allow-unrelated-histories
+  From https://github.com/czqhurricnae/container
+  * branch            master     -> FETCH_HEAD
+  #+END_SRC
+
+  #+BEGIN_SRC sh
+  $ git push origin master
+  Enumerating objects: 3617, done.
+  Counting objects: 100% (3617/3617), done.
+  Delta compression using up to 8 threads
+  Compressing objects: 100% (2948/2948), done.
+  Writing objects: 100% (3617/3617), 16.41 MiB | 50.00 KiB/s, done.
+  Total 3617 (delta 606), reused 3616 (delta 605)
+  remote: 导出 Git 代码中...
+  remote: 构建程序中...
+  remote: Save files ok
+  remote: VIA: 144198
+  r-----> apt-get done
+  r-----> Python app detected
+  r-----> Network Connection Success
+  r-----> Installing dependencies with Pipenv 2018.5.18…
+  r       Installing dependencies from Pipfile…
+  r-----> Discovering process types
+  r       Procfile declares types -> web
+  r-----> Compiled slug size is 99M
+  remote: Generating docker image VIA: 144198
+  remote: docker wait result 0 27d335e15ae907f
+  remote: sha256:e7f739d63f6b8353469885a94f243b6cca10fa9a81fa970b48806f3844b94f5a
+  remote: 27d335e15ae907f6c88c49820bc47081fbd227299987960c8b7fe175d8e96196
+  remote: Pushing image registry.docker.sae.sina.com.cn/forwxcontainer:610006e .................
+  ..
+  remote: 部署程序中 .................
+  To https://git.sinacloud.com/forwxcontainer
+  * [new branch]      master -> master
+  #+END_SRC

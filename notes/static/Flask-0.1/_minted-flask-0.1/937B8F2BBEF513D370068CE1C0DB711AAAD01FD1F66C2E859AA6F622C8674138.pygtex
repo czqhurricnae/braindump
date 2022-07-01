@@ -1,0 +1,60 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Map}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+
+    \PYG{k}{def} \PYG{n+nf}{bind\PYGZus{}to\PYGZus{}environ}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{,} \PYG{n}{server\PYGZus{}name}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{subdomain}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Like :meth:`bind` but you can pass it an WSGI environment and it}
+\PYG{l+s+sd}{        will fetch the information from that dictionary.  Note that because of}
+\PYG{l+s+sd}{        limitations in the protocol there is no way to get the current}
+\PYG{l+s+sd}{        subdomain and real `server\PYGZus{}name` from the environment.  If you don\PYGZsq{}t}
+\PYG{l+s+sd}{        provide it, Werkzeug will use `SERVER\PYGZus{}NAME` and `SERVER\PYGZus{}PORT` (or}
+\PYG{l+s+sd}{        `HTTP\PYGZus{}HOST` if provided) as used `server\PYGZus{}name` with disabled subdomain}
+\PYG{l+s+sd}{        feature.}
+
+\PYG{l+s+sd}{        If `subdomain` is `None` but an environment and a server name is}
+\PYG{l+s+sd}{        provided it will calculate the current subdomain automatically.}
+\PYG{l+s+sd}{        Example: `server\PYGZus{}name` is ``\PYGZsq{}example.com\PYGZsq{}`` and the `SERVER\PYGZus{}NAME`}
+\PYG{l+s+sd}{        in the wsgi `environ` is ``\PYGZsq{}staging.dev.example.com\PYGZsq{}`` the calculated}
+\PYG{l+s+sd}{        subdomain will be ``\PYGZsq{}staging.dev\PYGZsq{}``.}
+
+\PYG{l+s+sd}{        If the object passed as environ has an environ attribute, the value of}
+\PYG{l+s+sd}{        this attribute is used instead.  This allows you to pass request}
+\PYG{l+s+sd}{        objects.  Additionally `PATH\PYGZus{}INFO` added as a default of the}
+\PYG{l+s+sd}{        :class:`MapAdapter` so that you don\PYGZsq{}t have to pass the path info to}
+\PYG{l+s+sd}{        the match method.}
+
+\PYG{l+s+sd}{        .. versionchanged:: 0.5}
+\PYG{l+s+sd}{            previously this method accepted a bogus `calculate\PYGZus{}subdomain`}
+\PYG{l+s+sd}{            parameter that did not have any effect.  It was removed because}
+\PYG{l+s+sd}{            of that.}
+
+\PYG{l+s+sd}{        :param environ: a WSGI environment.}
+\PYG{l+s+sd}{        :param server\PYGZus{}name: an optional server name hint (see above).}
+\PYG{l+s+sd}{        :param subdomain: optionally the current subdomain (see above).}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{environ} \PYG{o}{=} \PYG{n}{\PYGZus{}get\PYGZus{}environ}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{server\PYGZus{}name} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HTTP\PYGZus{}HOST}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{environ}\PYG{p}{:}
+                \PYG{n}{server\PYGZus{}name} \PYG{o}{=} \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HTTP\PYGZus{}HOST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{server\PYGZus{}name} \PYG{o}{=} \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SERVER\PYGZus{}NAME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{wsgi.url\PYGZus{}scheme}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SERVER\PYGZus{}PORT}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)} \PYG{o+ow}{not} \PYGZbs{}
+                   \PYG{o+ow}{in} \PYG{p}{(}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{https}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{443}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{http}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{80}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}\PYG{p}{:}
+                    \PYG{n}{server\PYGZus{}name} \PYG{o}{+}\PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{:}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{+} \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SERVER\PYGZus{}PORT}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{elif} \PYG{n}{subdomain} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{wsgi\PYGZus{}server\PYGZus{}name} \PYG{o}{=} \PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{HTTP\PYGZus{}HOST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SERVER\PYGZus{}NAME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+            \PYG{n}{cur\PYGZus{}server\PYGZus{}name} \PYG{o}{=} \PYG{n}{wsgi\PYGZus{}server\PYGZus{}name}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+            \PYG{n}{real\PYGZus{}server\PYGZus{}name} \PYG{o}{=} \PYG{n}{server\PYGZus{}name}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{:}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+            \PYG{n}{offset} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{real\PYGZus{}server\PYGZus{}name}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{cur\PYGZus{}server\PYGZus{}name}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{:}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{real\PYGZus{}server\PYGZus{}name}\PYG{p}{:}
+                \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{the server name provided (}\PYG{l+s+si}{\PYGZpc{}r}\PYG{l+s+s1}{) does not }\PYG{l+s+s1}{\PYGZsq{}}
+                                 \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{match the server name from the WSGI }\PYG{l+s+s1}{\PYGZsq{}}
+                                 \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{environment (}\PYG{l+s+si}{\PYGZpc{}r}\PYG{l+s+s1}{)}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}}
+                                 \PYG{p}{(}\PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n}{wsgi\PYGZus{}server\PYGZus{}name}\PYG{p}{)}\PYG{p}{)}
+            \PYG{n}{subdomain} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n+nb}{filter}\PYG{p}{(}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{cur\PYGZus{}server\PYGZus{}name}\PYG{p}{[}\PYG{p}{:}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{Map}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SCRIPT\PYGZus{}NAME}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+                        \PYG{n}{subdomain}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{wsgi.url\PYGZus{}scheme}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,}
+                        \PYG{n}{environ}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{REQUEST\PYGZus{}METHOD}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{n}{environ}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{PATH\PYGZus{}INFO}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}
+
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

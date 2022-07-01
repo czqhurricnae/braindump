@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AMM TASK 20-50-11/")); -*-
+:PROPERTIES:
+:ID:       74A73131-EEB9-46F2-A781-5340ACA16C65
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-18 Sun 22:46>
+#+TITLE: AMM TASK 20-50-11
+
+* AMM Task 20-50-11-910-801 - Standard Torque Values
+- Table 220/20-50-11-993-820 Installation Torques for Flared, Flareless, and Short Flareless Fittings with Lubricated Threads Used on Aluminum and Annealed CRES Tube In-Line Fittings and Hose Ends
+- Table 220/20-50-11-993-823 Installation Torques for Flared, Flareless, and Short Flareless Fittings with Lubricated Threads Used on CRES and Titanium Tube Fittings and Hose Ends

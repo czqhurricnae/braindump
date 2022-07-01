@@ -1,0 +1,461 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/SAMPLE OF SAFETY PERFORMANCE INDICATORS/")); -*-
+#+filetags: :SPI:
+:PROPERTIES:
+:ID:       60A910C5-1B05-4C03-BF84-5E6720E49ACE
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-20 Thu 23:57>
+#+TITLE: SAMPLE OF SAFETY PERFORMANCE INDICATORS
+
+#+ROAM_KEY:
+ 
+
+* [[x-devonthink-item://B3C36A48-F4AC-4F40-87E5-0EE0A2720BB6?page=14][AC 120-49 Safety Performance Indicators_3. SAMPLE OF SAFETY PERFORMANCE INDICATORS]]
+:PROPERTIES:
+:ID:       6DC09C76-4E52-4DD4-B27E-9942D83F96C7
+:END:
+
+| First tier SPIs  | Number of aviation accidents: no accidents                                            |
+|------------------+---------------------------------------------------------------------------------------|
+| Second tier SPIs | Reducing the 10 year moving average of serious incidents rate of                      |
+|                  | national airline aircraft by 5/million flight hours. (RE. CFIT, LOC-I)                |
+|                  |                                                                                       |
+|                  | Rate of air traffic control incidents below 1.5 per 100,000 flights                   |
+|                  |                                                                                       |
+|                  | Rate of missed approach (due to ATC factor) below 0.6 per 10,000 flights              |
+|                  |                                                                                       |
+|                  | Maintain aircraft accidents caused by collisions between aircraft,                    |
+|                  | vehicles or other ground equipment below 1 time per million operations                |
+|                  |                                                                                       |
+|                  | Maintain events of damage to the aircraft which requires a repair due to              |
+|                  | ground handling mishaps or system failures for 2 time per hundred                     |
+|                  | thousand operations                                                                   |
+|------------------+---------------------------------------------------------------------------------------|
+| Third tier SPIs  | - Runway Excursions(RE):                                                              |
+|                  | - Unstable Approach                                                                   |
+|                  | - Loss of control on ground                                                           |
+|                  | - Long or fast landings                                                               |
+|                  | - Occurrences with crosswind conditions                                               |
+|                  | - High speed rejected take-offs                                                       |
+|                  | - ATA32 related occurrences                                                           |
+|                  |                                                                                       |
+|                  | - Controlled flight into terrain(CFIT):                                               |
+|                  | - EGPWS hard warnings                                                                 |
+|                  | - Descent below MSA                                                                   |
+|                  | - Navigation error                                                                    |
+|                  |                                                                                       |
+|                  | - Loss of control in flight (LOC-I):                                                  |
+|                  | - Stick shaker                                                                        |
+|                  | - Increased roll attitude or rate                                                     |
+|                  | - High pitch angle                                                                    |
+|                  | - Overspeed (vertical or configuration)                                               |
+|                  | - Wake turbulence incidents                                                           |
+|                  | - Failure of primary flight instruments                                               |
+|                  | - Fire or smoke on aircraft                                                           |
+|                  | - Deicing and anti-icing errors                                                       |
+|                  | - Aircraft weight and balance errors                                                  |
+|                  |                                                                                       |
+|                  | - Mid-air collisions and near misses (MAC)                                            |
+|                  | - Stick shaker                                                                        |
+|                  | - Loss of Separation                                                                  |
+|                  | - Inadequate separation                                                               |
+|                  | - Level Bursts                                                                        |
+|                  | - Air space infringement                                                              |
+|                  |                                                                                       |
+|                  | - Ground collisions (GCOL)                                                            |
+|                  | - Pushback or taxi interference                                                       |
+|                  | - Insufficient supervision at apron                                                   |
+|                  |                                                                                       |
+|                  | - Fatigue                                                                             |
+|                  | - Total and average flight hours per month                                            |
+|                  | - Total and average duty hours per month                                              |
+|                  | - Number of minimum rest periods per month as a percentage of all rest periods        |
+|                  | - Number of extended flight duty periods for a specific pairing                       |
+|                  |                                                                                       |
+|                  | - Dangerous Goods                                                                     |
+|                  | - Undeclared Dangerous Good                                                           |
+|                  | - Dangerous good spillage, leakage and/or improper handling                           |
+|                  |                                                                                       |
+|                  | - Aircraft technical systems and maintenance                                          |
+|                  | - Failure of more than on system in a multiple-redundancy system                      |
+|                  | - Air turn back due to technical failure                                              |
+|                  | - Shutdown an engine in flight                                                        |
+|                  |                                                                                       |
+|                  | - Human Factor                                                                        |
+|                  | - Human Error leading to incident (such as but no limited to wrong configuration,     |
+|                  | technical failure, wrong weight, wrong FMS data or wrong location upon takeoff)       |
+|                  |                                                                                       |
+|                  | - External Competition                                                                |
+|                  | -average time to fill a vacant post                                                   |
+|                  | - number of staff leaving to work for a competitor                                    |
+|                  | - number of cases where the reasons for departure of key personnel have been analyzed |
+|                  |                                                                                       |
+|                  | - System                                                                              |
+|                  | - number of significant findings versus total number of findings                      |
+|                  | - number of repeat findings within audit planning cycle                               |
+
+* [[x-devonthink-item:B0CEBFA0-8C16-4DD1-8248-5B6CE02DABE8][AC 120-32D Safety Management System_Table ATT 5-2-1 Safety Performance Indicator Samples]]
+:PROPERTIES:
+:ID:       B449CDB3-1F35-4E1B-A617-4B575026D8D8
+:END:
+
+* 系统问题指标 Indicators for systems issue
+:PROPERTIES:
+:ID:       D6D8B110-F52A-4168-A038-67DEF6A4A878
+:END:
+
++------+------------------------------------------+----------------------------------------------------------------+
+| 区域 | 评量重点                                 | 指标                                                           |
++------+------------------------------------------+----------------------------------------------------------------+
+|      | - internal audits/compliance             | - totoal numbefr per audit planning cycle/trend                |
+|      | monitoring: all non-compliance           | % of findings analyzed for their safety significance           |
+|      +------------------------------------------+----------------------------------------------------------------+
+|      | - internal audits/compliance             | - number of significant findings versus total number of        |
+|      | monitoring: significat non-compliance    | findings number of repeat findings within audit planning cycle |
+|      +------------------------------------------+----------------------------------------------------------------+
+| Comp | - internal audits/compliance             | - average lead time for completing corrective actions per      |
+|liance| monitoring: responsiveness to corrective | oversight planning cycle trend                                 |
+|      | action requests                          |                                                                |
+|      +------------------------------------------+----------------------------------------------------------------+
+|      | - external audits/compliance             | - totoal number per audit planning cycle/trend                 |
+|      | monitoring: all non-compliance           | % of findings analyzed for their safety significance           |
+|      +------------------------------------------+----------------------------------------------------------------+
+|      | - external audits/compliance             | - number of significant findings versus total number of        |
+|      | monitoring: significat non-compliance    | findings number of repeat findings within audit planning cycle |
+|      +------------------------------------------+----------------------------------------------------------------+
+|      | - external audits/compliance             | - average lead time for completing corrective actions per      |
+|      | monitoring: responsiveness to corrective | oversight planning cycle trend                                 |
+|      | action requests                          |                                                                |
+|      +------------------------------------------+----------------------------------------------------------------+
+|      | - consistency of results between         | - number of significant findings only revealed through         |
+|      | internal and external                    | external audits                                                |
+|      | audits/compliance monitoring             |                                                                |
++------+------------------------------------------+----------------------------------------------------------------+
+
+
++--------+-------------------------------+----------------------------------------------------------------------------------+
+| 区域   | 评量重点                      | 指标                                                                             |
++--------+-------------------------------+----------------------------------------------------------------------------------+
+| SMS    | - strategic management        | - the degree to which safety is considered in the organization's                 |
+| 有效性 |                               | official plans and strategy documents                                            |
+|        |                               | - the frequency with which the organization's official plans and strategy        |
+|        |                               | documents are reviewed with regards to safety                                    |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - management commitment       | - number of management walk-arounds per month/quarter/year                       |
+|        |                               | - number of management meetings dedicated to safety per month/quarter/year       |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - turnover rate of key safety | - length of term                                                                 |
+|        | personnel                     | - number of cases where the seasons for departure of key personnel have          |
+|        |                               | been analyzed                                                                    |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - supervision                 | - number of cases where supervisors provided positive feedback on safety-        |
+|        |                               | conscious behavior of your staff per month/quarter/year                          |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - reorting                    | - numbers of reports received per month/quarter/year & trend                     |
+|        |                               | - % of reports for which feedbacks to reporter was provided within 10            |
+|        |                               | working days                                                                     |
+|        |                               | - % of reports followed by an independent safety review                          |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - hazard                      | - number of accident/serious incident scenarios analyzed to support              |
+|        | identification                | Safety Risk Management(SRM) per month/quarter/year                               |
+|        |                               | - number of new hazards identified through the internal reporting                |
+|        |                               | system per month/quarter/year & trend                                            |
+|        |                               | - findings from external audits concerning hazards that have not been            |
+|        |                               | perceived by personnel/management previously                                     |
+|        |                               | - number of safety reports received from staff per month/quarter/year & trend    |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - risk controls               | - numbers of new risk controls validated per monther/quarter/year                |
+|        |                               | - % of overall budget allocated to new risk controls                             |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - HR management &             | - % of staff for which a competence profile has been established                 |
+|        | competence development        | - % of staff who have had safety management training                             |
+|        |                               | - frequency for reviewing competence profiles                                    |
+|        |                               | - frequency of reviewing the scope, content, and quality of training program     |
+|        |                               | - number of changes made to training programs following feedback from staff      |
+|        |                               | per month/quarter/year                                                           |
+|        |                               | - number of changes made to training programs following analysis of              |
+|        |                               | internal safety reports per month/quarter/year                                   |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - management of change        | - number of organizational changes for which a formal safety risk                |
+|        |                               | assessment has been performed per month/quarter/year & trend                     |
+|        |                               | - number of changes to Standard Operating Procedures(SOPs) for                   |
+|        |                               | which a formal safety risk assessment has been performed per                     |
+|        |                               | month/quarter/year & trend                                                       |
+|        |                               | - number of technical changes (e.g., new equipment, new facilities, new hardware)|
+|        |                               | for which a formal safety risk assessment has been performed per month/quarter/  |
+|        |                               | year & trend                                                                     |
+|        |                               | - number of risk controls implemented for changes per month/quarter/year & trend |
+|        |                               | - % of changes (organizational/SOP/technical etc.) that have been subject to     |
+|        |                               | risk assessment                                                                  |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - emergency response          | - number of emergency drills per year                                            |
+|        | planning(ERP)                 | - frequency of reviewing the ERP                                                 |
+|        |                               | - number of trainings on ERP per month/quarter/year                              |
+|        |                               | - % of staff trained on the ERP within a quarter/year                            |
+|        |                               | - number of meetings with main partners and contractors to coordinate            |
+|        |                               | ERP per month/quarter/year                                                       |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - safety promotion            | - number of safety communications published                                      |
+|        |                               | - number of trainings performed                                                  |
+|        |                               | - number of safety briefings performed                                           |
+|        |                               | - (per month/quarter/year)                                                       |
+|        +-------------------------------+----------------------------------------------------------------------------------+
+|        | - safety culture              | - the extent to which personnel consider safety as a value that guides           |
+|        |                               | their everyday work (e.g., on a scale from 1=low to 5=high)                      |
+|        |                               | - the extent to which personnel consider that safety is highly valued by         |
+|        |                               | their management                                                                 |
+|        |                               | - the extent to which human performance principles are applied                   |
+|        |                               | - the extent to which the personnel take initiatives in improving                |
+|        |                               | organizational practices or report problems to management                        |
+|        |                               | - the extent to which safety conscious behavior is supported                     |
+|        |                               | - the extent to which staff and management are aware of the risks your           |
+|        |                               | operations imply for themselves and for others                                   |
++--------+-------------------------------+----------------------------------------------------------------------------------+
+
+* 业务问题指标 Indicators for operational issue
+:PROPERTIES:
+:ID:       41C824DC-3C28-49CE-ADF1-6A89CCF315AC
+:END:
+
++----------------+---------------------------------------+-----------------------------------------------------------------------------+
+| Area           | High Severity outcome to be prevented | Metrics                                                                     |
++----------------+---------------------------------------+-----------------------------------------------------------------------------+
+| Air Operator   | - traffic collision                   | - number of Traffic Collision Avoidance System (TCAS) resolution advisories |
+| (see also Air) |                                       | per 1000 flight hours (FH)                                                  |
+| Traffic        +---------------------------------------+-----------------------------------------------------------------------------+
+| Management/    | - runway excursion                    | - number of unstabilized approaches per 1000 landings                       |
+| Air Navigation +---------------------------------------+-----------------------------------------------------------------------------+
+| Services for   | - ground collision                    | - number of runway incursions per 1000 take-offs                            |
+| additional     +---------------------------------------+-----------------------------------------------------------------------------+
+|  indicators)   | - controlled flight into terrain      | - number of Ground Proximity Warning System (GPWS) and Enhanced             |
+|                |                                       | Ground Proximity Warning System (EGPWS) warnings per 100 take-offs          |
+|                +---------------------------------------+-----------------------------------------------------------------------------+
+|                | - accident/incident related to        | - number of cases where flight preparation had to be done in less than the  |
+|                | poor flight preparation               | normally allocated time                                                     |
+|                |                                       | - number of short fuel events per 100 flights                               |
+|                |                                       | - number of fuel calculation errors per 100 flights                         |
+|                +---------------------------------------+-----------------------------------------------------------------------------+
+|                | - accident/incident related to        | - number of extensions to flight duty periods per month/quarter/year        |
+|                | fatigue                               | & trends                                                                    |
+|                +---------------------------------------+-----------------------------------------------------------------------------+
+|                | - accident/incident related to        | - number of incidents with ground handlers per month/quarter/year           |
+|                | ground-handling                       | & trends                                                                    |
+|                |                                       | - number of mass and balance errors per ground handler per                  |
+|                |                                       | month/quarter/year & trends                                                 |
+|                |                                       | - number of dysfunctions per ground handler per month/quarter/year          |
+|                |                                       | & trends                                                                    |
++----------------+---------------------------------------+-----------------------------------------------------------------------------+
+
+
++---------------+-----------------------------------------------+-----------------------------------------------------------------------------+
+| Area          | High Severity outcome to be prevented         | Metrics                                                                     |
++---------------+-----------------------------------------------+-----------------------------------------------------------------------------+
+| Air Operators | - maintenance related accident/incidents      | - Pilots Reports (PIREPS) per 100 take offs                                 |
+|               |                                               | - deferred items per month and aircraft                                     |
+|               |                                               | - In Flight Shut Down (IFSD) per 1000 FH                                    |
+|               |                                               | - In Flight Turn Backs (IFTB) and deviations per 100 take offs              |
+|               |                                               | - number of service difficulty reports filed with the                       |
+|               |                                               | Civil Aviation Authority dispatch reliability                               |
+|               |                                               | - number of delays of more than 15 minutes due to technical                 |
+|               |                                               | issues per 100 take offs                                                    |
+|               |                                               | - number of cancellations per 100 scheduled flights due to technical issues |
+|               |                                               | - rejected take offs per 100 take offs due to technical issues              |
++---------------+-----------------------------------------------+-----------------------------------------------------------------------------+
+
++---------------+-----------------------------------------------+-----------------------------------------------------------------------------+
+| Area          | High Severity outcome to be prevented         | Metrics                                                                     |
++---------------+-----------------------------------------------+-----------------------------------------------------------------------------+
+| Maintenance   | - maintenance planning/                       | - % of work orders for which a detailed planning has been made              |
+| Organizations | rostering related accident/incidents          |                                                                             |
+|               +-----------------------------------------------+-----------------------------------------------------------------------------+
+|               | - maintenance planning/                       | maintenance engineer fatigue/maintenance error:                             |
+|               | rostering related accident/incidents          | - % of work orders with a difference > 10% between the expected lead time   |
+|               |                                               | and the actual processing time                                              |
+|               |                                               | - % of work orders with  a difference > 10% between the estimated work      |
+|               |                                               | force and the actual needs                                                  |
+|               +-----------------------------------------------+-----------------------------------------------------------------------------+
+|               | - maintenance related accident/incidents      | maintenance error:                                                          |
+|               |                                               | - % of work orders that required re-work                                    |
+|               |                                               | - number of duplicate inspections that identified a maintenance error       |
+|               +-----------------------------------------------+-----------------------------------------------------------------------------+
+|               | - maintenance data related accident/incidents | - number of safety reports related to ambiguous maintenance data            |
+|               +-----------------------------------------------+-----------------------------------------------------------------------------+
+|               | - maintenance related accident/incidents      | - number of investigations performed following components removed from      |
+|               |                                               | service significantly before expected life limit was reached                |
++---------------+-----------------------------------------------+-----------------------------------------------------------------------------+
+
++-------------+---------------------------------------+----------------------------------------------------------------------------------------+
+| Area        | High Severity outcome to be prevented | Metrics                                                                                |     
++-------------+---------------------------------------+----------------------------------------------------------------------------------------+
+| 机场        | - post-accident/incident fire         | - Fire Extinguishing Services (ICAO Airport Fire Fighting Categories) decrease in value|
+|             |                                       | (# decrease-hours/# airport annual operating hours)                                    |
+|             |                                       | - number of radio/phone failures per 100 operations number of fire rescue vehicles     |
+|             |                                       | failures per 100 operations                                                            |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - runway incursion                    | - runway incursions per 1000 operations                                                |
+|             |                                       | signage:                                                                               |
+|             |                                       | - number of failures or defects found during routine inspection                        |
+|             |                                       | - number of defects reported                                                           |
+|             |                                       | - average lead-time for repair/replacement (per month/quarter/year & trends)           |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - collision with vehicle on ground/   | - notified platform safety rules violations per 1000 operations                        |
+|             | ground-equipment                      |                                                                                        |      
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - FOD(Foreign Object Damage)          | - number of FOD found during routine inspections                                       |
+|             |                                       | - number of FOD found out of inspections and after report                              |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - ground collision with wildlife      | - number of ground collision with wildlife                                             |
+|             |                                       | - number of inspections of fences and other protective                                 |
+|             |                                       | devices per month/quarter/year                                                         |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - runway incursion                    | runway lights                                                                          |
+|             |                                       | - number of failures or defects found during routine inspection                        |
+|             |                                       | - number of defects reported                                                           |
+|             |                                       | - average lead-time for repair/replacement (per month/quarter/year & trends)           |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - bird-strike in Flight Shut Down     | - number IFSD 10000 FH following bird-strike                                           |
+|             | (IFSD)                                |                                                                                        |
++-------------+---------------------------------------+----------------------------------------------------------------------------------------+
+
+
++-----------------+----------------------------------------------+-------------------------------------------------+
+| Area            | High Severity outcome to be prevented        | Metrics                                         |
++-----------------+----------------------------------------------+-------------------------------------------------+
+| Flight Training | - accident/incident related to poor training | - number of trainees per instructor             |
+| Organizations   |                                              | - number of changes in instructor per training  |
+|                 |                                              | - number of major changes to training program   |
+|                 |                                              | (per month/quarter/year & trends)               |
+|                 +----------------------------------------------+-------------------------------------------------+
+|                 | -accident/incident related to poor training  | - number of significant deviations from average |
+|                 | /complacency during examinations             | pass rates                                      |
++-----------------+----------------------------------------------+-------------------------------------------------+
+
++---------------+---------------------------------------+-------------------------------------------------------------+
+| Area          | High Severity outcome to be prevented | Metrics                                                     |
++---------------+---------------------------------------+-------------------------------------------------------------+
+| Design        | - design related accident/incidents   | During the design phase:                                    |
+| Organizations |                                       | - number of design changes requested due to design errors   |
+|               |                                       | per program and per period                                  |
+|               |                                       | - number of rejected compliance demonstrations per program  |
+|               |                                       | and per period                                              |
++---------------+---------------------------------------+-------------------------------------------------------------+
+|               | - design planning related accident    | - % of technical reports with a difference > 10% between    |
+|               | /incident                             | the expected lead time and the actual processing tie        |
+|               |                                       | - % of technical reports with a difference ? 10% between    |
+|               |                                       | the estimated work force and the actual needs               |
++---------------+---------------------------------------+-------------------------------------------------------------+
+|               | - design related accident/incidents   | Post certification:                                         |
+|               |                                       | - number of service difficulty/safety reports due to design |
+|               |                                       | errors per program and per period                           |
+|               |                                       | - number of safety reports related to ambiguous design data |
+|               |                                       | - number of design changes classified incorrectly           |
+|               |                                       | (minor/major) per period                                    |
++---------------+---------------------------------------+-------------------------------------------------------------+
+
++---------------+-----------------------------------------------------+-------------------------------------------------------+
+| Area          | High Severity outcome to be prevented               | Metrics                                               |
++---------------+-----------------------------------------------------+-------------------------------------------------------+
+| Manufacturing | - manufacturing related accident/incidents          | - number of service difficulty/safety reports due to  |
+|               |                                                     | manufacturing errors per program and per period       |
++---------------+-----------------------------------------------------+-------------------------------------------------------+
+|               | - manufacturing process related accident/incidents  | - % of work orders that required re-work              |
+|               |                                                     | - number of investigations performed following work   |
+|               |                                                     | orders that required re-work                          |
+|               |                                                     | - % of duplicate inspections that identified a        |
+|               |                                                     | manufacturing error                                   |
+|               |                                                     | - number of cases where final delivery was delayed    |
+|               |                                                     | due to significant non-compliances                    |
+|               |                                                     | - number of investigations performe following delayed |
+|               |                                                     | delivery                                              |
++---------------+-----------------------------------------------------+-------------------------------------------------------+
+|               | - manufacturing data related accident/incidents     | - number of safety reports related to ambiguous       |
+|               |                                                     | manufacturing data                                    |
++---------------+-----------------------------------------------------+-------------------------------------------------------+
+|               | - manufacturing planning related accident/incidents | - Production personnel fatigue/production error:      |
+|               |                                                     | - % of work orders with a difference > 10% between    |
+|               |                                                     | the estimated work force and the actual needs         |
+|               |                                                     | - % work orders with a difference > 10% between the   |
+|               |                                                     | expected lead time and the actual processing time     |
++---------------+-----------------------------------------------------+-------------------------------------------------------+
+
+#+LATEX: \resizebox{\textwidth}{!}{
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+| 航管        | - traffic collision                   | - number of level busts/exposure                                                                                  |
+| Air Traffic |                                       | - number of TCAS required action(RA)(with and without loss of separation)/exposure                                |
+| Management  |                                       | - number of minimum separation infringement/exposure                                                              |
+| 与航空公司  |                                       | - number of inappropriate separation (airspace in which separation minima is not applicable)/exposure             |
+| 有关        |                                       | - number of aircraft deviation from air traffic control(ATC) clearance/exposure                                   |
+|             |                                       | - number of airspace infringement/exposure                                                                        |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+|             | - traffic collision/                  | - number of aircraft deviation from air traffic management(ATM) procedures/exposure                               |
+|             | controlled flight into terrain        | - number of inappropriate or absences of ATC assistance to aircraft in distress                                   |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+|             | - controlled flight into              | - number of near Controlled Flight Into Terrain (CFIT) IFSD/exposure                                              |
+|             | terrain                               |                                                                                                                   |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+|             | - runway excursion                    | - number of inappropriate ATC instruction (no instruction, wrong information, action communicated too late, etc.) |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+|             | - runway incursion                    | - % of runway incursions where no avoiding action was necessary                                                   |
+|             |                                       | - % of runway incursion where avoiding action was necessary                                                       |
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+#+LATEX: }
+
+* 监测外部因素指标 Indicators to monitor external factors
+:PROPERTIES:
+:ID:       421D08EE-699C-46F8-8B4C-CCAA2037E5E2
+:END:
+
+#+LATEX: \resizebox{\textwidth}{!}{
+
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+| Area        | Monitoring Focus                      | Metrics                                                                                                           |       
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+| 法规        | - new regulations                     | - number of new regulatory requirements that will affect your organization within the next 12 months              |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+|             | - amendments to regulations           | - numbers of amended regulatory requirements that will affect your organization within the next 6 months          |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+|             | - evolution towards performance-based | - number of objective based rules for which you have defined your own means of compliance                         |
+|             | regulations                           |                                                                                                                   |
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------------------+
+#+LATEX: }
+
+#+LATEX: \resizebox{\textwidth}{!}{
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------+
+| Area        | Monitoring Focus                      | Metrics                                                                                               |       
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------+
+| 技术        | - new technologies                    | - % of total investment that is spent on new technologies                                             |
+|             | relevant to your core                 |                                                                                                       |
+|             | business-hardware                     |                                                                                                       |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------+
+|             | - new technologies                    | - % of total investment that is spe  on new technologies                                              |
+|             | relevant to your core                 |                                                                                                       |
+|             | business-software                     |                                                                                                       |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------+
+|             | - new technologies                    | - rate of obsolescence of existing qualifications                                                     |
+|             | relevant to your core                 |                                                                                                       |
+|             | business                              |                                                                                                       |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------+
+|             | - new technologies                    | - number of aircraft modifications/Supplemental Type Certificates (STCs) that require a change to your|
+|             | installed in aircraft                 | company's rating                                                                                      |
+|             +---------------------------------------+-------------------------------------------------------------------------------------------------------+
+|             | - new technologies                    | - number of new modifications/STC that require new qualifications                                     |
+|             | installed in aircraft                 |                                                                                                       |
++-------------+---------------------------------------+-------------------------------------------------------------------------------------------------------+
+#+LATEX: }
+
+#+LATEX: \resizebox{\textwidth}{!}{
++-------------+---------------------------------------+----------------------------------------------------------------------------------------+
+| Area        | Monitoring Focus                      | Metrics                                                                                |       
++-------------+---------------------------------------+----------------------------------------------------------------------------------------+
+| 竞争        | - financial turn-over                 | - evolution in your turnover                                                           |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - staff turnover                      | - average time to fill a vacant post                                                   |
+|             |                                       | - number of staff leaving to work for a competitor                                     |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - market opportunities                | - evolution in the number of requests for quotation from new customers                 |
+|             |                                       | - ratio of requests for quotation from new customers that are followed by a firm order |
+|             +---------------------------------------+----------------------------------------------------------------------------------------+
+|             | - competitors                         | - evolution in the number of your direct competitors                                   |
++-------------+---------------------------------------+----------------------------------------------------------------------------------------+
+#+LATEX: }
+

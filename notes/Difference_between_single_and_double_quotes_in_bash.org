@@ -1,0 +1,305 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       1F6AE048-F49E-4AA1-9694-3DCFEC0487A8
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-27 Mon 01:04>
+#+TITLE: Difference_between_single_and_double_quotes_in_bash
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+In Bash, what are the differences between single quotes (=''=) and double quotes (=""=)?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+Single quotes won't interpolate anything, but double quotes will. For example: variables, backticks, certain =\= escapes, etc.
+
+Example:
+
+#+BEGIN_SRC sh
+    $ echo "$(echo "upg")"
+    upg
+    $ echo '$(echo "upg")'
+    $(echo "upg")
+#+END_SRC
+
+The Bash manual has this to say:
+
+#+BEGIN_QUOTE
+  [[file:./static/Single-Quotes.html][3.1.2.2
+  Single Quotes]]
+
+  Enclosing characters in single quotes (='=) preserves the literal
+  value of each character within the quotes. A single quote may not
+  occur between single quotes, even when preceded by a backslash.
+
+  [[file:./static/Double-Quotes.html][3.1.2.3
+  Double Quotes]]
+
+  Enclosing characters in double quotes (="=) preserves the literal
+  value of all characters within the quotes, with the exception of =$=,
+  =`=, =\=, and, when history expansion is enabled, =!=. The characters
+  =$= and =`= retain their special meaning within double quotes (see
+  [[file:./static/Shell-Expansions.html#Shell-Expansions][Shell
+  Expansions]]). The backslash retains its special meaning only when
+  followed by one of the following characters: =$=, =`=, ="=, =\=, or
+  newline. Within double quotes, backslashes that are followed by one of
+  these characters are removed. Backslashes preceding characters without
+  a special meaning are left unmodified. A double quote may be quoted
+  within double quotes by preceding it with a backslash. If enabled,
+  history expansion will be performed unless an =!= appearing in double
+  quotes is escaped using a backslash. The backslash preceding the =!=
+  is not removed.
+
+  The special parameters =*= and =@= have special meaning when in double
+  quotes (see
+  [[file:./static/Shell-Parameter-Expansion.html#Shell-Parameter-Expansion][Shell
+  Parameter Expansion]]).
+#+END_QUOTE
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+If you're referring to what happens when you echo something,
+the single quotes will literally echo what you have between them,
+while the double quotes will evaluate variables between them and output the value of the variable.
+
+For example, this
+
+#+BEGIN_SRC sh
+    #!/bin/sh
+    MYVAR=sometext
+    echo "double quotes gives you $MYVAR"
+    echo 'single quotes gives you $MYVAR'
+#+END_SRC
+
+will give this:
+
+#+BEGIN_SRC sh
+    double quotes gives you sometext
+    single quotes gives you $MYVAR
+#+END_SRC
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+The [[file:./static/6862601][accepted answer]] is great.
+I am making a table that helps in quick comprehension of the topic.
+The explanation involves a simple variable =a= as well as an indexed array =arr=.
+
+If we set
+
+#+BEGIN_SRC sh
+    a=apple      # a simple variable
+    arr=(apple)  # an indexed array with a single element
+#+END_SRC
+
+and then =echo= the expression in the second column,
+we would get the result / behavior shown in the third column.
+The fourth column explains the behavior.
+
+#+BEGIN_SRC sh
+     # | Expression  | Result      | Comments
+    ---+-------------+-------------+--------------------------------------------------------------------
+     1 | "$a"        | apple       | variables are expanded inside ""
+     2 | '$a'        | $a          | variables are not expanded inside ''
+     3 | "'$a'"      | 'apple'     | '' has no special meaning inside ""
+     4 | '"$a"'      | "$a"        | "" is treated literally inside ''
+     5 | '\''        | **invalid** | can not escape a ' within ''; use "'" or $'\'' (ANSI-C quoting)
+     6 | "red$arocks"| red         | $arocks does not expand $a; use ${a}rocks to preserve $a
+     7 | "redapple$" | redapple$   | $ followed by no variable name evaluates to $
+     8 | '\"'        | \"          | \ has no special meaning inside ''
+     9 | "\'"        | \'          | \' is interpreted inside "" but has no significance for '
+    10 | "\""        | "           | \" is interpreted inside ""
+    11 | "*"         | *           | glob does not work inside "" or ''
+    12 | "\t\n"      | \t\n        | \t and \n have no special meaning inside "" or ''; use ANSI-C quoting
+    13 | "`echo hi`" | hi          | `` and $() are evaluated inside ""
+    14 | '`echo hi`' | `echo hi`   | `` and $() are not evaluated inside ''
+    15 | '${arr[0]}' | ${arr[0]}   | array access not possible inside ''
+    16 | "${arr[0]}" | apple       | array access works inside ""
+    17 | $'$a\''     | $a'         | single quotes can be escaped inside ANSI-C quoting
+    18 | "$'\t'"     | $'\t'       | ANSI-C quoting is not interpreted inside ""
+    19 | '!cmd'      | !cmd        | history expansion character '!' is ignored inside ''
+    20 | "!cmd"      | cmd args    | expands to the most recent command matching "cmd"
+    21 | $'!cmd'     | !cmd        | history expansion character '!' is ignored inside ANSI-C quotes
+    ---+-------------+-------------+--------------------------------------------------------------------
+#+END_SRC
+
+--------------
+
+See also:
+
+- [[file:./static/ANSI_002dC-Quoting.html][ANSI-C
+  quoting with =$''= - GNU Bash Manual]]
+- [[file:./static/Locale-Translation.html#Locale-Translation][Locale
+  translation with =$""= - GNU Bash Manual]]
+- [[file:./static/6862601][A three-point formula
+  for quotes]]
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4
+  :END:
+
+Others explained very well and just want to give with simple examples.
+
+*Single quotes* can be used around text to prevent the shell from interpreting any special characters.
+Dollar signs, spaces, ampersands,
+asterisks and other special characters are all ignored when enclosed within single quotes.
+
+#+BEGIN_SRC sh
+    $ echo 'All sorts of things are ignored in single quotes, like $ & * ; |.'
+#+END_SRC
+
+It will give this:
+
+#+BEGIN_SRC sh
+    All sorts of things are ignored in single quotes, like $ & * ; |.
+#+END_SRC
+
+The only thing that cannot be put within single quotes is a single quote.
+
+*Double quotes* act similarly to single quotes,
+except double quotes still allow the shell to interpret dollar signs,
+back quotes and backslashes.
+It is already known that backslashes prevent a single special character from being interpreted.
+This can be useful within double quotes if a dollar sign needs to be used as text instead of for a variable.
+It also allows double quotes to be escaped so they are not interpreted as the end of a quoted string.
+
+#+BEGIN_SRC sh
+    $ echo "Here's how we can use single ' and double \" quotes within double quotes"
+#+END_SRC
+
+It will give this:
+
+#+BEGIN_SRC sh
+    Here's how we can use single ' and double " quotes within double quotes
+#+END_SRC
+
+It may also be noticed that the apostrophe, which would otherwise be interpreted as the beginning of a quoted string,
+is ignored within double quotes.
+Variables, however, are interpreted and substituted with their values within double quotes.
+
+#+BEGIN_SRC sh
+    $ echo "The current Oracle SID is $ORACLE_SID"
+#+END_SRC
+
+It will give this:
+
+#+BEGIN_SRC sh
+    The current Oracle SID is test
+#+END_SRC
+
+*Back quotes* are wholly unlike single or double quotes.
+Instead of being used to prevent the interpretation of special characters,
+back quotes actually force the execution of the commands they enclose.
+After the enclosed commands are executed,
+their output is substituted in place of the back quotes in the original line.
+This will be clearer with an example.
+
+#+BEGIN_SRC sh
+    $ today=`date '+%A, %B %d, %Y'`
+    $ echo $today
+#+END_SRC
+
+It will give this:
+
+#+BEGIN_SRC sh
+    Monday, September 28, 2015
+#+END_SRC
+
+* Answer5
+  :PROPERTIES:
+  :CUSTOM_ID: answer5
+  :END:
+
+Since this is the de facto answer when dealing with quotes in =bash=,
+I'll add upon one more point missed in the answers above,
+when dealing with the arithmetic operators in the shell.
+
+The =bash= shell supports two ways do arithmetic operation,
+one defined by the built-in =let= command and the =$((..))= operator.
+The former evaluates an arithmetic expression while the latter is more of a compound statement.
+
+It is important to understand that the arithmetic expression used with =let= undergoes word-splitting,
+pathname expansion just like any other shell commands. So proper quoting and escaping needs to be done.
+
+See this example when using =let=
+
+#+BEGIN_SRC sh
+    let 'foo = 2 + 1'
+    echo $foo
+    3
+#+END_SRC
+
+Using single quotes here is absolutely fine here, as there is no need for variable expansions here,
+consider a case of
+
+#+BEGIN_SRC sh
+    bar=1
+    let 'foo = $bar + 1'
+#+END_SRC
+
+would fail miserably, as the =$bar= under single quotes would /not/ expand and needs to be double-quoted as
+
+#+BEGIN_SRC sh
+    let 'foo = '"$bar"' + 1'
+#+END_SRC
+
+This should be one of the reasons, the =$((..))= should always be considered over using =let=.
+Because inside it, the contents aren't subject to word-splitting.
+The previous example using =let= can be simply written as
+
+#+BEGIN_SRC sh
+    (( bar=1, foo = bar + 1 ))
+#+END_SRC
+
+Always remember to use =$((..))= without single quotes.
+Though the =$((..))= can be used with double-quotes, there is no purpose
+to it as the result of it /cannot/ contain a content that would need the
+double-quote. Just ensure it is not single quoted.
+
+#+BEGIN_SRC sh
+    printf '%d\n' '$((1+1))'
+    -bash: printf: $((1+1)): invalid number
+    printf '%d\n' $((1+1))
+    2
+    printf '%d\n' "$((1+1))"
+    2
+#+END_SRC
+
+May be in some special cases of using the =$((..))= operator inside a single quoted string,
+you need to interpolate quotes in a way that the operator either is left unquoted or under double quotes.
+E.g. consider a case, when you are tying to use the operator inside a =curl= statement to pass a counter every time a request is made, do
+
+#+BEGIN_SRC sh
+    curl http://myurl.com --data-binary '{"requestCounter":'"$((reqcnt++))"'}'
+#+END_SRC
+
+Notice the use of nested double-quotes inside,
+without which the literal string =$((reqcnt++))= is passed to =requestCounter= field.
+
+* Answer6
+  :PROPERTIES:
+  :CUSTOM_ID: answer6
+  :END:
+
+There is a clear distinction between the usage of =' '= and =" "=.
+
+When =' '= is used around anything, there is no "transformation or translation" done. It is printed as it is.
+
+With =" "=, whatever it surrounds, is "translated or transformed" into its value.
+
+By translation/ transformation I mean the following: Anything within the single quotes will not be "translated" to their values.
+They will be taken as they are inside quotes. Example: =a=23=, then =echo '$a'= will produce =$a= on standard output. Whereas =echo "$a"= will produce =23= on standard output.

@@ -1,0 +1,169 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python 2 使用描述符实现实例间属性共享和属性分隔存储/")); -*-
+:PROPERTIES:
+:ID:       D2646CB9-4923-4BA6-B047-370FB96DD50D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-18 Sun 21:14>
+#+TITLE: Python 2 使用描述符实现实例间属性共享和属性分隔存储
+
+* 使用描述符实现实例间属性共享
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  """A descriptor works only in a class.
+  Storing attribute data directly in a descriptor
+  means sharing between instances.
+  """
+
+  from __future__ import print_function
+
+
+  class DescriptorClassStorage(object):
+      """Descriptor storing data in class.
+      """
+
+      def __init__(self, default=None):
+          self.value = default
+
+      def __get__(self, instance, owner):
+          return self.value
+
+      def __set__(self, instance, value):
+          self.value = value
+
+
+  if __name__ == '__main__':
+      class StoreClass(object):
+          """All instances will share `attr`.
+          """
+          attr = DescriptorClassStorage(10)
+
+      store1 = StoreClass()
+      store2 = StoreClass()
+      print('store1', store1.attr)
+      print('store2', store2.attr)
+      print('Setting store1 only.')
+      store1.attr = 100
+      print('store1', store1.attr)
+      print('store2', store2.attr)
+#+END_SRC
+
+#+RESULTS:
+: store1 10
+: store2 10
+: Setting store1 only.
+: store1 100
+: store2 100
+
+* 使用 instance 作为键将实例属性隔离存储
+** 使用 WeakKeyDictionary 作为容器
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  """A descriptor works only in a class.
+  We can store a different value for each instance in a dictionary
+  in the descriptor.
+  """
+  from __future__ import print_function
+  from weakref import WeakKeyDictionary
+
+
+  class DescriptorWeakKeyDictStorage(object):
+      """Descriptor that stores attribute data in instances.
+      """
+      _hidden = WeakKeyDictionary()
+
+      def __init__(self, default=None):
+          self.default = default
+
+      def __get__(self, instance, owner):
+          return DescriptorWeakKeyDictStorage._hidden.get(instance, self.default)
+
+      def __set__(self, instance, value):
+          DescriptorWeakKeyDictStorage._hidden[instance] = value
+
+
+  if __name__ == '__main__':
+      class StoreInstance(object):
+          """All instances have own `attr`.
+          """
+          attr = DescriptorWeakKeyDictStorage(10)
+
+      store1 = StoreInstance()
+      store2 = StoreInstance()
+      print('store1', store1.attr)
+      print('store2', store2.attr)
+      print('Setting store1 only.')
+      store1.attr = 100
+      print('store1', store1.attr)
+      print('store2', store2.attr)
+      print('_hidden:', DescriptorWeakKeyDictStorage._hidden.items())
+      del store1
+      print('Deleted store1')
+      print('_hidden:', DescriptorWeakKeyDictStorage._hidden.items())
+#+END_SRC
+
+#+RESULTS:
+: store1 10
+: store2 10
+: Setting store1 only.
+: store1 100
+: store2 10
+: _hidden: [(<__main__.StoreInstance object at 0x1041f5790>, 100)]
+: Deleted store1
+: _hidden: []
+
+** 使用 dict 作为容器
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+ """A descriptor works only in a class.
+ We can store a different value for each instance in a dictionary
+ in the descriptor.
+ """
+ from __future__ import print_function
+
+
+ class DescriptorDictStorage(object):
+     """Descriptor that stores attribute data in instances.
+     """
+     _hidden = dict()
+
+     def __init__(self, default=None):
+         self.default = default
+
+     def __get__(self, instance, owner):
+         return DescriptorDictStorage._hidden.get(instance, self.default)
+
+     def __set__(self, instance, value):
+         DescriptorDictStorage._hidden[instance] = value
+
+
+ if __name__ == '__main__':
+     class StoreInstance(object):
+         """All instances have own `attr`.
+         """
+         attr = DescriptorDictStorage(10)
+
+     store1 = StoreInstance()
+     store2 = StoreInstance()
+     print('store1', store1.attr)
+     print('store2', store2.attr)
+     print('Setting store1 only.')
+     store1.attr = 100
+     print('store1', store1.attr)
+     print('store2', store2.attr)
+     print('_hidden:', DescriptorDictStorage._hidden.items())
+     del store1
+     print('Deleted store1')
+     print('_hidden:', DescriptorDictStorage._hidden.items())
+#+END_SRC
+
+#+RESULTS:
+: store1 10
+: store2 10
+: Setting store1 only.
+: store1 100
+: store2 10
+: _hidden: [(<__main__.StoreInstance object at 0x1041f5990>, 100)]
+: Deleted store1
+: _hidden: [(<__main__.StoreInstance object at 0x1041f5990>, 100)]
+
+可以看出没有使用弱引用字典的话，删除了实例 store1，在描述符类 DescriptorDictStorage 的 _hidden 字典中任然存储着原来的数据。

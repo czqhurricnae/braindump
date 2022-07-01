@@ -1,0 +1,61 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/SWPM 主要章节目录/")); -*-
+:PROPERTIES:
+:ID:       6C6C5861-7CFA-4A79-8D6B-1B40027A716B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-03 Sat 17:38>
+#+TITLE: SWPM 主要章节目录
+
+- 20-00-XX 通用数据
+  - 20-00-11 materials and parts
+    - general data
+      - temperature grades
+      - classes
+  - 20-00-13 wire type codes
+    - wire type codes and wire part numbers
+    - alternative wire
+- 20-02-XX 防火区域与周围环境
+  - 20-02-10 airplane flammable leakage zones
+  - 20-02-20 airplane temperature areas
+  - 20-02-30 airplane vibration areas
+- 20-10-XX 导线安装
+  - 20-10-13 repair of electrical wire and cable
+  - 20-10-14 installation of shrinkable sleeves 热缩管的安装程序
+    - part numbers and description
+    - installation of heat shrinkable sleeves
+    - installation of cold shrink sleeves
+  - 20-10-15 assembly of shield ground wires [[id:A6251A34-F64B-4F36-99ED-88FB8183F599][屏蔽地线]]的制作
+- 20-11-XX ARINC 629 数据总线
+- 20-12-XX 光纤电缆
+- 20-14-XX 主飞行控制，燃油量指示系统和飞行记录器导线束捆扎
+- 20-15-XX 777 ELMS 板修理
+- 20-20-XX 电接触与接地
+- 20-23-XX ROLLS ROYCE RB211-800 动力装置导线修理
+- 20-24-XX PRATT AND WHITNEY P44000/777 动力装置导线修理
+- 20-25-XX 屏蔽电缆和屏蔽地线
+- 20-30-XX 接线片与接线管
+  - 20-30-12 [[id:6E60497D-3D66-45C8-86CD-8C6F9171D7ED][AWG and CAU conversion]]
+  - 20-30-22 [[id:D89F95A0-C698-48D7-8CDD-EB302ADB0653][assembly of terminals and splices under special conditions]]
+    - assembly when the wire insulation is smaller than the insulation grip
+- 20-35-XX 专用电缆
+- 20-40-XX 焊接连接器
+- 20-42-XX MATE-N-LOC 连接器
+- 20-51-XX 同轴连接器
+- 20-53-XX 双中心钉连接器
+- 20-61-XX 前退圆形连接器
+- 20-62-XX 专用连接器
+- 20-63-XX 后退圆形连接器
+- 20-64-XX 小模块连接器
+- 20-71-XX 支架和配电板矩形连接器
+- 20-72-XX 小型 D 矩形连接器和其他小型连接器
+- 20-73-XX 扁平电缆连接器
+- 20-74-XX 矩形后退连接器
+- 20-81-XX 前退和后退继电器插座
+- 20-82-XX 印制电路板连接器
+- 20-83-XX 线路系统终端系统和触发电门
+- 20-84-XX 灯和灯电门
+- 20-85-XX 连接器卡子与起落架电缆
+- 20-86-XX BURNDY MT17R-1 连接器
+- 20-87-XX HF 天线插头的装配
+- 20-90-XX 终端块装配
+- 20-91-XX 保险丝二极管模块和灯泡更换

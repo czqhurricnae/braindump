@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/办理维修许可项目的变更/")); -*-
+:PROPERTIES:
+:ID:       ABE61294-C70C-4F36-8E06-9878185A9E95
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:50>
+#+TITLE: 办理维修许可项目的变更
+#+ROAM_KEY:
+

@@ -1,0 +1,419 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Nginx url 配置/")); -*-
+:PROPERTIES:
+:ID:       7F312CC4-2BB2-485B-931D-F0E327252797
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-18 Sun 14:09>
+#+TITLE: Nginx url 配置
+
+* 基本配置
+为了探究 nginx 的 url 配置规则，当然需要安装 nginx。我使用了 vagrant 创建了一个虚拟环境的 ubuntu，通过 apt-get 安装 nginx。
+这样就不会污染 mac 的软件环境。通过 vragrant 再创建一个项目进行实验。如果不了解 vagrant 的使用，可以查看[[https://www.jianshu.com/p/f9c41b20c47c][Vagrant虚拟环境利器]]。
+
+=/vagrant= 目录下创建了一个 =pro= 用于项目的根目录，同时配置 =nginx= 的配置文件。（ =/etc/nginx/sites-enabled/pro.conf= ）
+
+#+BEGIN_EXAMPLE
+    ☁  pro  tree
+    .
+    ├── 403.html
+    ├── 404.html
+    ├── index.html
+
+    0 directories, 3 files
+#+END_EXAMPLE
+
+=pro.conf= 的配置如下，即监听本机的 80 端口。
+
+#+BEGIN_EXAMPLE
+    server {
+       listen 80 default_server;
+       server_name localhost;
+
+       access_log /var/log/nginx/pro/access.log;
+       error_log /var/log/nginx/pro/error.log;
+
+       error_page 404 /404.html;
+
+       root /vagrant/pro;
+       index index.html index.htm;
+
+    }
+#+END_EXAMPLE
+
+上述的配置并没有设置 =location= ，但是配置了 =root /vagrant/pro= ，访问 =http://192.168.33.10/= 将会返回 =/vagrant/pro/index.html= 。
+
+* 匹配模式
+** 匹配语法
+nginx 的 url 匹配模式很强大，同时使用非常灵活，尤其是优先级的匹配，如果不寻找规律，不但很难掌握，而且容易犯晕。了解优先级之前，先看看匹配的配置语法，以及都有那些匹配模式。
+
+匹配的语法还是很简单的：
+
+#+BEGIN_EXAMPLE
+    location [ = | ~ | ~* | ^~ ] uri { ... }
+    location @name { ... }
+#+END_EXAMPLE
+
+没错，就这么多，实际写在=loacation=中大概是这样的：
+
+#+BEGIN_EXAMPLE
+    location = / {
+
+    }
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+    location  [指令模式] url匹配模式 {
+
+    }
+#+END_EXAMPLE
+
+指令模式指用于匹配的方式，即 *精确匹配* ， *前缀匹配* 还是 *正则匹配* ，当然这个是可选的，如果不写，则退化成 *正常匹配* 或者 *全匹配* 。
+url 匹配模式则是需要匹配的 url，可以看成是 web 开发中的 *路由* 。
+下面就分别介绍指令模式和匹配模式。
+
+** 精确匹配
+=== 指令用于精确字符匹配（模式），不能使用正则，区分大小写。为了直观的观察匹配命中的 location，使用 rewrite 指令，用于转发。目前只要理解命中了就重定向到 rewrite 后面的 url 即可。
+
+#+BEGIN_EXAMPLE
+    location = /demo {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+上述的配置表示只有访问 =http://192.168.33.10/demo= 这样的 url，才能跳转到 google 的页面。
+除此之外的任何地址都无法访问，那怕是访问 =http://192.168.33.10/demo/= 这个地址也不行。
+因为 url 匹配模式是 =/demo= 。
+
+修改 location：
+
+#+BEGIN_EXAMPLE
+    location = /demo$ {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+熟悉正则的同学初看会以为 =/demo$= 表示 =demo= 结尾的 url，其实不然，这里的 =$= 符号也是 url 的一部分，只有访问 =http://192.168.33.10/demo$= 这个地址才能跳转。
+
+** 前缀匹配
+=^~= 指令用于字符前缀匹配，和 === 精确匹配一样，也是用于字符确定的匹配，不能使用正则且区分大小写。
+和 === 不同的在于， =^~= 指令下，访问的 url 无需 url 匹配模式一模一样，只需要其开头前缀和 url 匹配模式一样即可。
+
+#+BEGIN_EXAMPLE
+    location ^~ /demo {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+对于该模式（ =/demo= ），访问下列的地址都能匹配：
+
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo][http://192.168.33.10/demo]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/][http://192.168.33.10/demo/]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/aaa][http://192.168.33.10/demo/aaa]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/aaa/bbb][http://192.168.33.10/demo/aaa/bbb]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/AAA][http://192.168.33.10/demo/AAA]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demoaaa][http://192.168.33.10/demoaaa]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo.aaa][http://192.168.33.10/demo.aaa]]
+
+只需要以 =/demo= 为前缀开头的 url 都能匹配。与该模式后的是否大小写无关。
+
+=^~= 不支持正则。
+模式 =/demo$= 中的 =$= 并不代表字符模式结束，而是一个是实实在在的 =$= ，只有访问 =/demo$= 开头的 url 才能匹配， =http://192.168.33.10/demo= 则不再匹配。
+
+模式 =/[0-9]emo= 也不代表正则中的 =http://192.168.33.10/0emo= 、 =http://192.168.33.10/5emo= 之类，只有访问以 =/[0-9]emo= 开头 url 才行，例如 =http://192.168.33.10/[0-9]emo= 或 =http://192.168.33.10/[0-9]emo/aaa= 前缀匹配通常用于匹配文件夹，如配置静态文件。
+
+** 正则匹配
+众所周知，nginx 的 url 功能强大，配置灵活。字符匹配中，支持正则和不支持正则完全是两个境界。前面的两种方式都不能使用正则，未免让人觉得 nginx 有点虚夸。
+
+实际上，nginx 支持正则匹配。所使用的指令是 =~= 和 =~*= ，前者表示使用正则，区分大小写，后者表示使用正则，不区分大小写。与前缀匹配一样，正则匹配也是只需匹配以 url 模式开头的即可。
+
+#+BEGIN_EXAMPLE
+    location ~ /[0-9]emo {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+对于上述的模式，可以匹配的 url 如下：
+
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5emo][http://192.168.33.10/5emo]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/9emo][http://192.168.33.10/9emo]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5emo/aaa][http://192.168.33.10/5emo/aaa]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5emo/AAA][http://192.168.33.10/5emo/AAA]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5emoaaa][http://192.168.33.10/5emoaaa]]
+
+只要是以正则表达式 =/[0-9]emo= 匹配的字符开头的 url，都能匹配。
+
+使用 =~*= 则不区分大小写
+
+#+BEGIN_EXAMPLE
+    location ~ /[0-9]EmO {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+下面的都能匹配
+
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5emo][http://192.168.33.10/5emo]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/9Emo][http://192.168.33.10/9Emo]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5emo/Aaa][http://192.168.33.10/5emo/Aaa]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/5eMoEaaa][http://192.168.33.10/5eMoEaaa]]
+
+** 正常匹配
+正常匹配的指令为空，即没有指定匹配指令的即为正常匹配。其形式类似 =/XXX/YYY.ZZZ= 正常匹配中的 url 匹配模式可以使用正则，不区分大小写。
+
+#+BEGIN_EXAMPLE
+    location /demo {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+上述模式指的是匹配 =/demo= 的 url，下面的都能匹配
+
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo][http://192.168.33.10/demo]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/][http://192.168.33.10/demo/]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/aaa][http://192.168.33.10/demo/aaa]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/aaa/bbb][http://192.168.33.10/demo/aaa/bbb]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo/AAA][http://192.168.33.10/demo/AAA]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demoaaa][http://192.168.33.10/demoaaa]]
+- [[https://link.jianshu.com/?t=http://192.168.33.10/demo.aaa][http://192.168.33.10/demo.aaa]]
+
+正常匹配和前缀匹配的差别在于优先级。前缀的优先级高于正常匹配
+
+** 全匹配
+全匹配与正常匹配一样，没有匹配指令，匹配的 url 模式仅一个斜杠 =/= ：
+
+#+BEGIN_EXAMPLE
+    location / {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+全匹配也可以配合精确匹配和正则匹配一些指令，只不过这样的设定意义不大。通过都会有一个默认的 location，这个就是全匹配。
+
+** 命名匹配
+命名匹配指的是使用 =@= 绑定一个模式，类似变量替换的用法。
+
+#+BEGIN_EXAMPLE
+    error_page 404 = @not_found
+
+    location @not_found {
+          rewrite http://google.com;
+    }
+#+END_EXAMPLE
+
+上述的作用是如果访问没有匹配的 url 会触发 404 指令，然后就匹配到 =@not_found= 这个 location 上。
+
+* 匹配优先级
+nginx 的匹配优先级遵循 *一个大原则* 和 *两个小细节* 。
+
+大原则是关于匹配模式的优先级：
+
+#+BEGIN_EXAMPLE
+    精确匹配  >  前缀匹配  >  正则匹配  > 正常匹配  > 全匹配
+#+END_EXAMPLE
+
+小细节则是同一优先级中：
+
+- 细节一：正则匹配成功之后停止匹配，非正则匹配成功还会接着匹配。
+- 细节二：在所有匹配成功的 url 中，选取匹配度最大的 url 字符地址。
+
+** 不同级匹配模式优先级原则
+*** 精确匹配 > 前缀匹配
+=== 精确匹配的优先级最高，这与配置的先后顺序无关
+
+#+BEGIN_EXAMPLE
+    location ^~ /demo{
+        rewrite ^ http://google.com;
+    }
+
+    location = /demo {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+访问
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo    -> baidu.com
+    http://192.168.33.10/demo/ggg -> google.com
+#+END_EXAMPLE
+
+尽管前缀匹配也能匹配 =/demo= 这个地址，并且还先命中，可是 === 的优先级更高。
+
+再把前缀匹配换成正则匹配：
+
+#+BEGIN_EXAMPLE
+    location ~ /demo{
+        rewrite ^ http://google.com;
+    }
+
+    location = /demo {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+访问结果仍然一样。精确匹配的优先级最高。
+
+*** 前缀匹配 > 正则匹配
+
+#+BEGIN_EXAMPLE
+    location ~ /[ad]emo{
+        rewrite ^ http://google.com;
+    }
+
+    location ^~ /demo {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+上述两个模式中，第一个使用正则匹配，第二个使用前缀匹配，访问效果如下
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo     -> baidu.com
+    http://192.168.33.10/aemo     -> google.com
+#+END_EXAMPLE
+
+由此可见，尽管也是正则匹配先命中规则，可以优先级低，还是让步给前缀匹配。
+
+*** 正则匹配 > 正常匹配
+
+#+BEGIN_EXAMPLE
+    location /demo/aa{
+          rewrite ^ http://google.com;
+    }
+
+    location ~ /[ad]emo {
+          rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo/aa     -> baidu.com
+    http://192.168.33.10/aemo/aa     -> baidu.com
+#+END_EXAMPLE
+
+访问 =/demo/aa= 的地址的时候，尽管前者位置在前，并且也匹配最长，可是大规则的优先级，还是要先进行后面的正则匹配。小细节也必须让步大规则。
+
+*** 正常匹配 > 全匹配
+
+#+BEGIN_EXAMPLE
+    location / {
+        rewrite ^ http://google.com;
+    }
+
+    location /demo {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+访问结果
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10          -> index.html
+    http://192.168.33.10/         -> google.comg
+    http://192.168.33.10/demo     -> baidu.com
+    http://192.168.33.10/demo/aa  -> baidu.com
+#+END_EXAMPLE
+
+由此可见，全匹配的优先级最低。
+
+** 同级匹配细节
+同级的匹配需要注意两个关键细节， *是否是正则匹配* ， *是否是最长匹配* 。
+
+*** 非正则匹配
+
+#+BEGIN_EXAMPLE
+    location /demo {
+        rewrite ^ http://google.com;
+    }
+
+    location /demo/aa {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+访问测试：
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo     -> google.com
+    http://192.168.33.10/demo/aa  -> baidu.com
+#+END_EXAMPLE
+
+第一个连接只匹配了第一个 location，跳转 google.com；第二个连接两者都匹配，可是第二个 location 的匹配字符更长，因此跳转了 baidu.com。
+
+把正常匹配换成前缀匹配的效果也一样。
+
+#+BEGIN_EXAMPLE
+    location ^~ /demo {
+        rewrite ^ http://google.com;
+    }
+
+    location ^~ /demo/aa {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+访问结果如下：
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo     -> google.com
+    http://192.168.33.10/demo/aa  -> baidu.com
+#+END_EXAMPLE
+
+通过上面的测试，可见同级的非正则的匹配，匹配结果最长的 location 最终会被命中。其实这个很好理解，匹配的字符越多，优先级越大嘛。但是为什么这个原则要特指非正则的匹配呢？
+
+**** 正则匹配
+正则匹配不适用最大匹配的原则，本质原因是因为正则一旦匹配了，就停止匹配其他 location，因此正则匹配与配置的先后顺序有关。
+
+#+BEGIN_EXAMPLE
+    location ~ /demo {
+        rewrite ^ http://google.com;
+    }
+
+    location ~ /demo/aa {
+        rewrite ^ http://baidu.com;
+    }
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo/aa  -> http://google.com
+#+END_EXAMPLE
+
+nginx 开始匹配 location 的模式，其中 =/demo= 已经匹配了 =http://192.168.33.10/demo/aa= 这个地址，因此停止搜索匹配其他的 location。
+
+下面更改一下上述配置的先后顺序：
+
+#+BEGIN_EXAMPLE
+    location ~ /demo/aa {
+        rewrite ^ http://baidu.com;
+    }
+
+    location ~ /demo {
+        rewrite ^ http://google.com;
+    }
+#+END_EXAMPLE
+
+访问测试：
+
+#+BEGIN_EXAMPLE
+    http://192.168.33.10/demo/aa  -> http://baidu.com
+#+END_EXAMPLE
+
+由此可见，正则匹配与匹配最大长度无关，只与匹配的先后顺序有关。
+
+** 归纳
+通过上述两个模式的测试，我们对两个细节进行了倒序的推导。实际上使用记住两个细节会比较简单。判断同级的优先级归纳如下：
+
+面对一个 location，先判断是否是正则匹配，如果是正则匹配，遇到匹配的模式，则命中。
+如果不是正则，则把匹配的模式放到一边，继续往下阅读配置，阅读完毕所有的匹配模式，查看哪一种的匹配模式更长，则是最终命中的模式。
+
+掌握 nginx 的 location 匹配优先级其实也不难，谨记一个原则两个细节，妈妈再也不用担心配错 url 啦。
+
+* 总结
+nginx 的 url 配置是使用 nginx 最基本功能。
+nginx 作为服务器，它可以接收请求，处理请求，都是基于客户端 url 访问。
+掌握 url 的配置要了解配置的几个指令（ === ， =^~= ）。
+熟悉每个匹配模式的特点。
+
+了解模式之后，对于优先级的判定，只需记住一个大的规则和两个细节，就能从容的应对了。
+
+掌握 url 的配置之后，更重要的是在 location 域中做请求的处理。比如常见的 *静态文件配置* ， *请求转发* （rewrite）， *负载均衡* 等。

@@ -1,0 +1,108 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Flask-SQLAlchemy 外键多对多关系/")); -*-
+:PROPERTIES:
+:ID:       922743FB-07C4-4F2A-8BD0-D2D78266029B
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-05-31 Sun 01:16>
+#+TITLE: Flask-SQLAlchemy 外键多对多关系
+
+#+BEGIN_SRC python
+class Article(db.Model):
+__tablename__ = 'article'
+id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+title = db.Column(db.String(100), nullable=False)
+tags = db.relationship('Tag', secondary=article_tag, backref=db.backref('articles'))
+#+END_SRC
+
+=~tags = db.relationship('Tag', secondary=article_tag, backref=db.backref('articles'))=:
+给 Article 这个模型添加一个 tags 属性，可以访问这篇文章的标签的数据，像访问普通模型一样。
+backref 是定义反向引用，可以通过 =Tag.articles= 访问这个标签所关联的所有文章。
+=secondary=article_tag= 这句话将 article_id 和 tag_id 关联起来，没有这个的话 article_tag Article Tag 这个三个是独立的。
+
+#+BEGIN_SRC python
+class Tag(db.Model):
+    __tablename__ = 'tag'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+#+END_SRC
+
+多对多的关系，要通过一个中间表进行关联 =article_tag= 就是中间表。
+中间表，不能通过 class 的方式实现，只能通过 =db.Table= 的方式进行实现。
+
+#+BEGIN_SRC python
+article_tag = db.Table('article_tag',
+                       db.Column('article_id', db.Integer, db.ForeignKey('article.id'), primary_key=True),
+                       db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True))
+#+END_SRC
+
+下面是这三张表的关系，可以看到 article_tag 作为一个中间表，被 tag 和 article 引用。
+
+#+DOWNLOADED: screenshot @ 2020-05-31 01:27:41
+[[file:./static/Flask-SQLAlchemy 外键多对多关系/2020-05-31_01-27-41_screenshot.jpg]]
+
+接下来在 tag 表和 article 中添加数据：
+
+#+BEGIN_SRC python
+@app.route('/addArticleAddTag')
+def addArticleAddTag():
+    article1 = Article(title='如何实现经济稳定繁荣发展')
+    article2 = Article(title='论增强国力的重要性')
+
+    tag1 = Tag(name='经济')
+    tag2 = Tag(name='民生')
+
+    article1.tags.append(tag1)
+    article1.tags.append(tag2)
+
+    article2.tags.append(tag1)
+
+    db.session.add(article1)
+    db.session.add(article2)
+
+    db.session.add(tag1)
+    db.session.add(tag2)
+
+    db.session.commit()
+    return 'hello'
+#+END_SRC
+
+tag 表:
+
+#+DOWNLOADED: screenshot @ 2020-05-31 01:29:21
+[[file:./static/Flask-SQLAlchemy 外键多对多关系/2020-05-31_01-29-21_screenshot.jpg]]
+
+article 表:
+
+#+DOWNLOADED: screenshot @ 2020-05-31 01:29:33
+[[file:./static/Flask-SQLAlchemy 外键多对多关系/2020-05-31_01-29-33_screenshot.jpg]]
+
+article_tag 表:
+
+#+DOWNLOADED: screenshot @ 2020-05-31 01:29:47
+[[file:./static/Flask-SQLAlchemy 外键多对多关系/2020-05-31_01-29-47_screenshot.jpg]]
+
+可以看到 article_id 为 1 的文章有两个标签（经济， 民生），文章 article_id 为 2 的文章只有一个标签（经济），说明已经成功的关联了。
+
+#+BEGIN_SRC python
+@app.route('/queryData')
+def queryData():
+    # 查询指定的文章有几个标签
+    article1 = Article.query.filter(Article.title == '如何实现经济稳定繁荣发展').first()
+    tags = article1.tags
+    for tag in tags:
+        print(tag.name)
+
+    # 查询指定的标签和哪些文章有关联
+    t = Tag.query.filter(Tag.name == '经济').first()
+    articles = t.articles  # 此处直接反向引用得到所有的文章
+    for article in articles:
+        print(article.title)
+    return 'Hello World!'
+#+END_SRC
+
+通过正向引用，得到指定文章下有几个标签，这里查询标题为“如何实现经济稳定繁荣发展” tag。
+name 的输出结果为：民生，经济。
+通过反向引用，得到指定标签下有哪些文章关联，这里查询标签为 “经济” 所关联的文章，article_title 的输出结果为：“如何实现经济稳定繁荣发展， 论增强国力的重要性”。
+
+通过两次查询，可以看到和我们最开始所说的是一致的。

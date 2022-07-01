@@ -1,0 +1,210 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 反推保留 M 程序/")); -*-
+:PROPERTIES:
+:ID:       DE48F577-F7E2-41BF-A100-AAAB861E6A59
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-12 Sun 01:49>
+#+TITLE: 737NG 反推保留 M 程序
+
+* 反推保留的主要工作
+完成 737NG 反推保留主要有以下工作：
+
+#+BEGIN_QUOTE
+- Make sure that the sync locks are in the locked position.
+- Open the applicable circuit breakers and attach lock collars.
+- Install the deactivation pins in the left and right thrust reverser sleeves.
+- Lockwire the reverse thrust lever to the applicable forward thrust lever.
+- Do an EEC BITE check to make sure that no ENGINE CONTROL LIGHT faults are present.
+- Make sure that the thrust reverser position data is in the limits.
+#+END_QUOTE
+
+* 反推的锁定 M 程序分两种情况（只需完成一种即可）
+* 可以使用液压收放 M 程序
+1.确认起动手柄位于关断位并挂牌
+
+2.确认油门手柄位于慢车位并挂牌
+
+3.确认反推手柄处于向前向下位
+
+4.对相应液压系统增压并放出反推
+
+5.拔出相应跳开关并挂跳开关夹
+
+   1)针对左发拔出 P18-2 板 B7（ENGINE1 THRUST REVERSER SYNC LOCK）跳开关
+
+   2)针对右发拔出 P6-2 板 C5（ENGINE2 THRUST REVERSER SYNC LOCK）跳开关
+
+6.反推手柄收回并使其向前向下，确认反推整流罩没有收回
+
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-45-56_screenshot.jpg]]
+
+7.将反推手柄置于放出位
+
+8.闭合相应跳开关
+
+   1)针对左发闭合 P18-2 板 B7（ENGINE1 THRUST REVERSER SYNC LOCK）跳开关
+
+   2)针对右发闭合 P6-2 板 C5（ENGINE2 THRUST REVERSER SYNC LOCK）跳开关
+
+9.消除 EAU 上的信息
+
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-47-20_screenshot.jpg]]
+
+10.收上反推
+
+11.拔出相应的跳开关并挂跳开关夹
+
+    1)对于左发拔出 P18-2 板以下跳开关：
+
+       a.B5（ENGINE1 THRUST REVERSER CONT）
+
+       b.B7（ENGINE1 THRUST REVERSER SYNC LOCK）
+
+    2)对于右发拔出 P6-2 板以下跳开关：
+
+       a.C7（ENGINE2 THRUST REVERSER CONT）
+
+       b.C5（ENGINE2 THRUST REVERSER SYNC LOCK）
+
+12.关闭相应的液压系统
+
+13.从主设备舱取出 4 根固定销（P/N：315A2258-2），装于相应发动机的左右侧反推，固定销安装力矩：110-125 磅·英寸
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:52:48
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-52-48_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 02:54:08
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-54-08_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 02:54:25
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-54-25_screenshot.jpg]]
+
+14.取下挂在起动手柄和油门手柄上的标牌
+
+15.使用保险丝将相应的反推手柄固定在油门手柄上
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:56:35
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-56-35_screenshot.jpg]]
+
+16.相应的反推手柄上挂失效标牌，相应的反推灯贴失效标牌
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:57:16
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-57-16_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 02:58:19
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-58-19_screenshot.jpg]]
+
+17.进行 EEC BITE 测试，确认无故障信息，确定 ENG CONTROL LIGTH 灯不会点亮
+
+#+DOWNLOADED: screenshot @ 2020-07-14 03:44:14
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_03-44-14_screenshot.jpg]]
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-59-03_screenshot.jpg]]
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-59-48_screenshot.jpg]]
+
+18.进入输入监控查看左，右 LVDT 指示（“SEL POS CHA:” 或 “SEL POS CHB:”）在 “0.0+/-4%” 范围内，否则根据手册完成相应 LVDT 的调节
+
+* 无法使用液压收放 M 程序
+1.若反推处于放出位，使用人工方法收上反推（参考 AMM78-31-00）
+
+2.拔出相应跳开关并挂跳开关夹
+
+   1)针对左发拔出 P18-2 板 B7（ENGINE1 THRUST REVERSER SYNC LOCK）跳开关
+
+   2)针对右发拔出 P6-2 板 C5（ENGINE2 THRUST REVERSER SYNC LOCK）跳开关
+
+3.检查 EAU 以确认没有动力到达同步锁
+
+   1)打开电子设备舱门
+
+   2)按压并保持相应发动机的 “T/R STOW FAULTS” 电门
+
+   3)确认所有的灯都闪亮大约 1 秒钟
+
+   4)确认相应发动机的 “L SLEEVE SYNC LOCK PWR” 和 “R SLEEVE SYNC LOCK PWR” 灯熄灭
+
+   5)松开 “T/R STOW FAULTS” 电门
+
+   6)关闭电子设备舱门
+
+4.若 “SYNC LOCK PWR” 灯熄灭
+
+   1)拔出相应的跳开关并挂跳开关夹
+
+      a.针对左发：P18-2 板 B5（ENGINE1 THRUST REVERSER CONT）
+
+      b.针对右发：P6-2 板 C7（ENGINE2 THRUST REVERSER CONT）
+
+5.从主设备舱取出 4 根固定销（P/N：315A2258-2），装于相应发动机的左右侧反推，固定销安装力矩：110-125 磅·英寸
+
+6.使用保险丝将相应的反推手柄固定在油门手柄上
+
+7.相应的反推手柄上挂失效标牌，相应的反推灯贴失效标牌
+
+8.进入输入监控查看左，右 LVDT 指示（“SELPOSCHA:” 或 “SELPOSCHB:”）在 “0.0+/-4%” 范围内，否则根据手册完成相应 LVDT 的调节
+
+9.若 “SYNC LOCK PWR” 灯持续点亮
+
+   1)拔出相应的跳开关并挂跳开关夹
+
+      a.针对左发：P18-2 板 B5（ENGINE1 THRUST REVERSER CONT）
+
+
+      b.针对右发：P6-2 板 C7（ENGINE2 THRUST REVERSER CONT）
+
+10.打开相应发动机风扇整流罩，脱开左右侧反推同步锁插头并安装保护盖，将电插头和反推固定连接
+
+#+DOWNLOADED: screenshot @ 2020-07-14 03:02:26
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_03-02-26_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 03:02:46
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_03-02-46_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 03:03:02
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_03-03-02_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 03:03:22
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_03-03-22_screenshot.jpg]]
+
+11.从主设备舱取出 4 根固定销（P/N：315A2258-2），装于相应发动机的左右侧反推，固定销安装力矩：110-125 磅·英寸
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:52:48
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-52-48_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 02:54:08
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-54-08_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 02:54:25
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-54-25_screenshot.jpg]]
+
+12.使用保险丝将相应的反推手柄固定在油门手柄上
+
+13.相应的反推手柄上挂失效标牌，相应的反推灯贴失效标牌
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:57:16
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-57-16_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 02:58:19
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-58-19_screenshot.jpg]]
+
+14.进行 EEC BITE 测试，确认无故障信息，确定 ENG CONTROL LIGTH 灯不会点亮
+
+#+DOWNLOADED: screenshot @ 2020-07-14 03:44:14
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_03-44-14_screenshot.jpg]]
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-59-03_screenshot.jpg]]
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-59-48_screenshot.jpg]]
+
+15.进入输入监控查看左，右 LVDT 指示（“SEL POS CHA:” 或 “SEL POS CHB:”）在 “0.0+/-4%” 范围内，否则根据手册完成相应 LVDT 的调节
+
+* 反推锁定视频
+
+[[video:./static/737NG 反推保留 M 程序/737NG反推锁定.mp4][737NG反推锁定.mp4]]
+
+* 注意点
+** Can the manual lockout lever on the hydraulic control value module be used to isolate the hydraulic actuators on the sleeves?
+
+#+DOWNLOADED: screenshot @ 2020-07-14 01:01:36
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_01-01-36_screenshot.jpg]]
+#+DOWNLOADED: screenshot @ 2020-07-14 01:04:16
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_01-04-16_screenshot.jpg]]
+
+*** 正常情况下，反推作动筒的头端和杆端的回油路线
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:26:30
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-26-30_screenshot.jpg]]
+
+*** 安装隔离销，会导致液压旁通回油单向活门，出现不安全的状况
+
+#+DOWNLOADED: screenshot @ 2020-07-14 02:29:50
+[[file:./static/737NG 反推保留 M 程序/2020-07-14_02-29-50_screenshot.jpg]]

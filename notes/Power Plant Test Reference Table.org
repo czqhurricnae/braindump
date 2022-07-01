@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Power Plant Test Reference Table/")); -*-
+:PROPERTIES:
+:ID:       C828EFFE-0223-4B2A-A8BC-CD7BE8108648
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-03-17 Wed 08:51>
+#+TITLE: Power Plant Test Reference Table
+TASK 71-00-00-800-811-F00

@@ -1,0 +1,36 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/飞机的几种重量/")); -*-
+:PROPERTIES:
+:ID:       DF38C409-B5E7-4031-9BC8-6F8FD0A28275
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-20 Tue 14:04>
+#+TITLE: 飞机的几种重量
+* Basic Weight
+飞机基本重量。
+
+* Dry Operating Weight
+飞机净操作重量，是在飞机基本重量（Basic Weight）上增加航材、救生筏、加机组等相关航班保障的重量。
+
+* Zero Fuel Weight Actual
+实际无油重量，是飞机净操作重量 + 业载。
+
+* Zero Fuel Weight Max
+最大无油重量。
+
+* Take Off Fuel
+起飞油量。
+
+* Take Off Weight Actual
+实际起飞重量，是实际无油重量 + 起飞油量。
+
+* Take Off Weight Max
+最大起飞重量，比较飞机最大结构起飞重量与性能起飞重量的小值。
+
+* Landing Weight Actual
+实际着陆重量，是实际起飞重量 - 航段耗油。
+
+* Landing Weight Max
+最大着陆重量，比较飞机最大结构着陆重量与性能着陆重量的小值。
+
+* 参考资料
+- 0413-6-载重平衡舱单格式与说明

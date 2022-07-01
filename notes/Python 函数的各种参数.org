@@ -1,0 +1,246 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       AB5666C0-B40A-448B-8215-919B88A93EFB
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-08 Wed 13:21>
+#+TITLE: Python 函数的各种参数
+
+* 位置参数或者关键字参数
+这是 Python 的默认参数类型。
+~arg2~ 提供了默认值。
+
+#+BEGIN_SRC python :results values list :exports no-eval :session func
+def func(arg1, arg2="World!"):
+    print arg1, arg2
+#+END_SRC
+
+#+RESULTS:
+
+** ~func~ 可以通过位置参数形式调用
+
+#+BEGIN_SRC python :results output :exports no-eval :session func
+func("Hello", "Python")
+#+END_SRC
+
+#+RESULTS:
+: Hello Python
+
+** 位置参数和关键字参数混合形式调用
+
+#+BEGIN_SRC python :results output :exports no-eval :session func
+func("Hello", arg2="Python")
+#+END_SRC
+
+#+RESULTS:
+: Hello Python
+
+** 不能将关键字参数先于位置参数传递给函数
+
+ #+BEGIN_SRC python :results output :exports no-eval :session func
+ func(arg1="Hello", "Python")
+ #+END_SRC
+
+ #+RESULTS:
+ : File "<stdin>", line 1
+ : SyntaxError: non-keyword arg after keyword arg
+
+* 仅适用位置参数的形式
+这种形式在需要将参数传递给函数（方法）时，仅能通过位置参数的传递方式。
+这种形式对于 Python 开发者来说，暂时没有办法使用。
+这种形式现在仅存在 Python 的内建函数。
+
+** Position-only parameter has no syntax to define
+ 虽然无法定义方法，但是内建的很多函数都是仅接受位置参数的。
+
+ #+BEGIN_SRC python :results values :exports no-eval
+ abs(-3)
+ #+END_SRC
+
+ #+RESULTS:
+ : None
+
+ #+BEGIN_SRC python :results values list :exports no-eval
+ abs(a=-3)
+ #+END_SRC
+
+ #+RESULTS:
+ : Traceback (most recent call last):
+ :   File "<stdin>", line 5, in <module>
+ :   File "<stdin>", line 3, in main
+ : TypeError: abs() takes no keyword arguments
+
+ #+BEGIN_SRC python :results values list :exports no-eval
+ pow(x=2, y=3)
+ #+END_SRC
+
+ #+RESULTS:
+ : Traceback (most recent call last):
+ :  File "<stdin>", line 5, in <module>
+ :  File "<stdin>", line 3, in main
+ : TypeError: pow() takes no keyword arguments
+
+* 任意数量的位置参数（带单个星号参数）
+任意数量的位置参数在定义的时候需要一个星号前缀来表示，
+在传递参数的时候，可以在原有参数的后面添加任意多个参数，
+这些参数将会被放在元组内提供给函数（方法）：
+
+** Var-position parameter
+
+ #+BEGIN_SRC python :results values list :exports no-eval :session args
+ def func(arg1, arg2, *args):
+     print arg1, arg2, args
+ #+END_SRC
+
+ #+RESULTS:
+
+** 调用时，前面两个必须在前面
+*** 前两个参数是位置参数或者关键字参数的形式
+
+  #+BEGIN_SRC python :results output :exports no-eval :session args
+  func("Hello", "Tuple, value is:", 1, 2, 3)
+  #+END_SRC
+
+  #+RESULTS:
+  : Hello Tuple, value is: (1, 2, 3)
+
+  #+BEGIN_SRC python :results output :exports no-eval :session args
+  func(arg1="Hello", arg2="Tuple, value is:")
+  #+END_SRC
+
+  #+RESULTS:
+  : Hello Tuple, value is: ()
+
+  #+BEGIN_SRC python :results output :exports no-eval :session args
+  func("Hello", arg2="Tuple, value is:", 1, 2, 3)
+  #+END_SRC
+
+  #+RESULTS:
+  : File "<stdin>", line 1
+  : SyntaxError: non-keyword arg after keyword arg
+
+  #+BEGIN_SRC python :results output :exports no-eval :session args
+  func(arg1="Hello", arg2="Tuple, value is:", 1, 2, 3)
+  #+END_SRC
+
+  #+RESULTS:
+  : File "<stdin>", line 1
+  : SyntaxError: non-keyword arg after keyword arg
+
+*** 如果需要传递元组给函数
+
+  #+BEGIN_SRC python :results output :exports no-eval :session args
+  func("Hello", "Tuple, value is:", (1, 2, 3))
+  #+END_SRC
+
+  #+RESULTS:
+  : Hello Tuple, value is: ((1, 2, 3),)
+
+  需要在传递的过程中添加 “*” 号。
+
+  #+BEGIN_SRC python :results output :exports no-eval :session args
+  func("Hello", "Tuple, value is:", *(1, 2, 3))
+  #+END_SRC
+
+  #+RESULTS:
+  : Hello Tuple, value is: (1, 2, 3)
+
+* 任意数量的关键参数（带两个星号参数）
+任意数量的关键参数在定义的时候，参数名称前面需要有两个星号（**）作为前缀，
+这样定义出来的参数，在传递参数的时候，可以在原有的参数后面添加任意多个关键字参数，
+关键字参数是使用 ~参数名称=参数值~ 的形式进行传递。
+
+** Var-keywords parameter
+
+ #+BEGIN_SRC python :results values list :exports no-eval :session kw-func
+ def func(arg1, arg2, **kwargs):
+     print arg1, arg2, kwargs
+ #+END_SRC
+
+ #+RESULTS:
+
+ #+BEGIN_SRC python :results output :exports no-eval :session kw-func
+ func("Hello", "Dict, value is:", x=2, y=3, z=4)
+ #+END_SRC
+
+ #+RESULTS:
+ : Hello Dict, value is: {'y': 3, 'x': 2, 'z': 4}
+
+多余的参数将自动被放入字典中提供给函数适用。
+
+如果需要传递字典给函数，需要在传递的过程中添加**，
+此时如果还有关键字参数应在字典前提供完成。
+不能在字典后在提供。
+
+#+BEGIN_SRC python :results output :exports no-eval :session kw-func
+func("Hello", "Dict, value is:", **{"y": 3, "x": 2, "z": 4})
+#+END_SRC
+
+#+RESULTS:
+: Hello Dict, value is: {'y': 3, 'x': 2, 'z': 4}
+
+#+BEGIN_SRC python :results output :exports no-eval :session kw-func
+func("Hello", "Dict, value is:", {"y": 3, "x": 2, "z": 4})
+#+END_SRC
+
+#+RESULTS:
+: Traceback (most recent call last):
+:   File "<stdin>", line 1, in <module>
+: TypeError: func() takes exactly 2 arguments (3 given)
+
+#+BEGIN_SRC python :results output :exports no-eval :session kw-func
+func("Hello", "Dict, value is:", s=5, **{"y": 3, "x": 2, "z": 4})
+#+END_SRC
+
+#+RESULTS:
+: Hello Dict, value is: {'y': 3, 'x': 2, 's': 5, 'z': 4}
+
+*** 提供重复的参数
+
+#+BEGIN_SRC python :results output :exports no-eval :session kw-func
+func("Hello", "Dict, value is:",y=3,  **{"y": 3, "x": 2, "z": 4})
+#+END_SRC
+
+#+RESULTS:
+: Traceback (most recent call last):
+:   File "<stdin>", line 1, in <module>
+: TypeError: func() got multiple values for keyword argument 'y'
+
+* 总结
+四种参数形式中仅有第二种 Python 没有提供定义的方法，其他三种在定义的时候也需要注意，定义的时候应该根据 Python 的解析规律进行定义，其中：
+
+- 位置或关键字参数应该在最前面，其中，没有默认值的应该在有默认值的参数前面
+- 任意数量位置参数应该放在所有位置或关键字参数的后面
+- 任意数量关键字参数应该放在任意数量位置参数的后面
+注意：任意数量位置参数和任意数量关键字参数只能在定义中定义一次。
+
+#+BEGIN_SRC python :results values list :exports no-eval :session all
+def func(arg1, arg2="default", *args, **kwargs):
+    print "arg1=%s, args=%s, args=%s, kwargs=%s" % (arg1, arg2, args, kwargs)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :results output :exports no-eval :session all
+func(1, 2, x=1)
+#+END_SRC
+
+#+RESULTS:
+: arg1=1, args=2, args=(), kwargs={'x': 1}
+
+#+BEGIN_SRC python :results output :exports no-eval :session all
+func(x=1)
+#+END_SRC
+
+#+RESULTS:
+: Traceback (most recent call last):
+:   File "<stdin>", line 1, in <module>
+: TypeError: func() takes at least 1 argument (0 given)
+
+#+BEGIN_SRC python :results output :exports no-eval :session all
+func(1, x=1)
+#+END_SRC
+
+#+RESULTS:
+: arg1=1, args=default, args=(), kwargs={'x': 1}

@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/IPM/")); -*-
+:PROPERTIES:
+:ID:       134B8CFB-D1C8-42DA-B147-462C7D1D6BE1
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 21:37>
+#+TITLE: IPM
+
+#+ROAM_KEY:
+
+IOSA 项目手册

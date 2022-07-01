@@ -1,0 +1,182 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/CSS 基础/")); -*-
+:PROPERTIES:
+:ID:       3665743C-E895-4FE8-972A-98593EB8FD62
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-08 Wed 12:25>
+#+TITLE: CSS 基础
+
+* 选择器分类
+  See：[[id:D639425D-6780-401E-87DA-E61EA88D7A2D][CSS3 常用选择器一览表]]
+
+  See：[[id:99E20195-5F5C-4F26-A059-46CBE322F9E3][CSS3 目标伪类选择器]]
+
+- 元素选择器 a{}
+- 伪元素选择器 ::before{}
+- 类选择器 .link{}
+- 属性选择器 [type=radio]{}
+- 伪类选择器 :hover{}
+- ID 选择器 #id{}
+- 组合选择器 [type=checkbox] + label{}
+- 否定选择器 :not(.link){}
+- 通用选择器 *{}
+
+* 选择器分权重
+- ID 选择器 +100
+- 类 属性 伪类 +10
+- 元素 伪元素 +1
+- 其他选择器 +0
+
+* 计算一个不进位的数字
+
+#+BEGIN_SRC css :results values list :exports no-eval
+#id .link a[href]
+#+END_SRC
+
+- #id +100
+- .link +10
+- a +1
+- [href] +0
+
+#+BEGIN_SRC css :results values list :exports no-eval
+#id .link .active
+#+END_SRC
+
+- #id +100
+- .link +10
+- .active +10
+
+* 非布局样式
+- 字体, 字重, 颜色, 大小, 行高
+- 背景, 边框
+- 滚动, 换行
+- 粗体, 斜体, 下划线
+- 其他
+
+** 字体
+*** 字体族
+- 衬线字体 serif
+- 非衬线字体 sans-serif
+- 等宽字体 monospace
+- 手写字体 cursive
+- 花体 fantasy
+
+*** 多字体 fallback
+    - Note taken on [2020-01-21 Tue 19:47] \\
+      注 2：在本系统 macOS 中没有 "Microsoft Yahei" 字体，所以就使用衬线字体进行渲染.
+    - Note taken on [2020-01-21 Tue 19:46] \\
+      注 1：字体族作为值不用加引号, 如 "serif"。
+
+  #+BEGIN_SRC html :results values list :exports no-eval
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>fonts</title>
+      <style>
+       body{
+         font-family: "aaa", "monaco", "PingFang SC";
+       }
+       .chinese{
+         font-family: "Microsoft Yahei", serif;
+       }
+      </style>
+    </head>
+    <body class="body" id="body">
+      hello world 你好, 世界
+      <div class="chinese">你好</div>
+    </body>
+  </html>
+  #+END_SRC
+
+  #+DOWNLOADED: screenshot @ 2020-01-21 19:44:13
+  [[file:./static/CSS 基础/2020-01-21_19-44-13_screenshot.jpg]]
+
+*** 网络字体, 自定义字体
+*** iconfont
+** 行高
+* HTML 元素嵌套关系
+- 块级元素可以包含行内元素
+- 块级元素不一定能包含块级元素
+- 行内元素一般不能包含块级元素
+~a > div~ 是合法的。
+~p > a > div~ 是不合法的。
+因为 ~a~ 是透明元素，在计算合法性将其去除，就变成 ~p >div~ ，而 ~p~ 包含 ~div~ 是不合法的。
+参考: https://www.w3.org/TR/2017/REC-html52-20171214/dom.html#phrasing-content-2
+
+#+BEGIN_SRC html :results values list :exports no-eval
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>default style</title>
+  </head>
+  <body>
+    <div>
+      <a href="#">DIV &gt; A</a>
+    </div>
+    <a href="#"><div>A &gt; DIV</div></a>
+    <p>
+      <a href="#"><div> P &gt; A &gt; DIV</div></a>
+    </p>
+  </body>
+</html>
+#+END_SRC
+
+* doctype 意义是什么
+- 让浏览器以标准模式渲染
+- 让浏览器知道元素的合法性
+
+* HTML XHTML HTML5 关系
+- HTMl 属于 SGML
+- XHTML 属于 XML, 是 HTML 进行 XML 严格化的结构
+- HTML5 不属于 SGML 或 XML，比 XHTML 宽松
+
+* HTML5 有什么变化
+- 新的语义化元素
+- 表单增强
+- 新的 API 离线，音视频，图形，实时通讯，本地存储，设备能力）
+- 分离和嵌套变更
+
+* em 和 i 有什么区别
+- ~em~ 是语义化的标签，表示强调
+- ~i~ 是纯样式的标签，表示斜体
+- HTML5 中不推荐使用 ~i~ ，一般用作图标
+
+* 语义化的意义
+- 开发者容易理解
+- 机器容易理解结构
+- 有利于 SEO
+- semantic microdata
+
+* 哪些标签可以自闭合
+- input
+- img
+- br
+- hr
+- meta
+- link
+
+* HTMl 和 DOM 的关系
+- DOM 是由 HTML 解析而来的
+- JS 可以维护 DOM
+
+* property 和 attribute 区别
+- attribute 是死的
+- property 是活的
+
+#+BEGIN_SRC html :results values list :exports no-eval
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>default style</title>
+  </head>
+  <body>
+
+  </body>
+</html>
+#+END_SRC

@@ -1,0 +1,60 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 路由 Redirect 组件/")); -*-
+:PROPERTIES:
+:ID:       9DCCAF98-08A0-4E20-A59C-DDA874A97325
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:57>
+#+TITLE: React 路由 Redirect 组件
+
+** Redirect from 和 to 的关系
+- Switch 是 Route 从上到下匹配，如果有一个匹配，后面的就不会再继续匹配了
+- Redirect from 属性是地址与 from 匹配（可以用正则），才会重定向到 to 属性指定的路径
+- Redirect from 属性如果没有，则默认是匹配所有的路径
+
+** 示例
+
+ #+BEGIN_SRC js :results values list :exports both
+ import React, { Component } from 'react'
+ import Header from '../components/homePage/Header'
+ import ArticleList  from './ArticleList'
+ import ArticleDetail  from './ArticleDetail'
+ import EditorPage  from './EditorPage'
+ import {Switch, Route, Redirect} from 'react-router-dom'
+
+ export class HomePage extends Component {
+     static propTypes = {
+     }
+
+     constructor(props) {
+         super(props)
+     }
+
+     render() {
+         return (
+             <div>
+                 {/* 头部导航 */}
+                 <Header></Header>
+                 {/*
+                     1. 需要把变化的部分，使用 路由来动态切换
+                 */}
+                 <Switch>
+                     {/* 与父组件的路由一模一样，采用 exact 精确匹配 */}
+                     <Route path='/home' exact component={ArticleList}></Route>
+                     <Route path='/home/editor'  component={EditorPage}></Route>
+                     <Route path='/home/detail/:id'  component={ArticleDetail}></Route>
+                     {/* 只有地址为 /home/aaa 才会从定向到 /home */}
+                     <Redirect from='/home/aaa' to='/home'></Redirect>
+                     <Redirect from='/home/detail' to='/home/detail/1'></Redirect>
+                     {/* 使用正则表达式匹配路径 */}
+                     <Redirect from='/home/*' to='/home/detail/1'></Redirect>
+                     {/* 如果前面的都不匹配,则匹配最后一个,类似于from='*' */}
+                     <Redirect  to='/home'></Redirect>
+                 </Switch>
+             </div>
+         )
+     }
+ }
+
+ export default HomePage
+ #+END_SRC
+

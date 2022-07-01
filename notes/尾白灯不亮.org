@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/尾白灯不亮/")); -*-
+:PROPERTIES:
+:ID:       31BCD95A-83F4-40D5-88AA-3EB223D52FF0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:53>
+#+TITLE: 尾白灯不亮
+
+MEL2-33-11-01
+

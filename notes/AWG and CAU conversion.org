@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AWG and CAU conversion/")); -*-
+:PROPERTIES:
+:ID:       6E60497D-3D66-45C8-86CD-8C6F9171D7ED
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-19 Mon 19:23>
+#+TITLE: AWG and CAU conversion
+#+FILETAGS: :SWPM_20_30_12:
+
+[[file:./static/AWG and CAU conversion/2021-07-19_19-29-19_screenshot.jpg]]
+[[file:./static/AWG and CAU conversion/2021-07-19_19-29-27_screenshot.jpg]]
+
+怎样提高导线的 CAU？
+当总的导线的 CAU 小于接线管的最小 CAU 时，需要提高导线的 CAU 。提高导线 CAU 有几种方法：
+- 将导线折叠
+- 增加填充导线

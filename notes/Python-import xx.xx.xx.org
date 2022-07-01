@@ -1,0 +1,50 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-import xx.xx.xx/")); -*-
+:PROPERTIES:
+:ID:       509F375C-DC86-408E-B5ED-0938E5926A6E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-22 Thu 14:30>
+#+TITLE: Python-import xx.xx.xx
+
+- ~import xx.xx.xx~ 最后的一个 ~xx~ 可以是 =package= 或 =module= ，但不能是变量，函数，或者类的名字。
+- ~import A~ ，再调用 ~A.a~ ，会在内存加载 =A= 的全部属性，此时多个文件的引用共享同一个模块，对 =A.a= 的修改会导致其他引用的变化。
+- 将模块执行一遍， ~if __name__ == "__main__"~ 里面的没有被执行。
+- 导入的 ~A~ 在 Python 2.5 之前是先在包内（intra-package）导入，在 Python 2.5 到 Python 2.7 可以使用 ~from __future__ import absolute_import~ 启用[[id:91B0F184-FB7B-4804-A94E-D19A090A411D][绝对导入]]这个新行为，
+在 Python 2.7 之后就是绝对导入了。（实际上从下面的实例可以看出，Python 2.7 也还没实现这个特性。）
+
+#+BEGIN_QUOTE
+In Python 2.5, you must enable the new absolute import behavior with
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+from __future__ import absolute_import
+#+END_SRC
+
+You may use relative imports freely.
+In Python 2.6, any import statement that results in an intra-package import will raise DeprecationWarning (this also applies to from <> import that fails to use the relative import syntax).
+#+END_QUOTE
+也就是说在 Pyhon 2.6 使用 ~import xx.xx.xx~ 导致了包内导入，就会引发 ~DeprecationWarning~ 错误。
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+#A.py
+a = 1
+
+#B.py
+def func1():
+    from A import a
+    a = 2
+
+def func2():
+    import A
+    A.a  = 2
+
+def print_a():
+    from A import a
+    print(a)
+#+END_SRC
+
+先运行 ~func1()~ ，再运行 ~printa()~ ，输出 =1= 。
+先运行 ~func2()~ ，再运行 ~printa()~ ，输出 =2= 。
+
+[[id:7B5F4FE1-04FD-4AC8-98D9-8F2DC00FAB4A][See：Python-from-import]]
+
+[[id:3ACB6261-EBF4-4846-B8F2-BFC06ADC4833][See：PEP 328 Absolute and Relative Imports]]

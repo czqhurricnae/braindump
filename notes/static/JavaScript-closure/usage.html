@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <h3>(Press F12 to display console.) Click one of the links below.
+    </h3>
+    <script type="text/javascript">
+        // Each "a" element gets the correct text,
+        // i.e. "Link 0", "Link 1" and so on. But whichever
+        // link you click, it always alerts the number "5".
+        // Why? (The reason is explained below.)
+        // Declare a outer function. Note that anonymous
+        // inner functions are being registered as event
+        // handlers for "link" (see line #29)
+        function addLinksExample1() {
+            for (var i = 0, link; i < 5; i++) {
+                // Create an anchor and add it to the <body> element
+                link = document.createElement("a");
+                link.innerHTML = "LinkWithoutClosure " + i + "<br/>";
+                // function is defined - in other words, a function object is
+                // created.
+                link.onclick = function () {
+                    alert(i);
+                    console.log(i);
+                };
+                document.body.appendChild(link);
+            }
+            // When addLinksWithoutClosure() outer
+            // function's execution is done, the value
+            // of "i" is set to 5.
+        }
+        // Invoke the outer function. Now the inner function
+        // is defined with its function scope - the variable i,
+        // which is set to 5. When link is clicked, the inner
+        // function gets executed with value of 5.
+        addLinksExample1();
+    </script>
+    <br/>
+    <script type="text/javascript">
+     //
+     // Use Closure to the solve the problem above
+     //
+     function addLinksExample2() {
+       for (var i = 0, link; i < 5; i++) {
+         link = document.createElement("a");
+         link.innerHTML = "LinkWithClosure " + i + "<br/>";
+         // Note that self-invoking function is used here.
+         // The correct value of "i" is passed to the
+         // self-invoking "function(value){..}", which
+         // provides the correct value to its own
+         // internal function.
+         link.onclick = (function (value) {
+           return function () {
+             alert(value);
+             console.log(i);
+           }
+         })(i);
+         document.body.appendChild(link);
+       }
+     }
+     addLinksExample2();
+    </script>
+</body>
+</html>

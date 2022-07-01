@@ -1,0 +1,35 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       768DDC8E-7CAE-4F97-AFAD-292FAA0B17B1
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-04 Tue 22:31>
+#+TITLE: macOS 平台 Homebrew 更新 brew update 卡死
+* 替换 Homebrew 源
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+$ cd "$(brew --repo)"
+$ git remote set-url origin https://mirrors.ustc.edu.cn/brew.git
+#+END_SRC
+
+- "$(brew --repo)"是用来自动指向 Homebrew 的目录的
+- 参考 [[http://mirrors.ustc.edu.cn/help/brew.git.html][Homebrew 源使用帮助]]
+
+* 替换 homebrew-core 源
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+$ cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+$ git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git
+#+END_SRC
+
+- 参考 [[http://mirrors.ustc.edu.cn/help/homebrew-core.git.html][Homebrew Core 源使用帮助]]
+
+* 替换 homebrew-cask 源
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+$ cd "$(brew --repo)"/Library/Taps/homebrew/homebrew-cask
+$ git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
+#+END_SRC
+
+- 参考 [[http://mirrors.ustc.edu.cn/help/homebrew-cask.git.html][Homebrew Cask源使用帮助]]

@@ -1,0 +1,395 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}*\PYGZhy{} coding: utf\PYGZhy{}8 \PYGZhy{}*\PYGZhy{}}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{    flask}
+\PYG{l+s+sd}{    \PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}}
+
+\PYG{l+s+sd}{    A microframework based on Werkzeug.  It\PYGZsq{}s extensively documented}
+\PYG{l+s+sd}{    and follows best practice patterns.}
+
+\PYG{l+s+sd}{    :copyright: (c) 2010 by Armin Ronacher.}
+\PYG{l+s+sd}{    :license: BSD, see LICENSE for more details.}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{k+kn}{import} \PYG{n+nn}{os}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{import} \PYG{n+nn}{pkg\PYGZus{}resources}
+\PYG{k+kn}{from} \PYG{n+nn}{threading} \PYG{k+kn}{import} \PYG{n}{local}
+\PYG{k+kn}{from} \PYG{n+nn}{jinja2} \PYG{k+kn}{import} \PYG{n}{Environment}\PYG{p}{,} \PYG{n}{PackageLoader}
+\PYG{k+kn}{from} \PYG{n+nn}{werkzeug} \PYG{k+kn}{import} \PYG{n}{Request}\PYG{p}{,} \PYG{n}{Response}\PYG{p}{,} \PYG{n}{LocalStack}\PYG{p}{,} \PYG{n}{LocalProxy}
+\PYG{k+kn}{from} \PYG{n+nn}{werkzeug.routing} \PYG{k+kn}{import} \PYG{n}{Map}\PYG{p}{,} \PYG{n}{Rule}
+\PYG{k+kn}{from} \PYG{n+nn}{werkzeug.exceptions} \PYG{k+kn}{import} \PYG{n}{HTTPException}\PYG{p}{,} \PYG{n}{InternalServerError}
+\PYG{k+kn}{from} \PYG{n+nn}{werkzeug.contrib.securecookie} \PYG{k+kn}{import} \PYG{n}{SecureCookie}
+
+\PYG{c+c1}{\PYGZsh{} try to import the json helpers}
+\PYG{k}{try}\PYG{p}{:}
+    \PYG{k+kn}{from} \PYG{n+nn}{simplejson} \PYG{k+kn}{import} \PYG{n}{loads} \PYG{k}{as} \PYG{n}{load\PYGZus{}json}\PYG{p}{,} \PYG{n}{dumps} \PYG{k}{as} \PYG{n}{dump\PYGZus{}json}
+\PYG{k}{except} \PYG{n+ne}{ImportError}\PYG{p}{:}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{k+kn}{from} \PYG{n+nn}{json} \PYG{k+kn}{import} \PYG{n}{loads} \PYG{k}{as} \PYG{n}{load\PYGZus{}json}\PYG{p}{,} \PYG{n}{dumps} \PYG{k}{as} \PYG{n}{dump\PYGZus{}json}
+    \PYG{k}{except} \PYG{n+ne}{ImportError}\PYG{p}{:}
+        \PYG{k}{pass}
+
+\PYG{c+c1}{\PYGZsh{} utilities we import from Werkzeug and Jinja2 that are unused}
+\PYG{c+c1}{\PYGZsh{} in the module but are exported as public interface.}
+\PYG{k+kn}{from} \PYG{n+nn}{werkzeug} \PYG{k+kn}{import} \PYG{n}{abort}\PYG{p}{,} \PYG{n}{redirect}\PYG{p}{,} \PYG{n}{secure\PYGZus{}filename}\PYG{p}{,} \PYG{n}{cached\PYGZus{}property}\PYG{p}{,} \PYGZbs{}
+    \PYG{n}{html}\PYG{p}{,} \PYG{n}{import\PYGZus{}string}\PYG{p}{,} \PYG{n}{generate\PYGZus{}password\PYGZus{}hash}\PYG{p}{,} \PYG{n}{check\PYGZus{}password\PYGZus{}hash}
+\PYG{k+kn}{from} \PYG{n+nn}{jinja2} \PYG{k+kn}{import} \PYG{n}{Markup}\PYG{p}{,} \PYG{n}{escape}
+
+
+\PYG{k}{class} \PYG{n+nc}{FlaskRequest}\PYG{p}{(}\PYG{n}{Request}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The request object used by default in flask.  Remembers the}
+\PYG{l+s+sd}{    matched endpoint and view arguments.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{Request}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{endpoint} \PYG{o}{=} \PYG{n+nb+bp}{None}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{view\PYGZus{}args} \PYG{o}{=} \PYG{n+nb+bp}{None}
+
+
+\PYG{k}{class} \PYG{n+nc}{FlaskResponse}\PYG{p}{(}\PYG{n}{Response}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The response object that is used by default in flask.  Works like the}
+\PYG{l+s+sd}{    response object from Werkzeug but is set to have a HTML mimetype by}
+\PYG{l+s+sd}{    default.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{default\PYGZus{}mimetype} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{text/html}\PYG{l+s+s1}{\PYGZsq{}}
+
+
+\PYG{k}{class} \PYG{n+nc}{\PYGZus{}RequestGlobals}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{pass}
+
+
+\PYG{k}{class} \PYG{n+nc}{\PYGZus{}RequestContext}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The request context contains all request relevant information.  It is}
+\PYG{l+s+sd}{    created at the beginning of the request and pushed to the}
+\PYG{l+s+sd}{    `\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack` and removed at the end of it.  It will create the}
+\PYG{l+s+sd}{    URL adapter and request object for the WSGI environment provided.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{app}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{app} \PYG{o}{=} \PYG{n}{app}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}adapter} \PYG{o}{=} \PYG{n}{app}\PYG{o}{.}\PYG{n}{url\PYGZus{}map}\PYG{o}{.}\PYG{n}{bind\PYGZus{}to\PYGZus{}environ}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request} \PYG{o}{=} \PYG{n}{app}\PYG{o}{.}\PYG{n}{request\PYGZus{}class}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{session} \PYG{o}{=} \PYG{n}{app}\PYG{o}{.}\PYG{n}{open\PYGZus{}session}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{g} \PYG{o}{=} \PYG{n}{\PYGZus{}RequestGlobals}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{flashes} \PYG{o}{=} \PYG{n+nb+bp}{None}
+
+
+\PYG{k}{def} \PYG{n+nf}{url\PYGZus{}for}\PYG{p}{(}\PYG{n}{endpoint}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{values}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Generates a URL to the given endpoint with the method provided.}
+
+\PYG{l+s+sd}{    :param endpoint: the endpoint of the URL (name of the function)}
+\PYG{l+s+sd}{    :param values: the variable arguments of the URL rule}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{url\PYGZus{}adapter}\PYG{o}{.}\PYG{n}{build}\PYG{p}{(}\PYG{n}{endpoint}\PYG{p}{,} \PYG{n}{values}\PYG{p}{)}
+
+
+\PYG{k}{def} \PYG{n+nf}{jsonified}\PYG{p}{(}\PYG{o}{*}\PYG{o}{*}\PYG{n}{values}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Returns a json response\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{n}{current\PYGZus{}app}\PYG{o}{.}\PYG{n}{response\PYGZus{}class}\PYG{p}{(}\PYG{n}{dump\PYGZus{}json}\PYG{p}{(}\PYG{n}{values}\PYG{p}{)}\PYG{p}{,}
+                                      \PYG{n}{mimetype}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{application/json}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{k}{def} \PYG{n+nf}{flash}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Flashes a message to the next request.  In order to remove the}
+\PYG{l+s+sd}{    flashed message from the session and to display it to the user,}
+\PYG{l+s+sd}{    the template has to call :func:`get\PYGZus{}flashed\PYGZus{}messages`.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{session}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}flashes}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{session}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}flashes}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{)}\PYG{p}{)} \PYG{o}{+} \PYG{p}{[}\PYG{n}{message}\PYG{p}{]}
+
+
+\PYG{k}{def} \PYG{n+nf}{get\PYGZus{}flashed\PYGZus{}messages}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Pulls all flashed messages from the session and returns them.}
+\PYG{l+s+sd}{    Further calls in the same request to the function will return}
+\PYG{l+s+sd}{    the same messages.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{flashes} \PYG{o}{=} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{flashes}
+    \PYG{k}{if} \PYG{n}{flashes} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+        \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{flashes} \PYG{o}{=} \PYG{n}{flashes} \PYG{o}{=} \PYGZbs{}
+            \PYG{n}{session}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}flashes}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{flashes}
+
+
+\PYG{k}{def} \PYG{n+nf}{render\PYGZus{}template}\PYG{p}{(}\PYG{n}{template\PYGZus{}name}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{context}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Renders a template from the template folder with the given}
+\PYG{l+s+sd}{    context.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{n}{current\PYGZus{}app}\PYG{o}{.}\PYG{n}{jinja\PYGZus{}env}\PYG{o}{.}\PYG{n}{get\PYGZus{}template}\PYG{p}{(}\PYG{n}{template\PYGZus{}name}\PYG{p}{)}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{n}{context}\PYG{p}{)}
+
+
+\PYG{k}{def} \PYG{n+nf}{render\PYGZus{}template\PYGZus{}string}\PYG{p}{(}\PYG{n}{source}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{context}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Renders a template from the given template source string}
+\PYG{l+s+sd}{    with the given context.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{n}{current\PYGZus{}app}\PYG{o}{.}\PYG{n}{jinja\PYGZus{}env}\PYG{o}{.}\PYG{n}{from\PYGZus{}string}\PYG{p}{(}\PYG{n}{source}\PYG{p}{)}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{n}{context}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{Flask}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The flask object implements a WSGI application and acts as the central}
+\PYG{l+s+sd}{    object.  It is passed the name of the module or package of the application}
+\PYG{l+s+sd}{    and optionally a configuration.  When it\PYGZsq{}s created it sets up the}
+\PYG{l+s+sd}{    template engine and provides ways to register view functions.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{c+c1}{\PYGZsh{}: the class that is used for request objects}
+    \PYG{n}{request\PYGZus{}class} \PYG{o}{=} \PYG{n}{FlaskRequest}
+
+    \PYG{c+c1}{\PYGZsh{}: the class that is used for response objects}
+    \PYG{n}{response\PYGZus{}class} \PYG{o}{=} \PYG{n}{FlaskResponse}
+
+    \PYG{c+c1}{\PYGZsh{}: path for the static files.  If you don\PYGZsq{}t want to use static files}
+    \PYG{c+c1}{\PYGZsh{}: you can set this value to `None` in which case no URL rule is added}
+    \PYG{c+c1}{\PYGZsh{}: and the development server will no longer serve any static files.}
+    \PYG{n}{static\PYGZus{}path} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/static}\PYG{l+s+s1}{\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{}: if a secret key is set, cryptographic components can use this to}
+    \PYG{c+c1}{\PYGZsh{}: sign cookies and other things.  Set this to a complex random value}
+    \PYG{c+c1}{\PYGZsh{}: when you want to use the secure cookie for instance.}
+    \PYG{n}{secret\PYGZus{}key} \PYG{o}{=} \PYG{n+nb+bp}{None}
+
+    \PYG{c+c1}{\PYGZsh{}: The secure cookie uses this for the name of the session cookie}
+    \PYG{n}{session\PYGZus{}cookie\PYGZus{}name} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{session}\PYG{l+s+s1}{\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{}: options that are passed directly to the Jinja2 environment}
+    \PYG{n}{jinja\PYGZus{}options} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(}
+        \PYG{n}{autoescape}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,}
+        \PYG{n}{extensions}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{jinja2.ext.autoescape}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{jinja2.ext.with\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{package\PYGZus{}name}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug} \PYG{o}{=} \PYG{n+nb+bp}{False}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{package\PYGZus{}name} \PYG{o}{=} \PYG{n}{package\PYGZus{}name}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{view\PYGZus{}functions} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error\PYGZus{}handlers} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}init\PYGZus{}funcs} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}shutdown\PYGZus{}funcs} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}map} \PYG{o}{=} \PYG{n}{Map}\PYG{p}{(}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{static\PYGZus{}path} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}map}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}
+                \PYG{n}{Rule}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{static\PYGZus{}path} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/\PYGZlt{}filename\PYGZgt{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,}
+                     \PYG{n}{build\PYGZus{}only}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,}
+                     \PYG{n}{endpoint}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{static}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{jinja\PYGZus{}env} \PYG{o}{=} \PYG{n}{Environment}\PYG{p}{(}\PYG{n}{loader}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{create\PYGZus{}jinja\PYGZus{}loader}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+                                     \PYG{o}{*}\PYG{o}{*}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{jinja\PYGZus{}options}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{jinja\PYGZus{}env}\PYG{o}{.}\PYG{n}{globals}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}
+            \PYG{n}{url\PYGZus{}for}\PYG{o}{=}\PYG{n}{url\PYGZus{}for}\PYG{p}{,}
+            \PYG{n}{request}\PYG{o}{=}\PYG{n}{request}\PYG{p}{,}
+            \PYG{n}{session}\PYG{o}{=}\PYG{n}{session}\PYG{p}{,}
+            \PYG{n}{g}\PYG{o}{=}\PYG{n}{g}\PYG{p}{,}
+            \PYG{n}{get\PYGZus{}flashed\PYGZus{}messages}\PYG{o}{=}\PYG{n}{get\PYGZus{}flashed\PYGZus{}messages}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{create\PYGZus{}jinja\PYGZus{}loader}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Creates the Jinja loader.  By default just a package loader for}
+\PYG{l+s+sd}{        the configured package is returned that looks up templates in the}
+\PYG{l+s+sd}{        `templates` folder.  To add other loaders it\PYGZsq{}s possible to}
+\PYG{l+s+sd}{        override this method.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n}{PackageLoader}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{package\PYGZus{}name}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{run}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{host}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{localhost}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{port}\PYG{o}{=}\PYG{l+m+mi}{5000}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Runs the application on a local development server\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k+kn}{from} \PYG{n+nn}{werkzeug} \PYG{k+kn}{import} \PYG{n}{run\PYGZus{}simple}
+        \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{debug}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{options}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug} \PYG{o}{=} \PYG{n}{options}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{debug}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{static\PYGZus{}path} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{options}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{static\PYGZus{}files}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{static\PYGZus{}path}\PYG{p}{:} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{package\PYGZus{}name}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{static}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+            \PYG{p}{\PYGZcb{}}
+            \PYG{n}{options}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{use\PYGZus{}reloader}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{)}
+            \PYG{n}{options}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{use\PYGZus{}debugger}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{run\PYGZus{}simple}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}
+
+    \PYG{n+nd}{@cached\PYGZus{}property}
+    \PYG{k}{def} \PYG{n+nf}{test}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}A test client for this application\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k+kn}{from} \PYG{n+nn}{werkzeug} \PYG{k+kn}{import} \PYG{n}{Client}
+        \PYG{k}{return} \PYG{n}{Client}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{response\PYGZus{}class}\PYG{p}{,} \PYG{n}{use\PYGZus{}cookies}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{open\PYGZus{}resource}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{resource}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Opens a resource from the application\PYGZsq{}s resource folder\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n}{pkg\PYGZus{}resources}\PYG{o}{.}\PYG{n}{resource\PYGZus{}stream}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{package\PYGZus{}name}\PYG{p}{,} \PYG{n}{resource}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{open\PYGZus{}session}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{request}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Creates or opens a new session.  Default implementation requires}
+\PYG{l+s+sd}{        that `securecookie.secret\PYGZus{}key` is set.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{key} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{secret\PYGZus{}key}
+        \PYG{k}{if} \PYG{n}{key} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n}{SecureCookie}\PYG{o}{.}\PYG{n}{load\PYGZus{}cookie}\PYG{p}{(}\PYG{n}{request}\PYG{p}{,}
+                                            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{session\PYGZus{}cookie\PYGZus{}name}\PYG{p}{,}
+                                            \PYG{n}{secret\PYGZus{}key}\PYG{o}{=}\PYG{n}{key}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{save\PYGZus{}session}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{session}\PYG{p}{,} \PYG{n}{response}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Saves the session if it needs updates.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{if} \PYG{n}{session} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{session}\PYG{o}{.}\PYG{n}{save\PYGZus{}cookie}\PYG{p}{(}\PYG{n}{response}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{session\PYGZus{}cookie\PYGZus{}name}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{route}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rule}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}A decorator that is used to register a view function for a}
+\PYG{l+s+sd}{        given URL rule.  Example::}
+
+\PYG{l+s+sd}{            @app.route(\PYGZsq{}/\PYGZsq{})}
+\PYG{l+s+sd}{            def index():}
+\PYG{l+s+sd}{                return \PYGZsq{}Hello World\PYGZsq{}}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def} \PYG{n+nf}{decorator}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}\PYG{p}{:}
+            \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{endpoint}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{options}\PYG{p}{:}
+                \PYG{n}{options}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{endpoint}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{f}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}map}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Rule}\PYG{p}{(}\PYG{n}{rule}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{options}\PYG{p}{)}\PYG{p}{)}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{view\PYGZus{}functions}\PYG{p}{[}\PYG{n}{options}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{endpoint}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{]} \PYG{o}{=} \PYG{n}{f}
+            \PYG{k}{return} \PYG{n}{f}
+
+        \PYG{k}{return} \PYG{n}{decorator}
+
+    \PYG{k}{def} \PYG{n+nf}{errorhandler}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{code}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}A decorator that is used to register a function give a given}
+\PYG{l+s+sd}{        error code.  Example::}
+
+\PYG{l+s+sd}{            @app.errorhandler(404)}
+\PYG{l+s+sd}{            def page\PYGZus{}not\PYGZus{}found():}
+\PYG{l+s+sd}{                return \PYGZsq{}This page does not exist\PYGZsq{}, 404}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def} \PYG{n+nf}{decorator}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error\PYGZus{}handlers}\PYG{p}{[}\PYG{n}{code}\PYG{p}{]} \PYG{o}{=} \PYG{n}{f}
+            \PYG{k}{return} \PYG{n}{f}
+
+        \PYG{k}{return} \PYG{n}{decorator}
+
+    \PYG{k}{def} \PYG{n+nf}{request\PYGZus{}init}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{f}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Registers a function to run before each request.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}init\PYGZus{}funcs}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{f}
+
+    \PYG{k}{def} \PYG{n+nf}{request\PYGZus{}shutdown}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{f}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Register a function to be run after each request.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}shutdown\PYGZus{}funcs}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{f}
+
+    \PYG{k}{def} \PYG{n+nf}{match\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Matches the current request against the URL map and also}
+\PYG{l+s+sd}{        stores the endpoint and view arguments on the request object}
+\PYG{l+s+sd}{        is successful, otherwise the exception is stored.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{rv} \PYG{o}{=} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{url\PYGZus{}adapter}\PYG{o}{.}\PYG{n}{match}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n}{request}\PYG{o}{.}\PYG{n}{endpoint}\PYG{p}{,} \PYG{n}{request}\PYG{o}{.}\PYG{n}{view\PYGZus{}args} \PYG{o}{=} \PYG{n}{rv}
+        \PYG{k}{return} \PYG{n}{rv}
+
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Does the request dispatching.  Matches the URL and returns the}
+\PYG{l+s+sd}{        def dispatch\PYGZus{}request(self):}
+\PYG{l+s+sd}{        return value of the view or error handler.  This does not have to}
+\PYG{l+s+sd}{        be a response object.  In order to convert the return value to a}
+\PYG{l+s+sd}{        proper response object, call :func:`make\PYGZus{}response`.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{endpoint}\PYG{p}{,} \PYG{n}{values} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{match\PYGZus{}request}\PYG{p}{(}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{view\PYGZus{}functions}\PYG{p}{[}\PYG{n}{endpoint}\PYG{p}{]}\PYG{p}{(}\PYG{o}{*}\PYG{o}{*}\PYG{n}{values}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n}{HTTPException}\PYG{p}{,} \PYG{n}{e}\PYG{p}{:}
+            \PYG{n}{handler} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error\PYGZus{}handlers}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{e}\PYG{o}{.}\PYG{n}{code}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{handler} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{e}
+            \PYG{k}{return} \PYG{n}{handler}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n+ne}{Exception}\PYG{p}{,} \PYG{n}{e}\PYG{p}{:}
+            \PYG{n}{handler} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error\PYGZus{}handlers}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug} \PYG{o+ow}{or} \PYG{n}{handler} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{raise}
+            \PYG{k}{return} \PYG{n}{handler}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{make\PYGZus{}response}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rv}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Converts the return value from a view function to a real}
+\PYG{l+s+sd}{        response object that is an instance of :attr:`response\PYGZus{}class`.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{response\PYGZus{}class}\PYG{p}{)}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n}{rv}
+        \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{,} \PYG{n+nb}{basestring}\PYG{p}{)}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{response\PYGZus{}class}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{,} \PYG{n+nb}{tuple}\PYG{p}{)}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{response\PYGZus{}class}\PYG{p}{(}\PYG{o}{*}\PYG{n}{rv}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{response\PYGZus{}class}\PYG{o}{.}\PYG{n}{force\PYGZus{}type}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{,} \PYG{n}{request}\PYG{o}{.}\PYG{n}{environ}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{preprocess\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Called before the actual request dispatching and will}
+\PYG{l+s+sd}{        call every as :func:`request\PYGZus{}init` decorated function.}
+\PYG{l+s+sd}{        If any of these function returns a value it\PYGZsq{}s handled as}
+\PYG{l+s+sd}{        if it was the return value from the view and further}
+\PYG{l+s+sd}{        request handling is stopped.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{for} \PYG{n}{func} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}init\PYGZus{}funcs}\PYG{p}{:}
+            \PYG{n}{rv} \PYG{o}{=} \PYG{n}{func}\PYG{p}{(}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{rv} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{rv}
+
+    \PYG{k}{def} \PYG{n+nf}{process\PYGZus{}response}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{response}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Can be overridden in order to modify the response object}
+\PYG{l+s+sd}{        before it\PYGZsq{}s sent to the WSGI server.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{session} \PYG{o}{=} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{session}
+        \PYG{k}{if} \PYG{n}{session} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{save\PYGZus{}session}\PYG{p}{(}\PYG{n}{session}\PYG{p}{,} \PYG{n}{response}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{handler} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request\PYGZus{}shutdown\PYGZus{}funcs}\PYG{p}{:}
+            \PYG{n}{response} \PYG{o}{=} \PYG{n}{handler}\PYG{p}{(}\PYG{n}{response}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{response}
+
+    \PYG{k}{def} \PYG{n+nf}{wsgi\PYGZus{}app}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{,} \PYG{n}{start\PYGZus{}response}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The actual WSGI application.  This is not implemented in}
+\PYG{l+s+sd}{        `\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}` so that middlewares can be applied:}
+
+\PYG{l+s+sd}{            app.wsgi\PYGZus{}app = MyMiddleware(app.wsgi\PYGZus{}app)}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{push}\PYG{p}{(}\PYG{n}{\PYGZus{}RequestContext}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{)}\PYG{p}{)}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{rv} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{preprocess\PYGZus{}request}\PYG{p}{(}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{rv} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{n}{rv} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{dispatch\PYGZus{}request}\PYG{p}{(}\PYG{p}{)}
+                \PYG{n}{response} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{make\PYGZus{}response}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{)}
+                \PYG{n}{response} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}response}\PYG{p}{(}\PYG{n}{response}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{response}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{,} \PYG{n}{start\PYGZus{}response}\PYG{p}{)}
+        \PYG{k}{finally}\PYG{p}{:}
+            \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{,} \PYG{n}{start\PYGZus{}response}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Shortcut for :attr:`wsgi\PYGZus{}app`\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{wsgi\PYGZus{}app}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{,} \PYG{n}{start\PYGZus{}response}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} context locals}
+\PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack} \PYG{o}{=} \PYG{n}{LocalStack}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{current\PYGZus{}app} \PYG{o}{=} \PYG{n}{LocalProxy}\PYG{p}{(}\PYG{k}{lambda}\PYG{p}{:} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{app}\PYG{p}{)}
+\PYG{n}{request} \PYG{o}{=} \PYG{n}{LocalProxy}\PYG{p}{(}\PYG{k}{lambda}\PYG{p}{:} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{request}\PYG{p}{)}
+\PYG{n}{session} \PYG{o}{=} \PYG{n}{LocalProxy}\PYG{p}{(}\PYG{k}{lambda}\PYG{p}{:} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{session}\PYG{p}{)}
+\PYG{n}{g} \PYG{o}{=} \PYG{n}{LocalProxy}\PYG{p}{(}\PYG{k}{lambda}\PYG{p}{:} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{g}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}\PYGZti{}}
+\PYG{c+c1}{\PYGZsh{}: create a new flask applications.  We pass it the name of our module}
+\PYG{c+c1}{\PYGZsh{}: so that flask knows where to look for templates and static files.}
+\PYG{n}{app} \PYG{o}{=} \PYG{n}{Flask}\PYG{p}{(}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}}\PYG{p}{)}
+
+
+\PYG{n+nd}{@app.route}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{methods}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{GET}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+\PYG{k}{def} \PYG{n+nf}{index}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Show an overview page\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{c+c1}{\PYGZsh{} return render\PYGZus{}template(\PYGZsq{}index.html\PYGZsq{})}
+    \PYG{k}{return} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{index}\PYG{l+s+s2}{\PYGZdq{}}
+
+
+\PYG{n+nd}{@app.route}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/hello/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{methods}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{GET}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{POST}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+\PYG{k}{def} \PYG{n+nf}{hello\PYGZus{}user}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Ask the user for a name and redirect to :func:`hello`\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{c+c1}{\PYGZsh{} if request.method == \PYGZsq{}POST\PYGZsq{}:}
+    \PYG{c+c1}{\PYGZsh{}     return redirect(url\PYGZus{}for(\PYGZsq{}hello\PYGZsq{}, name=request.form[\PYGZsq{}name\PYGZsq{}]))}
+    \PYG{c+c1}{\PYGZsh{} return render\PYGZus{}template(\PYGZsq{}hello.html\PYGZsq{}, name=None)}
+    \PYG{k}{return} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hello}\PYG{l+s+s2}{\PYGZdq{}}
+
+
+\PYG{n+nd}{@app.route}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/hello/\PYGZlt{}name\PYGZgt{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{methods}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{GET}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+\PYG{k}{def} \PYG{n+nf}{hello}\PYG{p}{(}\PYG{n}{name}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Greet name friendly\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{c+c1}{\PYGZsh{} return render\PYGZus{}template(\PYGZsq{}hello.html\PYGZsq{}, name=name)}
+    \PYG{k}{return} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hello name}\PYG{l+s+s2}{\PYGZdq{}}
+
+
+\PYG{c+c1}{\PYGZsh{} if \PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{} == \PYGZsq{}\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}\PYGZsq{}:}
+\PYG{n}{app}\PYG{o}{.}\PYG{n}{run}\PYG{p}{(}\PYG{n}{debug}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\end{Verbatim}

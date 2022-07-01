@@ -1,0 +1,19 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 飞机区域划分/")); -*-
+:PROPERTIES:
+:ID:       E6394480-6976-426E-87E4-500CD8B14D52
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :MAJOR_ZONES:Major_Zone:Major_Zones:
+
+#+DATE: <2021-04-19 Mon 09:40>
+#+TITLE: 737NG 飞机区域划分
+- 100 下半机身
+- 200 上半机身
+- 300 机尾
+- 400 动力装置和吊舱支柱
+- 500 左机翼
+- 600 右机翼
+- 700 起落架和起落架舱门
+- 800 舱门
+
+[[file:./static/737NG 飞机区域划分/2021-04-19_09-40-21_screenshot.jpg]]

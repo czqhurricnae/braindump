@@ -1,0 +1,33 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Insert Configurations/")); -*-
+:PROPERTIES:
+:ID:       00F87A74-63D8-4235-9DDC-4F9F073C9C7C
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-18 Thu 19:32>
+#+TITLE: Insert Configurations
+
+插钉的插入构型，用于确定插钉的件号，大小，以及插头的尺寸大小。
+
+[[file:./static/Insert Configurations/2021-07-04_23-14-00_screenshot.jpg]]
+
+以机组氧气瓶上压力传感器的插头，“BACC45FT10-5S” 为例。
+- Shell size
+10
+- Insert configuration
+5
+
+“5” 一般情况表示该插头内有 5 根插钉。
+
+但是对于“BACC63CB22-55S6”：
+- Shell Size。
+22
+- Insert Configuration。
+55
+- Contact Type。
+Sockets
+- Alternate Keyway Postion。
+6
+
+“55” 并不代表有 55 根插钉。
+
+[[file:./static/Insert Configurations/2021-07-04_23-20-10_2020-09-09_17-37-21_screenshot.jpg]]

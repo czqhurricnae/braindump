@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-socket/")); -*-
+:PROPERTIES:
+:ID:       858538C8-09FA-4C5B-8918-B57C44BAD84F
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-05 Sat 12:20>
+#+TITLE: Python-socket
+
+[[file:./static/Python-socket/2020-09-05_12-21-41_screenshot.jpg]]

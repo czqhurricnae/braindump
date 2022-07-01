@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/特氟龙胶带/")); -*-
+:PROPERTIES:
+:ID:       37D610CF-B543-445A-A1B7-E648A9118219
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:52>
+#+TITLE: 特氟龙胶带
+
+P421-1"
+

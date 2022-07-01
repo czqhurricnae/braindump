@@ -1,0 +1,38 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Flask 404 405 500 503 错误/")); -*-
+:PROPERTIES:
+:ID:       32D160EA-2BFA-43F3-987E-8756611E7045
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 14:01>
+#+TITLE: Flask 404 405 500 503 错误
+
+~404~, ~405~, ~500~, ~503~ 这些错误由 Flask 直接处理, 发生错误时会触发全局的错误处理函数, 如果没有定义对应的错误处理函数, 则返回默认的 HTTP 响应。
+
+#+BEGIN_SRC sh :results values list :exports both
+127.0.0.1 - - [11/Dec/2019 12:21:25] "POST /api/timesheets HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 2000, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1991, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask_restful/__init__.py", line 269, in error_router
+    return original_handler(e)
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1567, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1988, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1641, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask_restful/__init__.py", line 269, in error_router
+    return original_handler(e)
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1544, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1639, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/c/.virtualenvs/container-jXmPm-qZ/lib/python2.7/site-packages/flask/app.py", line 1625, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/c/container/my_app/index/views.py", line 79, in timesheets
+    tasktime=float(timesheet.get(u'tasktime')),
+ValueError: could not convert string to float:
+#+END_SRC
+

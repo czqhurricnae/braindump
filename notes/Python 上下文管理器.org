@@ -1,0 +1,84 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python 上下文管理器/")); -*-
+:PROPERTIES:
+:ID:       193BAE56-8CEF-4CDB-82F0-61CB06171521
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-18 Sun 21:09>
+#+TITLE: Python 上下文管理器
+
+* with 语句
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session with
+with open("test.txt", "w") as f:
+    f.write("Hello World")
+#+END_SRC
+
+#+RESULTS:
+
+with 语句的代码块的执行过程如下：
+- 计算表达式的值，返回一个上下文管理器对象。
+- 加载上下文管理器对象的 ~__exit__()~ 方法以备后用。
+- 调用上下文管理器对象的 ~__enter__()~ 方法。
+- 如果 with 语句中设置了目标对象，将 ~__enter__()~ 方法的返回值赋值给目标对象。
+- 执行 with 中的代码块。
+- 如果步骤 5 中代码正常结束，调用上下文管理器对象的 ~__exit__()~ 方法，其返回值直接忽略。
+- 如果步骤 5 中代码执行过程中发生异常，调用上下文管理器对象的 ~__exit__()~ 方法。
+
+将异常类型，异常值，traceback 信息作为参数传递给 ~__exit__()~ 方法，如果 ~__exit__~ 方法的返回值赋值给目标对象返回值为 ~false~ ，则异常重新抛出，如果返回值为 ~true~ ，则异常被挂起，程序继续执行。
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session with
+  print f.__enter__
+  print f.__exit__
+#+END_SRC
+
+#+RESULTS:
+: <built-in method __enter__ of file object at 0x111058930>
+: <built-in method __exit__ of file object at 0x111058930>
+
+* 自定义上下文管理器
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session MyContextManager
+class MyContextManager(object):
+      def __enter__(self):
+          print "entering..."
+
+      def __exit__(self, exception_type, exception_value, traceback):
+          print "leaving..."
+          if exception_type is None:
+              print "no exceptions!"
+              return False
+          elif exception_type is ValueError:
+              print "value error!!!"
+              return True
+          else:
+              print "other error!!!"
+              return True
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session MyContextManager
+  with MyContextManager():
+      print "testing..."
+      raise ValueError
+#+END_SRC
+
+#+RESULTS:
+: entering...
+: testing...
+: leaving...
+: value error!!!
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session MyContextManager
+  with MyContextManager():
+      print "testing..."
+#+END_SRC
+
+#+RESULTS:
+: entering...
+: testing...
+: leaving...
+: no exceptions!
+
+* contextmanager 装饰器
+Python 提供了 contextlib 模块，该模块是通过 Generator 实现的，其中的 contextmanager 装饰器提供一种针对函数级别的上下文管理机制。

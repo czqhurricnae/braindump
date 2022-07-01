@@ -1,0 +1,33 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/MacOS 无法登录 App Store 修复/")); -*-
+:PROPERTIES:
+:ID:       1FA2D310-3A56-465C-995C-15C536FF4EFC
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-06 Sun 16:11>
+#+TITLE: MacOS 无法登录 App Store 修复
+
+[[file:./static/MacOS 无法登录 App Store 修复/2020-09-06_16-12-34_screenshot.jpg]]
+
+无线网卡被系统分配到“en0”，才能让 App Store 登录。
+
+* 打开“系统偏好设置”-->“网络”，把左边的选项全都点“-”进行删除，然后点击“应用”。
+
+[[file:./static/MacOS 无法登录 App Store 修复/2020-09-06_17-07-10_screenshot.jpg]]
+
+* 打开苹果系统盘“根目录”-->“Library (资源库)”-->“Preferences”-->“SystemConfiguration”，找到并修改“com.apple.Boot.plist”文件，具体见下图：
+
+[[file:./static/MacOS 无法登录 App Store 修复/2020-09-06_17-09-57_screenshot.jpg]]
+
+插入的代码：
+
+#+begin_example
+1 <key>EthernetBuiltIn</key>
+2 <string>Yes</string>
+#+end_example
+
+* 打开苹果系统盘“根目录”-->“Library (资源库)”-->“Preferences”-->“SystemConfiguration”，找到并删除“NetworkInterfaces.plist”文件：
+
+[[file:./static/MacOS 无法登录 App Store 修复/2020-09-06_17-12-48_screenshot.jpg]]
+
+* 重启电脑

@@ -1,0 +1,221 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/When_to_use_weak_references_in_python/")); -*-
+:PROPERTIES:
+:ID:       B9673A7A-4482-4BF6-AAE4-69A518C28063
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-03-22 Sun 10:35>
+#+TITLE: When_to_use_weak_references_in_python
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+Can anyone explain usage of weak references?
+
+The [[https://docs.python.org/3/library/weakref.html][documentation]].
+doesn't explain it precisely, it just says that the GC can destroy the object linked to via a weak reference at any time.
+Then what's the point of having an object that can disappear at any time? What if I need to use it right after it disappeared?
+
+Can you please explain them with some good examples?
+
+Thanks
+
+* Answer 1
+  :PROPERTIES:
+  :CUSTOM_ID: answer 1
+  :END:
+
+The typical use for weak references is if A has a reference to B and B has a reference to A.
+Without a proper cycle-detecting garbage collector, those two objects would never get GC'd even if there are no references to either from the "outside".
+However if one of the references is "weak", the objects will get properly GC'd.
+
+However, Python /does/ have a cycle-detecting garbage collector (since 2.0!), so that doesn't count :)
+
+Another use for weak references is for caches. It's mentioned in the =weakref= documentation:
+
+#+BEGIN_QUOTE
+  A primary use for weak references is to implement caches or mappings
+  holding large objects, where it's desired that a large object not be
+  kept alive solely because it appears in a cache or mapping.
+#+END_QUOTE
+
+If the GC decides to destroy one of those objects, and you need it, you can just recalculate / refetch the data.
+
+* Answer 2
+  :PROPERTIES:
+  :CUSTOM_ID: answer 2
+  :END:
+
+Events are a common scenario for weak references.
+
+--------------
+
+Problem
+Consider a pair of objects: Emitter and Receiver. The receiver has shorter lifetime than the emitter.
+
+You could try an implementation like this:
+
+#+BEGIN_SRC python
+    class Emitter(object):
+
+        def __init__(self):
+            self.listeners = set()
+
+        def emit(self):
+            for listener in self.listeners:
+                # Notify
+                listener('hello')
+
+
+    class Receiver(object):
+
+        def __init__(self, emitter):
+            emitter.listeners.add(self.callback)
+
+        def callback(self, msg):
+            print 'Message received:', msg
+
+
+    e = Emitter()
+    l = Receiver(e)
+    e.emit() # Message received: hello
+#+END_SRC
+
+However, in this case, the Emitter keeps a reference to a bound method =callback= that keeps a reference to the Receiver. So the Emitter keeps the Receiver alive:
+
+#+BEGIN_SRC python
+    # ...continued...
+
+    del l
+    e.emit() # Message received: hello
+#+END_SRC
+
+This is sometimes troublesome. Imagine that =Emitter= is a part of some data model that indicates when data changes and =Receiver= was created by a dialog window that listens to that changes to update some UI controls.
+
+Through the application's lifetime, multiple dialogs can be spawned and we don't want their receivers to be still registered inside the Emitter long after the window had been closed. That would be a memory leak.
+
+Removing the callbacks manually is one option (just as troublesome), using weak references is another.
+
+--------------
+
+Solution
+There's a nice class =WeakSet= that looks like a normal set but stores its members using weak references and no longer stores them when they are freed.
+
+Excellent! Let's use it:
+
+#+BEGIN_SRC python
+    def __init__(self):
+        self.listeners = weakref.WeakSet()
+#+END_SRC
+
+and run again:
+
+#+BEGIN_SRC python
+    e = Emitter()
+    l = Receiver(e)
+    e.emit()
+    del l
+    e.emit()
+#+END_SRC
+
+Oh, nothing happens at all! That's because the bound method (a specific receiver's =callback=) is orphaned now - neither the Emitter nor the Receiver hold a strong reference to it.
+Hence it's garbage collected immediately.
+
+Let's make the Receiver (not the Emitter this time) keep a strong reference to this callback:
+
+#+BEGIN_SRC python
+    class Receiver(object):
+
+        def __init__(self, emitter):
+
+            # Create the bound method object
+            cb = self.callback
+
+            # Register it
+            emitter.listeners.add(cb)
+            # But also create an own strong reference to keep it alive
+            self._callbacks = set([cb])
+#+END_SRC
+
+Now we can observe the expected behaviour: the Emitter only keeps the callback as long as the Receiver lives.
+
+#+BEGIN_SRC python
+    e = Emitter()
+    l = Receiver(e)
+    assert len(e.listeners) == 1
+
+    del l
+    import gc; gc.collect()
+    assert len(e.listeners) == 0
+#+END_SRC
+
+--------------
+
+Under the hood
+Note that I've had to put a =gc.collect()= here to make sure that the receiver is really cleaned up immediately.
+It's needed here because now there's a cycle of strong references: the bound method refers to the receiver and vice versa.
+
+This isn't very bad; this only means that the receiver's cleanup will be deferred until the next garbage collector run.
+Cyclic references can't be cleaned up by the simple reference counting mechanism.
+
+If you really want, you could remove the strong reference cycle by replacing the bound method with a custom function object that would keep its =self= as a weak reference too.
+
+#+BEGIN_SRC python
+    def __init__(self, emitter):
+
+        # Create the bound method object
+        weakself = weakref.ref(self)
+        def cb(msg):
+            self = weakself()
+            self.callback(msg)
+
+        # Register it
+        emitter.listeners.add(cb)
+        # But also create an own strong reference to keep it alive
+        self._callbacks = set([cb])
+#+END_SRC
+
+Let's put that logic into a helper function:
+
+#+BEGIN_SRC python
+    def weak_bind(instancemethod):
+
+        weakref_self = weakref.ref(instancemethod.im_self)
+        func = instancemethod.im_func
+
+        def callback(*args, **kwargs):
+            self = weakref_self()
+            bound = func.__get__(self)
+            return bound(*args, **kwargs)
+
+        return callback
+
+    class Receiver(object):
+
+        def __init__(self, emitter):
+
+            cb = weak_bind(self.callback)
+
+            # Register it
+            emitter.listeners.add(cb)
+            # But also create an own strong reference to keep it alive
+            self._callbacks = set([cb])
+#+END_SRC
+
+Now there's no cycle of strong references, so when =Receiver= is freed, the callback function will also be freed (and removed from the Emitter's =WeakSet=) immediately, without the need for a full GC cycle.
+
+* Answer 3
+  :PROPERTIES:
+  :CUSTOM_ID: answer 3
+  :END:
+
+- Weak references is an important concept in python, which is missing in languages likes Java(java 1.5).
+
+- In Observer design pattern, generally Observable Object must maintain  weak references to the Observer object.
+  eg. A emits an event done() and B registers with A that, it want to listen to event done().
+  Thus, whenever done() is emitted, B is notified. But If B isn't required in application, then A must not become an hinderance in the garbage collection in A(since A hold the
+  reference to B). Thus, if A has hold weak reference to B, and when all the references to A are away, then B will be garbage collected.
+
+- It's also very useful in implementing caches.

@@ -1,0 +1,131 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Flask 子域名/")); -*-
+:PROPERTIES:
+:ID:       450F3C77-0BEB-4CB9-8CEB-4E128F4875DE
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-09 Tue 05:54>
+#+TITLE: Flask 子域名
+
+一般用于数量比较少的子域名， 一个模块对应一个子域名。 先看下面一个例子：
+
+#+BEGIN_SRC python
+# modules.py:
+from flask import Blueprint
+
+public = Blueprint('public', __name__)
+
+
+@public.route('/')
+def home():
+    return 'hello flask'
+
+
+# app.py:
+app = Flask(__name__)
+app.config['SERVER_NAME'] = 'example.com'
+from modules import public
+app.register_blueprint(public, subdomain='public')
+#+END_SRC
+
+现在可以通过 ~public.example.com/~ 来访问 public 模块了。
+
+* 通配符子域
+通配符子域， 即通过一个模块来匹配很多个子域名。 比如某些网站提供的个性化域名功能， 就是这种形式。
+
+先来看段示例代码：
+
+#+BEGIN_SRC python
+# modules.py:
+from flask import Blueprint
+
+member = Blueprint('member', __name__)
+
+
+@member.route('/')
+def home():
+    return g.subdomain
+
+
+# app.py:
+
+app = Flask(__name__)
+app.config['SERVER_NAME'] = 'example.com'
+from modules import member
+app.register_blueprint(member, subdomain='<subdomain>')
+#+END_SRC
+
+这段代码和上一节的很像，不同之处是这里的 subdomain 使用了动态参数 ~<subdomain>~ （路由中的 URL 变量也是这种方式）。我们可以用这个参数在请求回调函数之前利用的组合的 url 处理器来获取相关的用户。
+这样我们就可以通过 ~*.example.com~ 的形式来访问 member 模块了。
+
+下面是为任何 Flask 或 Blueprint 对象增加子域名支持的便捷函数：
+
+#+BEGIN_SRC python
+def add_subdomain_to_global(endpoint, values):
+    g.subdomain = values.pop('subdomain', None)
+
+
+def add_subdomain_to_url_params(endpoint, values):
+    if not 'subdomain' in values:
+        values['subdomain'] = g.subdomain
+
+
+def add_subdomain_support(app):
+    app.url_value_preprocessor(add_subdomain_to_global)
+    app.url_defaults(add_subdomain_to_url_params)
+#+END_SRC
+
+然后你可以使用 before_request 回调函数来处理子域名:
+
+#+BEGIN_SRC python
+add_subdomain_support(blueprint)
+
+@blueprint.before_request
+def add_user_to_global():
+    g.user = None
+    if g.subdomain:
+g.user =User.query.filter_by(username=g.subdomain).first_or_404()
+#+END_SRC
+
+注：这里的 blueprint 请改为实际对象。
+
+特别说明：通配符子域调试不是不太方便，需要做泛域名解析才可以。
+修改 hosts 文件来指定域名的方法是不可行的（子域名较少时可以逐个添加，子域名多了就不太现实了）。
+本机调试时，可以安装 DNS 服务器（比如 LINUX BIND 服务等），并做好泛域名解析，然后再进行调试。
+当然使用公网域名和服务器来调试也未尝不可。
+
+PS：
+- 如果某个 blueprint 默认就需要实用 ~a.domain.com~ ， 那么在定义 blueprint 时候：
+
+#+BEGIN_SRC python
+a=Blueprint(‘a' ,__name__, subdomain='a')
+#+END_SRC
+
+这样，该 bp 下面的所有 url routing 走的都是 ~a.domain.com/xxx~
+
+- 在某个具体的 url routing 定义时，如果需要使用 ~a.domain.com~, 那么这么写：
+
+#+BEGIN_SRC python
+@www.route(‘/hello', methods=['GET','POST'], subdomain='a')
+def xxx():
+
+#+END_SRC
+
+- 我在具体实践中，默认的 routing 都是走的 ~www~ ， 这是在 ~__init__.py~ 中：
+
+#+BEGIN_SRC python
+app.url_map.default_subdomain='www'
+#+END_SRC
+
+其实就是设置默认子域名，这样默认不做设置的话，路由走的就是 ~www~.
+那这个时候如果访问 ~domain.com~ ，即不带 www 的话，就会报 404 了，怎么办呢，我是在 nginx 层面解决这个问题的，在 ~nginx.conf~ 增加一个 ~server~ ：
+
+#+BEGIN_SRC python
+server {
+    server_name domain.com;
+    rewrite ^(.*) <a rel="nofollow"
+                     href="http://www.domain.com"
+                     target="_blank">
+    http://www.domain.com</a>$1 permanent;
+}
+#+END_SRC

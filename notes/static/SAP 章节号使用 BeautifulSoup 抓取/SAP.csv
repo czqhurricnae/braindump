@@ -1,0 +1,1020 @@
+机型,章节号,英文说明,说明,所属章号,章号说明
+737-678,54100,zonal inspection program,区域检查,5,时限维护检查
+737-678,54200,ezap inspection program,增强型区域检查,5,时限维护检查
+737-678,55000,unscheduled maintenance checks,非计划维修检查,5,时限维护检查
+737-678,55100,conditional inspections,视情检查,5,时限维护检查
+737-678,60000,dimensions and areas,尺寸与区域,6,尺寸与区域
+737-678,61000,principal dimensions and areas,主要尺寸和区域,6,尺寸与区域
+737-678,62000,station diagrams,站位图,6,尺寸与区域
+737-678,62100,body station diagrams,机身站位图,6,尺寸与区域
+737-678,62200,vertical fin and rudder station diagram,垂直安定面及方向舵站位图,6,尺寸与区域
+737-678,62300,horizontal stabilizer and elevator stati,水平安定面及升降舵站位图,6,尺寸与区域
+737-678,62400,wing station diagram,机翼站位图,6,尺寸与区域
+737-678,62500,engine and nacelle station diagram,发动机及吊挂站位图,6,尺寸与区域
+737-678,63000,zone diagrams,区域图,6,尺寸与区域
+737-678,64000,access doors and panels,外部接近门及盖板,6,尺寸与区域
+737-678,64100,fuselage (major zones 100 and 200) acces,"机身(区域100,200)接近门及盖板",6,尺寸与区域
+737-678,64200,empennage (major zone 300) access doors,尾部(区域300)接近门及盖板,6,尺寸与区域
+737-678,64300,cfm 56-7 series engine and nacelle strut,发动机及吊挂(区域400)接近门及盖板,6,尺寸与区域
+737-678,64400,wings (major zones 500 and 600) access d,"机翼(区域500,600)接近门及盖板",6,尺寸与区域
+737-678,64600,passenger and cargo compartment (major z,"客舱及货舱(区域800)门,接近门及盖板",6,尺寸与区域
+737-678,70000,lifting and shoring,顶升及支撑,7,顶升和支撑
+737-678,71000,jacking,牵引,7,顶升和支撑
+737-678,71100,jack airplane,顶升飞机,7,顶升和支撑
+737-678,71200,lifting damaged airplane,顶升受损飞机,7,顶升和支撑
+737-678,72000,shoring,支撑,7,顶升和支撑
+737-678,80000,leveling and weighing,水平及称重,8, 平衡和称重
+737-678,81000,weighing and balancing,载重与平衡,8, 平衡和称重
+737-678,81100,weighing,称重,8, 平衡和称重
+737-678,82000,leveling,水平,8, 平衡和称重
+737-678,82100,leveling,水平,8, 平衡和称重
+737-678,90000,towing and taxiing,牵引与滑行,9, 拖机和滑行
+737-678,91000,towing,牵引,9, 拖机和滑行
+737-678,91100,towing,牵引,9, 拖机和滑行
+737-678,92000,taxiing,滑行,9, 拖机和滑行
+737-678,100000,"parking, mooring, storage, and return to","停放,系留,存放及恢复使用",10, 停放和系留
+737-678,101000,parking / storage,"停放,存放",10, 停放和系留
+737-678,101100,normal parking,正常停放,10, 停放和系留
+737-678,101200,prolonged parking,长时间停放,10, 停放和系留
+737-678,101400,long-term storage,长时间存放,10, 停放和系留
+737-678,102000,mooring,系留,10, 停放和系留
+737-678,102100,high wind conditions mooring,大风系留,10, 停放和系留
+737-678,103000,return to service,恢复使用,10, 停放和系留
+737-678,110000,placards and markings,标牌与标志,11, 标牌和标志
+737-678,111000,exterior color schemes and markings,外部喷涂方案与标志,11, 标牌和标志
+737-678,112000,exterior placards and markings,外部标牌与标志,11, 标牌和标志
+737-678,113000,interior placards,内部标牌,11, 标牌和标志
+737-678,120000,servicing,勤务,12, 勤务-通用
+737-678,121000,replenishing,填充,12, 勤务-通用
+737-678,121100,fuel servicing,燃油勤务,12, 勤务-通用
+737-678,121200,hydraulic reservoir,液压油箱,12, 勤务-通用
+737-678,121300,engine/apu,发动机/apu勤务,12, 勤务-通用
+737-678,121400,water replenishing,加水,12, 勤务-通用
+737-678,121500,miscellaneous replenishing,其它填充,12, 勤务-通用
+737-678,121600,windows,风挡勤务,12, 勤务-通用
+737-678,121700,toilet/waste tank,厕所/废水系统勤务,12, 勤务-通用
+737-678,122000,lubrication, ,12, 勤务-通用
+737-678,122100,landing gear lubrication,起落架润滑,12, 勤务-通用
+737-678,122200,flight controls,飞行控制系统润滑,12, 勤务-通用
+737-678,122300,utility systems component lubrication,通用系统部件润滑,12, 勤务-通用
+737-678,122500,miscellaneous servicing,其它勤务,12, 勤务-通用
+737-678,122600,cable lubrication,钢索润滑,12, 勤务-通用
+737-678,123000,unscheduled servicing,非计划勤务,12, 勤务-通用
+737-678,123200,latches, ,12, 勤务-通用
+737-678,123300,weather condition maintenance,气候条件勤务,12, 勤务-通用
+737-678,124000,airplane cleaning and polishing,飞机清洁与抛光,12, 勤务-通用
+737-678,200000,standard practices - airframe,标准操作-机体,20, 标准施工
+737-678,200500,documentation,文件,20, 标准施工
+737-678,201000,repair and replacement,修理与更换,20, 标准施工
+737-678,201500,data and software,数据与软件,20, 标准施工
+737-678,202000,inspection / check,检查,20, 标准施工
+737-678,203000,specifications and materials,机身标准材料,20, 标准施工
+737-678,204000,grounding,接地,20, 标准施工
+737-678,205000,torque values and electrical protection,力矩值及放电保护,20, 标准施工
+737-678,206000,electrical / electronics safety and equi,电子/电气安全及设备,20, 标准施工
+737-678,210000,air conditioning,空调系统,21, 空调系统
+737-678,211000,compression, ,21, 空调系统
+737-678,212000,distribution,分配,21, 空调系统
+737-678,212100,main air distribution,空气分配与循环,21, 空调系统
+737-678,212200,flight compartment conditioned air distr,驾驶舱通风,21, 空调系统
+737-678,212300,passenger cabin conditioned air distribu,厕所和厨房通风,21, 空调系统
+737-678,212400,gasper air distribution,空气分配,21, 空调系统
+737-678,212500,recirculation system,再循环系统,21, 空调系统
+737-678,212600,ventilation system,电子设备通风,21, 空调系统
+737-678,212700,equipment cooling system,设备冷却系统,21, 空调系统
+737-678,213000,pressurization control,增压控制,21, 空调系统
+737-678,213100,pressurization control system,增压控制系统,21, 空调系统
+737-678,213200,cabin pressure relief,客舱释压,21, 空调系统
+737-678,213300,cabin pressure indication and warning sy,客舱压力指示与警告系统,21, 空调系统
+737-678,214000,heating,加热,21, 空调系统
+737-678,214100,lower lobe heating, ,21, 空调系统
+737-678,214300,forward cargo compartment heating system,前货舱加温系统,21, 空调系统
+737-678,214400,aft cargo compartment heating system,后货舱加温系统,21, 空调系统
+737-678,214500,door area heating system,门区域加温系统,21, 空调系统
+737-678,215000,cooling,空调冷却系统,21, 空调系统
+737-678,215100,pack flow control and pack cooling syste,组件流量控制与组件冷却系统,21, 空调系统
+737-678,215200,pack cooling and mix manifold temperatur,组件冷却与混合总管温度控制,21, 空调系统
+737-678,216000,temperature control,温度控制,21, 空调系统
+737-678,216100,zone temperature control and indication,区域温度控制与指示,21, 空调系统
+737-678,216200,trim air pressure regulation and shutoff,配平空气压力调节与关断控制,21, 空调系统
+737-678,217000,moisture/air contaminant control,湿度/空气污染控制,21, 空调系统
+737-678,217300,ozone control,臭氧控制,21, 空调系统
+737-678,217400,humidity control,湿度控制,21, 空调系统
+737-678,217500,air cleaner system,空气清洁系统,21, 空调系统
+737-678,220000,auto flight,自动飞行,22, 自动飞行
+737-678,221000,autopilot,自动驾驶,22, 自动飞行
+737-678,221100,digital flight control system,数字飞行控制系统,22, 自动飞行
+737-678,222000,speed-attitude correction,速度-高度校正,22, 自动飞行
+737-678,222100,mach trim system,马赫配平系统,22, 自动飞行
+737-678,222300,yaw damper system,偏航阻尼系统,22, 自动飞行
+737-678,223000,auto throttle,自动油门,22, 自动飞行
+737-678,223100,autothrottle system,自动油门系统,22, 自动飞行
+737-678,224000,system monitor,系统监控,22, 自动飞行
+737-678,225000,aerodynamic load alleviating, ,22, 自动飞行
+737-678,230000,communications,通讯,23, 通信系统
+737-678,231000,speech communications,语音通讯,23, 通信系统
+737-678,231100,high frequency communication system,高频通讯系统,23, 通信系统
+737-678,231200,very high frequency  communication syste,甚高频通讯系统,23, 通信系统
+737-678,231300,uhf/vhf communication system,超高频/甚高频通讯系统,23, 通信系统
+737-678,231400,uhf/vhf mission communication system,超高频/甚高频任务通讯系统,23, 通信系统
+737-678,231500,satellite communication system,卫星通讯系统,23, 通信系统
+737-678,231600,uhf satellite communication system,特高频卫星通讯系统,23, 通信系统
+737-678,231700,vhf-fm radio communication system,甚高频/fm收音通讯系统,23, 通信系统
+737-678,231900,air/ground public telephone system,空地公用通话系统,23, 通信系统
+737-678,232000,data transmission and automatic calling,数据传输和自动呼叫,23, 通信系统
+737-678,232100,mission communication system,任务通讯系统,23, 通信系统
+737-678,232200,selcal system,选择呼叫系统,23, 通信系统
+737-678,232400,emergency locator transmitter system,应急定位发射系统,23, 通信系统
+737-678,232500,satellite communication (satcom) system,卫星通讯系统,23, 通信系统
+737-678,232700,aircraft communications addressing and r,飞机通信寻址与报告系统,23, 通信系统
+737-678,232800,selcal system,卫星通讯,23, 通信系统
+737-678,232900,calsel system, ,23, 通信系统
+737-678,233000,"passenger address, entertainment, and co","旅客寻址,广播和娱乐",23, 通信系统
+737-678,233100,passenger address system,旅客寻址系统,23, 通信系统
+737-678,233200,passenger video system,旅客视频系统,23, 通信系统
+737-678,233400,passenger entertainment system,旅客娱乐系统,23, 通信系统
+737-678,233500,am radio entertainment system,am收音娱乐系统,23, 通信系统
+737-678,233600,data network,数据网络,23, 通信系统
+737-678,233800,passenger entertainment customer data,旅客娱乐系统客户数据,23, 通信系统
+737-678,234000,interphone,内话,23, 通信系统
+737-678,234100,service interphone system,服务内话系统,23, 通信系统
+737-678,234200,cabin interphone system,客舱内话系统,23, 通信系统
+737-678,234300,ground crew call system,地面机组呼叫系统,23, 通信系统
+737-678,235000,audio integrating, ,23, 通信系统
+737-678,235100,flight interphone system,飞行内话系统,23, 通信系统
+737-678,235300,voice encryption,语音加密,23, 通信系统
+737-678,236000,static discharging,静电放电,23, 通信系统
+737-678,236100,static dischargers,静电放电刷,23, 通信系统
+737-678,237000,audio and video monitoring,音频和视频监控,23, 通信系统
+737-678,237100,voice recorder system,话音记录器,23, 通信系统
+737-678,237500,video surveillance system,视频监控系统,23, 通信系统
+737-678,238000,integrated automatic tuning,集成自动调谐,23, 通信系统
+737-678,238100,pc power system,pc电源系统,23, 通信系统
+737-678,238200,flight compartment pc power system,驾驶舱pc电源系统,23, 通信系统
+737-678,239000,data bus system communications,数据总线通讯,23, 通信系统
+737-678,239100,arinc 629 multi-transmitter data bus,arinc 629多收发机数据总线,23, 通信系统
+737-678,239200,cardfiles arinc 629 bus interface,arinc 629总线接口,23, 通信系统
+737-678,239300,overhead panel arinc 629 system,顶班arinc 629系统,23, 通信系统
+737-678,239400,onboard local area network,机上本地网络,23, 通信系统
+737-678,239500,wireless local area network,无线本地网络,23, 通信系统
+737-678,240000,electrical power,电源,24, 电源系统
+737-678,241000,generator drive,发电机驱动,24, 电源系统
+737-678,241100,ac generator drive system,交流发电机驱动系统,24, 电源系统
+737-678,242000,ac generation,交流发电,24, 电源系统
+737-678,242100,ac generation system,交流发电系统,24, 电源系统
+737-678,242200,manual control,人工控制,24, 电源系统
+737-678,243000,dc generation,直流发电,24, 电源系统
+737-678,243100,dc generation system,直流发电系统,24, 电源系统
+737-678,243400,standby power system,备用电源系统,24, 电源系统
+737-678,244000,external power,外电源,24, 电源系统
+737-678,244100,ac external power,交流外电源,24, 电源系统
+737-678,245000,ac electrical load distribution,交流电负载分配,24, 电源系统
+737-678,245100,main 115-v ac power distribution,主115v交流电源分配,24, 电源系统
+737-678,245200,28 v ac power distribution,28v交流电源分配,24, 电源系统
+737-678,245400,medical outlet system,医疗插座系统,24, 电源系统
+737-678,245500,gupf power distribution,gupf电源分配,24, 电源系统
+737-678,246000,dc electrical load distribution,直流电负载分配,24, 电源系统
+737-678,246100,dc power distribution,直流电分配,24, 电源系统
+737-678,247000,primary and secondary power,主要及次要电源,24, 电源系统
+737-678,250000,equipment / furnishings,设备与装饰,25, 设备装饰
+737-678,250900,passenger compartment conversions,客舱转换,25, 设备装饰
+737-678,251000,flight compartment,驾驶舱,25, 设备装饰
+737-678,251100,flight compartment equipment,驾驶舱设备,25, 设备装饰
+737-678,252100,passenger compartment,客舱,25, 设备装饰
+737-678,252200,passenger seats,旅客座椅,25, 设备装饰
+737-678,252300,service units,旅客服务组件,25, 设备装饰
+737-678,252400,passenger cabin partitions and compartme,客舱隔板与隔间,25, 设备装饰
+737-678,252500,cabin attendant stations,乘务员工作站,25, 设备装饰
+737-678,252700,passenger cabin floor covering,客舱地毯,25, 设备装饰
+737-678,252900,passenger and cabin attendant accommodat,机组休息区,25, 设备装饰
+737-678,253000,buffet / galley,厨房,25, 设备装饰
+737-678,253100,galley,厨房,25, 设备装饰
+737-678,253200,galley equipment,厨房设备,25, 设备装饰
+737-678,254000,lavatories,厕所,25, 设备装饰
+737-678,254100,lavatory compartment,厕所,25, 设备装饰
+737-678,254200,lavatory equipment,厕所设备,25, 设备装饰
+737-678,254400,payloads electrical,厕所电源,25, 设备装饰
+737-678,255000,additional compartments,其它舱室,25, 设备装饰
+737-678,255100,sliding carpet loading system,货板装载系统,25, 设备装饰
+737-678,255200,cargo compartment,货舱,25, 设备装饰
+737-678,255400,main deck cargo handling system,主货舱装载系统,25, 设备装饰
+737-678,256000,emergency,紧急设备,25, 设备装饰
+737-678,256100,door equipment,门这边,25, 设备装饰
+737-678,256300,emergency evacuation signal system,撤离信号设备,25, 设备装饰
+737-678,256400,detachable emergency equipment,可拆卸应急设备,25, 设备装饰
+737-678,256600,door-mounted escape system,门上撤离系统,25, 设备装饰
+737-678,256700,midcabin door-mounted escape system,中舱门上撤离系统,25, 设备装饰
+737-678,257000,accessory compartments,附件舱,25, 设备装饰
+737-678,257100,electrical equipment rack moisture shrou,电子设备架防潮板,25, 设备装饰
+737-678,258000,insulation,机身隔热垫,25, 设备装饰
+737-678,260000,fire protection,防火,26, 防火系统
+737-678,261000,detection,探测,26, 防火系统
+737-678,261100,engine fire detection,发动机火警探测,26, 防火系统
+737-678,261400,lavatory smoke detection,厕所烟雾探测,26, 防火系统
+737-678,261500,apu fire detection system,apu火警探测系统,26, 防火系统
+737-678,261600,cargo compartment smoke detection system,货舱烟雾探测,26, 防火系统
+737-678,261800,"wheel well, wing, and lower aft body ove","轮舱,机翼,下部机身过热探测系统",26, 防火系统
+737-678,261900,electrical and electronic cooling smoke,电气与电子冷却烟雾探测,26, 防火系统
+737-678,262000,extinguishing,灭火,26, 防火系统
+737-678,262100,engine fire extinguishing,发动机灭火,26, 防火系统
+737-678,262200,apu fire extinguishing system,apu灭火,26, 防火系统
+737-678,262300,cargo fire extinguishing system,货舱灭火,26, 防火系统
+737-678,262400,lavatory fire extinguishing system,厕所垃圾箱灭火器,26, 防火系统
+737-678,262600,portable fire extinguishers,便携式灭火瓶,26, 防火系统
+737-678,263000,explosion suppression,爆炸抑制,26, 防火系统
+737-678,270000,flight controls,飞行操纵,27, 飞行操纵
+737-678,270900,miscellaneous flight control component,飞行操纵控制部件,27, 飞行操纵
+737-678,271000,aileron and tab,副翼与配平片,27, 飞行操纵
+737-678,271100,aileron and aileron trim control system,副翼与副翼配平控制系统,27, 飞行操纵
+737-678,272000,rudder and tab,方向舵与配平板,27, 飞行操纵
+737-678,272100,rudder and rudder trim control system,方向舵与方向度配平控制系统,27, 飞行操纵
+737-678,272300,rudder hydraulic pressure,方向舵液压系统,27, 飞行操纵
+737-678,272400,wheel-to-rudder interconnect system,驾驶盘到方向舵交联系统,27, 飞行操纵
+737-678,273000,elevator and tab,升降舵及调整片,27, 飞行操纵
+737-678,273100,elevator and tab control system,升降舵控制系统,27, 飞行操纵
+737-678,273200,stall warning system,失速警告,27, 飞行操纵
+737-678,274000,horizontal stabilizers,水平安定面,27, 飞行操纵
+737-678,274100,horizontal stabilizer trim control syste,水平安定面配平与控制系统,27, 飞行操纵
+737-678,275000,flaps,襟翼,27, 飞行操纵
+737-678,275100,trailing edge flap system,后缘襟翼系统,27, 飞行操纵
+737-678,275800,trailing edge flap position indication s,后缘襟翼位置指示系统,27, 飞行操纵
+737-678,275900,flap skew detection system,后缘襟翼卡滞探测系统,27, 飞行操纵
+737-678,276000,"spoiler, drag devices, and variable aero",扰流板,27, 飞行操纵
+737-678,276100,flight spoiler control system,飞行扰流板控制系统,27, 飞行操纵
+737-678,276200,speedbrake control system,减速板控制系统,27, 飞行操纵
+737-678,277000,gust lock and dampener,阵风锁与减震系统,27, 飞行操纵
+737-678,278000,lift augmenting,增升(缝翼),27, 飞行操纵
+737-678,278100,leading edge flap and slat control syste,前缘缝翼系统,27, 飞行操纵
+737-678,278300,leading edge autoslat system,前缘自动缝翼系统,27, 飞行操纵
+737-678,278800,leading edge flap and slat position indi,前缘襟缝翼位置指示系统,27, 飞行操纵
+737-678,280000,fuel,燃油,28, 燃油系统
+737-678,281000,storage,燃油储存,28, 燃油系统
+737-678,281100,integral fuel tanks,油箱,28, 燃油系统
+737-678,281300,fuel vent system,油箱通气系统,28, 燃油系统
+737-678,281400,auxiliary fuel system,备用油箱系统,28, 燃油系统
+737-678,281500,center tank fuel scavenge system,中央邮箱回油系统,28, 燃油系统
+737-678,282000,distribution,燃油分配,28, 燃油系统
+737-678,282100,pressure fueling system,压力加油系统,28, 燃油系统
+737-678,282200,engine fuel feed system,发动机供油系统,28, 燃油系统
+737-678,282500,apu fuel feed system,apu供油系统,28, 燃油系统
+737-678,282600,defueling,抽油,28, 燃油系统
+737-678,283000,dump, ,28, 燃油系统
+737-678,284000,indicating,燃油指示,28, 燃油系统
+737-678,284100,fuel quantity indicating system,燃油量指示系统,28, 燃油系统
+737-678,284200,fuel feed low pressure indicating system,燃油低压指示系统,28, 燃油系统
+737-678,284300,fuel temperature indicating system,燃油温度指示系统,28, 燃油系统
+737-678,284400,fuel measuring,油尺,28, 燃油系统
+737-678,290000,hydraulic power,液压,29, 液压系统
+737-678,290900,hydraulic reservoir pressurization syste,液压油箱增压系统,29, 液压系统
+737-678,291000,main,主液压系统,29, 液压系统
+737-678,291100,hydraulic systems a and b,液压系统(a和b),29, 液压系统
+737-678,291800,ground servicing system,地面勤务系统,29, 液压系统
+737-678,292000,auxiliary,辅助液压,29, 液压系统
+737-678,292100,standby hydraulic system,备用液压系统,29, 液压系统
+737-678,292200,hydraulic power transfer unit system,液压转换组件系统,29, 液压系统
+737-678,292300,landing gear transfer valve control (ref,起落架转换活门控制,29, 液压系统
+737-678,293000,indicating,液压指示,29, 液压系统
+737-678,293100,hydraulic pressure indicating system,液压压力指示,29, 液压系统
+737-678,293200,hydraulic fluid overheat warning system,液压油过热警告系统,29, 液压系统
+737-678,293300,hydraulic fluid quantity indicating syst,液压油量指示,29, 液压系统
+737-678,293400,pump low pressure warning system,液压泵低压警告系统,29, 液压系统
+737-678,300000,ice and rain protection,防冰防雨,30, 防冰排雨
+737-678,301000,airfoil,机翼,30, 防冰排雨
+737-678,301100,wing thermal anti-icing system,机翼防冰,30, 防冰排雨
+737-678,302000,air intakes,进气道,30, 防冰排雨
+737-678,302100,inlet cowl anti-icing system,发动机进气道防冰系统,30, 防冰排雨
+737-678,303000,pitot and static,皮托管,30, 防冰排雨
+737-678,303100,"pitot tubes, temperature probe, and alph",皮托管防冰,30, 防冰排雨
+737-678,304000,windows and windshields,"窗,风挡及门",30, 防冰排雨
+737-678,304100,control cabin window anti-icing system,驾驶舱风挡防冰,30, 防冰排雨
+737-678,304200,windshield wiper system,风挡雨刷系统,30, 防冰排雨
+737-678,304300,rain repellent system,风挡防雨剂系统,30, 防冰排雨
+737-678,305000,antennas and radomes,天线和雷达罩,30, 防冰排雨
+737-678,307000,water lines,供水管路,30, 防冰排雨
+737-678,307100,water and toilet drain anti-icing system,"供水,厕所排水管防冰系统",30, 防冰排雨
+737-678,308000,detection,探测,30, 防冰排雨
+737-678,308100,ice detection system,结冰探测,30, 防冰排雨
+737-678,310000,indicating / recording systems,指示/记录系统,31, 仪表系统
+737-678,311000,instrument and control panels,仪器和控制面板,31, 仪表系统
+737-678,311100,pilots' panels,飞行员面板,31, 仪表系统
+737-678,311500,cabin attendants' panels,乘务员面板,31, 仪表系统
+737-678,312000,independent instruments,独立设备,31, 仪表系统
+737-678,312500,clocks,时钟,31, 仪表系统
+737-678,313000,recorders,记录器,31, 仪表系统
+737-678,313100,flight data recorder system,飞行数据记录系统,31, 仪表系统
+737-678,313200,data loading and recording system,数据装载与记录系统,31, 仪表系统
+737-678,313300,printers,驾驶舱打印机,31, 仪表系统
+737-678,313500,airplane condition monitoring system,多功能打印(打印机),31, 仪表系统
+737-678,314000,central computers,中央计算机,31, 仪表系统
+737-678,314300,central data loading,中央数据装载,31, 仪表系统
+737-678,315000,central warning systems,中央警告系统,31, 仪表系统
+737-678,315100,aural warning system,声音警告系统,31, 仪表系统
+737-678,315200,master caution,主警告,31, 仪表系统
+737-678,316000,central display systems,中央显示系统,31, 仪表系统
+737-678,316200,common display system,通用显示系统,31, 仪表系统
+737-678,317000,automatic data reporting systems,自动数据报告系统,31, 仪表系统
+737-678,320000,landing gear,起落架,32, 起落架系统
+737-678,320500,"corrosion, fatigue, and structural inspe","腐蚀,疲劳与结构检查方案",32, 起落架系统
+737-678,320900,air/ground system,空地系统,32, 起落架系统
+737-678,321000,main gear and doors,主轮和舱门,32, 起落架系统
+737-678,321100,main landing gear,主轮,32, 起落架系统
+737-678,321200,main landing gear wheel well blade-type,主轮舱门,32, 起落架系统
+737-678,321300,main landing gear shock strut doors,主起减震支柱舱门,32, 起落架系统
+737-678,322000,nose gear and doors,前轮和舱门,32, 起落架系统
+737-678,322100,nose landing gear,前轮,32, 起落架系统
+737-678,322200,nose landing gear doors,前轮舱门,32, 起落架系统
+737-678,323000,extension and retraction,收放系统,32, 起落架系统
+737-678,323100,landing gear control system,起落架控制系统,32, 起落架系统
+737-678,323200,main landing gear extension and retracti,主起放下和收上系统,32, 起落架系统
+737-678,323300,nose landing gear extension and retracti,前起放下和收上,32, 起落架系统
+737-678,323400,main landing gear manual extension syste,主起人工放出系统,32, 起落架系统
+737-678,323500,nose landing gear manual extension syste,前起人工放出系统,32, 起落架系统
+737-678,324000,wheels and brakes,轮子和刹车,32, 起落架系统
+737-678,324100,hydraulic brake system,液压刹车系统,32, 起落架系统
+737-678,324200,antiskid/autobrake system,防滑/自动刹车系统,32, 起落架系统
+737-678,324300,autobrake system,自动刹车系统,32, 起落架系统
+737-678,324400,parking brake system,停留刹车系统,32, 起落架系统
+737-678,324500,tires and wheels,机轮与轮胎,32, 起落架系统
+737-678,324600,brake temperature monitoring system,刹车温度监控系统,32, 起落架系统
+737-678,324900,tire pressure indication system,轮胎压力指示系统,32, 起落架系统
+737-678,325000,steering,转弯系统,32, 起落架系统
+737-678,325100,nose wheel steering system,前轮转弯系统,32, 起落架系统
+737-678,326000,position and warning,位置和警告,32, 起落架系统
+737-678,326100,landing gear position indicating and war,起落架位置指示与警告系统,32, 起落架系统
+737-678,326200,supplemental landing gear position indic,辅助起落架位置指示与警告系统,32, 起落架系统
+737-678,327000,supplementary gear,辅助轮,32, 起落架系统
+737-678,327100,tail skid system,尾撬系统,32, 起落架系统
+737-678,330000,lights,灯,33, 灯光系统
+737-678,331000,flight compartment,驾驶舱灯,33, 灯光系统
+737-678,331100,instrument and panel lights,设备与面板灯光,33, 灯光系统
+737-678,331400,miscellaneous lights,驾驶舱杂项灯光,33, 灯光系统
+737-678,331700,flight crew lights,机组灯光,33, 灯光系统
+737-678,331800,master dim and test system,主暗亮与测试系统,33, 灯光系统
+737-678,332000,passenger compartment,客舱灯,33, 灯光系统
+737-678,332100,window lights,客舱一般照明,33, 灯光系统
+737-678,332200,ceiling lights,顶板灯,33, 灯光系统
+737-678,332300,reading lights,阅读灯,33, 灯光系统
+737-678,332500,information signs,旅客阅读灯,33, 灯光系统
+737-678,332600,work lights,工作灯,33, 灯光系统
+737-678,332700,passenger and lavatory call lights,旅客与厕所呼叫灯光,33, 灯光系统
+737-678,332900,entry lights,入口灯,33, 灯光系统
+737-678,333000,cargo and service compartments,货舱和服务灯,33, 灯光系统
+737-678,333200,wheel well lights,轮舱灯光,33, 灯光系统
+737-678,333300,air conditioning compartment lights,空调舱灯光,33, 灯光系统
+737-678,333400,electronic equipment compartment lights,电子设备舱灯光,33, 灯光系统
+737-678,333500,accessory compartment lights,附件舱灯光,33, 灯光系统
+737-678,333600,cargo compartment lights,货舱灯光,33, 灯光系统
+737-678,334000,exterior,外部灯,33, 灯光系统
+737-678,334100,wing illumination lights,机翼照明灯,33, 灯光系统
+737-678,334200,landing lights,着陆灯,33, 灯光系统
+737-678,334300,position lights,位置灯,33, 灯光系统
+737-678,334600,airstair tread lights,登机梯踏灯,33, 灯光系统
+737-678,334900,logo lights,航徽灯,33, 灯光系统
+737-678,335000,emergency lighting,应急灯光,33, 灯光系统
+737-678,335100,emergency lights,应急灯,33, 灯光系统
+737-678,335500,emergency lighting rechargeable flashlig,应急灯可充电手电筒,33, 灯光系统
+737-678,340000,navigation,导航,34, 导航系统
+737-678,341000,flight environment data,飞行环境数据,34, 导航系统
+737-678,341100,static and total air pressure system,"皮托管,静压管系统",34, 导航系统
+737-678,341300,air data instruments,大气数据仪表,34, 导航系统
+737-678,341600,mach airspeed warning system,马赫速度警告系统,34, 导航系统
+737-678,341700,altitude alerting system,高度警告系统,34, 导航系统
+737-678,342000,attitude and direction,高度与方位,34, 导航系统
+737-678,342100,air data inertial reference system (adir,大气数据惯性基准系统,34, 导航系统
+737-678,342200,radio  magnetic indicator,无线电磁指示器,34, 导航系统
+737-678,342300,standby magnetic compass,备用磁罗盘,34, 导航系统
+737-678,342400,standby attitude reference system,备用高度基准系统,34, 导航系统
+737-678,342600,flight director system,飞行指引系统,34, 导航系统
+737-678,342900,instrument comparator system,仪表比较系统,34, 导航系统
+737-678,343000,landing and taxiing aids,辅助着陆与滑行系统,34, 导航系统
+737-678,343100,instrument landing system,仪表着陆系统,34, 导航系统
+737-678,343200,marker beacon system,指点信标系统,34, 导航系统
+737-678,343300,low range radio altimeter system,短距无线电高度表系统,34, 导航系统
+737-678,343600,head-up display,抬头显示器,34, 导航系统
+737-678,343800,ground-maneuvering camera system,地面景观摄像系统,34, 导航系统
+737-678,344000,independent position determining,独立位置决策,34, 导航系统
+737-678,344300,weather radar system,气象雷达系统,34, 导航系统
+737-678,344500,traffic alert and collision avoidance sy,交通警告与防撞系统,34, 导航系统
+737-678,344600,ground proximity warning system,近地警告系统,34, 导航系统
+737-678,345000,dependent position determining,独立位置决策,34, 导航系统
+737-678,345100,vor system,vor系统,34, 导航系统
+737-678,345200,identification friend-or-foe (iff) syste,敌我识别系统,34, 导航系统
+737-678,345300,atc system,空中交通控制系统,34, 导航系统
+737-678,345400,tacan system,塔康导航系统,34, 导航系统
+737-678,345500,distance measuring equipment  system,测距设备系统,34, 导航系统
+737-678,345700,automatic direction finder (adf) system,自动测向系统,34, 导航系统
+737-678,345800,global positioning system (gps),全球定位系统,34, 导航系统
+737-678,345900,omega navigation system,欧米茄导航系统,34, 导航系统
+737-678,346000,flight management computing,飞行管理计算机,34, 导航系统
+737-678,346100,flight management computer system (fmcs),飞行管理计算机系统,34, 导航系统
+737-678,350000,oxygen,氧气,35, 氧气系统
+737-678,351000,crew,机组氧气,35, 氧气系统
+737-678,351200,flight crew oxygen system,机组氧气系统,35, 氧气系统
+737-678,352000,passenger,旅客氧气,35, 氧气系统
+737-678,352100,passenger oxygen system (gaseous),旅客氧气系统(气瓶式),35, 氧气系统
+737-678,352200,passenger oxygen system (chemical genera,旅客氧气系统(化学发生器),35, 氧气系统
+737-678,353000,portable,便携式氧气瓶,35, 氧气系统
+737-678,353100,portable oxygen equipment,便携式氧气设备,35, 氧气系统
+737-678,356000,supplementary oxygen systems,辅助氧气设备,35, 氧气系统
+737-678,356100,medical oxygen system,医疗氧气设备,35, 氧气系统
+737-678,360000,pneumatic,气源系统,36, 气源系统
+737-678,361000,distribution,分配,36, 气源系统
+737-678,361100,engine bleed air distribution system,发动机引气系统,36, 气源系统
+737-678,361200,bleed air precooler system,发动机引气预冷器系统,36, 气源系统
+737-678,361300,pneumatic manifold system,气源总管系统,36, 气源系统
+737-678,361400,apu bleed system,apu引气,36, 气源系统
+737-678,362000,indicating,引气指示系统,36, 气源系统
+737-678,362100,pressure indicating system,引气压力指示,36, 气源系统
+737-678,362200,temperature indicating system,引气温度指示,36, 气源系统
+737-678,380000,water / waste,水系统,38, 水/废水系统
+737-678,381000,potable,饮用水系统,38, 水/废水系统
+737-678,381100,passenger water system,旅客水系统,38, 水/废水系统
+737-678,381300,water heating,水加温,38, 水/废水系统
+737-678,381400,water quantity indication system,水量指示,38, 水/废水系统
+737-678,382000,wash,清洗,38, 水/废水系统
+737-678,383000,waste disposal,废物处理系统,38, 水/废水系统
+737-678,383100,gray water/drain system,灰水/排放系统,38, 水/废水系统
+737-678,383200,vacuum waste system,真空马桶系统,38, 水/废水系统
+737-678,383300,waste tank quantity indication system,废水量指示,38, 水/废水系统
+737-678,384000,air supply,供气,38, 水/废水系统
+737-678,384200,water tank pressurization system,水箱增压,38, 水/废水系统
+737-678,440000,cabin systems,客舱系统,44, 客舱系统
+737-678,441000,cabin core system,客舱核心系统,44, 客舱系统
+737-678,442000,inflight entertainment system,空中娱乐系统,44, 客舱系统
+737-678,442100,server-based inflight entertainment syst,服务器式空中娱乐系统,44, 客舱系统
+737-678,443000,external communication system,外部通讯系统,44, 客舱系统
+737-678,443100,telephone system,电话系统,44, 客舱系统
+737-678,443300,satellite systems,卫星电话系统,44, 客舱系统
+737-678,443500,broadband communication,宽带通信,44, 客舱系统
+737-678,444000,cabin mass memory system,客舱大容量存储器,44, 客舱系统
+737-678,445000,cabin monitoring system,客舱监视系统,44, 客舱系统
+737-678,446000,miscellaneous cabin system,客舱杂项系统,44, 客舱系统
+737-678,450000,central maintenance system,中央维护系统,45, 中央维护系统
+737-678,451000,cms/aircraft general,cms/飞机总体,45, 中央维护系统
+737-678,452000,cms/airframe systems,cms/机身系统,45, 中央维护系统
+737-678,453000,cms/airframe systems,cms/机身系统,45, 中央维护系统
+737-678,454000,cms/airframe systems,cms/机身系统,45, 中央维护系统
+737-678,454500,central maintenance system,中央维护系统,45, 中央维护系统
+737-678,455000,cms/structures,cms/结构,45, 中央维护系统
+737-678,457000,cms/power plant,cms/动力,45, 中央维护系统
+737-678,460000,information systems,信息系统,46, 信息系统
+737-678,461000,airplane general information systems,飞机总体信息系统,46, 信息系统
+737-678,461100,crew information system,机组信息系统,46, 信息系统
+737-678,461300,onboard network system,机上网络系统,46, 信息系统
+737-678,461500,efb class 2,2类efb,46, 信息系统
+737-678,461900,efb - part 121 operationally approved da,efb-121部操作允许数据,46, 信息系统
+737-678,462000,flight deck information systems,驾驶舱信息系统,46, 信息系统
+737-678,462100,flight deck computers,驾驶舱计算机,46, 信息系统
+737-678,463000,maintenance information systems,维修信息系统,46, 信息系统
+737-678,464000,passenger cabin information systems,客舱信息系统,46, 信息系统
+737-678,465000,miscellaneous cabin information systems,客舱杂项信息系统,46, 信息系统
+737-678,470000,inert gas system,惰性气体系统,47, 惰性气体
+737-678,470100,onboard inert gas-generating system,机上惰性气体生成系统,47, 惰性气体
+737-678,471000,generation/storage,气体生成/存储,47, 惰性气体
+737-678,471100,air separation unit (asu),空气分离组件,47, 惰性气体
+737-678,472000,distribution,分配,47, 惰性气体
+737-678,472100,nitrogen-enriched air distribution,氮气增强空气分配系统,47, 惰性气体
+737-678,473000,control,控制,47, 惰性气体
+737-678,473100,nitrogen generation control system,ngs控制系统,47, 惰性气体
+737-678,473200,thermal control system,热控制系统,47, 惰性气体
+737-678,474000,indicating,指示,47, 惰性气体
+737-678,474100,nitrogen generation system indication,ngs指示,47, 惰性气体
+737-678,474200,air separation unit indication,空气分离器指示,47, 惰性气体
+737-678,474300,thermal control unit,热量控制组件,47, 惰性气体
+737-678,490000,airborne auxiliary power,apu,49,APU
+737-678,491000,power plant,apu整体,49,APU
+737-678,491100,apu power plant,apu本体,49,APU
+737-678,491300,apu mounts,防火层,49,APU
+737-678,491500,apu air inlet,apu进气系统,49,APU
+737-678,491600,apu drains,apu排放系统,49,APU
+737-678,491700,apu firewall,动力排放系统,49,APU
+737-678,492000,engine,apu动力系统,49,APU
+737-678,492100,apu engine,动力部分,49,APU
+737-678,493000,engine fuel and control,apu燃油与控制,49,APU
+737-678,493100,apu fuel system,apu燃油系统,49,APU
+737-678,494000,ignition / starting,apu点火和起动,49,APU
+737-678,494100,apu ignition and start system,apu点火和起动,49,APU
+737-678,495000,air,apu引气,49,APU
+737-678,495200,apu bleed air system,apu引气系统,49,APU
+737-678,496000,engine controls,apu控制,49,APU
+737-678,496100,apu controls,apu控制系统,49,APU
+737-678,497000,indicating,指示系统,49,APU
+737-678,497100,egt indicating system,apu 排气温度指示系统,49,APU
+737-678,497200,apu indicating system,apu指示系统,49,APU
+737-678,498000,indicating,apu排气,49,APU
+737-678,498100,apu exhaust system,apu排气系统,49,APU
+737-678,499000,oil,apu滑油,49,APU
+737-678,499100,apu lubrication system,apu润滑系统,49,APU
+737-678,499400,apu oil indicating system,apu滑油指示系统,49,APU
+737-678,510000,standard practices and structures,标准工艺和结构,51,结构
+737-678,510500,"corrosion, fatigue, and structural inspe","腐蚀,疲劳与结构检查方案",51,结构
+737-678,511000,"investigation, cleanup, and aerodynamic","检查,清洁和气动平滑",51,结构
+737-678,511100,window and door leaks,门窗泄露检查,51,结构
+737-678,512000,processes,过程,51,结构
+737-678,512100,interior and exterior finishes,内外饰面,51,结构
+737-678,513000,materials,材料,51,结构
+737-678,513100,seals and sealing,密封,51,结构
+737-678,514000,fasteners,紧固件,51,结构
+737-678,514100,airframe drainage,机身排水,51,结构
+737-678,515000,support of airplane for repair and align,修理和校装飞机支撑程序,51,结构
+737-678,515100,bonded rub pads,粘结橡胶垫,51,结构
+737-678,516000,control-surface balancing,舵面平衡控制,51,结构
+737-678,517000,repairs,修理,51,结构
+737-678,520000,doors,门,52, 舱门
+737-678,520500,"corrosion, fatigue, and structural inspe","腐蚀,疲劳与结构检查方案",52, 舱门
+737-678,520900,standard door seals,标准门封严,52, 舱门
+737-678,521000,passenger / crew,旅客机组门,52, 舱门
+737-678,521100,forward entry door,前登机门,52, 舱门
+737-678,521300,aft entry door,后登机门,52, 舱门
+737-678,522000,emergency exit,应急出口,52, 舱门
+737-678,522100,emergency exit hatch,应急出口手柄,52, 舱门
+737-678,522200,emergency exit door,应急门,52, 舱门
+737-678,522300,midcabin emergency exit door,中舱应急门,52, 舱门
+737-678,523000,cargo,货舱,52, 舱门
+737-678,523100,cargo compartment doors,货舱门,52, 舱门
+737-678,523200,main deck cargo door,主货舱门,52, 舱门
+737-678,524000,service,勤务,52, 舱门
+737-678,524100,galley service doors,厨房勤务接近口盖,52, 舱门
+737-678,524800,e/e and equipment service doors,电子设备舱门,52, 舱门
+737-678,524900,miscellaneous exterior service doors,其它外部勤务口盖,52, 舱门
+737-678,525000,fixed interior,内部固定门,52, 舱门
+737-678,525100,flight compartment door,驾驶舱门,52, 舱门
+737-678,526000,entrance stairs,登机梯,52, 舱门
+737-678,526100,forward airstair and door,登机梯及门,52, 舱门
+737-678,526200,aft airstair assembly,后登机梯系统,52, 舱门
+737-678,527000,door warning,门警告,52, 舱门
+737-678,527100,door warning system,门警告,52, 舱门
+737-678,528000,landing gear doors,起落架舱门,52, 舱门
+737-678,530000,fuselage,机身,53, 机身
+737-678,530500,"corrosion, fatigue, and structural inspe","腐蚀,疲劳与结构检查方案",53, 机身
+737-678,531100,frames and bulkheads,机身与隔舱,53, 机身
+737-678,531200,stringers and other longitudinal members,弦与其它纵向结构,53, 机身
+737-678,531300,structure around openings,开口周围结构,53, 机身
+737-678,531400,wheel well,轮舱,53, 机身
+737-678,532000,auxiliary structure,辅助结构,53, 机身
+737-678,532100,passenger cabin floors,客舱地板,53, 机身
+737-678,532200,fixed partitions,固定隔板,53, 机身
+737-678,533000,section 43,43段,53, 机身
+737-678,533100,skin,蒙皮,53, 机身
+737-678,534000,section 44,44段,53, 机身
+737-678,534100,structure attachment fittings,结构连接接头,53, 机身
+737-678,534200,equipment attachment fittings,设备连接接头,53, 机身
+737-678,535100,fillet fairings,翼身整流罩,53, 机身
+737-678,535200,nose radome,雷达罩,53, 机身
+737-678,535300,tail cone,尾椎,53, 机身
+737-678,535400,broadband radome,宽带天线罩,53, 机身
+737-678,540000,nacelles / pylons,短舱/吊舱概述,54, 吊架短舱
+737-678,540500,"corrosion, fatigue, and structural inspe","腐蚀,疲劳与结构检查方案",54, 吊架短舱
+737-678,541000,nacelle section,短舱区域,54, 吊架短舱
+737-678,542000,fan cowl,风扇整流罩,54, 吊架短舱
+737-678,543000,fan duct cowl and thrust reverser, ,54, 吊架短舱
+737-678,544000,core cowl, ,54, 吊架短舱
+737-678,545000,pylon,吊舱,54, 吊架短舱
+737-678,545100,strut,吊舱盒,54, 吊架短舱
+737-678,545200,strut to wing fairings,吊挂机翼整流罩,54, 吊架短舱
+737-678,545300,strut doors and access panels,吊挂接近门及口盖,54, 吊架短舱
+737-678,545400,strut fireseal depressor,吊挂防火封严抑制器,54, 吊架短舱
+737-678,545500,strut drains and seals,吊挂余油口及封严,54, 吊架短舱
+737-678,545600,strut engine mount fittings,吊挂发动机连接接头,54, 吊架短舱
+737-678,550000,stabilizers,安定面,55, 安定面
+737-678,550500,"rudder - corrosion, fatigue, and structu","腐蚀,疲劳与结构检查方案",55, 安定面
+737-678,551000,horizontal stabilizer,水平安定面,55, 安定面
+737-678,552000,elevator,升降舵,55, 安定面
+737-678,553000,vertical stabilizer,垂直安定面,55, 安定面
+737-678,553200,auxiliary structure,辅助结构,55, 安定面
+737-678,553300,plates and skin,板及蒙皮,55, 安定面
+737-678,553500,vertical stabilizer leading edge,垂直安定面前缘,55, 安定面
+737-678,554000,rudder,方向舵,55, 安定面
+737-678,560000,windows,窗,56, 窗户
+737-678,561000,flight compartment,驾驶舱风挡,56, 窗户
+737-678,561100,flight compartment windows,驾驶舱风挡,56, 窗户
+737-678,561200,flight compartment sliding windows,驾驶舱活动风挡,56, 窗户
+737-678,562000,cabin,客舱窗户,56, 窗户
+737-678,562100,passenger cabin windows,客舱窗户,56, 窗户
+737-678,562200,automatic overwing exit window,自动翼上撤离窗,56, 窗户
+737-678,563000,door,门的窗,56, 窗户
+737-678,563100,door-mounted windows,门上窗户,56, 窗户
+737-678,564000,inspection and observation,检查与观察窗,56, 窗户
+737-678,564100,viewers and observation windows,观察窗,56, 窗户
+737-678,570000,wings,机翼,57, 机翼
+737-678,570500,"corrosion, fatigue, and structural inspe","腐蚀,疲劳与结构检查方案",57, 机翼
+737-678,571000,center wing,中央机翼,57, 机翼
+737-678,571100,wing spars,翼梁,57, 机翼
+737-678,571200,wing ribs,翼肋,57, 机翼
+737-678,571300,wing stringers,翼梁,57, 机翼
+737-678,571400,center wing box,中央翼盒,57, 机翼
+737-678,571500,landing gear support beam,起落架支撑梁,57, 机翼
+737-678,571600,main landing gear support,主起支撑结构,57, 机翼
+737-678,572000,outer wing,外侧机翼,57, 机翼
+737-678,572100,removable wingtip,可拆卸翼尖,57, 机翼
+737-678,572200,winglets,翼稍小翼,57, 机翼
+737-678,573000,wing tip,翼尖,57, 机翼
+737-678,573200,wing vortex generators,机翼涡流发射器,57, 机翼
+737-678,574000,leading edge and leading edge devices,前缘和前缘设备-概要,57, 机翼
+737-678,574100,wing leading edge,前缘,57, 机翼
+737-678,574200,flight control attach fittings,飞行操纵接头,57, 机翼
+737-678,574300,landing gear attach fittings,起落架接头,57, 机翼
+737-678,574400,outboard leading edge,前缘外侧,57, 机翼
+737-678,575000,trailing edge and trailing edge devices,后缘和后缘设备,57, 机翼
+737-678,575200,trailing edge flaps,后缘襟翼,57, 机翼
+737-678,575300,leading edge flaps,前缘襟翼,57, 机翼
+737-678,575400,leading edge slats,前缘缝翼系统,57, 机翼
+737-678,576000,ailerons and elevons,副翼,57, 机翼
+737-678,577000,spoilers,扰流板,57, 机翼
+737-678,700000,standard practices - engines,标准施工-发动机,70, 标准施工 CFM56-7
+737-678,701000,miscellaneous procedures,其它程序,70, 标准施工 CFM56-7
+737-678,702000,standard tightening practices,标准紧固程序,70, 标准施工 CFM56-7
+737-678,703000,specifications and materials,标准与原料,70, 标准施工 CFM56-7
+737-678,704000,standard inspections - engine,标准程序-发动机,70, 标准施工 CFM56-7
+737-678,706000,standard equipment,标准设备,70, 标准施工 CFM56-7
+737-678,707000,standard checks,标准检查,70, 标准施工 CFM56-7
+737-678,710000,power plant,动力装置,71, 动力装置
+737-678,711000,cowling,整流罩,71, 动力装置
+737-678,711100,engine cowling,发动机整流罩,71, 动力装置
+737-678,712000,mounts,吊架,71, 动力装置
+737-678,712100,engine mounts,前吊架,71, 动力装置
+737-678,713000,fireseals, ,71, 动力装置
+737-678,714000,attach fittings,连接装置,71, 动力装置
+737-678,715000,electrical harness,导线,71, 动力装置
+737-678,715100,electrical harnesses,发动机导线束,71, 动力装置
+737-678,716000,air intakes,通气口,71, 动力装置
+737-678,717000,engine drains,排放系统,71, 动力装置
+737-678,717100,engine vents and drains,燃油通气与排放,71, 动力装置
+737-678,720000,engine,发动机,72, 发动机
+737-678,722000,air inlet section,风扇,72, 发动机
+737-678,722100,fan and booster assembly,风扇和低压压气机装置,72, 发动机
+737-678,722200,no.1 and 2 bearing support module,1和2号轴承支撑装置,72, 发动机
+737-678,722300,fan frame assembly,风扇框架,72, 发动机
+737-678,722400,fan inlet case assembly,风扇进气道,72, 发动机
+737-678,723000,compressor section,高压压气机,72, 发动机
+737-678,723100,compressor rotor assembly,高压压气机转子,72, 发动机
+737-678,723200,high pressure compressor front stator as,高压压气机前静子,72, 发动机
+737-678,723300,compressor rear stator assembly,高压压气机后静子,72, 发动机
+737-678,724000,combustion section,燃烧室,72, 发动机
+737-678,724100,combustion case assembly,燃烧室机匣,72, 发动机
+737-678,725000,turbine section,涡轮,72, 发动机
+737-678,725100,high pressure turbine assembly,高压涡轮组件,72, 发动机
+737-678,725200,high pressure turbine rotor assembly,高压涡轮转子,72, 发动机
+737-678,725300,high pressure turbine shroud and stage 1,高压涡轮衬套和1级低压静子,72, 发动机
+737-678,725400,low pressure turbine case,lpt涡轮机匣,72, 发动机
+737-678,725500,low pressure turbine shaft,lpt轴,72, 发动机
+737-678,725600,turbine frame assembly,涡轮框架,72, 发动机
+737-678,726000,accessory drives,附件驱动,72, 发动机
+737-678,726100,inlet gearbox assembly,进口齿轮箱,72, 发动机
+737-678,726200,transfer gearbox assembly,传输齿轮箱,72, 发动机
+737-678,726300,accessory gearbox assembly,附件齿轮箱,72, 发动机
+737-678,729000,engine module,发动机组件,72, 发动机
+737-678,730000,engine fuel and control,发动机燃油和控制,73, 燃油控制
+737-678,731000,distribution,发动机燃油分配-总体,73, 燃油控制
+737-678,731100,fuel distribution system,发动机燃油分配,73, 燃油控制
+737-678,732000,controlling,控制-总体,73, 燃油控制
+737-678,732100,full authority digital electronic contro,数字全权电子控制系统(fedac),73, 燃油控制
+737-678,733000,indicating,发动机燃油指示,73, 燃油控制
+737-678,733100,fuel flow indicating system,燃油流量-指示,73, 燃油控制
+737-678,733400,fuel filter bypass warning system,燃油滤堵塞警告系统,73, 燃油控制
+737-678,740000,ignition,点火系统,74, 点火系统
+737-678,741000,electrical power supply,电源,74, 点火系统
+737-678,741100,ignition power supply,点火电源,74, 点火系统
+737-678,742000,distribution,点火分配,74, 点火系统
+737-678,742100,high tension distribution,高压分配系统,74, 点火系统
+737-678,743000,switching,开关,74, 点火系统
+737-678,743100,engine ignition control,点火开始和持续点火,74, 点火系统
+737-678,750000,air,发动机引气,75, 发动机空气
+737-678,751000,engine anti-icing,发动机防冰,75, 发动机空气
+737-678,752000,accessory cooling,冷却,75, 发动机空气
+737-678,752100,engine external accessories cooling,发动机外部附件冷却,75, 发动机空气
+737-678,752300,transient bleed valve,瞬态放气活门,75, 发动机空气
+737-678,753000,compressor control,压气机控制,75, 发动机空气
+737-678,753100,variable stator vane (vsv) actuation sys,可变静子叶片(vsv)系统,75, 发动机空气
+737-678,753200,variable bleed valve (vbv) actuation sys,可变静子叶片(vsv)系统,75, 发动机空气
+737-678,754000,indicating,发动机气路指示,75, 发动机空气
+737-678,760000,engine controls,发动机控制,76, 发动机控制
+737-678,761000,power control,功率控制,76, 发动机控制
+737-678,761100,engine control system,发动机控制系统,76, 发动机控制
+737-678,762000,emergency shutdown,应急关车,76, 发动机控制
+737-678,762100,engine fire emergency shutdown,发动机火警应急关车,76, 发动机控制
+737-678,770000,engine indicating,发动机指示,77, 发动机指示
+737-678,771000,power,功率指示,77, 发动机指示
+737-678,771100,engine tachometer system,转速指示系统,77, 发动机指示
+737-678,772000,temperature,温度指示,77, 发动机指示
+737-678,772100,exhaust gas temperature (egt) indicating,排气温度指示系统,77, 发动机指示
+737-678,772200,compressor temperature indicating system,压气机温度指示系统,77, 发动机指示
+737-678,772300,exhaust nozzle temperature indicating sy,排气温度指示系统,77, 发动机指示
+737-678,773000,analyzers,分析器,77, 发动机指示
+737-678,773100,airborne vibration monitoring (avm) syst,振动监控系统,77, 发动机指示
+737-678,774000,integrated engine instrument systems,整体发动机仪表,77, 发动机指示
+737-678,780000,exhaust,排气,78, 反推
+737-678,781000,collector,收集器,78, 反推
+737-678,781100,turbine exhaust system,热排气,78, 反推
+737-678,782000,noise supressor,消音器,78, 反推
+737-678,783000,thrust reverser,反推系统,78, 反推
+737-678,783100,thrust reverser system,反推控制和指示,78, 反推
+737-678,783400,thrust reverser control system,反推控制系统,78, 反推
+737-678,783600,thrust reverser indicating system,反推位置指示系统,78, 反推
+737-678,790000,oil,发动机滑油,79, 发动机滑油
+737-678,791000,storage, ,79, 发动机滑油
+737-678,791100,oil storage,发动机滑油储存,79, 发动机滑油
+737-678,792000,distribution,发动机滑油分配-总体,79, 发动机滑油
+737-678,792100,oil distribution,发动机滑油分配,79, 发动机滑油
+737-678,793000,indicating,发动机滑油指示,79, 发动机滑油
+737-678,793100,oil quantity indicating system,发动机滑油量指示,79, 发动机滑油
+737-678,793200,oil pressure indicating system,发动机滑油压力指示系统,79, 发动机滑油
+737-678,793300,low oil pressure warning system,滑油低压警告系统,79, 发动机滑油
+737-678,793400,oil temperature indicating system,发动机滑油温度指示系统,79, 发动机滑油
+737-678,793500,oil scavenge filter bypass warning syste,发动机滑油滤堵塞警告系统,79, 发动机滑油
+737-678,800000,starting,发动机起动,80, 发动机启动
+737-678,801000,cranking,起动,80, 发动机启动
+737-678,801100,engine starting system,发动机启动,80, 发动机启动
+737-678,442400,wireless ife system,无线ife系统,44, 客舱系统
+737-678,334500,taxi and runway turnoff lights,滑行与跑道转弯灯,33, 灯光系统
+737-678,334400,anti-collision lights,防撞灯,33, 灯光系统
+737-max,220000,autoflight,自动飞行,22, 自动飞行
+737-max,221000,autopilot,自动驾驶,22, 自动飞行
+737-max,221100,digital flight control system,数字飞行控制系统,22, 自动飞行
+737-max,222000,speed-attitude correction,速度-高度校正,22, 自动飞行
+737-max,222300,yaw damper system,偏航阻尼系统,22, 自动飞行
+737-max,223000,auto throttle,自动油门,22, 自动飞行
+737-max,223100,autothrottle system,自动油门系统,22, 自动飞行
+737-max,224000,system monitor,系统监控,22, 自动飞行
+737-max,225000,aerodynamic load alleviating, ,22, 自动飞行
+737-max,230000,communications,通讯,23, 通信系统
+737-max,231000,speech communications,语音通讯,23, 通信系统
+737-max,231100,high frequency communication system,高频通讯系统,23, 通信系统
+737-max,231200,very high frequency (vhf) communication,甚高频通讯系统,23, 通信系统
+737-max,231500,satellite communicatons (satcom) system,卫星通讯系统,23, 通信系统
+737-max,232000,data transmission and automatic calling,数据传输和自动呼叫,23, 通信系统
+737-max,232400,emergency locator transmitter,应急定位发射系统,23, 通信系统
+737-max,232700,aircraft communications and reporting sy,飞机通信寻址与报告系统,23, 通信系统
+737-max,232800,selcal system,卫星通讯,23, 通信系统
+737-max,233000,"passenger address, entertainment, and co","旅客寻址,广播和娱乐",23, 通信系统
+737-max,233100,passenger address system,旅客寻址系统,23, 通信系统
+737-max,234000,interphone,内话,23, 通信系统
+737-max,234100,service interphone system,服务内话系统,23, 通信系统
+737-max,234200,cabin interphone system,客舱内话系统,23, 通信系统
+737-max,234300,ground crew call system,地面机组呼叫系统,23, 通信系统
+737-max,235000,audio integrating, ,23, 通信系统
+737-max,235100,flight interphone system,飞行内话系统,23, 通信系统
+737-max,236000,static discharging,静电放电,23, 通信系统
+737-max,236100,static dischargers,静电放电刷,23, 通信系统
+737-max,237000,audio and video monitoring,音频和视频监控,23, 通信系统
+737-max,237100,voice recorder (vr) system,话音记录器,23, 通信系统
+737-max,237500,flight deck entry video surveillance sys,驾驶舱入口视频监控系统,23, 通信系统
+737-max,238000,integrated automatic tuning,集成自动调谐,23, 通信系统
+737-max,238200,flight deck pc power, ,23, 通信系统
+737-max,310000,indicating/recording systems,指示/记录系统,31, 仪表系统
+737-max,311000,instrument and control panels,仪器和控制面板,31, 仪表系统
+737-max,311100,flight compartment panels,驾驶舱面板,31, 仪表系统
+737-max,311500,attendants' panels,乘务员面板,31, 仪表系统
+737-max,312000,independent instruments,独立设备,31, 仪表系统
+737-max,312500,clocks,时钟,31, 仪表系统
+737-max,313000,recorders,记录器,31, 仪表系统
+737-max,313100,flight data recorder system,飞行数据记录系统,31, 仪表系统
+737-max,313300,printer,驾驶舱打印机,31, 仪表系统
+737-max,314000,central computers,中央计算机,31, 仪表系统
+737-max,315000,central warning systems,中央警告系统,31, 仪表系统
+737-max,315100,aural warning system,声音警告系统,31, 仪表系统
+737-max,316000,display systems,显示系统,31, 仪表系统
+737-max,316500,max display system,显示系统,31, 仪表系统
+737-max,317000,automatic data reporting systems,自动数据报告系统,31, 仪表系统
+737-max,340000,navigation,导航,34, 导航系统
+737-max,341000,flight environment data,飞行环境数据,34, 导航系统
+737-max,341100,static and total air pressure system,"皮托管,静压管系统",34, 导航系统
+737-max,341300,air data instruments,大气数据仪表,34, 导航系统
+737-max,341600,mach airspeed warning system,马赫速度警告系统,34, 导航系统
+737-max,342000,attitude and direction,高度与方位,34, 导航系统
+737-max,342100,air data inertial reference system,大气数据惯性基准系统,34, 导航系统
+737-max,342200,radio magnetic indicator,无线电磁指示器,34, 导航系统
+737-max,342300,standby magnetic compass,备用磁罗盘,34, 导航系统
+737-max,342400,integrated standby flight display system,综合备用飞行显示系统,34, 导航系统
+737-max,343000,landing and taxiing aids,辅助着陆与滑行系统,34, 导航系统
+737-max,343100,instrument landing system,仪表着陆系统,34, 导航系统
+737-max,343200,marker beacon system,指点信标系统,34, 导航系统
+737-max,343300,low range radio altimeter (lrra) system,短距无线电高度表系统,34, 导航系统
+737-max,343600,head up display system,抬头显示器,34, 导航系统
+737-max,344000,independent position determining,独立位置决策,34, 导航系统
+737-max,344100,weather radar (wxr) system,气象雷达系统,34, 导航系统
+737-max,344500,traffic alert and collision avoidance sy,交通警告与防撞系统,34, 导航系统
+737-max,344900,ground proximity warning system,近地警告系统,34, 导航系统
+737-max,345000,dependent position determining,独立位置决策,34, 导航系统
+737-max,345100,vor system,vor系统,34, 导航系统
+737-max,345300,air traffic control (atc) system,空中交通控制系统,34, 导航系统
+737-max,345500,distance measuring equipment system,测距设备系统,34, 导航系统
+737-max,345700,automatic direction finder system,自动测向系统,34, 导航系统
+737-max,345800,global positioning system,全球定位系统,34, 导航系统
+737-max,346000,flight management computing,飞行管理计算机,34, 导航系统
+737-max,346100,flight management computer system,飞行管理计算机系统,34, 导航系统
+737-max,420000,integrated modular avionics,综合模块化航电设备,42, 综合模块化航电设备
+737-max,421000,shared avionics resources,共享电子资源,42, 综合模块化航电设备
+737-max,422000,core system,核心系统,42, 综合模块化航电设备
+737-max,423000,communication network,通讯网络,42, 综合模块化航电设备
+737-max,424000,remote shared resources,远程共享资源,42, 综合模块化航电设备
+737-max,440000,cabin systems,客舱系统,44, 客舱系统
+737-max,441000,cabin core system,客舱核心系统,44, 客舱系统
+737-max,442000,inflight entertainment system,空中娱乐系统,44, 客舱系统
+737-max,442100,server based in flight entertainment sys,服务器式空中娱乐系统,44, 客舱系统
+737-max,443000,external communication system,外部通讯系统,44, 客舱系统
+737-max,443500,broadband communication system,宽带通信,44, 客舱系统
+737-max,444000,cabin mass memory system,客舱大容量存储器,44, 客舱系统
+737-max,445000,cabin monitoring system,客舱监视系统,44, 客舱系统
+737-max,446000,miscellaneous cabin system,客舱杂项系统,44, 客舱系统
+737-max,450000,central maintenance system (cms),中央维护系统,45, 中央维护系统
+737-max,451000,cms/aircraft general,cms/飞机总体,45, 中央维护系统
+737-max,452000,cms/airframe systems,cms/机身系统,45, 中央维护系统
+737-max,455000,cms/structures,cms/结构,45, 中央维护系统
+737-max,457000,cms/power plant,cms/动力,45, 中央维护系统
+737-max,460000,information systems,信息系统,46, 信息系统
+737-max,461000,airplane general information systems,飞机总体信息系统,46, 信息系统
+737-max,461300,onboard network system,机上网络系统,46, 信息系统
+737-max,462000,flight deck information systems,驾驶舱信息系统,46, 信息系统
+737-max,463000,maintenance information systems,维修信息系统,46, 信息系统
+737-max,464000,passenger cabin information systems,客舱信息系统,46, 信息系统
+737-max,465000,miscellaneous cabin information systems,客舱杂项信息系统,46, 信息系统
+757-200,220000,auto flight - general,自动飞行,22, 自动飞行
+757-200,221000,autopilot,自动驾驶,22, 自动飞行
+757-200,221100,autopilot/flight director power,自动驾驶飞行指引电源,22, 自动飞行
+757-200,221200,autopilot/flight director pitch channel,自动驾驶/飞行指引俯仰通道,22, 自动飞行
+757-200,221300,autopilot/flight director system roll an,自动驾驶/飞行指引横滚和偏航通道,22, 自动飞行
+757-200,221400,autopilot/flight director warning and an,自动驾驶/飞行指引警告与告警,22, 自动飞行
+757-200,221500,autopilot/flight director interchannel d,自动驾驶/飞行指引通道间数据,22, 自动飞行
+757-200,222100,yaw damper system,偏航阻尼系统,22, 自动飞行
+757-200,222200,automatic stabilizer trim system,自动安定面配平系统,22, 自动飞行
+757-200,222400,mach trim/speed stability,马赫配平/速度稳定,22, 自动飞行
+757-200,223100,thrust management power,推力管理电源,22, 自动飞行
+757-200,223200,thrust management system,推力管理系统,22, 自动飞行
+757-200,223300,thrust management engine, ,22, 自动飞行
+757-200,223400,thrust management warning and annunciati,推力管理警告与告警,22, 自动飞行
+757-200,224100,maintenance monitor,维护监控,22, 自动飞行
+757-200,224200,ils deviation monitor,ils偏离监控,22, 自动飞行
+757-200,230000,communications,通讯,23, 通信系统
+757-200,231100,hf communication system,高频通讯系统,23, 通信系统
+757-200,231200,vhf communication system,甚高频通讯系统,23, 通信系统
+757-200,232100,selcal system,选择呼叫系统,23, 通信系统
+757-200,232200,acars,飞机通信寻址与报告系统,23, 通信系统
+757-200,233100,passenger address system,旅客寻址系统,23, 通信系统
+757-200,233200,passenger entertainment (video) system,旅客娱乐(视频)系统,23, 通信系统
+757-200,233400,passenger entertainment system,旅客娱乐系统,23, 通信系统
+757-200,234100,service interphone system,服务内话系统,23, 通信系统
+757-200,234200,cabin interphone system,客舱内话系统,23, 通信系统
+757-200,234300,ground crew call system,地面机组呼叫系统,23, 通信系统
+757-200,235100,flight interphone system,飞行内话系统,23, 通信系统
+757-200,236100,static discharging,静电放电刷,23, 通信系统
+757-200,237100,voice recorder system,话音记录器,23, 通信系统
+757-200,310000,indicating / recording systems,指示/记录系统,31, 仪表系统
+757-200,312500,clocks,时钟,31, 仪表系统
+757-200,313100,flight data recorder system,飞行数据记录系统,31, 仪表系统
+757-200,314100,engine indication and crew alerting syst,发动机指示与机组警告系统,31, 仪表系统
+757-200,315100,warning system,警告系统,31, 仪表系统
+757-200,340000,navigation,导航,34, 导航系统
+757-200,341100,pitot-static system,"皮托管,静压管系统",34, 导航系统
+757-200,341200,air data computing system,大气数据计算系统,34, 导航系统
+757-200,341300,air data instruments,大气数据仪表,34, 导航系统
+757-200,341600,altitude alert system,高度警告系统,34, 导航系统
+757-200,342100,inertial reference system,惯性基准系统,34, 导航系统
+757-200,342200,electronic flight instrument system,电子飞行仪表系统,34, 导航系统
+757-200,342300,standby magnetic compass,备用磁罗盘,34, 导航系统
+757-200,342400,standby attitude reference system,备用高度基准系统,34, 导航系统
+757-200,343100,instrument landing system,仪表着陆系统,34, 导航系统
+757-200,343200,marker beacon system,指点信标系统,34, 导航系统
+757-200,343300,radio altimeter system,无线电高度表系统,34, 导航系统
+757-200,344300,weather radar system,气象雷达系统,34, 导航系统
+757-200,344500,traffic alert and collision avoidance sy,交通警告与防撞系统,34, 导航系统
+757-200,344600,ground proximity warning system,近地警告系统,34, 导航系统
+757-200,345100,vor navigation system,vor导航系统,34, 导航系统
+757-200,345300,air traffic control (atc) system,空中交通控制系统,34, 导航系统
+757-200,345500,dme system,测距设备系统,34, 导航系统
+757-200,345700,automatic direction finder system,自动测向系统,34, 导航系统
+757-200,345800,global positioning system,全球定位系统,34, 导航系统
+757-200,346100,flight management computer system,飞行管理计算机系统,34, 导航系统
+787,220000,auto flight,自动飞行,22, 自动飞行
+787,221000,autopilot,自动驾驶,22, 自动飞行
+787,221100,autopilot flight director system,自动驾驶飞行指引系统,22, 自动飞行
+787,222000,speed-attitude correction,速度-高度校正,22, 自动飞行
+787,223000,auto throttle,自动油门,22, 自动飞行
+787,223100,thrust management system,推力管理系统,22, 自动飞行
+787,224000,system monitor,系统监控,22, 自动飞行
+787,225000,aerodynamic load alleviating,气动载荷优化,22, 自动飞行
+787,230000,communications,通讯,23, 通信系统
+787,231000,speech communications,语音通讯,23, 通信系统
+787,231100,high frequency communication system,高频通讯系统,23, 通信系统
+787,231200,very high frequency communication system,甚高频通讯系统,23, 通信系统
+787,231500,satellite communication system,卫星通讯系统,23, 通信系统
+787,232000,data transmission and automatic calling,数据传输和自动呼叫,23, 通信系统
+787,232100,selective calling (selcal) system,选择呼叫系统,23, 通信系统
+787,232400,emergency locator transmitter (elt) syst,应急定位发射系统,23, 通信系统
+787,232700,data communication management function,数据通讯管理功能,23, 通信系统
+787,233000,"passenger address, entertainment, and co","旅客寻址,广播和娱乐(迁移至44-00-00)",23, 通信系统
+787,234000,interphone [moved to 23-50-00],内话(迁移至23-50-00),23, 通信系统
+787,235000,audio integrating,音频集成,23, 通信系统
+787,235100,flight interphone system,飞行内话系统,23, 通信系统
+787,235200,service interphone system,服务内话系统,23, 通信系统
+787,236000,static discharging,静电放电,23, 通信系统
+787,236100,static dischargers,静电放电刷,23, 通信系统
+787,237000,audio and video monitoring,音频和视频监控,23, 通信系统
+787,237100,cockpit voice recorder system,驾驶舱语音记录系统,23, 通信系统
+787,237500,flight deck entry video surveillance sys,驾驶舱入口视频监控系统,23, 通信系统
+787,238000,integrated automatic tuning,集成自动调谐,23, 通信系统
+787,239000,data bus system communications,数据总线通讯,23, 通信系统
+787,239100,arinc 629 multi-transmitter data bus,arinc 629多收发机数据总线,23, 通信系统
+787,239200,cardfiles arinc 629 bus interface,arinc 629总线接口,23, 通信系统
+787,239300,flight deck data bus,驾驶舱数据总线,23, 通信系统
+787,239400,onboard local area network,机上本地网络,23, 通信系统
+787,239500,wireless local area network,无线本地网络,23, 通信系统
+787,310000,indicating/recording systems,指示/记录系统,31, 仪表系统
+787,310900,system card files,系统卡文件,31, 仪表系统
+787,311000,instrument and control panels,仪器和控制面板,31, 仪表系统
+787,311100,pilot main panels,飞行员主面板,31, 仪表系统
+787,311200,overhead panels,头顶板,31, 仪表系统
+787,311300,sidewall panels,侧板,31, 仪表系统
+787,311500,observer panels,观察员面板,31, 仪表系统
+787,311700,attendant panels,乘务员面板,31, 仪表系统
+787,312000,independent instruments,独立设备,31, 仪表系统
+787,312500,clocks,时钟,31, 仪表系统
+787,313000,recorders,记录器,31, 仪表系统
+787,313100,flight recorder system,飞行数据记录系统,31, 仪表系统
+787,313200,data load and record system,数据装载与记录系统,31, 仪表系统
+787,313300,flight compartment printing,驾驶舱打印机,31, 仪表系统
+787,314000,central computers,中央计算机,31, 仪表系统
+787,314100,airplane information management system (,飞机信息管理系统,31, 仪表系统
+787,315000,central warning systems,中央警告系统,31, 仪表系统
+787,315100,caution and warning systems,警告与告警系统,31, 仪表系统
+787,316000,central display systems,中央显示系统,31, 仪表系统
+787,316100,primary display system,主显示系统,31, 仪表系统
+787,317000,automatic data reporting systems,自动数据报告系统,31, 仪表系统
+787,319100,test data recording systems,测试数据记录系统,31, 仪表系统
+787,340000,navigation,导航,34, 导航系统
+787,340100,navigation component configuration,导航设备构型,34, 导航系统
+787,341000,flight environment data,飞行环境数据,34, 导航系统
+787,341100,pitot-static system,"皮托管,静压管系统",34, 导航系统
+787,341200,air data system,大气数据系统,34, 导航系统
+787,341300,air data standby instruments,大气数据备用仪表,34, 导航系统
+787,341600,altitude alert system,高度警告系统,34, 导航系统
+787,342000,attitude and direction, ,34, 导航系统
+787,342100,earth reference system,地球基准系统,34, 导航系统
+787,342200,inertial reference system,惯性基准系统,34, 导航系统
+787,342300,standby magnetic compass system,备用磁罗盘,34, 导航系统
+787,342400,integrated standby flight display system,综合备用飞行显示系统,34, 导航系统
+787,343000,landing and taxiing aids,辅助着陆与滑行系统,34, 导航系统
+787,343100,integrated navigation radio system,综合导航无线电系统,34, 导航系统
+787,343300,low range radio altimeter system,短距无线电高度表系统,34, 导航系统
+787,343800,ground-maneuvering camera system,地面景观摄像系统,34, 导航系统
+787,344000,independent position determining,独立位置决策,34, 导航系统
+787,344200,integrated surveillance system (iss),综合监控系统,34, 导航系统
+787,345000,dependent position determining,独立位置决策,34, 导航系统
+787,345500,distance measuring equipment system,测距设备系统,34, 导航系统
+787,345700,automatic direction finder system,自动测向系统,34, 导航系统
+787,346000,flight management computing,飞行管理计算机,34, 导航系统
+787,346100,flight management function,飞行管理功能,34, 导航系统
+787,420000,integrated modular avionics,综合模块化航电设备,42, 综合模块化航电设备
+787,421000,common core system,通用核心系统,42, 综合模块化航电设备
+787,422000,core system,核心系统,42, 综合模块化航电设备
+787,422100,common core system,通用核心系统,42, 综合模块化航电设备
+787,423000,network components,网络部件,42, 综合模块化航电设备
+787,423100,ccs network components,通用核心系统网络部件,42, 综合模块化航电设备
+787,424000,concentrators,采集器,42, 综合模块化航电设备
+787,424100,ccs data concentrators,通用核心系统数据采集器,42, 综合模块化航电设备
+787,424200,main engine data concentrator system,主发动机数据采集器,42, 综合模块化航电设备
+787,440000,cabin systems,客舱系统,44, 客舱系统
+787,441000,cabin core system,客舱核心系统,44, 客舱系统
+787,441100,cabin services system,客舱服务系统,44, 客舱系统
+787,441200,passenger address system,客舱寻址系统,44, 客舱系统
+787,441300,passenger service system,客舱服务系统,44, 客舱系统
+787,441400,cabin interphone system,客舱内话系统,44, 客舱系统
+787,442000,inflight entertainment system,空中娱乐系统,44, 客舱系统
+787,442100,passenger entertainment system,客舱娱乐系统,44, 客舱系统
+787,442200,pc power system,pc电源系统,44, 客舱系统
+787,442300,passenger entertainment system (pes) - v,客舱娱乐系统-视频,44, 客舱系统
+787,442400,passenger entertainment system (pes) - a,客舱娱乐系统-音频,44, 客舱系统
+787,442500,in-flight entertainment system ex2, ,44, 客舱系统
+787,442600,in-flight entertainment system i8000,空中娱乐系统i8000,44, 客舱系统
+787,443000,external communication system,外部通讯系统,44, 客舱系统
+787,443100,cellular communication system,蜂窝通讯系统,44, 客舱系统
+787,443300,crew communication,机组通讯,44, 客舱系统
+787,444000,cabin mass memory system,客舱大容量存储器,44, 客舱系统
+787,444100,cabin printer system,客舱打印机,44, 客舱系统
+787,444300,ground crew call system,地面机组呼叫系统,44, 客舱系统
+787,445000,cabin monitoring system,客舱监视系统,44, 客舱系统
+787,445100,video surveillance system,视频监控系统,44, 客舱系统
+787,446000,miscellaneous cabin system,客舱杂项系统,44, 客舱系统
+787,450000,central maintenance system (cms),中央维护系统,45, 中央维护系统
+787,450100,cms/aircraft general, ,45, 中央维护系统
+787,450200,data load function,数据装载功能,45, 中央维护系统
+787,451000,health management,健康管理,45, 中央维护系统
+787,451100,central maintenance computing function,中央维护计算机,45, 中央维护系统
+787,451200,airplane condition monitoring function,飞机状态监控,45, 中央维护系统
+787,451300,onboard data load function,机载数据装载,45, 中央维护系统
+787,452000,cms/airframe systems,cms/机身系统,45, 中央维护系统
+787,454500,central maintenance system,中央维护系统,45, 中央维护系统
+787,455000,cms/structures,cms/结构,45, 中央维护系统
+787,457000,cms/power plant,cms/动力,45, 中央维护系统
+787,460000,information systems,信息系统,46, 信息系统
+787,461000,airplane general information systems,飞机总体信息系统,46, 信息系统
+787,461100,crew information system,机组信息系统,46, 信息系统
+787,461200,core network system,核心网络系统,46, 信息系统
+787,461300,onboard boeing electronic distribution s,机上波音电子分配系统,46, 信息系统
+787,461500,efb class 2,2类efb,46, 信息系统
+787,462000,flight deck information systems,驾驶舱信息系统,46, 信息系统
+787,463000,maintenance information systems,维修信息系统,46, 信息系统
+787,464000,passenger cabin information systems,客舱信息系统,46, 信息系统
+787,465000,miscellaneous cabin information systems,客舱杂项信息系统,46, 信息系统
+787,443500,broadband communication,宽带通信,44, 客舱系统
+787,527115,door indication system - cargo and acces, ,52, 舱门

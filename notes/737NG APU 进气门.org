@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG APU 进气门/")); -*-
+:PROPERTIES:
+:ID:       9B84E8F9-4AF3-4E4C-A932-88CBA371BB42
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-01 Mon 11:46>
+#+TITLE: 737NG APU 进气门
+
+* TODO 进气门使用 28V DC

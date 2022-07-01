@@ -1,0 +1,41 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 默认值/")); -*-
+:PROPERTIES:
+:ID:       9631717F-0591-4404-A75E-BA9AE3F3E200
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:42>
+#+TITLE: React 默认值
+
+#+BEGIN_SRC js
+class App extends Component {
+    constructor(props) {
+          super(props);
+    }
+
+    render() {
+        return (
+                <div>
+                    <h1>
+                        {this.props.title}
+                    </h1>
+                    <RecentChangesTable>
+                        // 原来给 RecentChangesTable 组件 headings 属性
+                        // <RecentChangesTable.Headings headings={this.props.headings}/>
+                        <RecentChangesTable.Headings/>
+                        <RecentChangesTable.Rows rows={this.props.data}/>
+                    </RecentChangesTable>
+                </div>
+        );
+  }
+}
+
+// 这里设置默认值不是为 App 设置的, 所以必须改为 RecentChangesTable
+// App.defaultProps = {
+RecentChangesTable.Headings.defaultProps = {
+    headings: ["When happened", "Who did it", "What they change"]
+};
+#+END_SRC
+#+BEGIN_SRC comment :results values list :exports both
+[screenshotImg/React 类型检查.png]:
+[screenshotImg/React 默认值.png]:
+#+END_SRC

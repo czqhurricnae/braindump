@@ -1,0 +1,108 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/what_does_sudo_h_do/")); -*-
+:PROPERTIES:
+:ID:       88F2901C-9F14-4E24-B701-4ED50BCA1D7B
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-03-02 Mon 20:10>
+#+TITLE: What_does_sudo_h_do
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+After trying to install virtualenv with pip
+
+#+BEGIN_SRC sh
+$ pip install virtualenv
+#+END_SRC
+
+I got a permission denied error
+
+#+BEGIN_SRC sh
+IOError: [Errno 13] Permission denied: '/Library/Python/2.7/site-packages/virtualenv.py'
+#+END_SRC
+
+So I used sudo to install virtualenv
+
+#+BEGIN_SRC sh
+$ sudo pip install virtualenv
+#+END_SRC
+
+But then a warning showed up:
+
+#+BEGIN_QUOTE
+The directory '/Users/petertao/Library/Caches/pip/http' or its parent
+directory is not owned by the current user and the cache has been
+disabled. Please check the permissions and owner of that directory. If
+executing pip with sudo, you may want sudo's -H flag.
+
+The directory '/Users/petertao/Library/Caches/pip' or its parent
+directory is not owned by the current user and caching wheels has been
+disabled. check the permissions and owner of that directory. If
+executing pip with sudo, you may want sudo's -H flag.
+#+END_QUOTE
+
+*What does sudo's -H flag do?*
+** comment1
+Could have found this via searching for sudo and see that sudo manual page with -H stating "set the HOME environment variable to the home directory specified by the target user's password database entry."
+** comment2
+I'm voting to close this question as off-topic because of lack of basic research before posting.
+** comment3
+Thanks for getting back and I apologize if this seems like a trivial question for everybody. I am just starting to use python, pip, and the terminal. What I am still trying to understand is how setting the HOME environment variable to the home directory fixes these warnings.
+** comment4
+While this exact question is painfully trivial, the unstated question of "Why does pip complain about non-superuser permissions and ownership when running as the superuser?" is non-trivially interesting. As user3141593's well-authored answer explains, pip complains because creating superuser-owned subdirectories in non-superuser home directories is a bad idea. Fortunately, this question remained open long enough to receive a useful response.
+** comment5
+What's with the pretentious attitudes?
+** comment6
+@JohnRPerry: Same here. I found the man page entry entirely unhelpful and wound up here after a Google search. Thankfully, user3141593 provided an answer that gave more insight.
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+Generally [[file:./static/sudo][=man sudo=]] (the exact text may vary, but it will be similar):
+
+#+BEGIN_QUOTE
+-H
+
+The -H (HOME) option requests that the security policy set the HOME
+environment variable to the home directory of the target user (root by
+default) as specified by the password database. Depending on the
+policy, this may be the default behavior.
+#+END_QUOTE
+
+So why is this even an option? *Normally using "sudo" does not change
+the $HOME environment variable.*
+
+for example:
+
+#+BEGIN_SRC sh
+echo $HOME $USER
+/home/testuser testuser
+
+sudo bash -c 'echo $HOME $USER'
+/home/testuser root
+
+sudo -H bash -c 'echo $HOME $USER'
+/home/root root
+#+END_SRC
+
+You can see that a normal sudo changes which user I am from "testuser"
+to "root", but not what $HOME is set to, while a sudo -H also changes
+the variable from "my" home directory to root's home directory.
+
+In your Case
+pip is warning you that it was executed as the user root and wanted to
+modify things in $HOME, which was set to '/Users/petertao', which is not
+owned by root (most likely the "petertao" user). the warning indicates
+that pip uses $HOME to cache files, but has disabled its own caching
+because of the folder ownership discrepancy.
+
+Of course while executing as root pip can modify
+'/Users/petertao/Library/Caches/pip' because root is (almost) almighty.
+This can become troublesome later because a program running without root
+could no longer overwrite or modify these files. Instead pip refuses to
+write to a directory owned by another user.

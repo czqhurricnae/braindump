@@ -1,0 +1,7 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737-SL-36-024-B/")); -*-
+:PROPERTIES:
+:ID:       D0792F23-7F57-4046-BA78-C00146EC14C5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-18 Mon 16:02>
+#+TITLE: 737-SL-36-024-B

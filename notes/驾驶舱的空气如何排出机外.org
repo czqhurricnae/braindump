@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/驾驶舱的空气如何排出机外/")); -*-
+:PROPERTIES:
+:ID:       5D7797FD-8641-4AD7-8EFE-77BB52DAAC33
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-01 Tue 05:16>
+#+TITLE: 驾驶舱的空气如何排出机外
+
+[[file:./static/驾驶舱的空气如何排出机外/2020-12-01_05-16-45_screenshot.jpg]]

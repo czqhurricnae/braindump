@@ -1,0 +1,296 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/WDM 使用说明/")); -*-
+:PROPERTIES:
+:ID:       77BF805B-FB88-4E3E-AD6E-3FA54B9BF9EF
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-09-09 Wed 15:31>
+#+TITLE: WDM 使用说明
+
+[[id:40B3D8E3-02A7-4305-8DEB-2B80DA1A63BC][See：WDM 符号说明]]
+
+* 91 章图表包括
+- 飞机站位布局
+- 线路区域
+- 主线束走向
+- 面板及设备架位置
+- 跳开关面板图（AEXXXX）
+- 脱开支架图
+- 主线束信息
+
+* 91 章清单包括
+- 91-02-00 Circuit breaker list
+- 91-04-00 Bracket list
+- 91-21-11 Wire list
+- 91-21-21 Ground list
+- 91-21-31 Splice list
+- 91-21-41 Terminal strip list
+- 91-21-51 hookup list
+
+* EQUIPMENT LIST 设备清单
+
+[[file:./static/WDM 使用说明/2020-09-17_18-47-19_screenshot.jpg]]
+
+** REV 修改情况说明
+** MOD 改装情况说明
+** EQUIP 电气设备号
+ 在 SSM 和 WDM 中，用指定的字母，数字，符号表示电气设备号（Equipment Number）。
+ 在设备清单（Equipment List）中，通过电气设备号可以找到件号和件号描述。
+
+- 由字母，数字组成，通常是字母开头，有时在字母前有一个空格，最多 10 个字符长度。
+- 在部件的实际安装位置不会显示电气设备号，只是在 SSM 和 WDM 图示上标注。
+- 9000-9999，90000-99999 是留给客户使用。
+- 设备号的第八个字母表示设备的固定连接方式。
+
+如图所示：
+[[file:./static/WDM 使用说明/2020-09-17_19-02-03_screenshot.jpg]]
+
+“M00306 T” 中字母“T”。
+
+*** 在设备清单中不包括
+ - 接线管
+ - 接地
+ - 终端
+ - 线束
+
+** 选装说明 OPT
+ 表示是否可以使用其他件号的设备。
+
+ [[file:./static/WDM 使用说明/2020-09-17_19-13-00_screenshot.jpg]]
+
+ 以下表格表示，交付飞机时，各字符代表的含义：
+
+ | OPT | Option available |
+ |-----+------------------|
+ |     | No               |
+ |   0 | No               |
+ |   1 | First option     |
+ |   2 | Second option    |
+ |   3 | Third option     |
+
+ 以下表格表示，交付飞机后作出改变（如 SB 或 COC），各字符代表的含义：
+
+ | OPT | Option available |
+ |-----+------------------|
+ |   9 | First option     |
+ |   8 | Second option    |
+ |   7 | Third option     |
+ |   6 | Fourth option    |
+
+** USED ON DWG
+该部件所在的图纸，图纸中包含该部件详细的安装情况。
+
+** DIAGRAM (REFERENCE)
+该部件所在的 WDM 线路图章节号。
+
+** CH 20 REF
+- 仅使用于接头，指明该接头在标准线路施工手册中的章节号。
+- 对于接头，可以通过此方法直接进入标准线路施工手册中的子章节。
+
+** QTY
+该部件在飞机上的安装数量。
+
+** STATION-WL-BL
+该部件的定位信息。
+- STATION-站位
+- WL-水线
+- BL-纵剖线
+
+若部件位于或接近，面板，设备架，脱开支架，终端块，则直接使用它们的电气设备号表示。
+
+[[file:./static/WDM 使用说明/2020-09-17_20-03-21_screenshot.jpg]]
+
+** VENDOR 供应商代码
+* WIRE LIST
+以字母顺序列出飞机上的线束和线束内的导线。
+
+[[file:./static/WDM 使用说明/2020-09-17_20-23-09_screenshot.jpg]]
+
+** WIRE/GA（导线直径代码）/CO（导线颜色标志）
+
+[[file:./static/WDM 使用说明/2020-09-17_20-23-54_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_20-24-07_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_20-24-23_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_20-24-31_screenshot.jpg]]
+
+** TY wire type
+ 线的类型，通过此代码与 20-00-13 导线类型码（wire type codes）互相联系，查找导线件号。
+
+[[file:./static/WDM 使用说明/2020-09-17_20-26-37_screenshot.jpg]]
+
+** FA
+ 用来表示互相关联的一组线，比如有共同的屏蔽层或绝缘层或扭曲在一起的导线。
+
+** LENGTH FT/IN
+ - 在线路图中标示出导线或线束的关键长度和允许误差。
+ - 若为空白，表示它是组线中的一部分，其长度在组线的最小序列号的导线中显示。
+
+** DIAGRAM (REFERENCE) 线路图号，显示该导线出现的相关线路图号，若该位置显示 SP-AR-E 或 SP-AR-E*，则表示该导线为备用线
+ - XX-XX-XX
+ 导线所在的线路图章节号。
+
+ - SP-AR-E
+备线 wire list，ground list，terminal strip list，splice list，hookup list。
+
+ - SP-AR-E
+ Boeing spares
+
+** EQUIP
+ 线的两端各连接一个设备，可能是设备号，接地点（GDXXXXX），连接管（SPXXXXX，SXMXXXXX）。
+
+** TERM 终端号，显示该导线连接在相应设备的具体端子位置
+
+ [[file:./static/WDM 使用说明/2020-09-09_15-51-09_screenshot.jpg]]
+
+ 线的两端各有一个终端，用字母数字表示。
+ - 标识前加“=”号，仅用于连接及测试目地，在部件上找不到该标识。
+
+ - DED
+ 表示[[id:A6251A34-F64B-4F36-99ED-88FB8183F599][屏蔽地线]]的一端衔空，没有用跳线或猪尾巴线连接。
+
+ - CAP
+ 该线的一端使用终端帽。
+
+ - 接地终端标识
+   - A：交流接地
+   - D：直流接地
+   - S：Static or shield or special groud
+
+ - 大写字母前加“-”表示与大写字母相对应的小写字母（-F=f）。
+
+** TT
+ Terminal type codes 终端类型代码，用代码表示。
+ - 接线片和接地桩的尺寸和/或件号（在线路图中用符号表示终端尺寸）。
+
+ #+CAPTION: 在 WDM 前言中介绍
+ <<在 WDM 前言中介绍>>
+ [[file:./static/WDM 使用说明/2020-09-17_20-32-20_screenshot.jpg]]
+
+ - 特殊终端或特殊插钉。
+
+*** 代码的表现形式
+  - 单个字母
+  - 以字母开头的两位字母数字
+  - 数字（一位数字，两位数字，一位数字+一位字母）
+  - 符号
+
+ [[file:./static/WDM 使用说明/2020-09-17_20-33-35_screenshot.jpg]]
+
+*** 举例
+
+  [[file:./static/WDM 使用说明/2020-09-09_19-36-17_screenshot.jpg]]
+
+  [[在 WDM 前言中介绍][See：在 WDM 前言中介绍]]
+
+  [[file:./static/WDM 使用说明/2020-09-09_19-38-19_screenshot.jpg]]
+
+  GD1448 在清单中“TT”为 E，表明它是“General purpose lug，#10 stud”（通用接线柱）。
+  在 WDM32-42-01 内的实际符号也表明该终端的尺寸为 =#10= 。
+
+** SP 连接方式
+ Splice 用来表示连接方式。
+
+ - *
+ 两根或多根线的终端连接在一起。
+
+ - *1，*2，*3
+ 表示 =*1= 的线连接在第一个终端上， =*2= 的线连接在第二个终端上， =*3= 的线连接在第三个终端上。
+
+ - A，B...
+ [[id:A6251A34-F64B-4F36-99ED-88FB8183F599][屏蔽地线]]终端。
+
+ - JPA，JPB...
+ 标识从连接管到另一终端的导线。
+
+ - FA
+ 表示[[id:A6251A34-F64B-4F36-99ED-88FB8183F599][屏蔽]]接地是用金属箍或猪尾巴套固定的。
+
+ - FR-()
+ 跳线号，用于将屏蔽线连到插钉或地。
+
+ - FRAA，FRAB...
+ 表示跳线连到 FA 或 FB。
+
+* GROUND LIST 接地清单
+接地清单中给出了接地桩的件号、类型、位置、所连接的导线号、有效性等信息。
+
+接地有两种类型：
+- GB
+  只用于增压区。
+
+- GD
+  可以用于增压区和非增压区。
+
+- 清单中不包含面板和支架上的接地（如 GDM，GDX，GDY，GDZ，GBX，GBY，GBZ）。
+
+- 清单中包含：接地号，有效性，接地类型（AC，DC，S），定位信息，接地的线号，终端类型，线路图纸章节号。
+
+[[file:./static/WDM 使用说明/2020-09-17_22-35-00_screenshot.jpg]]
+
+** 举例
+GD002564。
+从清单可知 WDM 章节号为 24-23-31。
+该接地点的终端类型代码为“H”，查找代码解释为“General purpose lug, 3/8 stud”。
+件号为“BACT12AR()” 或 “BACT12AC()”。
+也可以从 WDM 图纸中接地桩的符号直接得到接地桩的尺寸。
+
+[[在 WDM 前言中介绍][See：在 WDM 前言中介绍]]
+
+[[file:./static/WDM 使用说明/2020-09-17_22-46-26_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_22-46-40_screenshot.jpg]]
+
+* HOOKUP LIST 连接（杂项）清单
+连接清单反映导线两端的连接设备，但不包括接地点，连接管，连接条及单相跳开关。
+清单列举连接设备（例如插头），与每一个连接设备相连的所有导线，终端类型，所在的章节号。
+清单列出了除接地、接线管、接线片、单向跳开关之外所有的接线终端设备，目录按设备号排列。
+清单中包含所连接设备的设备号、终端类型、定位信息、所连接的线束号、线的类型、所在章节、有效性等信息。
+
+[[file:./static/WDM 使用说明/2021-07-06_15-21-16_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_22-52-41_screenshot.jpg]]
+
+* SPLICE LIST 接线管清单
+接线管分 SP 和 SM 两种，SP 用于不同线束之间的连接，SM 用于同一线束间导线的连接。
+接线管清单中只包含 SP，目录按设备号排列。
+清单中包含接线管的设备号、两端的线束号、定位信息、线径、终端号、所在章节、有效性等信息。
+
+SPLICE（SP）用于：
+- 同一线束内，连接波音导线和厂家导线。
+- 不同线束之间连接。
+- SM 不再此清单内（用于同一导线束内导线连接）。
+
+[[file:./static/WDM 使用说明/2020-09-17_22-56-28_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_22-56-46_screenshot.jpg]]
+
+* TERMINAL STRIP LIST 接线条清单
+可以查询到飞机上所有的 TB 及其件号、站位、类型、所连线束等内容。
+
+[[file:./static/WDM 使用说明/2020-09-17_22-58-23_screenshot.jpg]]
+
+[[file:./static/WDM 使用说明/2020-09-17_22-58-36_screenshot.jpg]]
+
+- INTENDED FOR 24 THROUGH 20 GAGE WIE
+适用于 24 至 20 号线。
+
+* BRACKET LIST 脱开支架清单
+脱开支架清单目录按支架设备号顺序排列，包含脱开支架的设备号、所在位置、定位信息、所安装插头和插座的设备号及其所连接线束号、有效性等信息。
+
+[[file:./static/WDM 使用说明/2021-07-06_15-08-43_screenshot.jpg]]
+
+* SAPRE WIRE LIST 备用线清单
+备用线清单列出了飞机上所有的备用线，以及所连接设备和接线端等信息。
+
+[[file:./static/WDM 使用说明/2021-07-06_15-12-43_screenshot.jpg]]
+
+* MASTER BUNDLE LIST 主线束清单
+
+[[file:./static/WDM 使用说明/2021-07-06_15-13-37_screenshot.jpg]]
+
+* TERMINAL LIST 接线片清单
+清单包含接线片的设备号、件号、终端类型、所连接的线束号、线径、定位信息、所在章节、有效性等信息。
+
+[[file:./static/WDM 使用说明/2021-07-06_15-19-27_screenshot.jpg]]

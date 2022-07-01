@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Plastic Installing and Removal Tool Part Number Guide/")); -*-
+:PROPERTIES:
+:ID:       B289152D-AD09-4F53-BD91-56E990D55291
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-03 Sat 19:00>
+#+TITLE: Plastic Installing and Removal Tool Part Number Guide
+
+[[file:./static/Plastic Installing and Removal Tool Part Number Guide/2021-07-03_21-03-24_screenshot.jpg]]
+
+[[file:./static/Plastic Installing and Removal Tool Part Number Guide/2021-07-03_21-05-12_screenshot.jpg]]
+
+[[file:./static/Plastic Installing and Removal Tool Part Number Guide/2021-07-03_21-06-23_screenshot.jpg]]

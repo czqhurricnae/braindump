@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG EEC 双通道交替使用/")); -*-
+:PROPERTIES:
+:ID:       5E98E768-E584-42AB-BEEA-DAE114ED7712
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-31 Sun 16:58>
+#+TITLE: 737NG EEC 双通道交替使用
+
+- 双通道可用。
+- 上次发动机起动时 [[id:AF803E18-D9E2-43D5-BC5E-667D8D6F879B][N2>76%]]。
+- [[id:1D6928D0-6F61-4BD4-A363-AADF92D5D580][新工作通道无故障]]，或故障数少于新备用通道。

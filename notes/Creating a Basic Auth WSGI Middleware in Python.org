@@ -1,0 +1,55 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Creating a Basic Auth. WSGI Middleware in Python/")); -*-
+:PROPERTIES:
+:ID:       821951E2-A8A2-44AA-8043-A4A2A6CD0890
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-20 Sun 22:39>
+#+TITLE: Creating a Basic Auth WSGI Middleware in Python
+With my recent dedicated introduction to the Python language I have become very appreciative of the highly composable nature of [[http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface][WSGI]] applications.
+In a functional style you are able to compose a desired application from many different components, using the middleware ideology.
+The benefits of this approach can be clearly seen in the contrived example depicted below, which is based on my previous [[https://eddmann.com/posts/using-basic-auth-and-decorators-in-pythons-flask/][Flask example]].
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+class Auth():
+    def __init__(self, app):
+        self._app = app
+
+    def __call__(self, environ, start_response):
+        if self._authenticated(environ.get('HTTP_AUTHORIZATION')):
+            return self._app(environ, start_response)
+        return self._login(environ, start_response)
+
+    def _authenticated(self, header):
+        from base64 import b64decode
+        if not header:
+            return False
+        _, encoded = header.split(None, 1)
+        decoded = b64decode(encoded).decode('UTF-8')
+        username, password = decoded.split(':', 1)
+        return username == password
+
+    def _login(self, environ, start_response):
+        start_response('401 Authentication Required',
+                       [('Content-Type', 'text/html'),
+                        ('WWW-Authenticate', 'Basic realm="Login"')])
+        return [b'Login']
+
+
+def app(environ, start_response):
+    start_response('200 OK', [('Content-Type', 'text/html')])
+    return [b'Hello, world!']
+
+
+if __name__ == '__main__':
+    from wsgiref.simple_server import make_server
+    httpd = make_server('', 8080, Auth(app))
+    print('Serving on port 8080...')
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print('Goodbye!')
+#+END_SRC
+
+As you can see we are able to secure a specified WSGI application with the provided ‘Auth' middleware.
+The advantages of using this loosely coupled approach allows us to easily replace the authentication implementation with an alternative (i.e. OAuth) in future builds,
+without alteration to encapsulated applications.

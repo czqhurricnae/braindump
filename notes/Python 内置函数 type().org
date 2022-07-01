@@ -1,0 +1,327 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 内置函数 type()/")); -*-
+:PROPERTIES:
+:ID:       8DEA9DA6-E7AE-4EE9-988D-3902C0A6162B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-11 Sun 19:05>
+#+TITLE: Python 内置函数 type()
+
+作用：
+- 返回对象的类型
+- 使用类名称，基类元组，类主体定义的字典作为参数来创建一个新类对象
+
+#+BEGIN_SRC python :results output :exports no-eval
+Foo = type('Foo', (object,), {'foo': lambda self: 'foo'})
+print(type(Foo))
+print(Foo.__mro__)
+#+END_SRC
+
+#+RESULTS:
+: <type 'type'>
+: (<class '__main__.Foo'>, <type 'object'>)
+
+* 使用 [[id:016820F3-F4AC-402A-964B-0505ED066B96][Python 元类]] 时候，一般会自定义一个继承自 =type= 的子类，并重新实现 =new()= 和 =init()= 方法
+
+ #+BEGIN_SRC python :results output :exports no-eval
+ class ExampleType(type):
+     def __new__(cls, name, bases, dct):
+         print 'Create class %s' % name
+         type.__new__(cls, name, bases, dct)
+
+     def __init__(cls, name, bases, dct):
+         print 'Init class %s' % name
+         type.__init__(cls, name, bases, dct)
+
+
+ class Foo(object):
+     __metaclass__ = ExampleType
+
+ Foo()
+ #+END_SRC
+
+ #+RESULTS:
+ : Traceback (most recent call last):
+ :   File "<stdin>", line 14, in <module>
+ : TypeError: 'NoneType' object is not callable
+
+ 这个例子出现错误是因为在 =new()= 方法中没有使用 =return= 返回创建的类对象。
+
+ #+BEGIN_SRC python :results output :exports no-eval
+ class ExampleType(type):
+     def __new__(cls, name, bases, dct):
+         print 'Create class %s' % name
+         return type.__new__(cls, name, bases, dct)
+
+     def __init__(cls, name, bases, dct):
+         print 'Init class %s' % name
+         type.__init__(cls, name, bases, dct)
+
+
+ class Foo(object):
+     __metaclass__ = ExampleType
+
+ Foo()
+ #+END_SRC
+
+ #+RESULTS:
+ : Create class Foo
+ : Init class Foo
+
+ 第一个语句 =Create class Foo= 是使用 ~class Foo(object)~ 语句定义类后，输出的。
+ 可见这时元类就使用传递给元类的类名称，基类元祖和类方法字典创建类了。
+
+ 第二个语句 =Init class Foo= 是在 =Foo()= 类实例化时输出的。
+
+ 因为元类创建的实例是类对象，所以 =init()= 方法的第一个参数按惯例写为 =cls= ，与 =self= 功能相同。
+
+ [[id:D9EDB036-21BC-4D24-A99F-3DF8574515BF][See：Python 2-MRO_and_super]]
+
+* 类访问元类定义的属性和方法
+
+ #+BEGIN_SRC python :results output :exports no-eval :session ExtrType
+ class ExtrType(type):
+
+    name = 'ExtrType'
+
+    def get_cls_name(cls):
+         print(cls.__name__)
+
+
+ class Foo():
+     __metaclass__ = ExtrType
+
+ #+END_SRC
+
+ #+RESULTS:
+
+ #+BEGIN_SRC python :results output :exports no-eval :session ExtrType
+ Foo.get_cls_name()
+ #+END_SRC
+
+ #+RESULTS:
+ : Foo
+
+ #+BEGIN_SRC python :results values :exports no-eval :session ExtrType
+ Foo.name
+ #+END_SRC
+
+ #+RESULTS:
+ : ExtrType
+
+ 可见类可以访问元类定义的方法和属性。
+
+ 具体的属性查找过程，参考如下：
+
+ [[id:D1AA4AE4-F3BD-4C94-BA62-264AE6D68827][See：Python 类的 __get__() 调用]]
+
+ 对于 =Priority 1:Data Descriptor on Metaclass= 和 =Priority 3: Non-Data Descriptor or Attribute on Metaclass= 来说，
+ 都需要沿着类对象的 =__mro__= 的元类进行查找。
+
+ #+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session ExtrType
+ Foo.__mro__
+ #+END_SRC
+
+ #+RESULTS:
+ : (<class '__main__.Foo'>, <type 'object'>)
+
+ 可以看到元类 =ExtrType= 并不在其中，因为元类与类并不是继承关系，而是实例与类的创造关系。
+ 那么累 =Foo= 是怎么访问到元类中定义的方法 =get_cls_name= 和属性 =name= 呢？
+ 是因为查找是否存在要访问的方法或属性是要到 =__mro__= 中每个类的元类中的，
+ 而 =Foo= 类的元类如下：
+
+ #+BEGIN_SRC python :results output :exports no-eval :session ExtrType
+ type(Foo)
+ #+END_SRC
+
+ #+RESULTS:
+ : <class '__main__.ExtrType'>
+
+ #+BEGIN_SRC python :results output :exports no-eval :session ExtrType
+ type(object)
+ #+END_SRC
+
+ #+RESULTS:
+ : <type 'type'>
+
+* 元类属性的可用性是不会传递的
+ 元类的属性对它的类实例是可用的，但是对它的类实例的实例是不可用的。
+
+ #+BEGIN_SRC python :results output :exports no-eval :session ExtrType
+ Foo().get_cls_name()
+ #+END_SRC
+
+ #+RESULTS:
+ : Traceback (most recent call last):
+ :   File "<stdin>", line 1, in <module>
+ : AttributeError: 'Foo' object has no attribute 'get_cls_name'
+
+* 类同时有元类和基类的属性访问顺序
+
+ #+BEGIN_SRC python :results output :exports no-eval :session M
+ class M(type):
+     name = 'M'
+
+ class B(object):
+     name = 'B'
+
+ class A(B):
+     __metaclass__ = M
+ #+END_SRC
+
+ #+RESULTS:
+
+ #+BEGIN_SRC python :results values :exports no-eval :session M
+ A.name
+ #+END_SRC
+
+ #+RESULTS:
+ : B
+
+ 可见类先到继承的基类中查找属性。
+
+ #+BEGIN_SRC python :results values :exports no-eval :session M
+ A().name
+ #+END_SRC
+
+ #+RESULTS:
+ : B
+
+ [[id:CBACC63C-317D-4BBB-8B55-1B3A4A5F8518][See：Python 属性的查找顺序]]
+
+ #+BEGIN_SRC python :results output :exports no-eval :session M
+ print type(A()).__mro__
+ #+END_SRC
+
+ #+RESULTS:
+ : (<class '__main__.A'>, <class '__main__.B'>, <type 'object'>)
+
+* 元类冲突
+ 假如有两个不同元类的类，要生成一个继承这两个类的子类。
+
+#+BEGIN_SRC python :results values :exports no-eval
+class MA(type):
+    pass
+
+class A(object):
+    __metaclass__ = MA
+
+class MB(type):
+    pass
+
+class B(object):
+    __metaclass__ = MB
+
+class C(A, B):
+    pass
+#+END_SRC
+
+#+RESULTS:
+: Traceback (most recent call last):
+:   File "<stdin>", line 18, in <module>
+:   File "<stdin>", line 15, in main
+: TypeError: Error when calling the metaclass bases
+:     metaclass conflict: the metaclass of a derived class must be a (non-strict) subclass of the metaclasses of all its bases
+
+ 提示元类冲突。
+
+ 需要用所有基类的元类重新创建一个新的元类，然后去继承它。
+
+#+BEGIN_SRC python :results values :exports no-eval
+class MA(type):
+    pass
+
+class A(object):
+    __metaclass__ = MA
+
+class MB(type):
+    pass
+
+class B(object):
+    __metaclass__ = MB
+
+class MC(MA, MB):
+    pass
+
+class C(A, B):
+    __metaclass__ = MC
+#+END_SRC
+
+#+RESULTS:
+: None
+
+* 练习
+
+#+BEGIN_SRC python :results output :exports no-eval
+class M(type):
+    def __init__(cls, name, bases, attrs, **kwargs):
+        super().__init__(name, bases, attrs, **kwargs)
+
+        def f(self):
+            try:
+                super(cls, self).f()
+            except AttributeError:
+                pass
+            print(name, type(self).__name__)
+
+        cls.f = f
+
+
+class A(metaclass=M):
+    pass
+
+
+class AA(A):
+    pass
+
+
+class AAA(AA):
+    pass
+
+
+class B(metaclass=M):
+    pass
+
+
+class C(AAA, B, metaclass=M):
+    pass
+
+
+C().f()
+print(C.__mro__)
+#+END_SRC
+
+#+RESULTS:
+: B C
+: A C
+: AA C
+: AAA C
+: C C
+: (<class '__main__.C'>, <class '__main__.AAA'>, <class '__main__.AA'>, <class '__main__.A'>, <class '__main__.B'>, <class 'object'>)
+
+ 在 ~super(cls, self).f()~ 调用连中，参数 ~self~ 一直都是实例对象 ~C()~ 。
+
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:08:37
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-08-37_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:09:08
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-09-08_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:09:22
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-09-22_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:09:36
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-09-36_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:09:52
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-09-52_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:10:34
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-10-34_screenshot.jpg]]
+ 当寻找到类 ~B~ 后，因为 ~mro~ 中类 ~B~ 之后是 ~object~ ，而 ~object~ 是没有 ~f()~ 方法的，所以开始执行 类 ~B~ 中的 ~except AttributeError~ 。
+ 紧接着 ~print(name, type(self).__name__)~ 打印出 ~B, C~ 。
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:11:27
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-11-27_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:16:25
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-16-25_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:16:50
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-16-50_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:17:04
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-17-04_screenshot.jpg]]
+ #+DOWNLOADED: screenshot @ 2020-10-19 17:17:26
+ [[file:./static/Python 内置函数 type()/2020-10-19_17-17-26_screenshot.jpg]]
+

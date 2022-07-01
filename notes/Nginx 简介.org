@@ -1,0 +1,108 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Nginx 简介/")); -*-
+:PROPERTIES:
+:ID:       1C510DE3-3B73-4227-BC55-03A763EC1550
+:END:
+
+#+DATE: <2020-07-26 Sun 20:26>
+#+TITLE: Nginx 简介
+
+Nginx 是一款轻量级的 Web 服务器，反向代理服务器，由于它的内存占用少，启动极快，高并发能力强，在互联网项目中广泛应用。
+
+#+DOWNLOADED: https://pic3.zhimg.com/80/v2-e1826bab1d07df8e97d61aa809b94a10_hd.jpg @ 2019-05-24 20:52:10
+[[file:./static/Nginx 简介/v2-e1826bab1d07df8e97d61aa809b94a10_hd_2019-05-24_20-52-10.jpg]]
+
+* 正向代理服务器和 反向代理服务器
+正向代理：
+
+#+DOWNLOADED: https://pic4.zhimg.com/80/v2-c8ac111c267ae0745f984e326ef0c47f_hd.jpg @ 2019-05-24 20:54:11
+[[file:./static/Nginx 简介/v2-c8ac111c267ae0745f984e326ef0c47f_hd_2019-05-24_20-54-10.jpg]]
+
+正向代理 “代理” 的是客户端，而且客户端知道目标，而目标不知道客户端是通过 VPN 访问的。
+
+反向代理：
+
+#+DOWNLOADED: https://pic1.zhimg.com/80/v2-4787a512240b238ebf928cd0651e1d99_hd.jpg @ 2019-05-24 20:55:10
+[[file:./static/Nginx 简介/v2-4787a512240b238ebf928cd0651e1d99_hd_2019-05-24_20-55-10.jpg]]
+
+当我们在外网访问百度的时候，其实会进行一个转发，代理到内网，这就是所谓的反向代理。
+反向代理 “代理” 的是服务器端，而且这一个过程对于客户端是透明的。
+
+* Nginx 的 Master-Worker 模式
+
+#+DOWNLOADED: https://pic2.zhimg.com/80/v2-0951372e22a6314b1e9b520b3cd6b3b6_hd.jpg @ 2019-05-24 20:57:56
+[[file:./static/Nginx 简介/v2-0951372e22a6314b1e9b520b3cd6b3b6_hd_2019-05-24_20-57-55.jpg]]
+
+启动 Nginx 后，其实就是在 80 端口启动了 Socket 服务进行监听，如图所示，Nginx 涉及 Master 进程和 Worker 进程。
+
+- Master-Worker 模式：
+
+[[file:./static/Nginx 简介/v2-b24eb2b29b48f59883232a58392ddae3_hd_2019-05-24_21-04-01.jpg]]
+
+- ngnix.conf
+
+[[file:./static/Nginx 简介/v2-d21393745de9c470934575ef76cefd29_hd_2019-05-24_21-04-41.jpg]]
+
+- Master 进程的作用是？
+读取并验证配置文件 =nginx.conf= ， 管理 worker 进程。
+
+- Worker 进程的作用是？
+每一个 Worker 进程都维护一个线程（避免线程切换），处理连接和请求，注意 Worker 进程的个数由配置文件决定，一般和 CPU 个数相关（有利于进程切换），配置几个就有几个 Worker 进程。
+
+* Nginx 如何做到热部署
+所谓热部署，就是配置文件 =nginx.conf= 修改后，不需要 stop Nginx，不需要中断请求，就能让配置文件生效！
+（ ~nginx -s reload~ 重新加载 ~nginx -t~ 检查配置 ~nginx -s stop~ ）
+通过上文我们已经知道 worker 进程负责处理具体的请求，那么如果想达到热部署的效果，可以想象：
+- 修改配置文件 =nginx.conf= 后，主进程 master 负责推送给 woker 进程更新配置信息，woker 进程收到信息后，更新进程内部的线程信息。（有点 valatile 的味道）
+- 修改配置文件 =nginx.conf= 后，重新生成新的 worker 进程，当然会以新的配置进行处理请求，而且新的请求必须都交给新的 worker 进程，至于老的 worker 进程，等把那些以前的请求处理完毕后，kill 掉即可。
+Nginx 采用的就是方案二来达到热部署的！
+
+* Nginx 如何做到高并发下的高效处理?
+上文已经提及 Nginx 的 worker 进程个数与 CPU 绑定，worker 进程内部包含一个线程高效回环处理请求，这的确有助于效率，但这是不够的。
+作为专业的程序员，我们可以开一下脑洞：BIO/NIO/AIO，异步/同步，阻塞/非阻塞。。。
+要同时处理那么多的请求，要知道，有的请求需要发生 IO，可能需要很长时间，如果等着它，就会拖慢 worker 的处理速度。
+Nginx 采用了 Linux 的 epoll 模型，epoll 模型基于事件驱动机制，它可以监控多个事件是否准备完毕，如果 OK，那么放入 epoll 队列中，这个过程是异步的。
+worker 只需要从 epoll 队列循环处理即可。
+
+* Nginx 挂了怎么办?
+Nginx 既然作为入口网关，很重要，如果出现单点问题，显然是不可接受的。
+答案是：Keepalived + Nginx 实现高可用。
+Keepalived 是一个高可用解决方案，主要是用来防止服务器单点发生故障，可以通过和 Nginx 配合来实现 Web 服务的高可用。
+（其实，Keepalived 不仅仅可以和 Nginx 配合， 还可以和很多其他服务配合）
+Keepalived+Nginx 实现高可用的思路：
+- 请求不要直接打到 Nginx 上，应该先通过 Keepalived（这就是所谓虚拟 IP，VIP）
+- Keepalived 应该能监控 Nginx 的生命状态（提供一个用户自定义的脚本，定期检查 Nginx 进程状态，进行权重变化，从而实现 Nginx 故障切换）
+
+[[file:./static/Nginx 简介/v2-ec3208d1ea659d126fe2a008ec5ae927_hd_2019-05-24_21-06-56.jpg]]
+
+* nginx.conf
+nginx.conf 是典型的分段配置文件
+
+[[file:./static/Nginx 简介/v2-b418e69a42a65f033cfdf3b80b988d83_hd_2019-05-24_21-07-39.jpg]]
+
+[[file:./static/Nginx 简介/v2-bec9b433b145d892b4eddfaf5b2aee1e_hd_2019-05-24_21-08-19.jpg]]
+
+其实这是把 Nginx 作为 web server 来处理静态资源。
+- ~location~ 可以进行正则匹配， 应该注意正则的几种形式以及优先级。
+- Nginx 能够提高速度的其中一个特性就是：动静分离，就是把静态资源放到 Nginx 上，由 Nginx 管理，动态请求转发给后端。
+- 我们可以在 Nginx 下把静态资源，日志文件归属到不同域名下（也即是目录），这样方便管理维护。
+- Nginx 可以进行 IP 访问控制，有些电商平台，就可以在 Nginx 这一层，做一下处理，内置一个黑名单模块，那么就不必等请求通过 Nginx 达到后端在进行拦截，而是直接在 Nginx 这一层就处理掉。
+
+* 反向代理
+所谓反向代理，很简单，其实就是在 ~location~ 这一段配置中的 ~root~ 替换成 ~proxy_pass~ 即可。
+~root~ 说明是静态资源，可以由 Nginx 进行返回，而 ~proxy_pass~ 说明是动态请求，需要进行转发，比如代理到 Tomcat 上。
+反向代理，上面已经说了，过程是透明的，比如说 =request -> Nginx -> Tomcat= ，
+那么对于 Tomcat 而言，请求的 IP 地址就是 Nginx 的地址，而非真实的 request 地址，这一点需要注意。
+不过好在 Nginx 不仅仅可以反向代理请求，还可以由用户自定义设置 HTTP HEADER。
+
+* 负载均衡(upsteam)
+上面的反向代理中，我们通过 ~proxy_pass~ 来指定 Tomcat 的地址，很显然我们只能指定一台 Tomcat 地址，那么我们如果想指定多台来达到负载均衡呢？
+- 通过 ~upstream~ 来定义一组 Tomcat，并指定负载策略（IPHASH，加权论调，最少连接），健康检查策略（Nginx 可以监控这一组 Tomcat 的状态）等。
+- 将 ~proxy_pass~ 替换成 ~upstream~ 指定的值即可。
+
+** 负载均衡可能带来的问题？
+负载均衡所带来的明显的问题是，一个请求，可以到 A server，也可以到 B server，这完全不受我们的控制，
+当然这也不是什么问题，只是我们得注意的是：用户状态的保存问题，如 Session 会话信息，不能在保存到服务器上。
+
+* 缓存
+缓存，是 Nginx 提供的，可以加快访问速度的机制，说白了，在配置上就是一个开启，同时指定目录，让缓存可以存储到磁盘上。
+具体配置，大家可以参考 Nginx 官方文档，这里就不在展开了。

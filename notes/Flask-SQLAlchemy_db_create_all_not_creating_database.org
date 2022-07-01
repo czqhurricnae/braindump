@@ -1,0 +1,107 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "/./static/Flask-SQLAlchemy_db_create_all_not_creating_database/")); -*-
+:PROPERTIES:
+:ID:       520AAC3F-B7B0-4D0F-8890-555B429DEA35
+:END:
+
+#+DATE: <2020-10-20 Tue 04:22>
+#+TITLE: Flask-SQLAlchemy_db_create_all_not_creating_database
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I can't seem to figure out why my call to db.create_all() is not working.
+
+I have an app package with following init:
+
+#+BEGIN_SRC python
+    from flask import Flask
+    from config import config
+    from flask.ext.sqlalchemy import SQLAlchemy
+
+    # create the database object
+    db = SQLAlchemy()
+
+    # this function is the application factory
+    def create_app(environment):
+        app = Flask(__name__)
+        app.config.from_object(config[environment])
+
+        db.init_app(app)
+
+        from bp_root import bp_root
+        from bp_aws import bp_aws
+
+        app.register_blueprint(bp_root, url_prefix='/')
+        app.register_blueprint(bp_aws, url_prefix='/aws')
+
+        return app
+#+END_SRC
+
+Then I have models.py inside the app package:
+
+#+BEGIN_SRC python
+    from datetime import datetime
+    from . import db
+
+    class MyTestClass(db.Model):
+        __tablename__ = 'mytesttable'
+        id = db.Column(db.Integer, primary_key=True)
+        email = db.Column(db.String(64), nullable=False, unique=True, index=True)
+        username = db.Column(db.String(64), nullable=False, unique=True, index=True)
+        is_admin = db.Column(db.Boolean)
+        password_hash = db.Column(db.String(128))
+        location = db.Column(db.String(64))
+        member_since = db.Column(db.DateTime, default=datetime.utcnow)
+        bio = db.Column(db.Text())
+
+        def __init__(self, email, username):
+            self.email = email
+            self.username = username
+
+        def __repr__(self):
+            return '<User %r>' % self.username
+#+END_SRC
+
+app.config contains, among other things, the following:
+
+#+BEGIN_SRC python
+    'SQLALCHEMY_DATABASE_URL': 'sqlite:////Users/xxxxx/projects/yyyyy/data-dev.sqlite'
+#+END_SRC
+
+Then if I fire up my interactive shell, you can see objects exist
+appropriately and call to db.create_all() appears to work, but results
+in no database creation:
+
+#+BEGIN_SRC python
+    $ ./manage.py shell
+    >>> from app import db
+    >>> from app import models
+    >>> app
+    <Flask 'app'>
+    >>> db
+    <SQLAlchemy engine='sqlite://'>
+    >>> models
+    <module 'app.models' from '/Users/xxxxx/projects/yyyyy/app/models.py'>
+    >>> dir(models)
+    ['MyTestClass', '__builtins__', '__doc__', '__file__', '__name__', '__package__', 'datetime', 'db']
+    >>> db.create_all()
+    >>>
+#+END_SRC
+
+Any thoughts on why the database isn't getting created?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+The setting should be =SQLALCHEMY_DATABASE_URI=, not =URL=. You can see that the db doesn't have the right uri when you ran this line:
+
+#+BEGIN_SRC python
+    >>> db
+    <SQLAlchemy engine='sqlite://'>
+#+END_SRC
+
+It shows that Flask-SQLAlchemy defaulted to an in-memory sqlite database. Change the setting and it will work.

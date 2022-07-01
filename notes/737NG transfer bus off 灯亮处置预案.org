@@ -1,0 +1,90 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG transfer bus off 灯亮处置预案/")); -*-
+:PROPERTIES:
+:ID:       A9AF60C8-97DC-42BB-858E-7D712BB17209
+:END:
+#+LATEX_CLASS: my-article
+#+SETUPFILE: ../theme-rose.setup
+#+DATE: <2021-07-20 Jul 01:01>
+#+TITLE: 737NG transfer bus off 灯亮处置预案
+
+一、 故障现象
+
+1. P5-4 板 TRANSFER BUS OFF 灯亮
+
+二、 MEL 规定
+
+1. 排故后放行
+
+三、 参考手册
+
+1. FIM 24-21TASK822、FIM 24-21 TASKS 818-819
+
+2. AMM 24-21-51、AMM 24-21-81
+
+3. SSM 24-22-11/21、SSM 24-23-11、SSM 24-28-11
+
+4. WDM 24-22-11/21、WDM 24-11-11、
+
+四、 排故步骤
+
+1. 检查跳开关情况：确认 P6 板、P18 板、P91 板、P92 板跳开关无异常跳出
+
+2.
+检查电动液压泵和燃油泵工作情况，如果全部工作正常，则属于指示系统故障，针对指示故障：1）根据 FIM24-21TASK822 检查；2）逐个更换 P5-13 板、GCU、P5-4 板；3）参考 WDM
+24-22-11/21 测量线路（注：曾出现 P5-13 板内部故障导致 TRANSFER BUS
+OFF 灯亮）。
+
+3. 如果同侧 SOURCE
+OFF 灯亮，并且部分液压泵和燃油泵不工作，则是真实失电，针对真实故障：1）测试 GCU 和 BPCU，根据测试结果排故；2）如无故障记录，逐个更换 GCU、BPCU；3）测量 GCB 和 BTB 位置信号（参考 SSM
+24-22-11 / 21）。
+
+4. 如果 P5-4 电源控制板的指示灯全部点亮，则是主暗亮测试故障
+
+5. 如果 TRANSFER BUS OFF 灯闪亮，参考 FIM 24-21 TASKS 818-819
+
+五、 可能故障部件（根据历史经验可能性从高到低排序）
+
+1. P5-13 板，P/N：285A1840-10
+
+2. GCU，P/N：762185J
+
+3. P5-4，P/N: 233A3204-1
+
+4. BPCU，P/N: 762187G
+
+六、 相关 MT（相关 MT 编号和标题）
+
+1. MT737-2421-160927 737NG-24-GCU 更换及测试
+
+2. MT737-2421-160939 737NG-24-电源指示、电瓶、厨房组件,
+P5-13 板更换
+
+3. MT737-2441-160936 737NG-24- BPCU 更换及测试
+
+七、 相关 XD 工卡（相关工卡编号和标题）
+
+无
+
+八、 应急备忘（应急处置相关）
+
+无
+
+九、 机组检查单
+
+快速检查单 6.13 有相关处置程序
+
+[[file:./static/737NG transfer bus off 灯亮处置预案/5469.jpeg]]
+
+十、 相关部门沟通和后续运行安排
+
+无
+
+十一、 风险点
+
+ 无
+
+附图
+
+[[file:./static/737NG transfer bus off 灯亮处置预案/6742.jpeg]]
+
+\\

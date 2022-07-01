@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/stiffener/")); -*-
+:PROPERTIES:
+:ID:       D411A992-5AF3-4C28-9C31-6114EA555C4A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-14 Sun 18:48>
+#+TITLE: stiffener
+
+[[file:./static/stiffener/2021-02-14_18-48-56_screenshot.jpg]]

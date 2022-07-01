@@ -1,0 +1,1064 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/How_does_pythons_super_work_with_multiple_inheritance/")); -*-
+:PROPERTIES:
+:ID:       98569DD6-7B98-4ACF-A92D-FA6D697C6D47
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-26 Mon 01:22>
+#+TITLE: How_does_pythons_super_work_with_multiple_inheritance
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I'm pretty much new in Python object oriented programming and
+I have trouble understanding the =super()= function (new style classes)
+especially when it comes to multiple inheritance.
+
+For example if you have something like:
+
+#+BEGIN_SRC python
+    class First(object):
+        def __init__(self):
+            print "first"
+
+    class Second(object):
+        def __init__(self):
+            print "second"
+
+    class Third(First, Second):
+        def __init__(self):
+            super(Third, self).__init__()
+            print "that's it"
+#+END_SRC
+
+What I don't get is: will the =Third()= class inherit both constructor methods?
+If yes, then which one will be run with super() and why?
+
+And what if you want to run the other one? I know it has something to do with Python method resolution order ([[http://en.wikipedia.org/wiki/C3_linearization][MRO]]).
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+This is detailed with a reasonable amount of detail by Guido himself in his blog post
+[[http://python-history.blogspot.com/2010/06/method-resolution-order.html][Method Resolution Order]] (including two earlier attempts).
+
+In your example, =Third()= will call =First.__init__=. Python looks for each attribute in the class's parents as they are listed left to right.
+In this case, we are looking for =__init__=.
+So, if you define
+
+#+BEGIN_SRC python
+    class Third(First, Second):
+        ...
+#+END_SRC
+
+Python will start by looking at =First=, and, if =First= doesn't have the attribute, then it will look at =Second=.
+
+This situation becomes more complex when inheritance starts crossing paths (for example if =First= inherited from =Second=).
+Read the link above for more details, but, in a nutshell, Python will try to maintain the order in which each class appears on the inheritance list,
+starting with the child class itself.
+
+So, for instance, if you had:
+
+#+BEGIN_SRC python
+    class First(object):
+        def __init__(self):
+            print "first"
+
+    class Second(First):
+        def __init__(self):
+            print "second"
+
+    class Third(First):
+        def __init__(self):
+            print "third"
+
+    class Fourth(Second, Third):
+        def __init__(self):
+            super(Fourth, self).__init__()
+            print "that's it"
+#+END_SRC
+
+the MRO would be =[Fourth, Second, Third, First].=
+
+By the way: if Python cannot find a coherent method resolution order,
+it'll raise an exception, instead of falling back to behavior which
+might surprise the user.
+
+Edited to add an example of an ambiguous MRO:
+
+#+BEGIN_SRC python
+    class First(object):
+        def __init__(self):
+            print "first"
+
+    class Second(First):
+        def __init__(self):
+            print "second"
+
+    class Third(First, Second):
+        def __init__(self):
+            print "third"
+#+END_SRC
+
+Should =Third='s MRO be =[First, Second]= or =[Second, First]=? There's
+no obvious expectation, and Python will raise an error:
+
+#+BEGIN_SRC python
+    TypeError: Error when calling the metaclass bases
+        Cannot create a consistent method resolution order (MRO) for bases Second, First
+#+END_SRC
+
+*Edit:* I see several people arguing that the examples above lack
+=super()= calls, so let me explain: The point of the examples is to show
+how the MRO is constructed. They are *not* intended to print
+"first\nsecond\third" or whatever. You can -- and should, of course,
+play around with the example, add =super()= calls, see what happens, and
+gain a deeper understanding of Python's inheritance model. But my goal
+here is to keep it simple and show how the MRO is built. And it is built
+as I explained:
+
+#+BEGIN_SRC python
+    >>> Fourth.__mro__
+    (<class '__main__.Fourth'>,
+     <class '__main__.Second'>, <class '__main__.Third'>,
+     <class '__main__.First'>,
+     <type 'object'>)
+#+END_SRC
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+Your code, and the other answers, are all buggy. They are missing the
+=super()= calls in the first two classes that are required for
+co-operative subclassing to work.
+
+Here is a fixed version of the code:
+
+#+BEGIN_SRC python
+    class First(object):
+        def __init__(self):
+            super(First, self).__init__()
+            print("first")
+
+    class Second(object):
+        def __init__(self):
+            super(Second, self).__init__()
+            print("second")
+
+    class Third(First, Second):
+        def __init__(self):
+            super(Third, self).__init__()
+            print("third")
+#+END_SRC
+
+The =super()= call finds the next method in the MRO at each step, which
+is why First and Second have to have it too, otherwise execution stops
+at the end of =Second.__init__()=.
+
+This is what I get:
+
+#+BEGIN_SRC python
+    >>> Third()
+    second
+    first
+    third
+#+END_SRC
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+I wanted to elaborate [[https://stackoverflow.com/a/16310777/889617][the
+answer by lifeless]] a bit because when I started reading about how to
+use super() in a multiple inheritance hierarchy in Python, I did't get
+it immediately.
+
+What you need to understand is that =super(MyClass, self).__init__()=
+provides the /next/ =__init__= method according to the used Method
+Resolution Ordering (MRO) algorithm /in the context of the complete
+inheritance hierarchy/.
+
+This last part is crucial to understand. Let's consider the example
+again:
+
+#+BEGIN_SRC python
+    #!/usr/bin/env python2
+
+    class First(object):
+      def __init__(self):
+        print "First(): entering"
+        super(First, self).__init__()
+        print "First(): exiting"
+
+    class Second(object):
+      def __init__(self):
+        print "Second(): entering"
+        super(Second, self).__init__()
+        print "Second(): exiting"
+
+    class Third(First, Second):
+      def __init__(self):
+        print "Third(): entering"
+        super(Third, self).__init__()
+        print "Third(): exiting"
+#+END_SRC
+
+[[http://python-history.blogspot.nl/2010/06/method-resolution-order.html][According to this article about Method Resolution Order]] by Guido van Rossum, the
+order to resolve =__init__= is calculated (before Python 2.3) using a
+"depth-first left-to-right traversal" :
+
+#+BEGIN_SRC python
+    Third --> First --> object --> Second --> object
+#+END_SRC
+
+After removing all duplicates, except for the last one, we get :
+
+#+BEGIN_SRC python
+    Third --> First --> Second --> object
+#+END_SRC
+
+So, lets follow what happens when we instantiate an instance of the
+=Third= class, e.g. =x = Third()=.
+
+1. According to MRO =Third.__init__= executes.
+
+   - prints =Third(): entering=
+   - then =super(Third, self).__init__()= executes and MRO returns
+     =First.__init__= which is called.
+
+2. =First.__init__= executes.
+
+   - prints =First(): entering=
+   - then =super(First, self).__init__()= executes and MRO returns
+     =Second.__init__= which is called.
+
+3. =Second.__init__= executes.
+
+   - prints =Second(): entering=
+   - then =super(Second, self).__init__()= executes and MRO returns
+     =object.__init__= which is called.
+
+4. =object.__init__= executes (no print statements in the code there)
+5. execution goes back to =Second.__init__= which then prints
+   =Second(): exiting=
+6. execution goes back to =First.__init__= which then prints
+   =First(): exiting=
+7. execution goes back to =Third.__init__= which then prints
+   =Third(): exiting=
+
+This details out why instantiating Third() results in to :
+
+#+BEGIN_SRC python
+    Third(): entering
+    First(): entering
+    Second(): entering
+    Second(): exiting
+    First(): exiting
+    Third(): exiting
+#+END_SRC
+
+The MRO algorithm has been improved from Python 2.3 onwards to work well
+in complex cases, but I guess that using the "depth-first left-to-right
+traversal" + "removing duplicates expect for the last" still works in
+most cases (please comment if this is not the case). Be sure to read the
+blog post by Guido!
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4
+  :END:
+
+This is known as the
+[[http://en.wikipedia.org/wiki/Diamond_problem][Diamond Problem]], the
+page has an entry on Python, but in short, Python will call the
+superclass's methods from left to right.
+
+* Answer5
+  :PROPERTIES:
+  :CUSTOM_ID: answer5
+  :END:
+
+This is to how I solved to issue of having multiple inheritance with
+different variables for initialization and having multiple MixIns with
+the same function call. I had to explicitly add variables to passed
+**kwargs and add a MixIn interface to be an endpoint for super calls.
+
+Here =A= is an extendable base class and =B= and =C= are MixIn classes
+both who provide function =f=. =A= and =B= both expect parameter =v= in
+their =__init__= and =C= expects =w=. The function =f= takes one
+parameter =y=. =Q= inherits from all three classes. =MixInF= is the
+mixin interface for =B= and =C=.
+
+- [[http://nbviewer.ipython.org/github/brentpayne/learning-python/blob/master/MixInMultipleInheritance/MixInMultipleInheritance.ipynb][IPython
+  NoteBook Of This Code]]
+- [[https://github.com/brentpayne/learning-python/tree/master/MixInMultipleInheritance][Github
+  Repo with code example]]
+
+#+BEGIN_SRC python
+    class A(object):
+        def __init__(self, v, *args, **kwargs):
+            print "A:init:v[{0}]".format(v)
+            kwargs['v']=v
+            super(A, self).__init__(*args, **kwargs)
+            self.v = v
+
+
+    class MixInF(object):
+        def __init__(self, *args, **kwargs):
+            print "IObject:init"
+        def f(self, y):
+            print "IObject:y[{0}]".format(y)
+
+
+    class B(MixInF):
+        def __init__(self, v, *args, **kwargs):
+            print "B:init:v[{0}]".format(v)
+            kwargs['v']=v
+            super(B, self).__init__(*args, **kwargs)
+            self.v = v
+        def f(self, y):
+            print "B:f:v[{0}]:y[{1}]".format(self.v, y)
+            super(B, self).f(y)
+
+
+    class C(MixInF):
+        def __init__(self, w, *args, **kwargs):
+            print "C:init:w[{0}]".format(w)
+            kwargs['w']=w
+            super(C, self).__init__(*args, **kwargs)
+            self.w = w
+        def f(self, y):
+            print "C:f:w[{0}]:y[{1}]".format(self.w, y)
+            super(C, self).f(y)
+
+
+    class Q(C,B,A):
+        def __init__(self, v, w):
+            super(Q, self).__init__(v=v, w=w)
+        def f(self, y):
+            print "Q:f:y[{0}]".format(y)
+            super(Q, self).f(y)
+#+END_SRC
+
+* Answer6
+  :PROPERTIES:
+  :CUSTOM_ID: answer6
+  :END:
+
+I understand this doesn't directly answer the =super()= question, but I
+feel it's relevant enough to share.
+
+There is also a way to directly call each inherited class:
+
+#+BEGIN_SRC python
+
+    class First(object):
+        def __init__(self):
+            print '1'
+
+    class Second(object):
+        def __init__(self):
+            print '2'
+
+    class Third(First, Second):
+        def __init__(self):
+            Second.__init__(self)
+#+END_SRC
+
+Just note that if you do it this way, you'll have to call each manually
+as I'm pretty sure =First='s =__init__()= won't be called.
+
+* Answer7
+  :PROPERTIES:
+  :CUSTOM_ID: answer7
+  :END:
+
+Overall
+Assuming everything descends from =object= (you are on your own if it
+doesn't), Python computes a method resolution order (MRO) based on your
+class inheritance tree. The MRO satisfies 3 properties:
+
+- Children of a class come before their parents
+- Left parents come before right parents
+- A class only appears once in the MRO
+
+If no such ordering exists, Python errors. The inner workings of this is
+a C3 Linerization of the classes ancestry. Read all about it here:
+[[https://www.python.org/download/releases/2.3/mro/]]
+
+Thus, in both of the examples below, it is:
+
+1. Child
+2. Left
+3. Right
+4. Parent
+
+When a method is called, the first occurrence of that method in the MRO
+is the one that is called. Any class that doesn't implement that method
+is skipped. Any call to =super= within that method will call the next
+occurrence of that method in the MRO. Consequently, it matters both what
+order you place classes in inheritance, and where you put the calls to
+=super= in the methods.
+
+With =super= first in each method
+#+BEGIN_SRC python
+    class Parent(object):
+        def __init__(self):
+            super(Parent, self).__init__()
+            print "parent"
+
+    class Left(Parent):
+        def __init__(self):
+            super(Left, self).__init__()
+            print "left"
+
+    class Right(Parent):
+        def __init__(self):
+            super(Right, self).__init__()
+            print "right"
+
+    class Child(Left, Right):
+        def __init__(self):
+            super(Child, self).__init__()
+            print "child"
+#+END_SRC
+
+=Child()= Outputs:
+
+#+BEGIN_SRC python
+    parent
+    right
+    left
+    child
+#+END_SRC
+
+With =super= last in each method
+#+BEGIN_SRC python
+    class Parent(object):
+        def __init__(self):
+            print "parent"
+            super(Parent, self).__init__()
+
+    class Left(Parent):
+        def __init__(self):
+            print "left"
+            super(Left, self).__init__()
+
+    class Right(Parent):
+        def __init__(self):
+            print "right"
+            super(Right, self).__init__()
+
+    class Child(Left, Right):
+        def __init__(self):
+            print "child"
+            super(Child, self).__init__()
+#+END_SRC
+
+=Child()= Outputs:
+
+#+BEGIN_SRC python
+    child
+    left
+    right
+    parent
+#+END_SRC
+
+* Answer8
+  :PROPERTIES:
+  :CUSTOM_ID: answer8
+  :END:
+
+About
+[[https://stackoverflow.com/questions/3277367/how-does-pythons-super-work-with-multiple-inheritance#comment36109355_16310777][@calfzhou's
+comment]], you can use, as usually, =**kwargs=:
+
+[[https://repl.it/CIX5/0][Online running example]]
+
+#+BEGIN_SRC python
+    class A(object):
+      def __init__(self, a, *args, **kwargs):
+        print("A", a)
+
+    class B(A):
+      def __init__(self, b, *args, **kwargs):
+        super(B, self).__init__(*args, **kwargs)
+        print("B", b)
+
+    class A1(A):
+      def __init__(self, a1, *args, **kwargs):
+        super(A1, self).__init__(*args, **kwargs)
+        print("A1", a1)
+
+    class B1(A1, B):
+      def __init__(self, b1, *args, **kwargs):
+        super(B1, self).__init__(*args, **kwargs)
+        print("B1", b1)
+
+
+    B1(a1=6, b1=5, b="hello", a=None)
+#+END_SRC
+
+Result:
+
+#+BEGIN_SRC python
+    A None
+    B hello
+    A1 6
+    B1 5
+#+END_SRC
+
+You can also use them positionally:
+
+#+BEGIN_SRC python
+    B1(5, 6, b="hello", a=None)
+#+END_SRC
+
+but you have to remember the MRO, it's really confusing. You can avoid
+this by using
+[[https://docs.python.org/3/tutorial/controlflow.html#keyword-only-arguments][keyword-only
+parameters]]:
+
+#+BEGIN_SRC python
+    class A(object):
+      def __init__(self, *args, a, **kwargs):
+        print("A", a)
+#+END_SRC
+
+etcetera.
+
+I can be a little annoying, but I noticed that people forgot every time
+to use =*args= and =**kwargs= when they override a method, while it's
+one of few really useful and sane use of these 'magic variables'.
+
+* Answer9
+  :PROPERTIES:
+  :CUSTOM_ID: answer9
+  :END:
+
+Another not yet covered point is passing parameters for initialization
+of classes. Since the destination of =super= depends on the subclass the
+only good way to pass parameters is packing them all together. Then be
+careful to not have the same parameter name with different meanings.
+
+Example:
+
+#+BEGIN_SRC python
+    class A(object):
+        def __init__(self, **kwargs):
+            print('A.__init__')
+            super().__init__()
+
+    class B(A):
+        def __init__(self, **kwargs):
+            print('B.__init__ {}'.format(kwargs['x']))
+            super().__init__(**kwargs)
+
+
+    class C(A):
+        def __init__(self, **kwargs):
+            print('C.__init__ with {}, {}'.format(kwargs['a'], kwargs['b']))
+            super().__init__(**kwargs)
+
+
+    class D(B, C): # MRO=D, B, C, A
+        def __init__(self):
+            print('D.__init__')
+            super().__init__(a=1, b=2, x=3)
+
+    print(D.mro())
+    D()
+#+END_SRC
+
+gives:
+
+#+BEGIN_SRC python
+    [<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, <class '__main__.A'>, <class 'object'>]
+    D.__init__
+    B.__init__ 3
+    C.__init__ with 1, 2
+    A.__init__
+#+END_SRC
+
+Calling the super class =__init__= directly to more direct assignment of
+parameters is tempting but fails if there is any =super= call in a super
+class and/or the MRO is changed and class A may be called multiple
+times, depending on the implementation.
+
+To conclude: cooperative inheritance and super and specific parameters
+for initialization aren't working together very well.
+
+* Answer10
+  :PROPERTIES:
+  :CUSTOM_ID: answer10
+  :END:
+
+#+BEGIN_SRC python
+    class First(object):
+      def __init__(self, a):
+        print "first", a
+        super(First, self).__init__(20)
+
+    class Second(object):
+      def __init__(self, a):
+        print "second", a
+        super(Second, self).__init__()
+
+    class Third(First, Second):
+      def __init__(self):
+        super(Third, self).__init__(10)
+        print "that's it"
+
+    t = Third()
+#+END_SRC
+
+Output is
+
+#+BEGIN_SRC python
+    first 10
+    second 20
+    that's it
+#+END_SRC
+
+Call to Third() locates the *init* defined in Third. And call to super
+in that routine invokes *init* defined in First. MRO=[First, Second].
+Now call to super in *init* defined in First will continue searching MRO
+and find *init* defined in Second, and any call to super will hit the
+default object *init*. I hope this example clarifies the concept.
+
+If you don't call super from First. The chain stops and you will get the
+following output.
+
+#+BEGIN_SRC python
+    first 10
+    that's it
+#+END_SRC
+
+* Answer11
+  :PROPERTIES:
+  :CUSTOM_ID: answer11
+  :END:
+
+In learningpythonthehardway I learn something called super() an in-built
+function if not mistaken. Calling super() function can help the
+inheritance to pass through the parent and 'siblings' and help you to
+see clearer. I am still a beginner but I love to share my experience on
+using this super() in python2.7.
+
+If you have read through the comments in this page, you will hear of
+Method Resolution Order (MRO), the method being the function you wrote,
+MRO will be using Depth-First-Left-to-Right scheme to search and run.
+You can do more research on that.
+
+By adding super() function
+
+#+BEGIN_SRC python
+    super(First, self).__init__() #example for class First.
+#+END_SRC
+
+You can connect multiple instances and 'families' with super(), by
+adding in each and everyone in them. And it will execute the methods, go
+through them and make sure you didn't miss out! However, adding them
+before or after does make a difference you will know if you have done
+the learningpythonthehardway exercise 44. Let the fun begins!!
+
+Taking example below, you can copy & paste and try run it:
+
+#+BEGIN_SRC python
+    class First(object):
+        def __init__(self):
+
+            print("first")
+
+    class Second(First):
+        def __init__(self):
+            print("second (before)")
+            super(Second, self).__init__()
+            print("second (after)")
+
+    class Third(First):
+        def __init__(self):
+            print("third (before)")
+            super(Third, self).__init__()
+            print("third (after)")
+
+
+    class Fourth(First):
+        def __init__(self):
+            print("fourth (before)")
+            super(Fourth, self).__init__()
+            print("fourth (after)")
+
+
+    class Fifth(Second, Third, Fourth):
+        def __init__(self):
+            print("fifth (before)")
+            super(Fifth, self).__init__()
+            print("fifth (after)")
+
+    Fifth()
+#+END_SRC
+
+How does it run? The instance of fifth() will goes like this. Each step
+goes from class to class where the super function added.
+
+#+BEGIN_SRC python
+    1.) print("fifth (before)")
+    2.) super()>[Second, Third, Fourth] (Left to right)
+    3.) print("second (before)")
+    4.) super()> First (First is the Parent which inherit from object)
+#+END_SRC
+
+The parent was found and it will go continue to Third and Fourth!!
+
+#+BEGIN_SRC python
+    5.) print("third (before)")
+    6.) super()> First (Parent class)
+    7.) print ("Fourth (before)")
+    8.) super()> First (Parent class)
+#+END_SRC
+
+Now all the classes with super() have been accessed! The parent class
+has been found and executed and now it continues to unbox the function
+in the inheritances to finished the codes.
+
+#+BEGIN_SRC python
+    9.) print("first") (Parent)
+    10.) print ("Fourth (after)") (Class Fourth un-box)
+    11.) print("third (after)") (Class Third un-box)
+    12.) print("second (after)") (Class Second un-box)
+    13.) print("fifth (after)") (Class Fifth un-box)
+    14.) Fifth() executed
+#+END_SRC
+
+The outcome of the program above:
+
+#+BEGIN_SRC python
+    fifth (before)
+    second (before
+    third (before)
+    fourth (before)
+    first
+    fourth (after)
+    third (after)
+    second (after)
+    fifth (after)
+#+END_SRC
+
+For me by adding super() allows me to see clearer on how python would
+execute my coding and make sure the inheritance can access the method I
+intended.
+
+* Answer12
+  :PROPERTIES:
+  :CUSTOM_ID: answer12
+  :END:
+
+I would like to add to
+[[https://stackoverflow.com/a/30187306/3798217][what @Visionscaper
+says]] at the top:
+
+#+BEGIN_SRC python
+    Third --> First --> object --> Second --> object
+#+END_SRC
+
+In this case the interpreter doesnt filter out the object class because
+its duplicated, rather its because Second appears in a head position and
+doesnt appear in the tail position in a hierarchy subset. While object
+only appears in tail positions and is not considered a strong position
+in C3 algorithm to determine priority.
+
+The linearisation(mro) of a class C, L(C), is the
+
+- the Class C
+- plus the merge of
+
+  - linearisation of its parents P1, P2, .. = L(P1, P2, ...) and
+  - the list of its parents P1, P2, ..
+
+Linearised Merge is done by selecting the common classes that appears as
+the head of lists and not the tail since order matters(will become clear
+below)
+
+The linearisation of Third can be computed as follows:
+
+#+BEGIN_SRC python
+        L(O)  := [O]  // the linearization(mro) of O(object), because O has no parents
+
+        L(First)  :=  [First] + merge(L(O), [O])
+                   =  [First] + merge([O], [O])
+                   =  [First, O]
+
+        // Similarly,
+        L(Second)  := [Second, O]
+
+        L(Third)   := [Third] + merge(L(First), L(Second), [First, Second])
+                    = [Third] + merge([First, O], [Second, O], [First, Second])
+    // class First is a good candidate for the first merge step, because it only appears as the head of the first and last lists
+    // class O is not a good candidate for the next merge step, because it also appears in the tails of list 1 and 2,
+                    = [Third, First] + merge([O], [Second, O], [Second])
+    // class Second is a good candidate for the second merge step, because it appears as the head of the list 2 and 3
+                    = [Third, First, Second] + merge([O], [O])
+                    = [Third, First, Second, O]
+#+END_SRC
+
+Thus for a super() implementation in the following code:
+
+#+BEGIN_SRC python
+    class First(object):
+      def __init__(self):
+        super(First, self).__init__()
+        print "first"
+
+    class Second(object):
+      def __init__(self):
+        super(Second, self).__init__()
+        print "second"
+
+    class Third(First, Second):
+      def __init__(self):
+        super(Third, self).__init__()
+        print "that's it"
+#+END_SRC
+
+it becomes obvious how this method will be resolved
+
+#+BEGIN_SRC python
+    Third.__init__() ---> First.__init__() ---> Second.__init__() --->
+    Object.__init__() ---> returns ---> Second.__init__() -
+    prints "second" - returns ---> First.__init__() -
+    prints "first" - returns ---> Third.__init__() - prints "that's it"
+#+END_SRC
+
+* Answer13
+  :PROPERTIES:
+  :CUSTOM_ID: answer13
+  :END:
+
+In python 3.5+ inheritance looks predictable and very nice for me.
+Please looks at this code:
+
+#+BEGIN_SRC python
+    class Base(object):
+      def foo(self):
+        print("    Base(): entering")
+        print("    Base(): exiting")
+
+
+    class First(Base):
+      def foo(self):
+        print("   First(): entering Will call Second now")
+        super().foo()
+        print("   First(): exiting")
+
+
+    class Second(Base):
+      def foo(self):
+        print("  Second(): entering")
+        super().foo()
+        print("  Second(): exiting")
+
+
+    class Third(First, Second):
+      def foo(self):
+        print(" Third(): entering")
+        super().foo()
+        print(" Third(): exiting")
+
+
+    class Fourth(Third):
+      def foo(self):
+        print("Fourth(): entering")
+        super().foo()
+        print("Fourth(): exiting")
+
+    Fourth().foo()
+    print(Fourth.__mro__)
+#+END_SRC
+
+Outputs:
+
+#+BEGIN_SRC python
+    Fourth(): entering
+     Third(): entering
+       First(): entering Will call Second now
+      Second(): entering
+        Base(): entering
+        Base(): exiting
+      Second(): exiting
+       First(): exiting
+     Third(): exiting
+    Fourth(): exiting
+    (<class '__main__.Fourth'>, <class '__main__.Third'>, <class '__main__.First'>, <class '__main__.Second'>, <class '__main__.Base'>, <class 'object'>)
+#+END_SRC
+
+As you can see, it calls foo exactly ONE time for each inherited chain
+in the same order as it was inherited. You can get that order by calling
+[[https://docs.python.org/3/library/stdtypes.html#class.__mro__][.*mro*]]
+:
+
+Fourth -> Third -> First -> Second -> Base -> object
+
+* Answer14
+  :PROPERTIES:
+  :CUSTOM_ID: answer14
+  :END:
+
+Maybe there's still something that can be added, a small example with
+Django rest_framework, and decorators. This provides an answer to the
+implicit question: "why would I want this anyway?"
+
+As said: we're with Django rest_framework, and we're using generic
+views, and for each type of objects in our database we find ourselves
+with one view class providing GET and POST for lists of objects, and an
+other view class providing GET, PUT, and DELETE for individual objects.
+
+Now the POST, PUT, and DELETE we want to decorate with Django's
+login_required. Notice how this touches both classes, but not all
+methods in either class.
+
+A solution could go through multiple inheritance.
+
+#+BEGIN_SRC python
+    from django.utils.decorators import method_decorator
+    from django.contrib.auth.decorators import login_required
+
+    class LoginToPost:
+        @method_decorator(login_required)
+        def post(self, arg, *args, **kwargs):
+            super().post(arg, *args, **kwargs)
+#+END_SRC
+
+Likewise for the other methods.
+
+In the inheritance list of my concrete classes, I would add my
+=LoginToPost= before =ListCreateAPIView= and =LoginToPutOrDelete= before
+=RetrieveUpdateDestroyAPIView=. My concrete classes' =get= would stay
+undecorated.
+
+* Answer15
+  :PROPERTIES:
+  :CUSTOM_ID: answer15
+  :END:
+
+Posting this answer for my future referance.
+
+Python Multiple Inheritance should use a diamond model and the function
+signature shouldn't change in the model.
+
+#+BEGIN_SRC python
+        A
+       / \
+      B   C
+       \ /
+        D
+#+END_SRC
+
+The sample code snippet would be ;-
+
+#+BEGIN_SRC python
+    class A:
+        def __init__(self, name=None):
+            #  this is the head of the diamond, no need to call super() here
+            self.name = name
+
+    class B(A):
+        def __init__(self, param1='hello', **kwargs):
+            super().__init__(**kwargs)
+            self.param1 = param1
+
+    class C(A):
+        def __init__(self, param2='bye', **kwargs):
+            super().__init__(**kwargs)
+            self.param2 = param2
+
+    class D(B, C):
+        def __init__(self, works='fine', **kwargs):
+            super().__init__(**kwargs)
+            print(f"{works=}, {self.param1=}, {self.param2=}, {self.name=}")
+
+    d = D(name='Testing')
+#+END_SRC
+
+Here class A is =object=
+
+* Answer16
+  :PROPERTIES:
+  :CUSTOM_ID: answer16
+  :END:
+
+Consider calling =super().Foo()= called from a sub-class. The *Method
+Resolution Order (MRO)* method is the order in which method calls are
+resolved.
+
+Case 1: Single Inheritance
+In this, super().Foo() will be searched up in the hierarchy and will
+consider the closest implementation, if found, else raise an Exception.
+The "/*is a*/" relationship will always be True in between any visited
+sub-class and its super class up in the hierarchy. But this story isn't
+the same always in Multiple Inheritance.
+
+Case 2: Multiple Inheritance
+Here, while searching for super().Foo() implementation, every visited
+class in the hierarchy may or may not have /is a/ relation. Consider
+following examples:
+
+#+BEGIN_SRC python
+    class A(object): pass
+    class B(object): pass
+    class C(A): pass
+    class D(A): pass
+    class E(C, D): pass
+    class F(B): pass
+    class G(B): pass
+    class H(F, G): pass
+    class I(E, H): pass
+#+END_SRC
+
+Here, =I= is the lowest class in the hierarchy. Hierarchy diagram and
+MRO for =I= will be
+
+[[file:./static/How_does_pythons_super_work_with_multiple_inheritance/30337.jpeg]]
+
+(Red numbers showing the MRO)
+
+MRO is =I E C D A H F G B object=
+
+Note that a class =X= will be visited only if all its sub-classes, which
+inherit from it, have been visited(i.e., you should never visit a class
+that has an arrow coming into it from a class below that you have not
+yet visited).
+
+Here, note that after visiting class =C= , =D= is visited although =C=
+and =D= DO NOT have *is a* relationship between them(but both have with
+=A=). This is where =super()= differs from single inheritance.
+
+Consider a slightly more complicated example:
+
+[[file:./static/How_does_pythons_super_work_with_multiple_inheritance/31189.jpeg]]
+
+(Red numbers showing the MRO)
+
+MRO is =I E C H D A F G B object =
+
+In this case we proceed from =I= to =E= to =C=. The next step up would
+be =A=, but we have yet to visit =D=, a subclass of =A=. We cannot visit
+=D=, however, because we have yet to visit =H=, a subclass of =D=. The
+leaves =H= as the next class to visit. Remember, we attempt to go up in
+hierarchy, if possible, so we visit its leftmost superclass, =D=. After
+=D= we visit =A=, but we cannot go up to object because we have yet to
+visit =F=, =G=, and =B=. These classes, in order, round out the MRO for
+=I=.
+
+Note that no class can appear more than once in MRO.
+
+This is how super() looks up in the hierarchy of inheritance.
+
+Credits for resources: Richard L Halterman Fundamentals of Python
+Programming

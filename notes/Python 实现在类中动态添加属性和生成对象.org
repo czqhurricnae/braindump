@@ -1,0 +1,110 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 实现在类中动态添加属性和生成对象/")); -*-
+:PROPERTIES:
+:ID:       44B52E2E-3B65-49B9-A6B2-BCF68B7DBB44
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-02 Fri 15:58>
+#+TITLE: Python 实现在类中动态添加属性和生成对象
+现在有个存储用户信息的像表格一样的文档：第一行是属性，各个属性使用逗号（，）分隔，
+从第二行开始每行是各个属性对应的值，每行代表一个用户。
+如何实现读入这个文档，每行输出一个用户对象呢？
+
+另外 4 个要求：
+1. 每个文档都很大，如果一次性把所有行生成的那么多对象存成列表返回，内存会崩溃。程序中每次只能存一个行生成的对象。
+2. 用逗号隔开的每个字符串，前后可能有双引号（“”）或者单引号（‘’），例如“张三”，要把引号去掉。
+如果是数字，有“+0000000001.24”这样的形式，要把前面的“+”和“0”都去掉，提取出 1.24。
+3. 文档中有时间，形式可能是“2013-10-29”，也可能是“2013/10/29 2:23:56”这样的形式，要把这样的字符串转成时间类型。
+4. 这样的文档有好多个，每个的属性都不一样，例如这个是用户的信息，那个是通话记录。所以类中的具体属性有哪些要根据文档的第一行动态生成。
+
+* 类的定义
+
+#+BEGIN_SRC python :results values :exports no-eval
+class UserInfo(object):
+    'Class to instore user information.'
+    def __init__(self):
+        self.attrilist={}
+        self.__attributes=[]
+
+    def updateAttributes(self, attributes):
+        self.__attributes = attributes
+
+    def updatePairs(self, values):
+        for i in range(len(values)):
+            self.attrilist[self.__attributes[i]]=values[i]
+#+END_SRC
+
+#+RESULTS:
+: None
+
+属性是动态添加的，属性-值也是动态添加的。
+
+~__attributes~ 存储属性，词典 ~attrilist~ 存储映射。
+
+实例化时只需 ~a = UserInfo()~ 无需任何参数。
+
+* 用生成器（[[id:241C1FAD-06D8-4559-8CA6-47EE38DA1FE9][generator]]）动态更新每个对象并返回对象
+
+#+BEGIN_SRC python :results values list :exports no-eval
+def ObjectGenerator(maxlinenum):
+    filename = '/USER.csv'
+    attributes = []
+    linenum = 1
+    a = UserInfo()
+    file = open(filename)
+    while linenum < maxlinenum:
+        values = []
+        line = str.decode(file.readline(), 'gb2312')
+        if line == '':
+            print 'Reading failed! Please check file name!'
+            break
+        str_list = line.split(',')
+        for item in str_list:
+            item = item.strip()
+            item = item.strip('\"')
+            item = item.strip('\'')
+            item = item.strip('+0*')
+            item = catchTime(item)
+        if linenum == 1:
+            attributes.append(item)
+        else:
+            values.append(item)
+        if linenum == 1:
+            a.updateAttributes(attributes)
+        else:
+            a.updatePairs(values)
+            yield a.attrilist
+            linenum = linenum + 1
+#+END_SRC
+
+#+RESULTS:
+: None
+
+* 用 ~time.strptime~ 提取字符串转化为时间对象
+~time.strptime(str, format)~ 可以把 =str= 按照 =format= 格式转化为时间对象。
+常用的 =format= 格式：
+- %y 两位数的年份表示 （00-99）
+- %Y 四位数的年份表示 （000-9999）
+- %m 月份 （01-12）
+- %d 月份中的一天 （0-31）
+- %H 24 小时制小时数 （0-23）
+- %I 12 小时制小时数 （0-12）
+- %M 分钟数 （00-59）
+- %S 秒 （00-59）
+
+#+BEGIN_SRC python :results raw drawer values :exports no-eval
+import time
+import re
+
+
+def catchTime(item):
+    matchObject = re.match(r'\d{4}-\d{2}-\d{2}', item, flags=0)
+    if matchObject != None:
+        item = time.strptime(item, '%Y-%m-%d')
+        return item
+    else:
+        matchObject = re.match(r'\d{4}/\d{2}/\d{2}\s\d+:\d+:\d+', item, flags=0)
+        if matchObject != None:
+            item = item.strptime(item, '%Y/%m/%d %H:%M:%S')
+            return item
+#+END_SRC

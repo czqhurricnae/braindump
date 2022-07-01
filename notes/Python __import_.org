@@ -1,0 +1,16 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python __import_/")); -*-
+:PROPERTIES:
+:ID:       BD546F80-31DA-4AC9-825A-9417066E6FB4
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-06 Sun 21:39>
+#+TITLE: Python __import__
+
+[[eww:marginnote3app://note/FB788337-6A2E-4BB4-9DBB-2E21D95BCF2B][__import__()]]
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+webdirver = __import__('selenium.webdirver', fromlist=['webdirver'])
+driver = webdirver.Chromw()
+quit = getattr(driver, 'quit')
+quit()
+#+END_SRC

@@ -1,0 +1,41 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       FF6B3653-A5FB-4764-8C1F-04AE9A53B3EB
+:END:
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usetikzlibrary{tikzmark}
+#+OPTIONS: toc:nil
+#+DATE: <2022-06-28 Tue 01:25>
+#+TITLE: Add_annotation_in_PDF_src_block_1ST_version
+
+* Using minted with tikzmark
+
+# Org mode sample configuration (in your init.el file):
+#+BEGIN_SRC emacs-lisp :exports none
+  (setq org-latex-listings 'minted)
+  (setq org-latex-minted-options
+        '(("frame" "lines") ("linenos" "true")))
+#+END_SRC
+
+#+ATTR_LATEX: :caption \caption{Yes}\label{lst:code}
+#+BEGIN_listing
+#+ATTR_LATEX: :options escapeinside=||
+#+BEGIN_SRC c
+  #include <stdio.h>
+
+  int main()
+  {
+    // comment
+    printf("hello world\n"); |$\tikzmark{too}$|
+    return 0;
+  }
+#+END_SRC
+#+END_listing
+
+#+BEGIN_LaTeX
+\begin{tikzpicture}[overlay,remember picture]
+\draw[dashed,->] (pic cs:too) ++(0,0.25) to[bend left]
+                 ++(5,-1)node[right]{$\bullet$ Here it is too!};
+\end{tikzpicture}
+#+END_LaTeX

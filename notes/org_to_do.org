@@ -1,0 +1,420 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/org_to_do/")); -*-
+:PROPERTIES:
+:ID:       020C1CEE-4E94-46F2-8E76-B1FEC19EAC03
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-13 Sun 15:32>
+#+TITLE: org_to_do
+
+* 计时
+在 todo.org 中, 移到一个条目上,
+按 Ctrl-c Ctrl-x Ctrl-i 即可对该条目开始计时,
+Ctrl-c Ctrl-x Ctrl-o 停止当前计时.
+如果在 Agenda 中, 移到条目按 I(大写) 即可对该条目开始计时,O(大写) 即可停止计时.
+
+todo.org 的头部加入#+PROPERTY: CLOCK_INTO_DRAWER t,
+时间记录会放到一个名为 LOGBOOK 的抽屉(drawer) 中,
+平时看项目时并不展开, 所以记录再多也不影响日常操作.
+
+* 统计
+在 Day Agenda 中, 按 R(大写) 可打开 Clock report, 查看当日计时统计.
+不过这样有时略显繁琐,
+而且体现不出各类任务上所花的时间,
+为了实现类似柳比歇夫“第一类工作”时间类似的统计, 使用函数(org-clock-sum-today-by-tags).
+把它绑定到 Ctrl-c Ctrl-x t 按键上.
+可在当前光标处插入对当天各个分类进行时间统计
+(代码中的 include-tags 变量包含了参与统计的 tags, 可自行更改).
+默认的效果是将当天非零的各分类时间统计显示出来.
+
+** 周统计
+周统计中我查看的内容之一还是 Clockreport,
+在 todo.org 中任意位置(我是在 Weekly Review 下)
+按 Ctrl-c Ctrl-x Ctrl-r 即可插入一个 Clockreport, 不过参数需要做一些修改, 我使用的是：
+
+#+BEGIN: clocktable :maxlevel 5 :scope agenda-with-archives :block thisweek :fileskip0 t :indent t
+#+END:
+
+改动之后, 在 BEGIN 的位置再按一下 Ctrl-c Ctrl-c 就可以刷新报表了.
+同时我还查看每个 tag 的时间报表. 参数和上面是一样的,
+最后加一个类似:tags “React”的参数即可.
+这些 Clockreport, 只需插入一次, 以后每周用 Ctrl-c Ctrl-c 刷新即可.
+
+同样的, 这样的信息有时候太繁琐了, 对于简报, 我的做法是在 todo.org 中嵌入一段如下的 Lisp 代码:
+
+#+BEGIN_SRC emacs-lisp :results value
+(setq week-range (org-clock-special-range 'thisweek nil t))
+(org-clock-sum-today-by-tags nil (nth 0 week-range) (nth 1 week-range) t)
+#+END_SRC
+
+同时, 在配置文件中加入如下语句, 使得在 Org-mode 可直接 Evaluate 上面的代码.
+
+#+BEGIN_SRC
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((emacs-lisp . t)))
+#+END_SRC
+
+这样, 在刚才代码段的位置按 Ctrl-c Ctrl-c 即可获得各 Tag 的周时间统计
+
+* 非标题型子任务
+Org 的任务主要由标题定制, 但也提供了非标题型子任务的设置. 对于以“[ ]”开头的列表, Org 把它们当作复选框, 复选框各选项的选择状态表示完成状态. 例如：
+
++研究内容 [1/2]：
+ + [X] 研究内容 1
+ + [-] 研究内容 2 [1/2]
+   + [ ] 小内容 1
+   + [X] 小内容 2
+复选框有三种状态：未完成、完成和中间状态(如上),
+可以使用快捷键 C-c C-c 或 C-c C-x C-b 修改.
+
+* 标题型任务和子任务
+Org 的任务定义跟标题定义一样简单, 有三种方式：
+
++ 直接在标题中的 KEYWORD 位置输入 TODO 关键词
++ 使用 C-c C-t 快捷键呼出关键词选择菜单
++ 使用 S-LEFT/RIGHT 快捷键快速设置 TODO 关键词
+
+当然也可以在标题编辑时直接使用 M-S-RET 或 C-S-RET 插入 TODO 标题.
+
+* 任务优先级
+在标题上使用 S-UP/DOWN 可以选择和改变任务的优先级.
+
+* 标签
+标签可以直接在标题后手工输入,Org 也提供了快捷的编辑命令：
+
+在文内使用 C-c C-q 命令, 输入标签名称并回车, 标签自动产生并放置到该文所属标题的标签列
+如果光标在一个标题内, 使用 C-c C-c 命令的作用和 C-c C-q 一样, 但如果不在光标不在标题内则不起作用.
+在合适的位置再次使用 C-c C-q 或 C-c C-c 即可对现有标签名称进行修改.
+* 简单任务关系
+Org-mode 实现了两种简单任务关系的设置：
+
+如果子任务没有全部完成, 主任务将不能设置为 DONE 状态
+如果前面有其他任务没有完成, 后面的任务将不能设置为 DONE 状态
+要使用第一种依赖关系需要打开 org-enforce-todo-dependencies , 即在 Emacs 配置文件中设置：
+
+#+BEGIN_SRC
+(setq org-enforce-todo-dependencies t)
+#+END_SRC
+
+要使用第二种依赖关系则需要在主任务下打开任务的 ORDERED 属性, 例如：
+
+#+BEGIN_SRC
+* TODO 请客吃饭
+:PROPERTIES:
+:ORDERED: t
+:END:
+** TODO 确定客人时间
+** TODO 订饭店
+** TODO 点菜
+** TODO 买单
+#+END_SRC
+
+请客吃饭下的各项工作得按顺序去做
+
+* Emacs 日历
+Emacs 提供了桌面日历,
+不仅附带有公共事件日志(节假日等),
+还可以帮助你管理预约事件和跟踪项目时间.Emacs 日历使用独立的缓冲区和主模式(Calendar 模式),
+执行 M-x calendar 命令即可打开并显示 3 个月的日历, 当前月份居中.
+如果要打开特定时间的日历, 用 C-u M-x calendar ,
+在提示符下输入年(数字) 和月(名称) 即可.
+鼠标键在日历模式下具有特殊意义：左键(Mouse-1) 选定某天, 中键(如果有,Mouse-2) 弹出适用于整个日历的命令菜单, 右键(Mouse-3) 弹出适用于鼠标所指日期的菜单. 键盘输入 q 直接退出日历(关闭日历窗口).
+
+* 在日历中移动光标
+** 移动标准时长
+
+| 命令	  | 动作	     | 变量                    |
+|-----------+--------------+-------------------------|
+| C-f	   | 前移一天	 | calendar-forward-day    |
+| C-b	   | 后移一天	 | calendar-backward-day   |
+| C-n	   | 前移一周	 | calendar-forward-week   |
+| C-p	   | 后移一周	 | calendar-backward-week  |
+| M-}	   | 前移一月	 | calendar-forward-month  |
+| M-{	   | 后移一月	 | calendar-backward-month |
+| C-x ]	 | 前移一年	 | calendar-forward-year   |
+| C-x [	 | 后移一年	 | calendar-backward-year  |
+
+** 转到周、月、年的开始或结束日期：
+
+| 命令	 | 动作	       | 变量                        |
+|----------+----------------+-----------------------------|
+| C-a	  | 到周的开始	 | calendar-beginning-of-week  |
+| C-e	  | 到周的结束	 | calendar-end-of-week        |
+| M-a	  | 到月的开始	 | calendar-beginning-of-month |
+| M-e	  | 到月的结束	 | calendar-end-of-month       |
+| M-<	  | 到年的开始	 | calendar-beginning-of-year  |
+| M->	  | 到年的结束	 | calendar-end-of-year        |
+
+** 转到指定日期
+| 命令	 | 动作	           | 变量                      |
+|----------+--------------------+---------------------------|
+| g d	  | 到指定年月日	   | calendar-goto-date        |
+| g D	  | 到某年的第几天	 | calendar-goto-day-of-year |
+| g w	  | 到某年的第几周	 | calendar-iso-goto-week    |
+| o	    | 把某年某月居中	 | calendar-other-month      |
+| .	    | 到今日(不居中)	 | calendar-goto-today       |
+
+** 卷动日历
+| 命令	 | 动作	               | 变量                               |
+|----------+------------------------+------------------------------------|
+| >	    | 前卷一个月	         | calendar-scroll-left               |
+| <	    | 后卷一个月	         | calendar-scroll-right              |
+| C-v	  | 前卷三个月(下一屏)	 | calendar-scroll-left-three-months  |
+| M-v	  | 后卷三个月(上一屏)	 | calendar-scroll-right-three-months |
+
+* 节日和日志
+为简单起见, 凡在日历上标示的事件(节日、生日、纪念日或其他) 下面都称为节日
+| 命令              | 动作                                               |
+|-------------------+----------------------------------------------------|
+| x                 | 在日历窗口中标出节日                               |
+| u                 | 取消节日标记                                       |
+| h                 | 显示当前日期的节日                                 |
+| a                 | 列出当前日历(三个月) 的所有节日                    |
+| M-x holidays      | 在另一个窗口列出近 3 个月(以今天为中心) 的所有节日 |
+| M-x list-holidays | 在另一窗口列出设定的若干年内的所有节日             |
+
+Emacs 日历默认不标记节日, 如果希望打开日历就能看到节日标记, 设置一下：
+
+
+#+BEGIN_SRC emacs-lisp
+(setq mark-holidays-in-calendar t)
+#+END_SRC
+
+公共“节日”很多, 一些可能是你根本不 care 的, 如果这些都出现在日历和日程表中, 肯定很烦人. 所以还得定制一下, 只显示自己设定的日历事件, 比如：
+
+#+BEGIN_SRC emacs-lisp
+(setq my-holidays
+      '(;; 公历节日
+        (holiday-fixed 2 14 " 情人节")
+        (holiday-fixed 9 10 " 教师节")
+        (holiday-float 6 0 3 " 父亲节")
+        ;; 农历节日
+        (holiday-lunar 1 1 " 春节" 0)
+        (holiday-lunar 1 15 " 元宵节" 0)
+        (holiday-solar-term " 清明" " 清明节")
+        (holiday-lunar 5 5 " 端午节" 0)
+        (holiday-lunar 7 7 " 七夕情人节" 0)
+        (holiday-lunar 8 15 " 中秋节" 0)
+        ;; 纪念日
+        (holiday-fixed 1 1 " 儿子生日")
+        (holiday-lunar 2 2 " 老婆生日"  0)
+        (holiday-lunar 3 3 " 我的生日" 0)
+        ))
+(setq calendar-holidays my-holidays)  ; 只显示我定制的节假日
+#+END_SRC
+
+其中：
+
++ holiday-fixed 用于设定公历事件
++ holiday-float 用于设定浮动公历事件
++ holiday-lunar 用于设定农历事件, 各项的意义参考后面的 diary-float 说明.
++ holiday-solar-term 是一些预定义但还需要特殊计算的节日, 如农历的 24 节气.
+
+Emacs 可以使用日志(Diary) 方式管理日程, 方法是设置 diary-file. 但用 Org-mode 就可以不用那种方式了, 所以把它忽略.
+
+* 时间戳的组成
+时间戳由尖括号 <> 或方括号 [] 表示，前者为激活时间，后者为非激活时间（不加入日程表的时间）。括号内可以包括以下内容组成（按先后顺序）：
+
++ 日期, 如 2013-6-1
++ 时间或时间范围, 如 2:30pm 或 10:00-12:00
++ 表示周期重复的字符串, 如 +1w 表示每周重复
++ 其他附加信息和特殊符号：
+
+|  符号 | 意义                      |
+|-------+---------------------------|
+|    +0 | 今天                      |
+|     . | 今天                      |
+|   +4d | 今天算起, 第 4 天         |
+|    +4 | 同上                      |
+|   +2w | 今天算起, 第 2 周         |
+|   ++5 | 默认日期开始,5 天后       |
+| +2tue | 今天算起, 第 2 个 Tuesday |
+
+注意“今天”和“默认日期”所表示的意义是不同的, 例如：
++ <2013-06-20 周四 .+1w> 表示这是一个周期性重复任务, 每周四执行；
+  但是如果某次任务的实际完成日期( DONE 状态产生日期) 是星期一,
+  那么下一次任务就是一周后的星期一。
++ <2013-06-20 周四 ++1w> 同样表示一个周期性重复任务,
+  每周四执行；但不管任务实际完成日期是星期几,
+  下一次任务的时间都固定为下个星期四。
+由两个断线“–”连接起来的两个时间戳表示时间段, 如： <2013-06-25 周二>--<2013-06-26 周三>
+
+除以上标准用法外, 一些不规则时间戳可以使用 Emacs 日志风格的字符串表示,
+同样放在方括号或尖括号中. 常用的有：
+
++ 周年纪念,
+  如毛泽东诞辰： %%(diary-anniversary 12 26 1893)
++ 周期重复,
+  如从 6 月 1 日开始每隔 10 天重复： %%(diary-cyclic 10 6 1 2013)
++ 某些日期, 用于组合不同的月、日、年,
+  例如每年的 3-5 月的 10 号可以这么表示(t 表示所有数值, 这里表示所有年度)：
+  %%(diary-date '(3 4 5) 10 t)
++ 某月的第几个星期几,
+  用浮动日期格式字符串
+  %%(diary-float month dayname index) 表示.
+  其中 month 为表示月份的整数(同样可以使用 t 表示所有月份),
+  dayname 表示星期几(0 为 Sunday), index 为正数表示从前往后数, 复数则相反. 如 5 月的最后一个星期三表示为： %%(diary-float 5 3 -1)
+
+* 产生时间戳
+时间戳可以直接输入, 但最好使用快捷命令(期间要调用 Emacs 日历) 产生：
+
+| 快捷命令             | 动作                                                           |
+|----------------------+----------------------------------------------------------------|
+| C-c .                | 通过日历选择计划日期, 如果在一个时间戳后面使用将产生一个日期段 |
+| C-c !                | 同上, 但产生非激活日期                                         |
+| 连续使用 C c .       | 产生计划时间或时间段                                           |
+| 连续使用 C c !       | 同上, 但产生非激活日期                                         |
+| C-c C-c              | 在时间戳上使用该命令将对该时间戳进行格式补全和校对             |
+| C-c <                | 插入 Emacs 日历中光标所在处的日期(或当前日期) 作为时间戳       |
+| C-c >                | 访问 Emacs 日历上当前日期；如果光标处有时间戳就访问该日期      |
+| C-c C-o              | 在日程表上访问光标时间戳表示的日期/时间                        |
+| S-UP/DOWN/LEFT/RIGHT | 前/后移日期或时间(小时/分), 具体情况由光标所在位置而定         |
+
+* 预约任务时间 [66%]
+** DONE [#C] 安排开始时间(SCHEDULED)
+   CLOSED: [2018-09-06 Thu 21:28]
+
+   - State "DONE"       from "TODO"       [2018-09-06 Thu 21:28]
+ 表示任务将在指定的时间开始。 计划时间通过 C-c C-s 命令输入, 例如
+ SCHEDULED: <2013-06-25 周二>
+ 一个任务在计划时间到达时将在每天的日程表上出现,
+ 直到任务标记为 DONE。
+ 也可以延迟计划任务在日程表上显示的时间, 如延迟 2 天：
+
+ SCHEDULED: <2013-06-25 周二 -2d>
+ 注意这里“计划时间”和通常所说的安排一个任务的时间不一样。
+ 如果要指定一个任务在确切的时间开始, 直接输入时间戳就可以了。
+
+** DONE [#B] 设定截止时间(DEADLINE)
+   CLOSED: [2018-09-06 Thu 21:28]
+
+   - State "DONE"       from "TODO"       [2018-09-06 Thu 21:28]
+任务应该设置完成的截止时间。 截止时间通过 C-c C-d 命令输入， 例如：
+DEADLINE: <2013-06-26 周三 -5d>
+日期后面的 -5d 表示截止时间前 5 天开始在 today 日程表上提醒。
+如果不设置提醒开始时间则按照 org-deadline-warning-days 的设置进行提醒。
+日程提醒将一直持续（即使任务过期），直到任务标记为 DONE 状态。
+如果一个任务既安排了开始时间又设定了截止时间，日程表上的提醒将有重复，
+可以选择显示哪个。忽略截止时间提醒的设置为：
+
+#+BEGIN_SRC emacs-lisp :results values list :exports no-eval
+(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
+#+END_SRC
+
+忽略开始时间提醒的设置为：
+
+#+BEGIN_SRC emacs-lisp :results values list :exports no-eval
+(setq org-agenda-skip-scheduled-delay-if-deadline t)
+#+END_SRC
+
+** SOMEDAY [#B] 安排周期重复任务的时间
+   - State "SOMEDAY"    from "DONE"       [2018-09-06 Thu 21:28]
+   - State "DONE"       from "TODO"       [2018-09-06 Thu 21:28]
+和前面的重复任务时间戳没什么不同，
+只不过要注意表示重复和表示提醒安排的字符串的顺序, 表示重复的在前, 如：
+DEADLINE: <2013-11-01 周五 +1m -3d>
+
+* 任务进程监控和记录
+** 显示进度
+在标题或复选框列表(不一定是任务) 的任何位置输入 [%] 或 [/] ,
+当使用 C-c C-t 或 S-LEFT/RIGHT 改变子任务的状态时 Org 就会计算完成百分比或分数,
+如 [1/5]。通过输入改变 TODO 关键词状态的方式不触发计算，
+但可以在进度状态的位置上执行 C-c C-c 命令更新状态。
+** 设置统计方式
+默认情况下任务的进度监控仅计算下一级子任务，
+要统计所有级别的子任务应在合适的位置设置 :COOKIE_DATA: todo recursive 属性, 即：
+
+#+BEGIN_SRC emacs-lisp
+:PROPERTIES:
+:COOKIE_DATA: todo recursive
+:END:
+#+END_SRC
+
+如果监控的是复选框任务, 把 todo 改为 checkbox.
+** 状态更改记录
+如果 TODO 关键词定义时设置了时间标签选项(!), 
+任务状态发生改变时将在该任务的下方记录下状态改变的时间。 
+这项功能很容易使用。 如果不想记录某个任务及其子任务的状态更改， 可以在任务下设置属性 LOGGING 为 nil。
+
+#+BEGIN_SRC emacs-lisp
+,* 本项任务无需记录状态改变
+:PROPERTIES:
+:LOGGING: nil
+:END:
+#+END_SRC
+
+* 关闭任务
+如果觉得通过设置 TODO 关键词方式记录的状态更改时间很烦人（每次修改都记录， 即使误操作了也要手工删除），那你应该用 org-log-done 变量：
+
+#+BEGIN_SRC
+(setq org-log-done 'time)
+#+END_SRC
+
+如上设置后每次将任务改变为 DONE 状态时在任务下添加一行内容 CLOSED: [timestamp] , 而再将 DONE 状态改为 TODO 时该行内容被自动删除。
+
+如果项目结束时你还想对它写点评价的话, 可以设置：
+
+#+BEGIN_SRC
+(setq org-log-done 'note)
+#+END_SRC
+
+这样每次任务结束时 Org 就会提示你输入备注, 并把它放到“Closing Note”标题下。
+
+* 日程表视图(Agenda views)
+Org-mode 不要求所有的待办任务都整齐排列到一个文件中，
+更没有设立专门的诸如 .todo 类型的文件,
+因为它的作者们认为我们平时要处理的事情多数都是在记笔记中产生的。
+任务可以随时随地定制，
+它们会散落到各个角落（即文件），
+因此必需使用某些方式把它们收集起来并进行排序和显示。
+Org 能够使用一些标准选择任务并显示在独立的缓冲区中。 它提供了 7 种不同的显示模式：
+
++ 日程表：用类似于日历的方法显示特定日期的任务
++ 待办任务列表：列出所有未完成的任务
++ 匹配视图：通过标签、属性或 TODO 关键词选择并显示匹配的标题
++ 时间线视图：把所有任务放到一个 Org 文件中并按时间顺序排列
++ 文本搜索视图：从多个文件中搜索匹配特定关键词的任务
++ 静止项目视图：列出没有任何动静的项目(标题), 即没有任何 TODO 关键词标记的标题
++ 用户定制视图：可以定制特殊搜索条件或组合不同的视图
+
+* 日程表文件
+Org 虽然没有定义专门的日程表类型的文件,
+但要产生特定的日程表总不能天南海北的胡乱查找任务,
+所以要先指定一些（org）文件为搜索范围。
+这可以通过设置 org-agenda-files 变量完成, 如：
+
+#+BEGIN_SRC emacs-lisp :results values list :exports no-eval
+(setq org-agenda-files (list "D:/agenda"))
+#+END_SRC
+
+会把 D:/agenda 目录下（不包括子目录）的所有 org 文件都加入到日程表的搜索范围。
+也可以使用下面的快捷键逐个添加或删除：
+
++ C-c [ ：把当前文件加到 agenda-files 列表的最前面；如果文件已经在 agenda-files 中，就把移到最列表最前面或最后面。
++ C-c ] ：把当前文件从 agenda-files 列表移除。
+
+* 在日程表上查看任务
+Org-mode 产生日程表的快捷键默认不安装, 得自己设置：
+
+#+BEGIN_SRC
+(global-set-key "\C-c a" 'org-agenda)
+#+END_SRC
+
+使用 C-c a 就会弹出日程表视图选择窗口，每个选项都有说明，其中包括前面所说的几种日程表视图，不再啰嗦。 
+日程表默认列出 7 天内的任务，如果要改变就设置 org-agenda-ndays 变量， 如：
+
+#+BEGIN_SRC
+(setq org-agenda-ndays 21)
+(setq org-agenda-include-diary t)
+#+END_SRC
+
+* 用 Org 文件定制特殊日程表事件
+这是个很 fancy 的功能，类似于 Emacs 日历的日志文件管理方式，值得使用。 比如：
+
+#+BEGIN_SRC emacs-lisp :results values list :exports no-eval
+* 纪念日
+#+CATEGORY: Ann
+%%(org-anniversary 1999 1 1) 结婚 %d 周年纪念
+%%(org-anniversary 2000 2 2) 儿子 %d 岁生日
+#+END_SRC
+
+保存为一个独立的 org 文件，然后加入你的日程表文件列表，产生日程表时会加入这些事件。

@@ -1,0 +1,94 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python threading.local 是全局变量但是它的值却在当前调用它的线程当中/")); -*-
+:PROPERTIES:
+:ID:       4F6A6AF4-E7FE-4295-AEFC-CAD85B4BE5ED
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-27 Tue 15:48>
+#+TITLE: Python threading.local 是全局变量但是它的值却在当前调用它的线程当中
+
+在 threading module 中，有一个非常特别的类 local。
+一旦在主线程实例化了一个 local，它会一直活在主线程中，并且又主线程启动的子线程调用这个 local 实例时，它的值将会保存在相应的子线程的字典中。
+
+我们先看看测试代码：
+
+#+BEGIN_SRC python
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Description: test the threading.local class
+# Create: 2008-6-4
+# Author: MK2[fengmk2@gmail.com]
+from threading import local, enumerate, Thread, currentThread
+
+local_data = local()
+local_data.name = 'local_data'
+
+class TestThread(Thread):
+        def run(self):
+                print currentThread()
+                print local_data.__dict__
+                local_data.name = self.getName()
+                local_data.add_by_sub_thread = self.getName()
+                print local_data.__dict__
+
+if __name__ == '__main__':
+        print currentThread()
+        print local_data.__dict__
+
+        t1 = TestThread()
+        t1.start()
+        t1.join()
+
+        t2 = TestThread()
+        t2.start()
+        t2.join()
+
+        print currentThread()
+        print local_data.__dict__
+#+END_SRC
+
+#+RESULTS:
+: <_MainThread(MainThread, started)>
+: {'name': 'local_data'}
+: <TestThread(Thread-1, started)>
+: {}
+: {'add_by_sub_thread': 'Thread-1', 'name': 'Thread-1'}
+: <TestThread(Thread-2, started)>
+: {}
+: {'add_by_sub_thread': 'Thread-2', 'name': 'Thread-2'}
+: <_MainThread(MainThread, started)>
+: {'name': 'local_data'}
+
+主线程中的 local_data 并没有被改变，而子线程中的 local_data 各自都不相同。
+
+怎么这么神奇？local_data 具有全局访问权，主线程，子线程都能访问它，但是它的值却是各当前线程有关，究竟什么奥秘在这里呢？
+
+查看了一下 local 的源代码，发现就神奇在_path()方法中:
+
+#+BEGIN_SRC python
+def _patch(self):
+    key = object.__getattribute__(self, '_local__key')
+    d = currentThread().__dict__.get(key)
+    if d is None:
+        d = {}
+        currentThread().__dict__[key] = d
+        object.__setattr__(self, '__dict__', d)
+
+        # we have a new instance dict, so call out __init__ if we have
+        # one
+        cls = type(self)
+        if cls.__init__ is not object.__init__:
+            args, kw = object.__getattribute__(self, '_local__args')
+            cls.__init__(self, *args, **kw)
+    else:
+        object.__setattr__(self, '__dict__', d)
+#+END_SRC
+#+BEGIN_SRC awk
+
+#+END_SRC
+
+每次调用 local 实例的属性前，local 都会调用这个方法，找到它保存值的地方.
+
+~d = currentThread().__dict__.get(key)~  就是这个地方，确定了 local_data 值的保存位置。
+所以子线程访问 local_data 时，并不是获取主线程的 local_data 的值，在子线程第一次访问它是，它是一个空白的字典对象，所以~local_data.__dict__~ 为 {}，就像我们的输出结果一样。
+
+如果想在当前线程保存一个全局值，并且各自线程互不干扰，使用 local 类吧。

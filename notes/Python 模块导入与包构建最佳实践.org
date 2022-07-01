@@ -1,0 +1,851 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python 模块导入与包构建最佳实践/")); -*-
+:PROPERTIES:
+:ID:       2544C06E-E5DB-4574-837A-2F36B793D9BF
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-05 Wed 18:11>
+#+TITLE: Python 模块导入与包构建最佳实践
+
+最开始写程序的时候，都是一个文件里输入几行源码（python 的一个 web 框架 bottle 就特别强调自己是单文件框架）。
+随着程程式变大变复 杂，一个文件很难承载如此多的功能，因此将代码拆分到不同的文件里，以模块（module）或者包（package）形式组织。
+既方便管理，也 利于复用。python 的模块和包非常简单，一个文件即模块，一个文件夹 即一个包。
+
+文件夹包必须在文件夹内声明一个 =__init__.py= 文件，包被导入的时候，默认会先执行这个文件的代码。
+
+* 导入方式
+有了包机制，既可以把项目拆分封装。也可以实现独立的功能给别的项目使用。
+Python 提供了 import 指令，鉴于历史原因，import 有相对导入（implicit/explicit relative import）和绝对导入（absolute import）两种方式。
+相对导入有隐式的导入（implicit）和显示导入（explicit）。
+
+模块的导入都是相对于包而言。 import 指令是加载包的模块，通过 from import 语句不仅可以加载模块，也可以导入 python 对象（类，函数，变量等）。
+模块最小组织单位是文件，import 后面的如果是文件则被认为是模块，若是文件里的 python 对象，则加载的不是模块。
+
+* 模块搜索
+Python 的模块搜索大致有三种步骤。
+
+- 首先搜索 ~sys.modules~ ：这是一个列表，它存储了之前导入的所有模块，新导入的模块也会追加到这个列表里。若这里搜索不到，那么就会进行第二步。
+- 其次搜索 =built-in module= ：Python 的标准库和安装的第三方软件包。如果还搜索不到模块，就进行最后一步。
+- 最后搜索 ~sys.path~ ：被执行的 python 文件，其 *所在的目录* 会被追加到 ~sys.path~ 列表，也就是相对于被执行的文件的目录文件夹和系统在 ~sys.path~ 的也会被搜索。
+若任然找不到，最终会抛出一个 ~ModuleNotFoundError~ 错误。
+
+* Python 文件加载方式
+Python 的文件加载方式有两种，直接运行和以模块方式加载。
+
+- 以 *top-level* 方式直接加载：python + 文件名。
+如 ~python filename.py~ ，或者 ~python dir/filename.py~ ，这样的 python 文件是作为 *top-level* 脚本运行，脚本文件的 ~__name__~ 属性会被设置成 ~__main__~ ，
+同时其 ~__package__~ 属性设置为 None。因为此时的文件作为顶层模块，它不属于任何一个包。直接运行脚本，会把 *脚本所在的目录* 追加到 ~sys.path~ 之中。
+
+- 以 *模块* 方式加载，使用 *-m* 解释参数，然后跟着文件路径，其中 =/= 替换成 =.= 。
+如 ~python -m filename~ 或者 ~python dir.filename~ ， =filename.py= 变成了一个模块，其模块名为所在 python 执行目录下的 =包.模块.文件名= 。
+例如他的模块名是 =filename= 或者 =dir.filename= 。
+这种方式，不会把脚本所在位置加载 ~sys.path~ 之中，而是会把 *执行 python 命令所在的目录* 加载 ~sys.path~ 中。
+但是被执行的脚本肯定也在执行命令所在文件或者子文件中，因此效果类似自身也属于 ~sys.path~ 之中。
+
+自 2.6 以后，python 的模块名可以用下面的方式打印：
+
+#+BEGIN_SRC python :results raw drawer values :exports no-eval
+module_name = '"{}.{}".format(__package__, __name__) if __package is not None else __name__
+#+END_SRC
+
+* 相对导入和绝对导入
+上文介绍了 python 脚本加载和模块搜索的基本方式。基于此，python 提供了以相对或绝对导入两种包、模块的 import 方式。
+因 python2 和 3 分裂的历史，2 默认是相对导入，3 则默认是绝对导入，并且日常开发也推荐使用绝对导入方式。
+
+那么它们两种有什么区别呢？
+
+导入都是针对包而言：
+
+- 绝对导入：文件的 import 或者 from import 导入语句，都是从包的根路径开始。
+- 相对导入：导入的起始模块未必是从包路径开始，使用 =.= 或者 =..= 的方式是显式的相对导入，否则是隐式的。
+
+*Python 3 针对隐式相对导入会直接抛错* 。
+
+* Case Study
+文字都过于抽象，下面针对 code 进行演示解析。文件目录结构如下，myproj 项目中，有一个 pkg 的包，包里有两个文件夹 subpkg_a 和 subpkg_b 两个子包，子包分别有几个 py 模块文件。
+
+#+BEGIN_SRC python
+➜  myproj tree
+.
+└── pkg
+    ├── __init__.py
+    ├── main.py
+    ├── subpkg_a
+    │   ├── __init__.py
+    │   ├── hello.py
+    │   └── world.py
+    └── subpkg_b
+        ├── __init__.py
+        └── welcome.py
+#+END_SRC
+
+首先分析 subpka_a 包，即相对 subpkg_a 来分析 hello.py 和 world.py 直接的导入方式。暂时可以忽略其他文件或文件夹。
+
+下面是几个文件的源码：
+
+#+BEGIN_SRC python
+➜  pkg cat subpkg_a/__init__.py subpkg_a/hello.py subpkg_a/world.py
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+if __package__:
+    print("subpkg_a.__init__.py print1: ", "{}.{}".format(__package__, __name__))
+else:
+    print("subpkg_a.__init__.py print2: ", "{}".format(__name__))
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+if __package__:
+    print("hello.py print1: ", "{}.{}".format(__package__, __name__))
+else:
+    print("hello.py print2: ", "{}".format(__name__))
+
+import world
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+if __package__:
+    print("world.py print1: ", "{}.{}".format(__package__, __name__))
+else:
+    print("world.py print2: ", "{}".format(__name__))
+
+
+def say_world():
+    return "world"
+
+
+if __name__ == "__main__":
+    print(say_world)
+#+END_SRC
+
+hello.py 文件直接导入了 world 模块，然后运行结果如下：
+
+#+BEGIN_SRC python
+➜  pkg python subpkg_a/hello.py
+('hello.py print2: ', '__main__')
+('world.py print2: ', 'world')
+#+END_SRC
+
+可以看见，hello.py 的模块名为 ~__main__~ 。
+作为 top-level 执行的文件，其 ~__package__~ 是 ~None~ ， ~__name__~ 是 ~__main__~ 。
+对于 world.py 文件，因为它是被加载的模块， ~__name__~ 就是文件名 world。
+
+hello.py 很好理解，作为 top-level 脚本执行，其本身不属于任何一个包。
+world.py 是作为模块被加载的，但是 hello.py 里也没指定从哪个包里加载。
+因此加载时候就按照模块搜索方式。因为 hello.py 执行的目录被加入了 sys.path，
+world.py 与 hello.py 同级，因此自然能被搜索并成为模块。
+
+* 隐式相对导入
+由于上面的导入方式，模块都不属于任何一个包，自然就没有相对于绝对导入的说法。删掉 =subpka_a/__init__.py= 文件也不会有影响。
+正如前面所介绍，python 脚本若不是 *top-level* ，才有包概念的。
+修改执行方式如下：
+
+#+BEGIN_SRC python
+➜  pkg python -m subpkg_a.hello
+('subpkg_a.__init__.py print2: ', 'subpkg_a')
+('hello.py print1: ', 'subpkg_a.__main__')
+('world.py print2: ', 'subpkg_a.world')
+#+END_SRC
+
+在 =__init__.py= ， =world.py= 两个文件中的 ~__package__~ 都为 ~None~ 。
+对于 =__init__.py= 文件，属性 ~__name__~ 并不是为文件名 =__init__= ，而是包名 =subpkg_a= 。
+对于 =world.py= 文件，属性 ~__name__~ 并不是为文件名 =world=, 而是加上了包名 =subpkg_a= 这个前缀。
+
+可以看到，subpak_a 包的 =__init__.py= 文件也被加载执行了，这表示包 subpak_a 被导入了。
+=-m= 的语法告诉了解释器，把当前执行命令的目录加入到 ~sys.path~ 。
+以模块的方式加载 hello.py 文件，并且指定了 hello 模块的父级是 subpkg_a，同理，处于同级的 world.py 文件也被隐式的包含在 subkag_a 包里，它的模块名 subpkg_a.world。
+
+上面的 import 语句中没有出现包名 subpkg_a，所以是一种相对导入，也没有使用 =.= 或者 =..= 符号，所以是隐式的导入。隐式相对导入在 Python 3 下不支持，会抛错：
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+➜  pkg python3 -m subpkg_a/hello
+/Library/Developer/CommandLineTools/usr/bin/python3: No module named subpkg_a/hello
+#+END_SRC
+
+#+BEGIN_SRC python
+➜  pkg python3 -m subpkg_a.hello
+subpkg_a.__init__.py print1:  subpkg_a.subpkg_a
+hello.py print1:  subpkg_a.__main__
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/runpy.py", line 193, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/Users/c/Downloads/myproj/pkg/subpkg_a/hello.py", line 9, in <module>
+    import world
+ModuleNotFoundError: No module named 'world'
+#+END_SRC
+
+* 显示相对导入
+subpak_a 包的层级很清楚，因此改为显示相对导入也很简单，即：
+
+#+BEGIN_SRC python
+➜  pkg cat subpkg_a/hello.py
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+if __package__:
+    print("hello.py print1: ", "{}.{}".format(__package__, __name__))
+else:
+    print("hello.py print2: ", "{}".format(__name__))
+
+from . import world
+#+END_SRC
+
+运行结果也正确：
+
+#+BEGIN_SRC python
+➜  pkg python -m subpkg_a.hello
+('subpkg_a.__init__.py print2: ', 'subpkg_a')
+('hello.py print1: ', 'subpkg_a.__main__')
+('world.py print2: ', 'subpkg_a.world')
+#+END_SRC
+
+使用了 ~python -m subpkg_a.hello~ 命令执行，hello.py 和 world.py 分别属于 subpkg_a 包，因此 hello.py 里的 =.= 表示在包 subpkg_a 内，相对于 ~__main__~ 模块的导入同级模块。
+~from . import world~ 即代表导入模块 =subpkg_a.world= ， =.= 即代表包 =subpkg_a.= 。因此不会报错。
+
+需要注意， *显示的相对导入只有以模块加载的方式才能使用* ，否则会抛 ~Attempted relative import in non-package~ 的错误。
+
+#+BEGIN_SRC python
+➜  pkg python subpkg_a/hello.py
+('hello.py print2: ', '__main__')
+Traceback (most recent call last):
+  File "subpkg_a/hello.py", line 9, in <module>
+    from . import world
+ValueError: Attempted relative import in non-package
+#+END_SRC
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+➜  pkg python3 subpkg_a/hello.py
+hello.py print2:  __main__
+Traceback (most recent call last):
+  File "subpkg_a/hello.py", line 9, in <module>
+    from . import world
+ImportError: attempted relative import with no known parent package
+#+END_SRC
+
+正如前文所述，以 *top-level* 的运行 hello.py 文件，hello.py 的模块名是 ~__main__~ ， world.py 的模块名是 world，两者不属于任何一个包，自然也没有模块的层级。
+=.= 是指相对于包下面的模块的路径进行导入。由于以 *top-level* 的运行 hello.py 文件没有包概念，因此抛错。
+
+对于 subpak_b 包里的模块，需要使用 =..= 操作符，修改 hello.py 如下：
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+if __package__:
+    print("hello.py print1: ", "{}.{}".format(__package__, __name__))
+else:
+    print("hello.py print2: ", "{}".format(__name__))
+
+from . import world
+from ..subpkg_b import welcome
+#+END_SRC
+
+需要注意的是， ~python -m subpkg_a.hello~ 的执行方式，最顶级的包是 subpkg_a，而 subpkg_b 是搜索不到的，需要更上层的目录来执行：
+
+#+BEGIN_SRC python
+➜  pkg python -m subpkg_a.hello
+('subpkg_a.__init__.py print2: ', 'subpkg_a')
+('hello.py print1: ', 'subpkg_a.__main__')
+('world.py print2: ', 'subpkg_a.world')
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python@2/2.7.16/Frameworks/Python.framework/Versions/2.7/lib/python2.7/runpy.py", line 174, in _run_module_as_main
+    "__main__", fname, loader, pkg_name)
+  File "/usr/local/Cellar/python@2/2.7.16/Frameworks/Python.framework/Versions/2.7/lib/python2.7/runpy.py", line 72, in _run_code
+    exec code in run_globals
+  File "/Users/c/Downloads/myproj/pkg/subpkg_a/hello.py", line 10, in <module>
+    from ..subpkg_b import welcome
+ValueError: Attempted relative import beyond toplevel package
+
+➜  pkg cd ../
+➜  myproj python -m pkg.subpkg_a.hello
+('subpkg_a.__init__.py print2: ', 'pkg.subpkg_a')
+('hello.py print1: ', 'pkg.subpkg_a.__main__')
+('world.py print2: ', 'pkg.subpkg_a.world')
+('welcome.py print2: ', 'pkg.subpkg_b.welcome')
+
+➜  myproj python3 -m pkg.subpkg_a.hello
+subpkg_a.__init__.py print1:  pkg.subpkg_a.pkg.subpkg_a
+hello.py print1:  pkg.subpkg_a.__main__
+world.py print1:  pkg.subpkg_a.pkg.subpkg_a.world
+welcome.py print1:  pkg.subpkg_b.pkg.subpkg_b.welcome
+#+END_SRC
+
+综上所述，相对导入，导入的路径中，都没有出现包名。
+
+* 混用隐式和显示
+通常对于 subpak_a 和 subpak_b，它们自身实现逻辑可以使用显示或者隐式导入。对于它的调用者，pkg 下的 main.py 可以直接引用这两个包。此时的参考包是 pkg。
+
+#+BEGIN_SRC python
+#!/usr/bin/python
+# -*- conding:utf-8 -*-
+
+if __package__:
+    print('main.py print1: ', '{}.{}'.format(__package__, __name__))
+else:
+    print('main.py print2: ', '{}'.format(__name__))
+
+from subpkg_b import welcome
+from subpkg_a import hello
+#+END_SRC
+
+在 main 中隐式相对导入了 subpak_a，subpkg_b 和 hello，welcome 模块。
+
+#+BEGIN_SRC python
+➜  myproj python pkg/main.py
+('main.py print2: ', '__main__')
+('welcome.py print2: ', 'subpkg_b.welcome')
+('subpkg_a.__init__.py print2: ', 'subpkg_a')
+('hello.py print2: ', 'subpkg_a.hello')
+('world.py print2: ', 'subpkg_a.world')
+Traceback (most recent call last):
+  File "pkg/main.py", line 10, in <module>
+    from subpkg_a import hello
+  File "/Users/c/Downloads/myproj/pkg/subpkg_a/hello.py", line 10, in <module>
+    from ..subpkg_b import welcome
+ValueError: Attempted relative import beyond toplevel package
+#+END_SRC
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+➜  myproj python3 pkg/main.py
+main.py print2:  __main__
+welcome.py print1:  subpkg_b.subpkg_b.welcome
+subpkg_a.__init__.py print1:  subpkg_a.subpkg_a
+hello.py print1:  subpkg_a.subpkg_a.hello
+world.py print1:  subpkg_a.subpkg_a.world
+Traceback (most recent call last):
+  File "pkg/main.py", line 10, in <module>
+    from subpkg_a import hello
+  File "/Users/c/Downloads/myproj/pkg/subpkg_a/hello.py", line 10, in <module>
+    from ..subpkg_b import welcome
+ValueError: attempted relative import beyond top-level package
+#+END_SRC
+
+~from subpkg_b import welcome~ 语句正常执行了， ~from subpkg_a import hello~ 也正常，这符合前面的说明。
+此时 main 是 *top-level* ，它不属于任何一个包，但是 subpkg_a，subpkg_b 也不属于任何一个包，但是它本身是一个包，所以导入它是没问题，并且它里面的 hello 和 world 导入也正常。
+
+执行到 =subpkg_a/hello.py= 文件中 ~from ..subpkg_b import welcome~ 语句的时候报错了。
+正如前面的结果，subpkg_a 和 subpkg_b 是同级，可是在 subpkg_a 包并不知道 subpkg_b 包的存在，因此需要把他们共有的包 pkg 引入到包层级中，即
+
+#+BEGIN_SRC python
+➜  myproj python -m pkg.main
+('main.py print1: ', 'pkg.__main__')
+('welcome.py print2: ', 'pkg.subpkg_b.welcome')
+('subpkg_a.__init__.py print2: ', 'pkg.subpkg_a')
+('hello.py print2: ', 'pkg.subpkg_a.hello')
+('world.py print2: ', 'pkg.subpkg_a.world')
+#+END_SRC
+
+鉴于 welcome 已经被导入过，因此 hello.py 将不会再导入 welcome 模块，hello.py 中 ~from ..pkg_b import welcome'~ 不会被执行 。
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+➜  myproj python3 -m pkg.main
+
+main.py print1:  pkg.__main__
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/runpy.py", line 193, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.8/lib/python3.8/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/Users/c/Downloads/myproj/pkg/main.py", line 9, in <module>
+    from subpkg_b import welcome
+ModuleNotFoundError: No module named 'subpkg_b'
+#+END_SRC
+
+* 绝对导入
+隐式相对导入在 py3 被禁止了，显式相对导入也不是默认，那么最好还是使用绝对导入。即从包的起始位置书写 import 路径。
+
+修改 main.py，将 import 从跟包开始书写路径
+
+#+BEGIN_SRC python
+➜  myproj cat pkg/main.py
+
+#!/usr/bin/python
+# -*- conding:utf-8 -*-
+
+if __package__:
+    print('main.py print1: ', '{}.{}'.format(__package__, __name__))
+else:
+    print('main.py print2: ', '{}'.format(__name__))
+
+from pkg.subpkg_b import welcome
+from pkg.subpkg_a import hello
+
+➜  myproj python pkg/main.py
+('main.py: ', '__main__')
+Traceback (most recent call last):
+  File "pkg/main.py", line 11, in <module>
+    from pkg.subpkg_b import welcome
+ImportError: No module named pkg.subpkg_b
+#+END_SRC
+
+可以看到，与上次执行不一样， ~from pkg.subpkg_b import welcome~ 这一句就报错了。当前的 sys.path 是 main.py 所在的目录，并不包括 pkg 所在的目录，因此搜索包的时候，搜索不到 pkg。
+解决方案也有两种。
+
+因为 sys.path 没有，那么加上即可。在 main.py 中加上
+
+#+BEGIN_SRC python
+➜  myproj cat pkg/main.py
+#!/usr/bin/python
+# -*- conding:utf-8 -*-
+
+if __package__:
+    print('main.py print1: ', '{}.{}'.format(__package__, __name__))
+else:
+    print('main.py print2: ', '{}'.format(__name__))
+
+import sys
+sys.path.append('./')
+
+from pkg.subpkg_b import welcome
+from pkg.subpkg_a import hello
+
+➜  myproj python pkg/main.py
+('main.py print2: ', '__main__')
+('welcome.py print2: ', 'pkg.subpkg_b.welcome')
+('subpkg_a.__init__.py print2: ', 'pkg.subpkg_a')
+('hello.py print2: ', 'pkg.subpkg_a.hello')
+('world.py print2: ', 'pkg.subpkg_a.world')
+
+➜  myproj python3 pkg/main.py
+main.py print2:  __main__
+welcome.py print1:  pkg.subpkg_b.pkg.subpkg_b.welcome
+subpkg_a.__init__.py print1:  pkg.subpkg_a.pkg.subpkg_a
+hello.py print1:  pkg.subpkg_a.pkg.subpkg_a.hello
+world.py print1:  pkg.subpkg_a.pkg.subpkg_a.world
+#+END_SRC
+
+尽管针对 sys.path 进行 hack 可以实现绝对导入，可是这种方式始终一点也不 make sence。正如前面解决方式一样，可以使用 -m 以模块方式加载。
+毕竟 -m 可以把当前执行路径加入到 sys.path 中，去掉 sys.path.append 的语句，再运行：
+
+#+BEGIN_SRC python
+➜  myproj python -m pkg.main
+('main.py print1: ', 'pkg.__main__')
+('welcome.py print2: ', 'pkg.subpkg_b.welcome')
+('subpkg_a.__init__.py print2: ', 'pkg.subpkg_a')
+('hello.py print2: ', 'pkg.subpkg_a.hello')
+('world.py print2: ', 'pkg.subpkg_a.world')
+#+END_SRC
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+➜  myproj python3 -m pkg.main
+main.py print1:  pkg.__main__
+welcome.py print1:  pkg.subpkg_b.pkg.subpkg_b.welcome
+subpkg_a.__init__.py print1:  pkg.subpkg_a.pkg.subpkg_a
+hello.py print1:  pkg.subpkg_a.pkg.subpkg_a.hello
+world.py print1:  pkg.subpkg_a.pkg.subpkg_a.world
+#+END_SRC
+
+使用 -m 方式使用一个包，在 python 也是挺常见的，例如开启一个服务器和格式化 json 字符串：
+
+#+BEGIN_SRC json
+➜  myproj python3 -m http.server
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+
+
+➜  myproj echo '[{"hello": "world"}, {"python": "life is short"}]' | python -m json.tool
+[
+    {
+        "hello": "world"
+    },
+    {
+        "python": "life is short"
+    }
+]
+#+END_SRC
+
+然而，实际生产中，写一个 package 或者 lib，更多是被 install 后再导入运行。
+install 保证了它将会处在 sys.path，被导入等同于以 -m 方式被加载执行。
+因此不太会有 sys.path 和 ModuleNotFoundError 问题。例如将 hello 改为：
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+if __package__:
+    print("hello.py print1: ", "{}.{}".format(__package__, __name__))
+else:
+    print("hello.py print2: ", "{}".format(__name__))
+
+from subpkg_a import world
+from subpkg_b import welcome
+
+#+END_SRC
+
+变成绝对导入之后，直接运行会报错：
+
+#+BEGIN_SRC python
+➜  pkg python subpkg_a/hello.py
+('hello.py: ', '__main__')
+Traceback (most recent call last):
+  File "subpkg_a/hello.py", line 10, in <module>
+    from subpkg_a import world
+ImportError: No module named subpkg_a
+#+END_SRC
+
+main.py 改为
+
+#+BEGIN_SRC python
+#!/usr/bin/python
+# -*- conding:utf-8 -*-
+
+if __package__:
+    print('main.py print1: ', '{}.{}'.format(__package__, __name__))
+else:
+    print('main.py print2: ', '{}'.format(__name__))
+
+from subpkg_b import welcome
+from subpkg_a import hello
+#+END_SRC
+
+模拟 subpkg_a 作为一个独立的 lib，其本身使用绝对导入，然后 pkg 里的 main 使用这个包，直接运行，并没有报错
+
+#+BEGIN_SRC python
+➜  myproj python pkg/main.py
+('main.py print2: ', '__main__')
+('welcome.py print2: ', 'subpkg_b.welcome')
+('subpkg_a.__init__.py print2: ', 'subpkg_a')
+('hello.py print2: ', 'subpkg_a.hello')
+('world.py print2: ', 'subpkg_a.world')
+('main.py: ', '__main__')
+
+➜  myproj
+
+#+END_SRC
+
+因此使用绝对导入开发一个 lib 是更好的实践。可是正如上面 subpkg_a 所面临的问题，开发过程中，直接运行，可能会报错，不得不使用 -m 的方式。为了更好的开发，可以使用下面介绍的包结构。
+
+* Python Lib 构建推荐
+带有 =__init__.py= 文件夹即成为一个包，包，模块相互组织起来即成为 lib。先看一个相对导入，即构建包的时候。
+
+#+BEGIN_SRC python
+➜  demo tree mylib
+mylib
+├── mylib
+│   ├── __init__.py
+│   ├── greet
+│   │   ├── __init__.py
+│   │   ├── hello.py
+│   │   └── world.py
+│   └── main.py
+└── setup.py
+
+2 directories, 6 files
+#+END_SRC
+
+其中 hello.py world.py 和 main.py 的内容如下：
+
+#+BEGIN_SRC python
+➜  mylib cat greet/hello.py greet/world.py main.py
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+from . import world
+
+def say_hello():
+    return 'hello ' + world.say_world()
+
+
+if __name__ == '__main__':
+    print(say_hello())
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+def say_world():
+    return 'world'
+
+
+if __name__ == '__main__':
+    print(say_world())
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+from .greet import hello
+
+
+def do_greet():
+    return hello.say_hello()
+
+
+if __name__ == '__main__':
+    print(do_greet())
+#+END_SRC
+
+运行 =python main.py= 也能正常运行。
+
+然后使用 setup 打包进行安装。
+
+#+BEGIN_SRC python
+➜  mylib cat setup.py
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+
+from setuptools import setup, find_packages
+
+setup(
+    name='mylib',
+    version='1.0.0',
+    decription='simple lib demo',
+    long_description='README.md',
+    author='jiamin',
+    author_email='maojiamin@daixm.com',
+    licens='',
+    packages=find_packages(exclude=('tests', 'docs')),
+    test_suite='tests'
+)
+#+END_SRC
+
+执行 python setup.py bdist_wheel，会在 lib 下的 dist 文件夹生成一个 mylib-1.0.0-py2-none-any.whl 包。使用 pip 可以直接安装
+
+#+BEGIN_SRC python
+(venv) ➜  myproj pip list
+Package    Version
+---------- -------
+pip        19.0.1
+setuptools 40.6.3
+wheel      0.32.3
+(venv) ➜  myproj pip install ~/mylib/dist/mylib-1.0.0-py2-none-any.whl
+DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
+Processing /Users/master/mylib/dist/mylib-1.0.0-py2-none-any.whl
+Installing collected packages: mylib
+Successfully installed mylib-1.0.0
+(venv) ➜  myproj pip list
+
+Package    Version
+---------- -------
+mylib      1.0.0
+pip        19.0.1
+setuptools 40.6.3
+wheel      0.32.3
+(venv) ➜  myproj ipython
+
+In [1]: import mylib
+
+In [2]: from mylib.main import do_greet
+
+In [3]: do_greet()
+Out[3]: 'hello world'
+
+In [4]:
+#+END_SRC
+
+使用相对导入也可以构建一个包。
+
+* 更好的 python 包构建方式
+使用显示相对导入包构建方式，一个好处就是，包名修改了，也会不用修改包内模块的导入语句。而绝对导入包含了包名。
+但是绝对导入对于本地包的处理，有更好的方式，因此也是 Python 3 的默认方式。
+
+构建一个 python lib。和包结构和相对导入类似，下面增加更多的应用
+场景。项目结构目录如下
+
+#+BEGIN_SRC python
+➜  mylib tree
+.
+├── mylib
+│   ├── __init__.py
+│   ├── cron
+│   │   ├── __init__.py
+│   │   └── tasks.py
+│   ├── greet
+│   │   ├── __init__.py
+│   │   ├── hello.py
+│   │   └── world.py
+│   └── main.py
+├── setup.py
+├── docs
+├── README.md
+└── tests
+    ├── __init__.py
+    ├── __init__.pyc
+    └── test_greet.py
+
+4 directories, 11 files
+#+END_SRC
+
+增加了 tests 目录和 docs 目录以及 README.md。几个文件代码如下，所有导入都使用绝对导入，即从 mylib 开始导入
+
+#+BEGIN_SRC python
+➜  mylib cat mylib/greet/hello.py
+from mylib.greet import world
+...
+
+
+➜  mylib cat mylib/cron/tasks.py
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+from mylib.greet import hello
+
+def do_task():
+    return 'do task : ' + hello.say_hello()
+
+
+if __name__ == '__main__':
+    print(do_task())
+
+
+➜  mylib cat tests/test_greet.py
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+import unittest
+
+from mylib.greet import world
+from mylib.greet import hello
+
+
+class TestGreet(unittest.TestCase):
+
+    def test_say_world(self):
+        self.assertEqual('world', world.say_world())
+
+    def test_say_hello(self):
+        self.assertEqual('hello world', hello.say_hello())
+
+
+if __name__ == '__main__':
+    unittest.main()
+#+END_SRC
+
+在 mylib 内，若想要执行 corn 下面的 task，必须以 -m 方式运行，否则会抛错
+
+#+BEGIN_SRC python
+➜  mylib python mylib/cron/tasks.py
+Traceback (most recent call last):
+  File "mylib/cron/tasks.py", line 4, in <module>
+    from mylib.greet import hello
+ImportError: No module named mylib.greet
+
+➜  mylib python -m mylib.cron.tasks
+do task : hello world
+#+END_SRC
+
+同样的，执行 tests 也是需要制定 -m。
+
+hydra 里的 cron，都是使用 sys.path.append 方式，将执行脚本追加到 path。使用 -m 方式会比 hack sys.path 更好运行测试：
+
+#+BEGIN_SRC python
+➜  mylib python -m tests.test_greet
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+#+END_SRC
+
+* 测试 测试
+但是，其实 setup 工具，提供了测试方法，并且 setup 里还可以指定不同的测试方式，即声明 test_suite='tests'。
+
+ #+BEGIN_SRC python
+ ➜  mylib python setup.py test
+ running test
+ running egg_info
+ creating mylib.egg-info
+ writing mylib.egg-info/PKG-INFO
+ writing top-level names to mylib.egg-info/top_level.txt
+ writing dependency_links to mylib.egg-info/dependency_links.txt
+ writing manifest file 'mylib.egg-info/SOURCES.txt'
+ reading manifest file 'mylib.egg-info/SOURCES.txt'
+ writing manifest file 'mylib.egg-info/SOURCES.txt'
+ running build_ext
+ test_say_hello (tests.test_greet.TestGreet) ... ok
+ test_say_world (tests.test_greet.TestGreet) ... ok
+
+ ----------------------------------------------------------------------
+ Ran 2 tests in 0.000s
+ #+END_SRC
+
+当运行了上面的测试之后，会发现当前目录多了一个文件夹 mylib.egg-info。
+
+ #+BEGIN_SRC python
+ ➜  mylib ls
+ mylib          mylib.egg-info setup.py       tests
+ #+END_SRC
+
+* 安装项目
+Lib 开发完之后，自然是可以进行打包然后分发后 install。然而测试开发的时候，如果执行脚本，都需要加上 -m，整个开发过程还是蛮繁琐，
+因此 python 的 setup.py 提供了一个 develop 参数，进行了一次 mock 安装。
+
+#+BEGIN_SRC python
+(venv) ➜  mylib pip list
+Package    Version
+---------- -------
+pip        19.0.1
+setuptools 40.6.3
+wheel      0.32.3
+
+(venv) ➜  mylib python setup.py develop
+running develop
+running egg_info
+writing mylib.egg-info/PKG-INFO
+writing top-level names to mylib.egg-info/top_level.txt
+writing dependency_links to mylib.egg-info/dependency_links.txt
+reading manifest file 'mylib.egg-info/SOURCES.txt'
+writing manifest file 'mylib.egg-info/SOURCES.txt'
+running build_ext
+Creating /Users/master/myproj/venv/lib/python2.7/site-packages/mylib.egg-link (link to .)
+Adding mylib 1.0.0 to easy-install.pth file
+
+Installed /Users/master/myproj/mylib
+Processing dependencies for mylib==1.0.0
+Finished processing dependencies for mylib==1.0.0
+
+(venv) ➜  mylib pip list
+Package    Version Location
+---------- ------- --------------------------
+mylib      1.0.0   /Users/master/myproj/mylib
+pip        19.0.1
+setuptools 40.6.3
+wheel      0.32.3
+
+(venv) ➜  mylib python setup.py develop
+running develop
+running egg_info
+writing mylib.egg-info/PKG-INFO
+writing top-level names to mylib.egg-info/top_level.txt
+writing dependency_links to mylib.egg-info/dependency_links.txt
+reading manifest file 'mylib.egg-info/SOURCES.txt'
+writing manifest file 'mylib.egg-info/SOURCES.txt'
+running build_ext
+Creating /Users/master/myproj/venv/lib/python2.7/site-packages/mylib.egg-link (link to .)
+mylib 1.0.0 is already the active version in easy-install.pth
+
+Installed /Users/master/myproj/mylib
+Processing dependencies for mylib==1.0.0
+Finished processing dependencies for mylib==1.0.0
+
+(venv) ➜  mylib python mylib/cron/tasks.py
+do task : hello world
+
+
+#+END_SRC
+
+由此可见，执行了 python setup.py develop， 会在环境的 site-package 创建一个 mylib.egg-link 文件，
+这个文件的内容是 =/Users/master/myproj/mylib= ，即指向当前开发环境包目录，因此等价于安装了包到环境中。
+自然可以通过 pip list 查看。也就是可以直接使用脚本方式运行，不再需要 -m 了，并且也能再开发的时候，进行针对安装以后的行为效果进行调试。
+
+* 总结
+程序规模变大变复杂，通常进行模块拆分和封包复用。python 文件及模块的基本组织单位，文件夹则是基础包。包或者模块的引用可以使用 import 或者 from import 语法。
+
+Import 有相对导入和绝对导入，相对导入又有显式和隐式两种。显式则使用 =.= 或者 =..= 操作符。相对还是绝对，针对的是 python 文件被加载的方式。
+
+直接运行 python 文件则是以 top-level 方式，当前文件模块名是 ~__main__~ ，它本身就是顶级模块，不存在包的概念。
+若使用-m 参数，则以模块方式加载，模块方式加载都是相对包而言。
+=.= 表示在同一个包内，被相对被加载文件的路径进行加载导入的模块。
+
+相对导入的文件里不会出现包名，绝对导入的文件里，import 语句必须包含包名。同时所导入的包都必须从包名的根路径开始，写出完整的模块路径。
+
+Python 3 不在支持隐式相对导入。官方也更推荐使用绝对导入。
+因此介绍了使用绝对导入构建一个 lib，所使用的方式包括项目源码，文档，测试等，这也是 facebook 的 tornado 的方式。
+其中使用 ~python setup.py test~ 进行单元测试。以及使用 ~pyton setup.py develop~ 和 mock 安装，使得开发调试更方便。
+
+参考：
+-  [[https://docs.python.org/2.5/whatsnew/pep-328.html][PEP 328: Absolute and Relative Imports]]
+-  [[https://realpython.com/absolute-vs-relative-python-imports/][Absolute vs Relative Imports in Python]]
+-  [[https://docs.python.org/3/reference/import.html][The import system]]
+-  [[https://stackoverflow.com/questions/14132789/relative-imports-for-the-billionth-time][Script vs. Module]]
+
+禁止转载，如需转载请通过简信或评论联系作者。

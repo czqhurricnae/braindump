@@ -1,0 +1,82 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/react-dates/")); -*-
+:PROPERTIES:
+:ID:       3B6993A6-BC32-4B29-991E-77C686F4503F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:32>
+#+TITLE: react-dates
+
+- `onDateChage`, `onFocusChange` is marked as required in `SingleDatePickerInputController`, but its value is `undefined`.
+- index.js:1375 Warning: Failed prop type: SingleDatePicker: unknown props found: value, onChange.
+- Failed prop type: Invalid prop `date` of type `object` supplied to `withStyles(SingleDatePicker)`, expected `Moment`.
+
+#+CAPTION: 原来的实现
+<<原来的实现>>
+#+BEGIN_SRC js :results values list :exports both
+{getFieldDecorator(fields.date.field, {
+   initialValue: '',
+   rulse: [{
+       required:true,
+       message: fields.date.message,
+   }],
+})(<SingleDatePicker
+  onDateChange={this.setDate}
+  onFocusChange={this.setDate}
+  />)}
+#+END_SRC
+
+getFieldDecorator 方法主要实现了一个高阶组件 (HOC), 它主要为新组件增加了绑定 value 属性和 onChange 事件, 以及实现了 onChange 时的表单校验功能。
+新组件的 props 是通过 getFieldProps 方法创建, 该方法主要实现了绑定 onChange 事件, 确保表单能够获取到表单项输入的值, 在 onChange 的同时使用 async-validator 进行校验。
+实现的思路是用一个父组件去包裹 SingleDatePicker, 由父组件去取得 getFieldDecorator 传递的 value 和 onChange 事件。
+
+#+BEGIN_SRC js :results values list :exports both
+import React from 'react'
+import 'react-dates/initialize'
+import 'react-dates/lib/css/_datepicker.css'
+import { SingleDatePicker } from 'react-dates'
+import moment from 'moment'
+
+// MyDatePicker 组件的 value, onChange 是 由 rc-form 的 getFieldDecorator 传入.
+class MyDatePicker extends React.Component {
+    constructor (props) {
+        super(props)
+        this.state = { date: moment(new Date()), focused: false }
+    }
+
+    handleDateChange = date => {
+        const handleDateChange = this.props.onChange;
+        this.setState({date});
+        handleDateChange(date);
+    }
+
+    render () {
+        return (
+            <SingleDatePicker
+            numberOfMonths={1}
+            isOutsideRange={() => {}}
+            date={this.state.date}
+            onDateChange={this.handleDateChange}
+            focused={this.state.focused}
+            onFocusChange={({focused}) => this.setState({focused})}
+            id='datepicker'
+            />
+        )
+    }
+}
+
+export default MyDatePicker
+#+END_SRC
+
+#+CAPTION: 新的实现
+<<新的实现>>
+#+BEGIN_SRC js :results values list :exports both
+{getFieldDecorator(fields.date.field, {
+    initialValue: '',
+    rulse: [{
+        required:true,
+        message: fields.date.message,
+    }],
+})(<DatePicker
+   />)}
+#+END_SRC
+

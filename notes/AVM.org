@@ -1,0 +1,27 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AVM/")); -*-
+:PROPERTIES:
+:ID:       97881CDD-ED2E-494F-B04E-73D98742CBC3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-23 Fri 21:39>
+#+TITLE: AVM
+
+#+transclude: [[file:737NG 发动机振动值高.org::*计算 FAN，HPC，LPT，HPT 四个区域的振动值，在 CDS 上显示最大值][计算 FAN，HPC，LPT，HPT 四个区域的振动值，在 CDS 上显示最大值]]
+
+* 为什么低压涡轮振动值高，配平的是风扇叶片
+
+| 最大振动值 |  N1 | N2  | 时间 |
+|------------+-----+-----+------|
+| FAN        | 1.2 | --- | ---  |
+| HPC        | 0.2 | --- | ---  |
+| HPT        | 0.1 | --- | ---  |
+| LPT        | 2.3 | --- | ---  |
+
+比如 FAN：1.2，LPT：2.3。
+因为 FAN，LPT 都是指示 N1 转子的振动，只是来自不同的传感器。
+AVM 里记录的 FAN 和 HPC 的振动来自 1 号轴承传感器，HPT 和 LPT 的振动值来自 FFCCV 传感器。
+由于传感器安装的位置不同，感受振动的灵敏度有差别，导致测量出来的振动值有差别。
+
+而另一种理解：
+低压涡轮与风扇同轴，[[id:CF4A5C30-8E9A-4015-9F04-45B6D05A2C5A][低压涡轮在翼无法配平]]，通过风扇叶片配平降低低压涡轮振动。
+

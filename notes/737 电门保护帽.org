@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737 电门保护帽/")); -*-
+:PROPERTIES:
+:ID:       8F47DEB2-DDBB-48C0-A309-4BDAA5B3EA70
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-09 Wed 13:13>
+#+TITLE: 737 电门保护帽
+
+#+ROAM_KEY:
+
+
+737-SL-24-179

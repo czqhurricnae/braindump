@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Flask}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{dispatch\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Does the request dispatching.  Matches the URL and returns the}
+\PYG{l+s+sd}{        return value of the view or error handler.  This does not have to}
+\PYG{l+s+sd}{        be a response object.  In order to convert the return value to a}
+\PYG{l+s+sd}{        proper response object, call :func:`make\PYGZus{}response`.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{endpoint}\PYG{p}{,} \PYG{n}{values} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{match\PYGZus{}request}\PYG{p}{(}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{view\PYGZus{}functions}\PYG{p}{[}\PYG{n}{endpoint}\PYG{p}{]}\PYG{p}{(}\PYG{o}{*}\PYG{o}{*}\PYG{n}{values}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n}{HTTPException}\PYG{p}{,} \PYG{n}{e}\PYG{p}{:}
+            \PYG{n}{handler} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error\PYGZus{}handlers}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{n}{e}\PYG{o}{.}\PYG{n}{code}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{handler} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{e}
+            \PYG{k}{return} \PYG{n}{handler}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n+ne}{Exception}\PYG{p}{,} \PYG{n}{e}\PYG{p}{:}
+            \PYG{n}{handler} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error\PYGZus{}handlers}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debug} \PYG{o+ow}{or} \PYG{n}{handler} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{raise}
+            \PYG{k}{return} \PYG{n}{handler}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

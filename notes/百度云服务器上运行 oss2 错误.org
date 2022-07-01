@@ -1,0 +1,82 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/百度云服务器上运行 oss2 错误/")); -*-
+:PROPERTIES:
+:ID:       558A915A-FC49-4D2A-858E-5BF097ACD896
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-16 Sun 21:14>
+#+TITLE: 百度云服务器上运行 oss2 错误
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+Traceback (most recent call last):
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 2000, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1991, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/home/c/container/local/lib/python2.7/site-packages/flask_restful/__init__.py", line 269, in error_router
+    return original_handler(e)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1567, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1988, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1641, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask_restful/__init__.py", line 269, in error_router
+    return original_handler(e)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1544, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1639, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/c/container/local/lib/python2.7/site-packages/flask/app.py", line 1625, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask_admin/base.py", line 69, in inner
+    return self._run_view(f, *args, **kwargs)
+  File "/home/c/container/local/lib/python2.7/site-packages/flask_admin/base.py", line 368, in _run_view
+    return fn(self, *args, **kwargs)
+  File "./my_app/aliyun.py", line 765, in index_view
+    for item in self.storage.get_files(path):
+  File "./my_app/aliyun.py", line 131, in get_files
+    delimiter=self.separator):
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/iterators.py", line 43, in next
+    return self.__next__()
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/iterators.py", line 40, in __next__
+    self.fetch_with_retry()
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/iterators.py", line 48, in fetch_with_retry
+    self.is_truncated, self.next_marker = self._fetch()
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/iterators.py", line 108, in _fetch
+    max_keys=self.max_keys)
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/api.py", line 314, in list_objects
+    'encoding-type': 'url'})
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/api.py", line 1025, in __do_object
+    return self._do(method, self.bucket_name, key, **kwargs)
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/api.py", line 147, in _do
+    resp = self.session.do_request(req, timeout=self.timeout)
+  File "/home/c/container/local/lib/python2.7/site-packages/oss2/http.py", line 44, in do_request
+    raise RequestError(e)
+oss2.exceptions.RequestError: {'status': -2, 'details': "RequestError: HTTPConnectionPool(host='filessystem.oss-cn-shanghai.aliyuncs.com', port=80): Max retries exceeded with url: /?marker=&prefix=&max-keys=100&delimiter=%2F&encoding-type=url (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0xaf6d09cc>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution',))"}
+[pid: 11383|app: 0|req: 2/3] 45.32.41.152 () {46 vars in 920 bytes} [Sun May 16 19:36:34 2021] GET /admin/ossfileadmin/ => generated 0 bytes in 27 msecs (HTTP/1.1 500) 0 headers in 0 bytes (1 switches on core 0)
+#+END_SRC
+
+根本错误原因是： ~Temporary failure in name resolution~ 。
+
+通过 SSH 连接服务器，进行验证：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+c@instance-v1akmqdz:~$ ping oss-cn-shanghai.aliyuncs.com
+ping: unknown host oss-cn-shanghai.aliyuncs.com
+
+c@instance-v1akmqdz:~$ ping baidu.com
+ping: unknown host baidu.com
+#+END_SRC
+
+解决方法：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+c@instance-v1akmqdz:~$ sudo vim /etc/resolv.conf
+#+END_SRC
+
+添加以下内容：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+nameserver 114.114.114.114
+nameserver 8.8.8.8
+#+END_SRC

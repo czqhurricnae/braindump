@@ -1,0 +1,17 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/JavaScript spread attributes/")); -*-
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:36>
+#+TITLE: JavaScript spread attributes
+
+* JavaScript spread attributes                                   :JavaScript:
+:PROPERTIES:
+:ID:       048166EC-28A7-4767-AE31-9420259F63A7
+:END:
+#+BEGIN_SRC js :results values :exports no-eval
+let props = [{"a": 1, "b": 2}];
+console.log(...props);
+#+END_SRC
+
+#+RESULTS:
+: { a: 1, b: 2 }
+: undefined

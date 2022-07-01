@@ -1,0 +1,34 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 使用 connect/")); -*-
+:PROPERTIES:
+:ID:       CA36080E-C7FD-4C58-ACE7-75C894A06568
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:50>
+#+TITLE: React 使用 connect
+
+connect 函数, 第一个参数为 mapStatetoProps:
+
+#+BEGIN_SRC javascript :results values list :exports both
+const mapStateToProps = (state) => {
+  return { num: state.num }
+}
+#+END_SRC
+
+第二个参数为 actionCreators:
+
+#+BEGIN_SRC javascript :results values list :exports both
+const actionCreators = {reducer}
+#+END_SRC
+
+#+BEGIN_SRC javascript :results values list :exports both
+export default connect(mapStateToProps, actionCreator)(App)
+#+END_SRC
+
+使用:
+
+#+BEGIN_SRC javascript :results values list :exports both
+...
+this.props.num
+this.props.reducer
+...
+#+END_SRC

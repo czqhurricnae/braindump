@@ -1,0 +1,14 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/桥式整流器/")); -*-
+:PROPERTIES:
+:ID:       86ED41D7-E61A-44F3-83DD-F02B3979143F
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-07 Tue 19:14>
+#+TITLE: 桥式整流器
+
+#+DOWNLOADED: screenshot @ 2020-07-07 19:16:43
+[[file:./static/桥式整流器/2020-07-07_19-16-43_screenshot.jpg]]
+
+#+DOWNLOADED: screenshot @ 2020-07-07 19:17:06
+[[file:./static/桥式整流器/2020-07-07_19-17-06_screenshot.jpg]]

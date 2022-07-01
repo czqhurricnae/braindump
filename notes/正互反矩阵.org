@@ -1,0 +1,43 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/正互反矩阵/")); -*-
+:PROPERTIES:
+:ID:       9E3C3177-1CDB-4120-B567-D7B7247BB160
+:ROAM_ALIASES: "positive reciprocal matrix"
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-12 Sat 22:04>
+#+TITLE: 正互反矩阵
+
+#+ROAM_KEY:
+
+
+若矩阵 $$A = \left ( a_{i} {_{j}} \right )_{m}{_{\times}}{_{n}}$$ 满足以下特征：
+
+- $a_{i}{_{j}} > 0$
+- $a_{i}{_{j}} = \frac{1}{a_{j}{_{i}}}$
+
+
+理想的正互反矩阵
+
+$$
+A=\left[\begin{array}{cccc}
+a_{11} & a_{12} & \cdots & a_{1 n} \\
+\frac{1}{a_{12}} & a_{22} & \cdots & a_{2 n} \\
+\vdots & \vdots & \ddots & \vdots \\
+\frac{1}{a_{1 n}} & \frac{1}{a_{2 n}} & \cdots & a_{n n}
+\end{array}\right]=\left[\begin{array}{cccc}
+\frac{W_{1}}{W_{1}} & \frac{W_{1}}{W_{2}} & \cdots & \frac{W_{1}}{W_{n}} \\
+\frac{W_{2}}{W_{1}} & \frac{W_{2}}{W_{2}} & \cdots & \frac{W_{2}}{W_{n}} \\
+\vdots & \vdots & \ddots & \vdots \\
+\frac{W_{n}}{W_{1}} & \frac{W_{n}}{W_{2}} & \cdots & \frac{W_{n}}{W_{n}}
+\end{array}\right]
+$$
+
+- 理想的正互反矩阵每一列向量均呈倍数，故无法对角化[fn:1]。
+- 理想的正互反矩阵只有一个非零的特征值。
+- 理想的正互反矩阵对角线和为 n，故唯一非零的特征值应该为 n。
+
+理想的正互反矩阵也称[[id:B2BB3670-BFC8-4383-A227-B588C8EDC056][一致性矩阵]]。
+
+* Footnotes
+
+[fn:1] n 阶方阵 A 可对角化的充分必要条件是 A 有 n 个线性无关的特征向量。

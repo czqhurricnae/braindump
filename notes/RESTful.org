@@ -1,0 +1,17 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/RESTful/")); -*-
+:PROPERTIES:
+:ID:       CEB046A4-8599-4272-AF8E-F7B2B5198574
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-09 Tue 06:15>
+#+TITLE: RESTful
+
+#+LATEX: \resizebox{\textwidth}{!}{
+| HTTP verb | Scope                  | Semantics                                                                                   | success        | fail          | invalid         | example                                          |
+|-----------+------------------------+---------------------------------------------------------------------------------------------+----------------+---------------+-----------------+--------------------------------------------------|
+| GET       | Collection of messages | Retrieve all the stored messages in the collection, sorted by their name in ascending order | 200 OK         | 404 Not Found |                 | GET http://localhost:5000/api/messages/          |
+| GET       | Message                | Retrieve a single message                                                                   | 200 OK         | 404 Not Found |                 | GET ~http://localhost:5000/api/messages/{id}~    |
+| POST      | Collection of messages | Create a new message in the collection                                                      | 201 Created    |               |                 | POST http://localhost:5000/api/messages/         |
+| PATCH     | Message                | Update a field for an existing message                                                      | 200 OK         | 404 Not Found | 400 Bad Request | PATCH ~http://localhost:5000/api/messages/{id}~  |
+| DELETE    | Message                | Delete an existing message                                                                  | 204 No Content | 404 Not Found |                 | DELETE ~http://localhost:5000/api/messages/{id}~ |
+#+LATEX: }

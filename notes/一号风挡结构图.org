@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/一号风挡结构图/")); -*-
+:PROPERTIES:
+:ID:       FB49CB6E-93C4-4B30-8E9F-437B6A8303F8
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-24 Sat 11:41>
+#+TITLE: 一号风挡结构图
+
+[[file:./static/一号风挡结构图/2021-07-24_11-41-38_screenshot.jpg]]
+
+[[file:./static/一号风挡结构图/2021-07-24_11-41-46_screenshot.jpg]]
+
+导电层（window heat conductive coating），和上、下游的导电条和接线柱连接，通过上游获得电源，通过下游接地。

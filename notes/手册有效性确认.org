@@ -1,0 +1,29 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/手册有效性确认/")); -*-
+:PROPERTIES:
+:ID:       2150D0BD-D1B3-4D29-AB2F-B2FF5925280E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-27 Mar 02:20>
+#+TITLE: 手册有效性确认
+
+* 找 WDM 有效性步骤
+点击 [[file:飞机编号及飞机维修手册的有效性标识.org::*Block Number/Effectivity Number(Variable code) 批次号/有效号][WDM]]（线路解析手册）中的 FRONT MATTER 前面的加号点击 EFFECTIVE AIRCRAFT 得到如下
+
+[[file:./static/手册有效性确认/2389.jpeg]]
+
+* 找 AMM 的有效性步骤
+打开 AMM 手册找到 FRONT MATTER 点击 EFFECTIVITY CROSS REFERENCE 得到如下
+
+[[file:./static/手册有效性确认/3755.jpeg]]
+
+* IPC 有效性
+我们刚刚提到了在 AMM 手册中查到的 effectivity code 是 IPC 有效性。我们在 IPC 中看一下。
+
+[[file:./static/手册有效性确认/5048.jpeg]]
+
+我们可以看 11。
+
+[[file:./static/手册有效性确认/5800.jpeg]]
+
+我截取了部分对 11 的介绍。可以知道数字六位数代表的含义前三位与后三位，代表的是飞机有效性范围。
+比如 001099，则这个部件的有效性范围是从 1-99。

@@ -1,0 +1,112 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/错误处理程序中 return")); -*-
+:PROPERTIES:
+:ID:       58452ED0-4749-4159-8E22-54F6A14F99CE
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-19 Mon 18:35>
+#+TITLE: 错误处理程序中 return
+
+* 程序不报错，finally 部分没有 return
+
+  #+BEGIN_SRC js :results output :exports no-eval
+  var n = 1;
+  function func () {
+      try {
+          n++;
+          return n;
+      } catch (err) {
+          n++;
+          return n;
+      } finally {
+          n++;
+      }
+  }
+
+  console.log(func())
+  console.log(n)
+  #+END_SRC
+
+  #+RESULTS:
+  : 2
+  : 3
+
+* 在 try 中出现报错，finally 部分没有 return
+
+  #+BEGIN_SRC js :results output :exports no-eval
+  var n = 1;
+
+  function func() {
+      try {
+          n++;
+          console.log(m);
+          return n;
+      } catch (err) {
+          n++;
+          return n;
+      } finally {
+          n++;
+      }
+  }
+
+  console.log(func());
+  console.log(n);
+  #+END_SRC
+
+  #+RESULTS:
+  : 3
+  : 4
+
+  ~console.log(func())~ 打印的值要看在哪里执行 ~return~ ， =n= 在 ~try()~ ， ~catch()~ 中都自增一次，故返回 =3= ，而且无论如何， ~finally~ 语句是会被执行的。
+
+* 程序不报错，~finally{}~ 中有 return 返回值
+
+  #+BEGIN_SRC js :results output :exports no-eval
+  var n = 1;
+
+  function func() {
+      try {
+          n++;
+          return n;
+      } catch (err) {
+          n++;
+          return n;
+      } finally {
+          n++;
+          return n;
+      }
+  }
+
+  console.log(func());
+  console.log(n);
+  #+END_SRC
+
+  #+RESULTS:
+  : 3
+  : 3
+
+* 程序报错，~finally{}~ 中有 return
+
+  #+BEGIN_SRC js :results output :exports no-eval
+  var n = 1;
+
+  function func() {
+      try {
+          n++;
+          console.log(m);
+          return n;
+      } catch (err) {
+          n++;
+          return n;
+      } finally {
+          n++;
+          return n;
+      }
+  }
+
+  console.log(func());
+  console.log(n);
+  #+END_SRC
+
+  #+RESULTS:
+  : 4
+  : 4

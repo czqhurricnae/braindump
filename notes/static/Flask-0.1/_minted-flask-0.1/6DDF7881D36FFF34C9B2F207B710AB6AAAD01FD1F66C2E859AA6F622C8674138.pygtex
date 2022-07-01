@@ -1,0 +1,41 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Rule}\PYG{p}{(}\PYG{n}{RuleFactory}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{match}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{path}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Check if the rule matches a given path. Path is a string in the}
+\PYG{l+s+sd}{        form ``\PYGZdq{}subdomain|/path(method)\PYGZdq{}`` and is assembled by the map.}
+
+\PYG{l+s+sd}{        If the rule matches a dict with the converted values is returned,}
+\PYG{l+s+sd}{        otherwise the return value is `None`.}
+
+\PYG{l+s+sd}{        :internal:}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{build\PYGZus{}only}\PYG{p}{:}
+            \PYG{n}{m} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}regex}\PYG{o}{.}\PYG{n}{search}\PYG{p}{(}\PYG{n}{path}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{m} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{n}{groups} \PYG{o}{=} \PYG{n}{m}\PYG{o}{.}\PYG{n}{groupdict}\PYG{p}{(}\PYG{p}{)}
+                \PYG{c+c1}{\PYGZsh{} we have a folder like part of the url without a trailing}
+                \PYG{c+c1}{\PYGZsh{} slash and strict slashes enabled. raise an exception that}
+                \PYG{c+c1}{\PYGZsh{} tells the map to redirect to the same url but with a}
+                \PYG{c+c1}{\PYGZsh{} trailing slash}
+                \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strict\PYGZus{}slashes} \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{is\PYGZus{}leaf} \PYG{o+ow}{and} \PYGZbs{}
+                   \PYG{o+ow}{not} \PYG{n}{groups}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}\PYGZus{}suffix\PYGZus{}\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{:}
+                    \PYG{k}{raise} \PYG{n}{RequestSlash}\PYG{p}{(}\PYG{p}{)}
+                \PYG{c+c1}{\PYGZsh{} if we are not in strict slashes mode we have to remove}
+                \PYG{c+c1}{\PYGZsh{} a \PYGZus{}\PYGZus{}suffix\PYGZus{}\PYGZus{}}
+                \PYG{k}{elif} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{strict\PYGZus{}slashes}\PYG{p}{:}
+                    \PYG{k}{del} \PYG{n}{groups}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZus{}\PYGZus{}suffix\PYGZus{}\PYGZus{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}
+
+                \PYG{n}{result} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}
+                \PYG{k}{for} \PYG{n}{name}\PYG{p}{,} \PYG{n}{value} \PYG{o+ow}{in} \PYG{n}{groups}\PYG{o}{.}\PYG{n}{iteritems}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+                    \PYG{k}{try}\PYG{p}{:}
+                        \PYG{n}{value} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}converters}\PYG{p}{[}\PYG{n}{name}\PYG{p}{]}\PYG{o}{.}\PYG{n}{to\PYGZus{}python}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+                    \PYG{k}{except} \PYG{n}{ValidationError}\PYG{p}{:}
+                        \PYG{k}{return}
+                    \PYG{n}{result}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{name}\PYG{p}{)}\PYG{p}{]} \PYG{o}{=} \PYG{n}{value}
+                \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{defaults} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                    \PYG{n}{result}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{defaults}\PYG{p}{)}
+                \PYG{k}{return} \PYG{n}{result}
+
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

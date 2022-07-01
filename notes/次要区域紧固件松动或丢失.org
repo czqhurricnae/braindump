@@ -1,0 +1,18 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/紧固件松动/")); -*-
+:PROPERTIES:
+:ID:       B0B9B0E9-DD79-4B5A-917F-5E34EDE947CB
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-20 Tue 15:50>
+#+TITLE: 次要区域紧固件松动或丢失
+#+FILETAGS: :SRM_51_10_05:
+
+次要结构紧固件松动或丢失参考 SRM 51-10-05 判断放行标准。
+
+紧固件松动会呈现出以下几种现象，相对部件转动，凸起或有气流尾迹。紧固件周围漆层裂纹也可能是紧固件松动引起。
+
+[[file:./static/次要区域紧固件松动或丢失/2021-04-20_15-56-37_1613306464-547c2b12ffba48fc45ea4207c7181481.jpg]]
+
+[[file:./static/次要区域紧固件松动或丢失/2021-04-20_15-56-51_1613306464-43f35a8bda0915ae02f5a9370ebea1bd.jpg]]
+
+[[file:./static/次要区域紧固件松动或丢失/2021-04-20_15-57-05_1613306464-be36fe680ab1bd1cc58bad0f4711c788.jpg]]

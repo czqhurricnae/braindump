@@ -1,0 +1,88 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/设置断点的原理/")); -*-
+:PROPERTIES:
+:ID:       3F565CC0-FBDD-4081-AAFA-4A0B4AE93FC0
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-05 Sat 12:46>
+#+TITLE: 设置断点的原理
+
+对于程序员来说，debug 的时间往往比写程序的时间还要长。
+尤其对我这种专写 bug 为主的程序员来说，一个好的调试器意味着早点下班和休息。
+现在方便的调试器很多，有著名的 Visual Studio(VS) 等 IDE，也有免费的 Windbg 和 GDB 等等。
+加个断点也很简单，就是按一下键而已。
+但你有没有想过，调试器 Debugger 并不能控制程序的执行顺序，为什么它可以让 CPU 在需要的地方停住呢？
+
+今天我们就来揭开调试断点的神秘面纱，并通过一个实例来看看调试器实际都做了些什么。调试器能够随心所欲的停止程序的执行，主要通过软件断点和硬件断点两种方式。
+
+* 软件断点
+软件断点在 X86 系统中就是指令 ~INT 3~ ，它的二进制代码 opcode 是 ~0xCC~ 。
+当程序执行到 ~INT 3~ 指令时，会引发软件中断。
+操作系统的 ~INT 3~ 中断处理器会寻找注册在该进程上的调试处理程序。从而像 Windbg 和 VS 等等调试器就有了上下其手的机会。
+
+我们先通过一个例子来看看调试器都倒了什么鬼：
+
+#+header: :cmdline :includes <stdio.h> "/Users/c/Unix/error_function.c" "/Users/c/Unix/get_num.c"
+#+BEGIN_SRC C :results output list :exports no-eval
+#include
+int main ()
+{
+// This loop takes some time so that we
+// get a chance to examine the address of
+// the breakpoint at the second printf
+    for (int i = 1; i < 100000000; i++)
+        printf("Hello World!");
+    for (int i = 1; i < 10000000; i++)
+        printf("Hello World!");
+    return 0;
+}
+#+END_SRC
+
+这是一个比较傻的 Hello World 程序。
+我们用 Windbg 打开它，并设置一个断点：
+
+[[file:./static/设置断点的原理/95ddefd4-a8f1-43b4-8f9d-a437a744aa43.jpg]]
+
+这时 Windbg 会将自己 Attach 到该程序的进程，通过程序 PE 文件的 debug 节找到调试信息。
+在调试信息里面找到加断点行所在的机器代码，并把头一个字节用 ~WriteProcessMemory()~ 函数换成 ~0xCC(INT 3)~ 。
+
+让我们来验证一下：
+
+[[file:./static/设置断点的原理/06c87a14-169c-489a-9adc-63f336dc4180.jpg]]
+
+注意左边是 Windbg 窗口，右边是用 Process view 打开的进程空间，左右的红框是对应的。
+在我们设置断点之前，左右的内容是完全一样的，这里要特别注意 ~printf~ 编译出来的第一个二进制代码 0x68。
+接下来我们设置断点，并开始运行，那 100 万个 printf 让我们有充分的时间，看看发生了什么：
+
+[[file:./static/设置断点的原理/2fc224af-1b42-47be-809a-9ff60edf0212.jpg]]
+
+我们会发现 push 操作代码 ~0x68600e2900~ 的第一个字节被 windbg 换成了 ~0xCC~ 也就是 ~INT 3~ 。这样 windbg 就可以在执行到这里时被调度。
+
+不一会，windbg 的断点到了：
+
+[[file:./static/设置断点的原理/1f3ada69-97ec-4d1f-a4d7-ea3ce9e8efab.jpg]]
+
+到达断点后，操作符又被还原为 ~0x68~ ，似乎什么都没有发生，用户被蒙在鼓里，是不是很有意思？
+
+实际上，一般情况下，调试器维护了一大组调试断点，在并把他们都换成了 ~INT 3~ 。在被调度回来后，会都填回去，并通过现在的地址判断是到了那个断点。软件断点没有数目限制。
+
+* 硬件断点
+X86 系统提供 8 个调试寄存器（DR0~DR7）和 2 个 MSR 用于硬件调试。
+其中前四个 DR0~DR3 是硬件断点寄存器，可以放入内存地址或者 IO 地址，还可以设置为执行、修改等条件。
+CPU 在执行的到这里并满足条件会自动停下来。
+
+硬件断点十分强大，但缺点是只有四个，这也是为什么所有调试器的硬件断点只能设置 4 个原因。
+我们在调试不能修改的 ROM 时，只能选择这个，所以要省着点用，在一般情况下还是尽量选择软件断点。
+
+还有个 ~INT 1~ 是单步调试命令，这里略过。
+
+* 其他
+Visual Studio 有个有趣的特性是 debug 编译后，会把 ~0xcc(INT 3)~ 填入代码的空隙，这样一旦程序越界就会被 VS 捕捉而容易发现错误。
+而 ~0xCCCC~ 在中国的 GBK 编码是“烫”。
+有中国程序员翻看内存到代码段会发现很多"烫烫烫"，不明所以，以为发生了什么神奇的事情。
+
+有些程序越界也会打出"烫烫烫"：
+
+[[file:./static/设置断点的原理/03a858e4-3750-4da2-a19d-5b7cd2fe9c45.jpg]]
+
+有的用户被吓得够呛，以为计算机过热了，喊烫了，赶紧关机，十分搞笑。

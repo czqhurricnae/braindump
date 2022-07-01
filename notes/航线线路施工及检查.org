@@ -1,0 +1,32 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/航线线路施工及检查/")); -*-
+:PROPERTIES:
+:ID:       EF23ECC0-AC00-417C-A3C3-AD3DD3F17B34
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-05-21 四 00:48>
+#+TITLE: 航线线路施工及检查
+
+* 常用术语
+AWG：[[id:6E60497D-3D66-45C8-86CD-8C6F9171D7ED][American Wire Gauge]]，[[id:8F7C219D-9BBD-483C-BC1C-FDE804614F2C][美国标准线径]]，不包括导线外层的绝缘层，仅仅指导线内部导体的内径。
+
+#+BEGIN_QUOTE
+导线的线规号[fn:3]是一个表征导线的导体截面积大小的号码。
+通常用“美国线规”（AWG）号表示。
+线规号越大，导体的截面积就越小。
+线规号越小，导体的截面积就越大。
+美国线规号共有 44 个等级，按导体的截面积从大到小依次为 0000（写作 4/0），000（3/0），00（2/0），0（1/0），1，2，3，…，40。
+但是在波音飞机上，实际上只使用从 3/0 至 26 号的导线，4/0 号线以及 26 号以后的导线已很少见，且从小于 2 号以后的导线起就不用奇数线规的导线。
+0 号至 4/0 号之间的导线一般只使用在大功率负载线路及电源馈线线路中。
+#+END_QUOTE
+
+STRAIN RELIEF CLAMP：插头尾部。
+
+MECHANICAL FERRULE：机械压环，用于修理导线时或者做屏蔽接地线的时候使用。一般分为内层机械压环和外层机械压环。
+
+WTC：Wire Type Code，线类型代码，用于确定导线的件号。
+
+CAU：Circular Area Unit，导体的圆形面积。
+
+* Footnotes
+
+[fn:3][[eww:marginnote3app://note/0898775D-9F87-4BE5-850A-D54199C90320][ 导线的线规号]]

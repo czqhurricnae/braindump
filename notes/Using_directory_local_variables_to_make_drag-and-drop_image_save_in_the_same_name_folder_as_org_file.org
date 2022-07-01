@@ -1,0 +1,39 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Using_directory_local_variables_to_make_drag-and-drop_image_save_in_the_same_name_folder_as_org_file/")); -*-
+:PROPERTIES:
+:ID:       B3C22684-337B-4A3A-AAA2-A03D6CC04E7E
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-11-06 Fri 17:49>
+#+TITLE: Using_directory_local_variables_to_make_drag-and-drop_image_save_in_the_same_name_folder_as_org_file
+
+Now we need to add =.dir-locals.el= to our hexo's root directory, create a file called =.dir-locals.el= with following contents:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+((nil
+  .
+  ((eval
+    .
+    (progn
+
+      ;; make drag-and-drop image save in the same name folder as org file
+      ;; ex: `aa-bb-cc.org' then save image test.png to `aa-bb-cc/test.png'
+      (defun my-org-download-method (link)
+        (let ((filename
+               (file-name-nondirectory
+                (car (url-path-and-query
+                      (url-generic-parse-url link)))))
+              (dirname (file-name-sans-extension (buffer-name)) ))
+          ;; if directory not exist, create it
+          (unless (file-exists-p dirname)
+            (make-directory dirname))
+          ;; return the path to save the download files
+          (expand-file-name filename dirname)))
+
+      ;; only modify `org-download-method' in this project
+      (setq-local org-download-method 'my-org-download-method)
+
+      )))))
+#+END_SRC
+
+This will help emacs use =my-org-download-method= when enter the hexo project.

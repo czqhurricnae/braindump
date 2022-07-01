@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/波音工程图纸-零件清单（PL）/")); -*-
+:PROPERTIES:
+:ID:       12ABC211-BFB4-41EB-B477-5444288F6679
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-18 Mon 13:16>
+#+TITLE: 波音工程图纸-零件清单（PL）
+#+FILETAGS: :PL:
+
+零件清单（PL），即 Part list，是工程零部件的材料清单，表明工程零部件的完整构型，在实际应用中，我们可以根据 PL 来确定工程图纸的适用性。

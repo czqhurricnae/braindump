@@ -1,0 +1,47 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/前退式与后退式插头/")); -*-
+:PROPERTIES:
+:ID:       D17B8204-0F7E-4451-8FC5-4EBCD9714775
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-04 Sun 23:55>
+#+TITLE: 前退式与后退式插头
+
+插头 CONNETOR 分为两类 PLUG（插头）和 RECEPTACLE（插座）。
+插座靠近电源端，有安装⽀座，⼀般线号为 D*****J， 插头靠近接地端，⽆安装⽀座，⼀般线号为 D*****P。
+
+* 插头插钉的进退
+** 种类（两种）
+- 前退式：插头内部插针孔周围的物质是软质材料（软橡胶），可以变形，插头外部壳体上没有一条蓝色色环。
+- 后退式：插头内部插针孔周围的物质是硬质材料（硬塑料），不易变形，插头外部壳体上有一条蓝色色环。
+
+以上区别方法属于经验总结，在 SWPM 的插头描述中会说明前退式或者后退式。
+对于后退式插头，拆装工具是一样的。
+
+* 前退式
+
+#+CAPTION: 前退式插钉
+[[file:./static/前退式与后退式插头/2021-07-04_23-56-37_screenshot.jpg]]
+
+[[file:./static/前退式与后退式插头/2021-07-04_23-58-13_screenshot.jpg]]
+
+** 进钉
+[[file:./static/前退式与后退式插头/2021-07-04_23-58-55_screenshot.jpg]]
+
+** 退钉
+
+[[file:./static/前退式与后退式插头/2021-07-05_00-00-06_screenshot.jpg]]
+
+* 后退式
+
+#+CAPTION: 后退式插钉
+[[file:./static/前退式与后退式插头/2021-07-04_23-57-29_screenshot.jpg]]
+
+[[file:./static/前退式与后退式插头/2021-07-05_00-01-48_screenshot.jpg]]
+
+** 进钉
+
+[[file:./static/前退式与后退式插头/2021-07-05_00-01-11_screenshot.jpg]]
+
+** 退钉
+
+[[file:./static/前退式与后退式插头/2021-07-05_00-01-29_screenshot.jpg]]

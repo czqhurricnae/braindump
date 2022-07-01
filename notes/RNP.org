@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/RNP/")); -*-
+:PROPERTIES:
+:ID:       3A400CF8-F933-472A-BBC0-789F326DA906
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-26 Sat 20:01>
+#+TITLE: RNP
+
+Required Navigational Performance

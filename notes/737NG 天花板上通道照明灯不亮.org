@@ -1,0 +1,77 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 天花板上通道照明灯不亮/")); -*-
+:PROPERTIES:
+:ID:       F3BCE045-3967-40DE-9FD8-4100FEE5D787
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-27 Dec 16:19>
+#+TITLE: 737NG 天花板上通道照明灯不亮
+
+某天我值班，一架 737-700 飞机在鄂尔多斯航前反映乘务员测试时，下图这个应急灯不亮：
+
+[[file:./static/737NG 天花板上通道照明灯不亮/2838.jpeg]]
+
+由于飞机在外站，我立即给出的处理意见是按 MEL 33-15-02 放行：
+
+[[file:./static/737NG 天花板上通道照明灯不亮/3851.jpeg]]
+
+但后续接班的工程师对此有疑问：这个灯到底是不是 =应急通道灯= 。
+
+所以本期来聊一聊这个问题。
+
+关于应急灯系统，很多人应该看过我之前写过的一个课件：
+
+[[file:./static/737NG 天花板上通道照明灯不亮/6697.jpeg]]
+
+737NG 应急灯系统学习笔记
+
+对这条 MEL 的理解，一般会认为应急通道灯就是指装在行李架凸边上的应急灯：
+
+[[file:./static/737NG 天花板上通道照明灯不亮/7776.jpeg]]
+
+* 那么天板上这个灯属于应急通道灯吗？
+
+[[file:./static/737NG 天花板上通道照明灯不亮/17391.jpeg]]
+
+[[file:./static/737NG 天花板上通道照明灯不亮/9269.jpeg]]
+
+在 SSM 和 WDM 手册里，这个灯叫做 =天花板灯（CEILINGLT，L1417/L1419）= ，前后舱各有一个，位置在客舱和厨房之间的天花板上：
+
+[[file:./static/737NG 天花板上通道照明灯不亮/10125.jpeg]]
+
+前舱 L1417
+
+[[file:./static/737NG 天花板上通道照明灯不亮/10908.jpeg]]
+
+后舱 L1419
+
+[[file:./static/737NG 天花板上通道照明灯不亮/12709.jpeg]]
+
+SDS 手册里把飞机上的应急灯分为 4 类：
+- 出口信号灯
+- 紧急撤离外部照明灯
+- 过道灯
+- 地板紧急撤离通道灯
+
+出口信号灯、紧急撤离外部照明灯、地板紧急撤离通道灯，包括哪些灯都比较好理解，SSM/WDM 里直接看灯的名字就能看出来。分类有疑问的主要是这两种灯：
+
+- CEILING LT，L1417 & L1419
+-Dome Light，L273
+
+我之前的理解：
+
+天花板上那两个应急灯作用是照亮应急通道的，也应该归类为过道灯，所以可以按 MEL 33-15-02 放行。
+
+当然随后我也就此咨询了波音（SR：3-3877190207）：
+
+RESPONSE:
+
+The L1417 (forward) and L1419 (aft) lights are referred to as =ceiling mounted emergency aisle lights=.
+As mentioned in Ref /B/, these two lights may be inoperative and *dispatched per MMEL item 33-15-02, provided no adjacent light assembly is inoperative.
+
+[[file:./static/737NG 天花板上通道照明灯不亮/17391.jpeg]]
+
+L273 dome light:
+
+This dome light is located on P18 panel in the flight compartment and is a dual lamp assembly.
+One lamp is an emergency light for the flight compartment, and it comes on with the emergency light system.
+There is MEL relief for this light.*

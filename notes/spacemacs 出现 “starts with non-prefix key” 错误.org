@@ -1,0 +1,112 @@
+# -*- eval: (progn (setq org-media-note-screenshot-image-dir (concat default-directory "./static/spacemacs 出现 “starts with non-prefix key” 错误/")) (setq org-download-image-dir (concat default-directory "./static/spacemacs 出现 “starts with non-prefix key” 错误/"))); -*-
+:PROPERTIES:
+:ID:       25175811-97FD-46E9-86A1-84BCF6C0FA59
+:END:
+
+#+DATE: <2021-02-23 Tue 15:54>
+#+TITLE: spacemacs 出现 “starts with non-prefix key” 错误
+
+“SPC f e R” 调用 “dotspacemacs/sync-configuration-layers” 时出现 “(error "Key sequence r t a starts with non-prefix key r t")”。
+
+因为在文件 =~/.spacemacs.d/layers/hurricane-org/package.el= 中：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(spacemacs|use-package-add-hook org-roam
+  :post-init
+  (setq org-roam-directory (concat deft-dir (file-name-as-directory "notes")))
+  (setq org-roam-capture-templates
+   '(("d" "default" plain (function org-roam-capture--get-point)
+      "%?"
+      :file-name "${slug}"
+      :head "\n#+DATE: %T\n#+TITLE: ${title}\n"
+      :unnarrowed t)))
+  (progn
+    (spacemacs/declare-prefix "ar" "org-roam")
+    (spacemacs/set-leader-keys
+      "arl" 'org-roam
+      "art" 'org-roam-dailies-today
+      "arf" 'org-roam-find-file
+      "arg" 'org-roam-graph)
+
+    (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
+    (spacemacs/set-leader-keys-for-major-mode 'org-mode
+      "rl" 'org-roam
+      "rt" 'org-roam-dailies-today
+      "rb" 'org-roam-switch-to-buffer
+      "rf" 'org-roam-find-file
+      "ri" 'org-roam-insert
+      "rg" 'org-roam-graph))
+  :post-config
+  (defun org-roam--title-to-slug (title)
+    "Convert TITLE to a file-name-suitable slug."
+    (cl-flet* ((nonspacing-mark-p (char)
+                                  (eq 'Mn (get-char-code-property char 'general-category)))
+               (strip-nonspacing-marks (s)
+                                       (apply #'string (seq-remove #'nonspacing-mark-p
+                                                                   (ucs-normalize-NFD-string s))))
+               (cl-replace (title pair)
+                           (replace-regexp-in-string (car pair) (cdr pair) title)))
+      (let* ((pairs `(;; ("[^[:alnum:][:digit:]]" . " ")  ;; convert anything not alphanumeric
+                      ;; ("__*" . "_")  ;; remove sequential underscores
+                      ("^_" . "")  ;; remove starting underscore
+                      ("_$" . "")))  ;; remove ending underscore
+             (slug (-reduce-from #'cl-replace (strip-nonspacing-marks title) pairs)))
+        slug))))
+#+END_SRC
+
+在 =org-mode= 中，使用 “SPC m r t” 作为 ~org-roam-dailies-today~ 的快捷键。
+
+而在文件 =~/.emacs.d/layers/+emacs/org/packages.el= 中：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(defun org/init-org-roam ()
+  (use-package org-roam
+    :defer t
+    :commands (org-roam-buffer-toggle-display
+               org-roam-dailies-find-yesterday
+               org-roam-dailies-find-today
+               org-roam-dailies-find-tomorrow
+               org-roam-dailies-find-date
+               org-roam-tag-add
+               org-roam-tag-delete)
+    :init
+    (progn
+      (spacemacs/declare-prefix "aor" "org-roam")
+      (spacemacs/declare-prefix "aord" "org-roam-dailies")
+      (spacemacs/declare-prefix "aort" "org-roam-tags")
+      (spacemacs/set-leader-keys
+        "aordy" 'org-roam-dailies-find-yesterday
+        "aordt" 'org-roam-dailies-find-today
+        "aordT" 'org-roam-dailies-find-tomorrow
+        "aordd" 'org-roam-dailies-find-date
+        "aorf" 'org-roam-find-file
+        "aorg" 'org-roam-graph
+        "aori" 'org-roam-insert
+        "aorI" 'org-roam-insert-immediate
+        "aorl" 'org-roam-buffer-toggle-display
+        "aorta" 'org-roam-tag-add
+        "aortd" 'org-roam-tag-delete)
+
+      (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
+      (spacemacs/declare-prefix-for-mode 'org-mode "mrd" "org-roam-dailies")
+      (spacemacs/declare-prefix-for-mode 'org-mode "mrt" "org-roam-tags")
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "rb" 'org-roam-switch-to-buffer
+        "rdy" 'org-roam-dailies-find-yesterday
+        "rdt" 'org-roam-dailies-find-today
+        "rdT" 'org-roam-dailies-find-tomorrow
+        "rdd" 'org-roam-dailies-find-date
+        "rf" 'org-roam-find-file
+        "rg" 'org-roam-graph
+        "ri" 'org-roam-insert
+        "rI" 'org-roam-insert-immediate
+        "rl" 'org-roam-buffer-toggle-display
+        "rta" 'org-roam-tag-add
+        "rtd" 'org-roam-tag-delete))
+    :config
+    (progn
+      (spacemacs|hide-lighter org-roam-mode))))
+#+END_SRC
+
+在 =org-mode= 中，使用 “SPC m r t a” 和 “SPC m r t d” 分别作为 ~org-roam-tag-add~，~org-roam-tag-delete~ 的快捷键。
+这两处的配置产生冲突。

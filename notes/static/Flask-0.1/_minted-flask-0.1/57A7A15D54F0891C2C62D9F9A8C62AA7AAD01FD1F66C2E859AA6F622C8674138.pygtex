@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{\PYGZus{}RequestContext}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The request context contains all request relevant information.  It is}
+\PYG{l+s+sd}{    created at the beginning of the request and pushed to the}
+\PYG{l+s+sd}{    `\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack` and removed at the end of it.  It will create the}
+\PYG{l+s+sd}{    URL adapter and request object for the WSGI environment provided.}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{app}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{app} \PYG{o}{=} \PYG{n}{app}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}adapter} \PYG{o}{=} \PYG{n}{app}\PYG{o}{.}\PYG{n}{url\PYGZus{}map}\PYG{o}{.}\PYG{n}{bind\PYGZus{}to\PYGZus{}environ}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request} \PYG{o}{=} \PYG{n}{app}\PYG{o}{.}\PYG{n}{request\PYGZus{}class}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{session} \PYG{o}{=} \PYG{n}{app}\PYG{o}{.}\PYG{n}{open\PYGZus{}session}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{request}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{g} \PYG{o}{=} \PYG{n}{\PYGZus{}RequestGlobals}\PYG{p}{(}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{flashes} \PYG{o}{=} \PYG{n+nb+bp}{None}
+\end{Verbatim}

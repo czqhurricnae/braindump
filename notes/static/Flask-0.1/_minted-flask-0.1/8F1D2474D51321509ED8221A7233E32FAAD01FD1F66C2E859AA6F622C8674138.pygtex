@@ -1,0 +1,82 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{LocalStack}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+  \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}This class works similar to a :class:`Local` but keeps a stack}
+\PYG{l+s+sd}{  of objects instead.  This is best explained with an example::}
+
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls = LocalStack()}
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls.push(42)}
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls.top}
+\PYG{l+s+sd}{      42}
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls.push(23)}
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls.top}
+\PYG{l+s+sd}{      23}
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls.pop()}
+\PYG{l+s+sd}{      23}
+\PYG{l+s+sd}{      \PYGZgt{}\PYGZgt{}\PYGZgt{} ls.top}
+\PYG{l+s+sd}{      42}
+
+\PYG{l+s+sd}{  They can be force released by using a :class:`LocalManager` or with}
+\PYG{l+s+sd}{  the :func:`release\PYGZus{}local` function but the correct way is to pop the}
+\PYG{l+s+sd}{  item from the stack after using.  When the stack is empty it will}
+\PYG{l+s+sd}{  no longer be bound to the current context (and as such released).}
+
+\PYG{l+s+sd}{  By calling the stack without arguments it returns a proxy that resolves to}
+\PYG{l+s+sd}{  the topmost item on the stack.}
+
+\PYG{l+s+sd}{  .. versionadded:: 0.6.1}
+\PYG{l+s+sd}{  \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+  \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local} \PYG{o}{=} \PYG{n}{Local}\PYG{p}{(}\PYG{p}{)}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock} \PYG{o}{=} \PYG{n}{allocate\PYGZus{}lock}\PYG{p}{(}\PYG{p}{)}
+
+  \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}release\PYGZus{}local\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local}\PYG{o}{.}\PYG{n}{\PYGZus{}\PYGZus{}release\PYGZus{}local\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{p}{)}
+
+  \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+      \PYG{k}{def} \PYG{n+nf}{\PYGZus{}lookup}\PYG{p}{(}\PYG{p}{)}\PYG{p}{:}
+          \PYG{n}{rv} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{top}
+          \PYG{k}{if} \PYG{n}{rv} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+              \PYG{k}{raise} \PYG{n+ne}{RuntimeError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{object unbound}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+          \PYG{k}{return} \PYG{n}{rv}
+      \PYG{k}{return} \PYG{n}{LocalProxy}\PYG{p}{(}\PYG{n}{\PYGZus{}lookup}\PYG{p}{)}
+
+  \PYG{k}{def} \PYG{n+nf}{push}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{obj}\PYG{p}{)}\PYG{p}{:}
+      \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Pushes a new item to the stack\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock}\PYG{o}{.}\PYG{n}{acquire}\PYG{p}{(}\PYG{p}{)}
+      \PYG{k}{try}\PYG{p}{:}
+          \PYG{n}{rv} \PYG{o}{=} \PYG{n+nb}{getattr}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{stack}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{None}\PYG{p}{)}
+          \PYG{k}{if} \PYG{n}{rv} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+              \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local}\PYG{o}{.}\PYG{n}{stack} \PYG{o}{=} \PYG{n}{rv} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}
+          \PYG{n}{rv}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{obj}\PYG{p}{)}
+          \PYG{k}{return} \PYG{n}{rv}
+      \PYG{k}{finally}\PYG{p}{:}
+          \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock}\PYG{o}{.}\PYG{n}{release}\PYG{p}{(}\PYG{p}{)}
+
+  \PYG{k}{def} \PYG{n+nf}{pop}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+      \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Removes the topmost item from the stack, will return the}
+\PYG{l+s+sd}{      old value or `None` if the stack was already empty.}
+\PYG{l+s+sd}{      \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock}\PYG{o}{.}\PYG{n}{acquire}\PYG{p}{(}\PYG{p}{)}
+      \PYG{k}{try}\PYG{p}{:}
+          \PYG{n}{stack} \PYG{o}{=} \PYG{n+nb}{getattr}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{stack}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{None}\PYG{p}{)}
+          \PYG{k}{if} \PYG{n}{stack} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+              \PYG{k}{return} \PYG{n+nb+bp}{None}
+          \PYG{k}{elif} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{stack}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{:}
+              \PYG{n}{release\PYGZus{}local}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local}\PYG{p}{)}
+              \PYG{k}{return} \PYG{n}{stack}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+          \PYG{k}{else}\PYG{p}{:}
+              \PYG{k}{return} \PYG{n}{stack}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{p}{)}
+      \PYG{k}{finally}\PYG{p}{:}
+          \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}lock}\PYG{o}{.}\PYG{n}{release}\PYG{p}{(}\PYG{p}{)}
+
+  \PYG{n+nd}{@property}
+  \PYG{k}{def} \PYG{n+nf}{top}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+      \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The topmost item on the stack.  If the stack is empty,}
+\PYG{l+s+sd}{      `None` is returned.}
+\PYG{l+s+sd}{      \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+      \PYG{k}{try}\PYG{p}{:}
+          \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}local}\PYG{o}{.}\PYG{n}{stack}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+      \PYG{k}{except} \PYG{p}{(}\PYG{n+ne}{AttributeError}\PYG{p}{,} \PYG{n+ne}{IndexError}\PYG{p}{)}\PYG{p}{:}
+          \PYG{k}{return} \PYG{n+nb+bp}{None}
+\end{Verbatim}

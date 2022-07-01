@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/保留工作项目/")); -*-
+:PROPERTIES:
+:ID:       5C5AF07E-597B-4435-9BF6-20060B606729
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-01 Tue 17:31>
+#+TITLE: 保留工作项目
+在航空器计划维修中不能正常地计划完成的维修工作项目。

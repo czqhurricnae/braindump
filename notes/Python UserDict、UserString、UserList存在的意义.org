@@ -1,0 +1,50 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python UserDict、UserString、UserList 存在的意义/")); -*-
+:PROPERTIES:
+:ID:       B22D1303-1649-401B-AEF7-A1F17F3D8A6E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-27 Tue 16:05>
+#+TITLE: Python UserDict、UserString、UserList存在的意义
+
+从 Python 2.2 开始，Python 支持继承 Python 内建结构，如 list、dict。
+最近在实现一个功能，为了简化内容，我直接继承了 dict，但是结果和预期不一样。举个例子：
+
+ #+BEGIN_SRC python
+ In : class NewDict(dict):
+ ...:     def __getitem__(self, key):
+ ...:         return 42
+ ...:
+ In : d = NewDict(a=1)
+ In : d
+ Out: {'a': 42}
+ In : d2 = {}
+ In : d2.update(d)
+ In : d2
+ Out: {'a': 1}
+ #+END_SRC
+
+也就是说 NewDict 的 =__getitem__= 方法被 =dict.update= 给忽略了。
+
+ #+BEGIN_SRC python
+     In : from UserDict import UserDict
+
+     In : class NewDict(UserDict):
+     ...:     def __getitem__(self, key):
+     ...:         return 42
+     ...:
+
+     In : d = NewDict(a=1)
+     In : d['b'] =2
+     In : d
+     Out: {'a': 1, 'b': 2}
+     In : d['b']
+     Out: 42
+     In : d2 = {}
+     In : d2.update(d)
+     In : d2
+     Out: {'a': 42, 'b': 42}
+ #+END_SRC
+
+这才是对的呀。所以我开始研究找答案。后来在 PyPy 的文档中发现了[[http://pypy.readthedocs.io/en/latest/cpython_differences.html#subclasses-of-built-in-types][原因]]，也就是这种 C 实现的结构的内建方法大部分会忽略重载的那个方法。
+
+之前我以为 UserDict 这样的类是历史遗留问题，现在才知道是有原因的。原来 UserDict、UserString、UserList 这样的模块是非常必要的。

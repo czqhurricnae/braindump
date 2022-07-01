@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 盖板图号查找/")); -*-
+:PROPERTIES:
+:ID:       ABFCA8C1-508E-4CC9-B460-58A11FA13974
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-19 Mon 09:57>
+#+TITLE: 737NG 盖板图号查找
+
+#+transclude: t
+[[file:737NG 盖板螺钉件号查找.org::#盖板图号查找][737NG 盖板螺钉件号查找]]
+
+#+transclude: t
+[[file:737NG 盖板紧固件件号确认.org::#盖板图号查找][737NG 盖板紧固件件号确认]]

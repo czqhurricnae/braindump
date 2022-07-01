@@ -1,0 +1,23 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/发动机火警过热探测元件/")); -*-
+:PROPERTIES:
+:ID:       8F6B6F04-0902-4074-93CA-22870CB07EE8
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-11-17 Tue 16:58>
+#+TITLE: 发动机火警过热探测元件
+
+引用自：[fn:1]
+#+BEGIN_QUOTE
+The Fire/Overheat Detector has two threaded terminal studs(one common and one ground).
+The common terminal stud extends through the responder housing and is brazed to the metallized ceramic insulator that, in turn, brazed to the housing.
+The ground terminal stud is not insulated and attached to common equipment ground for the entire assembly.
+It is brazed to the outer body of the sensor housing.
+The studs are electrically connected to the internal switches and to a resistor.
+The studs provide the interface connection points between the switch circuits and the external aircraft wiring system.
+The common terminal stud is used for the positive (+) connection of the voltage source(28 Vdc), and the ground terminal stud is used for the return voltage (20 V RTN).
+#+END_QUOTE
+
+* Footnotes
+
+[fn:1] CMM 26-10-14-R3 -> Description and Operation -> Physical Description

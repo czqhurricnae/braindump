@@ -1,0 +1,108 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/液压系统维护时管路接头堵头的件号和使用/")); -*-
+:PROPERTIES:
+:ID:       7DBA1AAA-0385-4CC5-B8CB-7BEA8A432CE1
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-26 Oct 01:33>
+#+TITLE: 液压系统维护时管路接头堵头的件号和使用
+
+在日常液压系统部件拆装过程中，为了避免脱开的部件滴油，我们需要安装堵头。下面介绍关于堵头件号和使用。
+
+* 参考 AMM 手册
+737NG AMM TASK 20-10-20-800-801 Cap and Plug Hydraulic Fittings
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/4722.jpeg]]
+
+#+BEGIN_QUOTE
+Caps and plugs are used on the ports and disconnected hydraulic lines to *prevent leakage and contamination.*
+在接头和断开的液压管路上使用盖子和塞子，以防止渗漏和污染。
+#+END_QUOTE
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/14974.jpeg]]
+
+#+BEGIN_QUOTE
+NOTE: Do not use protective metal or plastic caps or plugs for system pressure testing.
+Use protective caps or plugs before and after test as needed, to prevent system contamination.
+注意:不要使用金属或塑料的保护堵盖或塞子进行系统压力测试。根据需要，在测试之前和之后使用保护盖或保护塞，以防止系统污染。
+#+END_QUOTE
+
+* 举例说明
+下面以拆卸 EMDP 回油滤组件为例：
+
+AMM TASK 29-11-41-000-802 EMDP Case Drain Filter Module Removal
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/9962.jpeg]]
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/10418.jpeg]]
+
+
+这里的堵头怎么查找呢？
+
+首先查找管路或者接头尺寸：
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/11333.jpeg]]
+
+IPC 里查出连接油滤组件的：
+
+- 单向活门 PN：2S5306（BACV10W6H）
+
+- 接头 PN：MS21902D6（MS21902W6）
+
+从件号后缀 =6/06= 也很容易能得出接头的管路尺寸标号为 =06= ，也就是 0.375 英寸[fn:1]。
+当然，也可以[[file:737NG 更换一号风挡固定拖把耗材工程图纸查询.org::Product Standards Search][通过标准件号查找详细信息]]：
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/13703.jpeg]]
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/14046.jpeg]]
+
+接头尺寸都是 06，对应的连接管路端的尺寸也会是 06。
+但需要注意的是，在此处，接头这边要用 06 的 CAP，而管路接头端要用 06 的 PLUG。对应前面的标准表格，可得到件号。
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/14974.jpeg]]
+
+可以用 =*= 查找，比如 =AS21913*6*= ，=BACC14AD*6*= 。这里我们可以使用：
+
+- 堵盖 CAP：BACC14AD06JL
+- 堵头 PLUG：MS21913-6（注：MS21913 标准和 AS21913 相同）
+
+
+#+CAPTION: BACC14AD06JL
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/2021-04-19_09-27-40_screenshot.jpg]]
+
+#+CAPTION: CAP：BACC14AD06JL，PLUG：AS5169J06
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/16054.jpeg]]
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/16352.jpeg]]
+
+* 特别说明
+如果要对安装堵盖/堵塞的接头施加液压压力，只能使用 AMM TASK 20-10-20-800-801 中规定 P/N 的堵头。
+它们在设计和压力等级上与液压部件兼容，因此波音公司推荐使用。这些件号的盖子/塞子也可防止污染。
+然而，仅出于接头的保护目的，任何合适的抗液压油堵头就足够了。
+
+平时我们使用堵头和堵盖，只是为了防止污染，而不是液压系统增压测试时保持或抑制液压压力用的。所以，只要尺寸合适并且材料能抗液压油，可使用任何供应商提供的堵头和堵盖。
+
+本例中按 AMM 拆卸 EMDP 回油滤组件时，我们安装堵头的目的仅仅是防止污染用的，而不是打压测试用的。所以，也可以不用 AMM TASK 20-10-20-800-801 给出的件号规格。
+
+厂家对于防止污染功能的堵头，也没有给出特别的规范和件号，金属和非金属的都可以：
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/20870.jpeg]]
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/21250.jpeg]]
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/21549.jpeg]]
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/21808.jpeg]]
+
+可参考网站：
+
+- https://www.aircraftspruce.com/catalog/hapages/caplugpdseries.php
+
+- https://hi-line.com/non-threaded-jic-37-hydraulic-fitting-cap-plug/
+
+[[file:./static/液压系统维护时管路接头堵头的件号和使用/22591.jpeg]]
+
+当然，还是推荐购买一套 AMM TASK 20-10-20-800-801 给出 PN 的 PLUG 和 CAP，打压测试和平时防污染都可以用，特别是在定检中可能会用到。
+
+另外，对于堵头，波音和空客是通用的。
+
+* Footnotes
+
+[fn:1] 在管路、接头等标准件号的构成里面，后缀数字代表了以 1/16 英寸为单位的管子外径。以我们找到的这个 06 为例，也就是 6/16 英寸，即 3/8 英寸=0.375 英寸。

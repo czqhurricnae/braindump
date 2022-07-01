@@ -1,0 +1,45 @@
+:PROPERTIES:
+:ID:       5C98D8FB-664E-4760-81E0-EF75E8C27E17
+:END:
+#+DATE: <2020-06-08 Mon 01:58>
+#+TITLE: Add_annotation_in_PDF_src_block_2ND_update
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usetikzlibrary{tikzmark}
+#+OPTIONS: toc:nil
+
+* Using minted with tikzmark
+
+#+LABEL: lst:c code
+#+CAPTION: Yes
+#+BEGIN_SRC c
+  #include <stdio.h>
+
+  int main()
+  {
+    // comment
+    printf("hello world\n"); |$\tikzmark{too}$|
+    return 0;
+  }
+#+END_SRC
+
+#+BEGIN_LaTeX
+    \begin{tikzpicture}[overlay,remember picture]
+      \draw[dashed,->] (pic cs:too) ++(0,0.25) to[bend left]
+      ++(5,-1)node[right]{$\bullet$ Here it is too!};
+    \end{tikzpicture}
+#+END_LaTeX
+
+As you can see in [[lst:c code][c code]] \ldots
+
+* org-mode 中 #+LABEL 的用法
+=#+LABEL= 只是用于 LaTex 的引用.
+- 无法在 org-mode 像锚点一样进行跳转.
+- 无法作为标题.
+
+#+BEGIN_SRC emacs-lisp
+[[lst:c code][c code]]
+#+END_SRC
+
+本文档的效果如图:
+[[file:./static/Add_annotation_in_PDF_src_block/2ND_update_page_1.png]]

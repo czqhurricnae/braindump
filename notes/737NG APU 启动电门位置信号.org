@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG APU 启动电门位置信号/")); -*-
+:PROPERTIES:
+:ID:       2A6CD059-C083-4BE2-8509-102B312A1A3F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-21 Thu 13:25>
+#+TITLE: 737NG APU 启动电门位置信号
+
+[[file:./static/737NG APU 启动电门位置信号/2021-01-21_13-25-50_WDM 49-62-11 .jpeg]]
+[[file:./static/737NG APU 启动电门位置信号/2021-01-21_13-25-54_WDM 49-62-11  2.jpeg]]
+[[file:./static/737NG APU 启动电门位置信号/2021-01-21_13-25-58_WDM 49-62-11  3.jpeg]]

@@ -1,0 +1,15 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 发动机构型/")); -*-
+:PROPERTIES:
+:ID:       E0A22043-C8FB-46A2-995C-FF65E7CEC3C1
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-30 Sat 22:02>
+#+TITLE: 737NG 发动机构型
+
+[[file:./static/737NG 发动机构型/2021-01-30_22-02-59_screenshot.jpg]]
+
+- /2：双环形燃烧室（无）
+- /3（列）：技术嵌入构型（TI）
+- /B1，/B2：BUMP 增推力（B1，B2）
+- F：拐点温度后移
+- E：evolution 第三代

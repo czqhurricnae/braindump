@@ -1,0 +1,202 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 前登机门门警电门 S1147/")); -*-
+:PROPERTIES:
+:ID:       207FCC74-E3F7-4E9A-99AB-4F64AF9ACA63
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-02-14 Feb 20:34>
+#+TITLE: 737NG 前登机门门警电门 S1147
+B737NG 飞机前登机门门警指示不同于其余三个客舱/勤务门，上面装有两个门警电门 S199 和 S1147，S1147 电门是波音为了防止前登机门出现假锁情况在后期加装的。\\
+
+\\
+
+一
+
+S1147 的来由
+
+\\
+
+\\
+
+很久以前〈笑〉，13 家运营商反映 35 架飞机有 41 航班返航或者滑油，原因是前登机门漏气飞机无法增压。但是飞机门指示面板没有任何警告舱门未关好的指示，也就是指示信号与实际位置不一致，原因是门没有调节好出现假锁。
+
+\\
+
+为避免或减少因为门未锁好造成的返航或滑回事件，波音在前登机门框后上部加装一个门警电门，以减少错误指示。相应的 SB：737-52-1159，加装的门警电门设备号 S1147，原装的门警传感器设备号是 S199。
+
+\\
+
+[[file:./static/737NG 前登机门门警电门 S1147/3111.jpeg]]
+
+\\
+
+[[file:./static/737NG 前登机门门警电门 S1147/3508.jpeg]]
+
+\\
+
+[[file:./static/737NG 前登机门门警电门 S1147/3904.jpeg]]
+
+\\
+
+\\
+
+\\
+
+二
+
+S1147 作动支架缺陷及处理建议
+
+\\
+
+\\
+
+原装的传感器 S199 靠锁滚轮作动传感器标靶。加装的门警电门不在锁接收器里，需要在门上另加装一个作动支架。关门时支架压缩电门，接收门的关闭信号。由于频繁的压缩作动，支架容易出现磨损或者断裂。
+
+\\
+
+[[file:./static/737NG 前登机门门警电门 S1147/5892.jpeg]]
+
+\\
+
+\\
+
+以下是支架磨损和支架断裂的案例图。
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+支架断裂
+
+[[file:./static/737NG 前登机门门警电门 S1147/8516.jpeg]]
+
+[[file:./static/737NG 前登机门门警电门 S1147/9026.jpeg]]
+
+调整片磨损
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+\\
+
+为什么支架不设计一个材质好点的避免磨损呢？波音答复支架是航线简单的可更换件，设计材质比门警电门脆弱，可以防止门警电门磨损。
+
+\\
+
+#+BEGIN_QUOTE
+
+  The Switch Depressor Bracket is intended to be a simple 'line replaceable' part and to bend and/or fail before physically damaging the switch -- it is design to be weaker than the switch. If high strength material used on this bracket, the switch own may be damaged prior to the bracket damage.
+
+#+END_QUOTE
+
+\\
+
+对于支架断裂缺陷，解决的方法比较简单，就是更换支架。对于支架调整片磨损问题，需要定一个维护标准。\\
+
+\\
+
+根据 AMM52-71-11-820-802，S1147 的压缩量为 0.10+/-0.010
+inch（2.54+/-0.254mm），也就是 2.5 毫米多一点，随着支架调整片磨损凹坑逐渐加深，S1147 的压缩量随之变小，当压缩量小到一定程度时，S1147 内的触点电门不再作动，将触发前登机门门警灯亮。波音 737-SL-52-061-A 提到，NG 机队出现过几起类似缺陷导致门警灯亮的故障。
+
+\\
+
+作动支架上最多可以安装 4 片调整片，每片调整片自身厚度 0.032
+inch，另可叠加最多 10 片厚度为 0.003
+inch 薄片，即每片调整片的调节厚度为 0.032-0.062inch。如果支架磨损超过一个调整片，门警灯可能点亮。
+\\
+
+为了避免门警灯亮故障导致航班延误或滑回事件发生，并且考虑方案的可行性，建议当作动支架调整片上凹坑深度达 0.5MM 时，更换调整片或调整片上的薄片。
+
+\\
+
+\\
+
+三
+
+S1147 故障隔离
+
+\\
+
+\\
+
+S1147 和 S199 故障都会点亮前登机门门警灯，如何区别灯亮是由那个门警电门引起呢？
+
+\\
+
+从线路图看，S199 信号先传到 PSEU，PSEU 控制门警灯，如果 S199 故障 PSEU 将记录故障代码。而 S1147 不需要经过 PSEU，直接控制门警灯。所以如果是门警电门故障导致的门警灯亮，可通过自检 PSEU 查看代码判断是 S199 还是 S1147 故障，以便明确排故方向。
+
+\\
+
+[[file:./static/737NG 前登机门门警电门 S1147/14332.jpeg]]
+
+\\
+
+四
+
+*相关航材*
+
+\\
+
+\\
+
+相关航材参考件号如下。飞机构型不同有些差异，详细请查阅 IPC52-11-00-02B、IPC52-11-00-18 和 SB737-52-1159.
+
+\\
+
+| 名称         | 件号                          |
+| 支架         | 141A6118-2                    |
+| 支架铆钉     | BACR15FR5E3R                  |
+| 调整片 shim   | 141A6119-1                    |
+| 螺杆         | BACS12BP06P10                 |
+| 垫片         | NAS1149FN632P/NAS1149EN632P   |
+| 螺帽         | H52732-06CD                   |
+| S1147        | 602EN1-6                      |
+
+\\
+
+[[file:./static/737NG 前登机门门警电门 S1147/21559.jpeg]]
+
+◆[[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1478519824170434566&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][737NG飞机常见特殊检查要点]]
+
+◆[[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1478551830468050947&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][737NG飞机系统原理SDS学习]]
+
+◆[[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1462890183552335872&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][737NG飞机驾驶舱面板]].
+
+◆[[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1488001557634826243&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][MEL和CDL解读]]
+
+[[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1527349987389554688&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][◆其他放行标准]]
+
+[[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1527349987389554688&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][◆]][[https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=1527368233064939521&__biz=MzI4Mzc4MjQ3OQ==#wechat_redirect][SRM解读]]
+
+\\

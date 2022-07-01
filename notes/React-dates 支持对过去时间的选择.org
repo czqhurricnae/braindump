@@ -1,0 +1,38 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/React-dates 支持对过去时间的选择/")); -*-
+:PROPERTIES:
+:ID:       25E5E4C9-1B38-44AE-ABE3-3C14A605F86A
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-02 二 00:12>
+#+TITLE: React-dates 支持对过去时间的选择
+
+react 项目里的时间组件来自 airbnb 的 [[https://github。com/airbnb/react-dates][react-dates]]，但这个组件默认选择范围是从当前时间往后。
+即，假设今天是 2018 年 1 月 30 日，在这之前的日期我都无法选择。
+下图灰色的部分都是不能选中的。
+
+[[file:./static/React-dates 支持对过去时间的选择/7.png]]
+
+查看 [[http://airbnb.io/react-dates/?selectedKind=DRP%2520-%2520Day%2520Props&selectedStory=allows%2520all%2520days%252C%2520including%2520past%2520days&full=0&addons=1&stories=1&panelRight=0&addonPanel=storybook%252Factions%252Factions-panel][storybook]] 寻找某个能开启选择过去日期的属性：
+
+[[file:./static/React-dates 支持对过去时间的选择/6.png]]
+
+一开始我是懵的，DateRangePickerWrapper 从哪来的怎么 import 的 ？
+isOutsideRange 属性接受的是一个匿名函数，那我要传什么样的匿名函数给你？？
+经过试验，我发现，不需要 import 什么 DateRangePickerWrapper 组件，只要这样就能让你的 DateRangePicker 组件支持选择过去的时间。
+
+[[file:./static/React-dates 支持对过去时间的选择/5.png]]
+
+isOutsideRange 属性需要接受一个匿名函数，这个匿名函数有无返回值都没有关系，只要 isOutsideRange 属性被赋值了一个匿名函数，你的日期组件就能支持选择过去日期。
+我个人倾向于，时间组件是否支持对过去时间的选择，应该由一个属性去控制，这个属性接收的是布尔值。
+项目里的 QbDatePicker 组件 是对 airbnb 的时间组件进行了一次包装，为了方便使用，我给 QbDatePicker 组件增加了一个 allowPastDays 属性，其默认值是 false。
+
+[[file:./static/React-dates 支持对过去时间的选择/4.png]]
+
+[[file:./static/React-dates 支持对过去时间的选择/3.png]]
+
+这样在使用 QbDatePicker 组件的时间就比较方便了，只要加上 allowPastDays 属性就能打开选择过去时间的开关了。
+
+[[file:./static/React-dates 支持对过去时间的选择/2.png]]
+
+[[file:./static/React-dates 支持对过去时间的选择/1.png]]

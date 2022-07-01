@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/人员疏失归责图/")); -*-
+:PROPERTIES:
+:ID:       1F0E85EF-7B85-4EE4-A24A-95E6564738A0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-16 Wed 14:19>
+#+TITLE: 人员疏失归责图
+
+#+ROAM_KEY:
+
+ 
+[[file:./static/人员疏失归责图/1.png]]

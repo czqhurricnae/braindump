@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG AACU/")); -*-
+:PROPERTIES:
+:ID:       96EE79A3-9D5A-460B-9A3E-CE2296A6ADAD
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-18 Thu 12:24>
+#+TITLE: 737NG AACU
+
+[[file:./static/737NG AACU/2021-02-18_12-45-03_svgexport-1.png]]

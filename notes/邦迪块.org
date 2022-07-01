@@ -1,0 +1,195 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/邦迪块/")); -*-
+:PROPERTIES:
+:ID:       C2C1F99B-92E6-487E-9D3B-AC5F65CA33FB
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-17 Wed 23:33>
+#+TITLE: 邦迪块
+#+FILETAGS: :terminal_strip:Assembly_of_BACM15C_and_BURNDY_YHLZD____and_YHLZR____Terminal_Block_Modules:SWPM_20_90_11:
+
+* 接线块分类
+:PROPERTIES:
+:ID:       E5B8E220-F622-4F27-BB9A-8E6D9AAD1CA9
+:END:
+[[file:./static/邦迪块/2021-07-06_15-37-45_screenshot.jpg]]
+
+** 电阻型接线块
+:PROPERTIES:
+:ID:       E5AABB9F-C434-46F0-92BF-32E8CB4E9E25
+:END:
+是指相通的 2 个插孔之间通过一个固定电阻相连，插孔之间有一定的电阻；二极管型是指 2 个插孔之间通过一个二极管相连，具有方向导通特性。该两种接线块一般为彩色的。
+
+[[file:./static/邦迪块/2021-07-06_15-38-32_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-39-25_screenshot.jpg]]
+
+** 按密度来分类
+:PROPERTIES:
+:ID:       DE5A4752-0827-46B3-AFBA-F3FFF3DC9691
+:END:
+分为标准密度邦迪块（插孔数量少于 16 个）和高密度邦迪块（插孔数量等于 16 个）。
+
+[[file:./static/邦迪块/2021-03-17_23-34-31_screenshot.jpg]]
+
+** 按类型来分类
+:PROPERTIES:
+:ID:       BBF73268-E94E-494A-A0A7-E98085FD1F9F
+:END:
+分为 F G H X Y Z 六种类型。
+[[file:./static/邦迪块/2021-07-06_15-30-04_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-30-33_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-30-40_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-30-48_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-30-58_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-31-05_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-31-12_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-07-06_15-30-16_screenshot.jpg]]
+
+* 邦迪块配件件号说明
+:PROPERTIES:
+:ID:       99301A47-EF54-4826-AEA7-686DEC3F523F
+:END:
+邦迪块的安装需要许多配件支持，主要配件有：终端卡子（End Clamp）、间隔器（Spacer）、导轨（Track）。各种配件的件号和图示如下表：
+
+[[file:./static/邦迪块/2021-03-19_08-13-22_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-03-17_23-36-05_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-03-17_23-40-31_screenshot.jpg]]
+
+* 邦迪块插钉
+:PROPERTIES:
+:ID:       9065EC66-C142-4485-A572-B80A6D613BEB
+:END:
+邦迪块的插孔需要用压接好线的插钉插进去以实现把几根线连接在一起（Bus Together）的功能。
+邦迪块主要使用的插钉有两种，一种适用于标准密度的邦迪块，件号为： =BACC47DE()A= ；一种适用于高密度的邦迪块，件号为： =M39029/11-145= 。
+
+* 邦迪块定位
+:PROPERTIES:
+:ID:       48467A09-2C89-4AC5-A5DA-A4F5DBE5B75D
+:END:
+邦迪块的定位在线路图中是以 2 个或 3 个位置代码来定位的， 比如 =FA3= 。
+- F：表示邦迪块的类型。
+- A：表示邦迪块的横向定位（Horizontal Row）。
+  - 横向定位（Horizontal Row）一般用英文字母标注在以下地方：
+    - 终端卡子（end clamp）上。
+    - 间隔器（spacer）上。
+    - 邦迪块安装支架（block mount rail）上。
+  - 如果邦迪块定位代码中没有包含横向定位代码：如 F3，那么表示：
+    - 所有单独的列（即一块邦迪块）所有的插钉都是连接在一起（Bus Together）的。
+    - 横向定位不重要。
+- 3：表示邦迪块的纵向定位（Vertical Column）。
+  - 纵向定位（Vertical Column）一般用阿拉伯数字标注在以下地方：
+    - T 型支架（T bar）上。
+    - 邦迪块安装支架（block mount rail）上。
+
+* 邦迪块模块的拆卸（Terminal Block Module Removal）
+:PROPERTIES:
+:ID:       C043BB66-67F2-45E3-87D6-C1173A6628A1
+:END:
+** 将邦迪块从导轨（Track）上取下
+:PROPERTIES:
+:ID:       EBCE21E7-F3F8-407B-913E-4DD5978CC419
+:END:
+- 松开一边终端卡子（End Clamp）。
+- 旋转 90° 将终端卡子（End Clamp）从导轨（Track）上取下（或者从导轨边滑出）→ 移动相应的邦迪块 → 将所需拆下的邦迪块旋转 90° 拆下（或者从导轨边滑出）。
+
+** 邦迪块插钉的拆卸
+:PROPERTIES:
+:ID:       DD7B94FE-26D8-4A95-A1EC-EEB3D938A6ED
+:END:
+*** 标准密度邦迪块退针工具
+:PROPERTIES:
+:ID:       F4ECAA06-0848-4CE1-A924-4EE05F6C405B
+:END:
+[[file:./static/邦迪块/2021-03-18_09-10-25_screenshot.jpg]]
+
+[[file:./static/邦迪块/2021-03-17_23-44-55_screenshot.jpg]]
+
+退针步骤：选择合适的工具 → 将工具插入邦迪块插钉对应的工具槽（tool slot[fn:1]） → 将工具往里推直到止停位（此动作会将弹簧解锁）→ 拉出线和插钉。
+注意事项：当邦迪块的弹簧锁没有解锁时不能强行把插钉拉出，否则会对插钉、邦迪块、导线造成损坏。
+
+*** 高密度邦迪块退针工具
+:PROPERTIES:
+:ID:       60849E3A-87EE-46C4-A89C-E1D3966B7DD2
+:END:
+[[file:./static/邦迪块/2021-03-18_19-08-40_screenshot.jpg]]
+
+退针步骤：选择合适的工具 → 将工具插入邦迪块插钉对应的圆形槽 → 将工具往里推直到止停位（此动作会将弹簧解锁）→ 拉出线和插钉。
+
+* 邦迪块插钉的安装
+:PROPERTIES:
+:ID:       8E62B77C-912F-4400-BDC1-A196324D7501
+:END:
+** 标准密度邦迪块插钉的安装
+:PROPERTIES:
+:ID:       6EA11A38-3B25-4B8E-83C8-E344FA4AE27B
+:END:
+只压接单根导线时，需根据导线线号在波音 SWPM 20-90-11 Table10 选择合适的插钉。
+压接两根导线时，需根据导线线号在波音 SWPM 20-90-11 Table11 选择合适的插钉。
+根据下表选择合适的压接工具（分为机械式和电动式）：
+
+- 机械式
+[[file:./static/邦迪块/2021-07-19_12-51-19_screenshot.jpg]]
+
+- 电动式
+[[file:./static/邦迪块/2021-07-19_12-51-51_screenshot.jpg]]
+
+- 压接步骤
+  - 选择合适的剥线工具。
+  - 剥离导线绝缘层，剥离的尺寸为：0.22 inch ± 0.03 inch。
+  - 当只压接一根导线时，请测量导线绝缘层的直径。
+    - 当只压接一根导线，且该导线绝缘层直径小于 SWPM 20-90-11 Table10 要求的最小直径时，请依据以下步骤[[id:D89F95A0-C698-48D7-8CDD-EB302ADB0653][加装一段热缩管]]：
+    - 根据波音 SWPM 20-00-11 选择等级为 Grade B，Class 1 的热缩管。
+    - 剪下长度为 0.5 inch±0.13 inch 一段热缩管并将热缩管的末端与导线绝缘层末端对齐。
+    - 根据波音 SWPM 20-10-14 热缩该段热缩管，确保热缩管的末端没有覆盖到导体部分并且与导线绝缘层的末端在 0.03inch 之内。
+    - 如果插钉绝缘层压接部位（Insulation Grip）与热缩完的热缩管外径不匹配，则需要重新选择合适的插钉和热缩管。
+  - 选择合适的压接工具。
+  - 将导体部分插进插钉压接槽并确保：所有的导体都在压接槽中。从观察孔可以看到导体。如果只压接一根导线，确保导线的绝缘层末端顶住插钉 Insulation Grip，如果是压接两根导线则无此要求。
+  - 压接插钉。
+  - 检查压接完的插钉有 4 条压接痕。
+  - 按照以下步骤将插钉送进邦迪块插孔，从下表选择进针工具：
+  [[file:./static/邦迪块/2021-07-19_13-16-20_screenshot.jpg]]
+    - 进针步骤：将插钉尖端放进邦迪块插钉孔 → 用进针工具的尖端将插钉送进邦迪块 → 确保感觉到卡一声。
+  - 将邦迪块安装到导轨上。
+
+** 高密度邦迪块插钉的安装
+:PROPERTIES:
+:ID:       31AE9609-5A04-4358-A9EB-E22E4D05F32B
+:END:
+- 插钉组装
+  - 参考下表选择合适的压接工具：
+    [[file:./static/邦迪块/2021-07-19_13-46-57_screenshot.jpg]]
+  - 从 SWPM 20-90-11 Table7 选择合适的插钉。
+  - 剥离导线绝缘层：3/16 inch±1/32inch。
+  - 将导体部分放进插钉，压接插钉。
+-按照以下步骤将插钉送进邦迪块插孔，从下表选择进针工具：
+[[file:./static/邦迪块/2021-07-19_13-49-04_screenshot.jpg]]
+  - 用进针工具将插钉送进邦迪块。
+
+* 邦迪块的安装
+:PROPERTIES:
+:ID:       C64915BF-68AF-41BF-A453-633E40698EFF
+:END:
+- 将邦迪块以平行于导轨（Track）的方向放进安装轨道。
+- 将邦迪块和终端卡子（end clamp）写有件号的一端朝向导轨（Track）的开口（Open）端。
+- 将邦迪块旋转 90°，使得邦迪块安装进导轨（Track）。
+- 将邦迪块移动到相应的位置并安装终端卡子（endclamp）。
+- 拧紧螺钉（只能使用开口的防松垫片）。
+
+* 参考资料
+:PROPERTIES:
+:ID:       631C8E93-FA72-4AC3-A8A2-F29B54092499
+:END:
+- SWPM 20-90-11
+
+* Footnotes
+
+[fn:1] The contact removal tool slot is adjacent to the contact.

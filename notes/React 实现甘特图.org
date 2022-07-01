@@ -1,0 +1,440 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 实现甘特图/")); -*-
+:PROPERTIES:
+:ID:       47A3364A-57CE-4413-88F3-A462442C8E16
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-20 Sun 21:03>
+#+TITLE: React 实现甘特图
+
+在网上没有找到免费合适的甘特图，自己参考一些甘特图的范例开发了一个甘特图。使用场景，会议室使用情况预览。
+
+- 24 小时制，根据开始时间和结束时间计算间隔宽度，使用开始时间计算开始位置。
+- 通过左边数据滚动条控制右边数据同步滚动；通过下边数据滚动条控制时间轴滚动。
+- 通过鼠标事件实时计算 tooltip 位置，通过 transform 样式属性阻止 tooltip 溢出页面。
+- 无引用库 ，直接 react 加 less 实现。
+
+实现效果：
+
+[[file:./static/React 实现甘特图/1624193789-991840d3331aedbd686c5400fc8d807f.gif]]
+
+#+BEGIN_SRC css
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './style.less';
+
+const GunttChart = (props) => {
+    const {
+        rowHeight = 40,  ///数据行高
+        hourWidth = 80,  ///数据行宽
+        startTime = 7,    ///默认起始时间     小屏幕会生效
+        width = '100%',
+        bodyHeight = 'calc(100% - 40px)',
+        rowTitle = '会议厅',     首列名称
+        rows = [{                     ///行名
+            title: '101会议厅',
+            key: 101,
+        }, {
+            title: '102会议厅',
+            key: 102,
+        }, {
+            title: '103会议厅',
+            key: 103,
+        }, {
+            title: '104会议厅',
+            key: 104,
+        }, {
+            title: '105会议厅',
+            key: 105,
+        }, {
+            title: '106会议厅',
+            key: 106,
+        }, {
+            title: '107会议厅',
+            key: 107,
+        }, {
+            title: '108会议厅',
+            key: 108,
+        }, {
+            title: '109会议厅',
+            key: 109,
+        }, {
+            title: '201会议厅',
+            key: 201,
+        }, {
+            title: '301会议厅',
+            key: 301,
+        }],
+        dataSource = [{   ///行数据
+            key: 101,
+            tasks: [{
+                key: 1,
+                start: "07:00:00",
+                end: "08:30:00",
+                title: "面试"
+            }, {
+                key: 2,
+                start: "09:00:00",
+                end: "11:30:00",
+                title: "面试"
+            }]
+        }, {
+            key: 104,
+            tasks: [{
+                key: 1,
+                start: "02:00:00",
+                end: "11:30:00",
+                title: "月度会"
+            }, {
+                key: 2,
+                start: "12:20:00",
+                end: "13:30:00",
+                title: "周会"
+            }]
+        }, {
+            key: 105,
+            tasks: [{
+                key: 1,
+                start: "09:00:00",
+                end: "10:30:00",
+                title: "召开养易却参动少铁专火民的会议"
+            }, {
+                key: 2,
+                start: "11:20:00",
+                end: "13:30:00",
+                title: "召开养易却参动少铁专火民的会议"
+            }]
+        }]
+    } = props;
+    const valueScrollRef = useRef();
+    const timeScrollRef = useRef();
+    const [offsetX, setOffsetX] = useState(0)
+    const [offsetY, setOffsetY] = useState(0)
+    const [translateX, setTranslateX] = useState(0)
+    const [tooltipVisble, setTooltipVisble] = useState('none')
+    const [tooltipData, setTooltipData] = useState(null)
+    const onScrollY = e => {
+        valueScrollRef.current.scrollTop = e.target.scrollTop
+    }
+
+    const onScrollX = e => {
+        timeScrollRef.current.scrollLeft = e.target.scrollLeft
+    }
+
+    const onWheel = e => {
+        timeScrollRef.current.scrollLeft += e.deltaY
+        valueScrollRef.current.scrollLeft += e.deltaY
+    }
+
+    const onMouseEnter = (e, value) => {
+        setTooltipData(value)
+        setTooltipVisble('block')
+    }
+
+    const onMouseMove = e => {
+        e.nativeEvent.stopImmediatePropagation();
+        const offset = (e.clientX / document.body.clientWidth * 100).toFixed(0)
+        setTranslateX(offset)
+        setOffsetX(e.clientX)
+        setOffsetY(e.clientY)
+    }
+
+    const onMouseLeave = e => {
+        setTooltipVisble('none')
+    }
+
+    const timeInterval = (start, end) => {
+        const t1 = new Date(`2017-1-1 ${start}`);
+        const t2 = new Date(`2017-1-1 ${end}`);
+        const interval = t2.getTime() - t1.getTime();
+        if (interval < 0) return 0;
+        return (interval / 1000 / 60 / 60).toFixed(2)
+    }
+
+    useEffect(() => {
+        valueScrollRef.current.scrollLeft = hourWidth * startTime
+    }, [])
+
+    return (
+        <>
+            <div className={styles.container_wrapper} style={{ width }} >
+                <div className={styles.container} style={{ display: 'block' }}>
+                    <div className={styles.rowTitle} style={{ width: 150 }}>{rowTitle || null}</div>
+                    <div className={styles.header_container} ref={timeScrollRef} style={{ marginLeft: 150 }}>
+                        <div className={styles.time_header_container} >
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                00:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                01:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                02:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                03:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                04:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                05:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                06:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                07:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                08:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                09:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                10:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                11:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                12:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                13:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                14:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                15:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                16:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                17:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                18:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                19:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                20:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                21:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                22:00
+                            </div>
+                            <div className={styles.time_header_item} style={{ width: hourWidth }}>
+                                23:00
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.desc_container} onScroll={onScrollY} style={{ height: bodyHeight, width: 150, display: 'block' }}>
+                        {rows.map(row => (
+                            <div key={row.key} className={styles.row_desc_container} style={{ height: rowHeight, lineHeight: `${rowHeight}px` }}>
+                                {row.title}
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles.val_container} ref={valueScrollRef} onScroll={onScrollX} onWheel={onWheel} style={{ height: bodyHeight, display: 'block' }}>
+                        {rows.map(row => (
+                            <div key={row.key} className={styles.row_val_container} style={{ height: rowHeight, lineHeight: `${rowHeight}px`, width: 24 * hourWidth }}>
+                                {
+                                    dataSource.find(data => data.key === row.key) ? dataSource.find(data => data.key === row.key).tasks.map(
+                                        task => (
+                                            <div
+                                                key={task.key}
+                                                onMouseEnter={e => onMouseEnter(e, task)}
+                                                onMouseLeave={onMouseLeave}
+                                                onMouseMove={onMouseMove}
+                                                className={styles.activity}
+                                                style={{
+                                                    width: timeInterval(task.start, task.end) * hourWidth,
+                                                    left: timeInterval('00:00:00', task.start) * hourWidth,
+                                                    backgroundColor: '#5e63b5',
+                                                    height: 24,
+                                                }}
+                                            />
+                                        )
+                                    ) : <></>
+                                }
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <div className={styles.tooltip}
+                style={{ left: offsetX, top: offsetY - 60, position: 'fixed', display: tooltipVisble, transform: `translateX(-${translateX}%)` }}
+            >
+                <div className={styles.title}>
+                    {tooltipData ? tooltipData.title : ''}
+                </div>
+                <div className={styles.time}>
+                    {`${tooltipData ? tooltipData.start : ''} - ${tooltipData ? tooltipData.end : ''}`}
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default GunttChart;
+#+END_SRC
+#+BEGIN_SRC css
+.container_wrapper {
+  position: relative;
+  white-space: nowrap;
+  font-family: basefontRegular, Helvetica Neue, Arial, sans-serif;
+  font-size: 15px;
+  color: #585050;
+  height: 100%;
+
+  .container {
+    background-color: #b5bbbb;
+    border-radius: 2px;
+    height: 100%;
+  }
+
+  .rowTitle {
+    display: block;
+    float: left;
+    background-color: #f0f0f0;
+    border-right: solid 1px #e0e0e0;
+    border-bottom: solid 1px #e0e0e0;
+    font-weight: 600;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+  }
+
+  .header_container {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+
+    .time_header_container {
+      width: 100%;
+      white-space: nowrap;
+      font-weight: bold;
+
+      .time_header_item {
+        height: 40px;
+        line-height: 40px;
+        display: inline-block;
+        box-sizing: border-box;
+        background-color: #f0f0f0;
+        border-right: solid 1px #e0e0e0;
+        border-bottom: solid 1px #e0e0e0;
+        text-align: center;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .desc_container {
+    display: block;
+    float: left;
+    border-right: solid 2px #ccc;
+    font-weight: bold;
+    overflow-y: auto;
+
+    .row_desc_container {
+      display: block;
+      padding-left: 10px;
+    }
+
+    .row_desc_container:nth-child(even) {
+      background-color: #e0e0e0;
+    }
+
+    .row_desc_container:nth-child(odd) {
+      background-color: #f0f0f0;
+    }
+
+    .row_desc_container:first-child {
+      border-top-left-radius: 2px;
+    }
+
+    .row_desc_container:last-child {
+      border-bottom-left-radius: 2px;
+    }
+  }
+
+  .val_container {
+    vertical-align: top;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0px;
+
+    .row_val_container {
+      position: relative;
+
+      .activity {
+        box-sizing: border-box;
+        position: absolute;
+        border-radius: 2px;
+        padding: 0px 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        min-width: 1px;
+        font-size: 14px;
+        text-align: center;
+        line-height: 24px;
+        color: #fff;
+        background-color: #5e63b5;
+        cursor: pointer;
+      }
+    }
+
+    .row_val_container:nth-child(even) {
+      background-color: #e0e0e0;
+    }
+
+    .row_val_container:nth-child(odd) {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+.tooltip {
+  z-index: 99999;
+
+  border-radius: 2px;
+  background-color: #fff;
+  box-shadow: 1px 1px 3px 3px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  white-space: pre;
+
+  .title {
+    background-color: #718fbd;
+    color: #fff;
+    padding: 2px 6px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .time {
+    font-size: 14px;
+    padding: 2px 6px;
+    text-align: center;
+    border: 1px solid #718fbd;
+    border-radius: 0px 0px 2px 2px;
+  }
+}
+
+.tooltip::before {
+  position: absolute;
+  left: -12px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-right: 6px solid#fff;
+  content: '';
+}
+
+#+END_SRC

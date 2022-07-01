@@ -1,0 +1,93 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG AUTO BRAKE DISARM 灯亮/")); -*-
+:PROPERTIES:
+:ID:       786EDBA9-7B3A-4508-9264-D5C918A3EE94
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-18 Thu 13:38>
+#+TITLE: 737NG AUTO BRAKE DISARM 灯亮
+
+* The AUTO BRAKE DISARM amber light also comes on when the AUTO BRAKE select switch is in the OFF position and the solenoid valve pressure increases more than 1000 psi.
+
+[[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_13-47-35_screenshot.jpg]]
+
+[[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_13-47-47_screenshot.jpg]]
+
+[[id:8CDBD4CA-10BC-444F-9BAC-496DB3FA20C1][See：737NG 自动刹车压力控制组件]]
+
+* AUTOBRAKE DISARM LOGIC
+** (AB SELECTED) AND (LANDING AUTOBRAKE DISARM LOGIC = 1)
+
+ [[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-49-59_screenshot.jpg]]
+
+ [[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-13-04_screenshot.jpg]]
+
+ [[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-15-55_langing autobrake disarm.png]]
+
+ The autobrake system releases the landing autobrakes and disarms the autobrake system when any of these conditions occur:
+
+ - AUTO BRAKE select switch to the OFF position.
+ - One normal metered pressure is more than 750 psi.
+ - One thrust lever advanced out of the idle position after the airplane is on the ground for more than 3 seconds (before 3 seconds causes brake release with no disarm).
+ - Speedbrake lever from the UP position to the DOWN position.
+ - Fault in the normal antiskid system.
+ - Fault in the autobrake system.
+ - Input from one ADIRU not valid..
+
+ When disarmed, the system sends a signal to the AUTO BRAKE DISARM light, and the light comes on (except for the first condition, when you move the AUTO BRAKE select switch to OFF).
+ *Move the AUTO BRAKE select switch to the OFF position to make the light not come on.*
+
+** (RTO APPLY = 1) AND (RTO DISARM LOGIC = 1)
+
+ [[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-49-59_screenshot.jpg]]
+
+ [[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-28-54_screenshot.jpg]]
+
+ [[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_15-03-04_screenshot.jpg]]
+
+* A/B DISARM LIGHT
+** (RTO AUTOBRAKE INITIALLY SELECTED) AND (RTO ARMING LOGIC = 0)
+航前工卡中检查的项目。
+
+[[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-12-38_screenshot.jpg]]
+
+[[file:./static/737NG AUTO BRAKE DISARM 灯亮/2021-02-18_14-40-14_screenshot.jpg]]
+
+When you move the AUTO BRAKE select switch to the RTO position, the antiskid/autobrake control unit starts a turn-on self check.
+The autobrake system arms for the RTO autobrake function when all of the these turn-on self check conditions occur:
+
+- AUTO BRAKE select switch to the RTO position.
+- No fault in the RTO autobrake function.
+- Two air ground systems in the ground mode.
+- Average of all wheel speeds less than 60 knots.
+- No fault in the normal antiskid system.
+- Two thrust levers are in the idle position.
+- [fn:1]Solenoid and control valve pressures less than 1000 psi.
+
+The turn-on self check also does a test of the antiskid/autobrake control unit and related components.
+While the turn-on self check operates, *the AUTO BRAKE DISARM light comes on for 1.4 seconds*.
+If the turn-on self check fails, the RTO autobrakes do not arm and the AUTO BRAKE DISARM light stays on.
+
+* 通过测量相关部件阻值判断故障件
+
+| 被测量部件                     | 测量插针位置点          | 电阻值      |
+|--------------------------------+-------------------------+-------------|
+| M1766（S2，S3）                | D1040B A4 - D1040A A7   | ‹ 3Ω        |
+|                                | D1040B A7 - D1040B B9   |             |
+|--------------------------------+-------------------------+-------------|
+| M1767（S2，S3）                | D1040B D6 - D1040A A7   | ‹ 3Ω        |
+|                                | D1040B A2 - D1040B B9   |             |
+|--------------------------------+-------------------------+-------------|
+| S276                           | D1040B C11 - D1040A B7  | ‹ 3Ω        |
+|--------------------------------+-------------------------+-------------|
+| S763，S762（刹车脚蹬压力电门） | D1040A B10 - D1040A A10 | ‹ 3Ω        |
+|                                | D1040B A9 - D1040B B8   | ‹ 3Ω        |
+| V122[fn:2] 上 D2570[fn:3]      | 1 - 2                   | 400 - 600 Ω |
+| V122 上 D2574                  | D1040A C9 - D1040A D9   | ‹ 80 Ω      |
+
+* Footnotes
+
+[fn:3] D2570 在主轮舱顶板 V122 组件上测量。
+
+[fn:2] 判断 V122 时，D2570，D2574 任何一个有问题都需要更换。
+
+[fn:1] 通过将自动刹车选择电门选择到 OFF 位，如果 AUTO BRAKE DISARM 灯熄灭，就说明不是该项导致的灯亮。

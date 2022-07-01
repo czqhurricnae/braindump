@@ -1,0 +1,322 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Flask 项目集成富文本编辑器 UEditor/")); -*-
+:PROPERTIES:
+:ID:       BFD51D37-32B9-479A-8BAE-5F8325E81733
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-23 Sun 10:21>
+#+TITLE: Flask 项目集成富文本编辑器 UEditor
+
+本文介绍如何在 Flask 项目中集成富文本编辑器 UEditor，并实现文件上传、图片上传、视频上传及涂鸦功能。
+* UEditor 简介
+
+[[http://ueditor.baidu.com/][UEditor]]是由百度「FEX 前端研发团队」开发的所见即所得富文本 web 编辑器，具有轻量，可定制，注重用户体验等特点，开源基于 MIT 协议，允许自由使用和修改代码。
+
+由于 1.4.2 版本之后的版本与之前版本存在较大的差异，本文以 1.4.3 版本为蓝本。
+
+具体文档参见：[[http://fex-team.github.io/ueditor/][http://fex-team.github.io/ueditor/]]
+
+* 在 Flask 项目中加入 UEditor
+
+** 下载 UEditor
+ 访问 UEditor 首页，下载 1.4.3 PHP UTF-8 版本的 UEditor，并解压到 Flask 应用程序的 static 目录。解压之后的目录结构是这样的：
+
+ #+BEGIN_SRC php
+ | static/
+ | | ueditor/
+ | | |+dialogs/
+ | | |+lang/
+ | | |+php/
+ | | |+themes/
+ | | |+third-party/
+ | | |-config.json
+ | | |-index.html
+ | | |-ueditor.all.js
+ | | |-ueditor.all.min.js
+ | | |-ueditor.config.js
+ | | |-ueditor.parse.js
+ | | |-ueditor.parse.min.js
+ #+END_SRC
+
+ +表示目录。
+
+** 在项目中加入 UEditor
+ 我们在 Flask 应用程序的 templates 目录新建一个 index.html 文件（可根据实际情况选择文件名，或者把代码加入需要使用 UEditor 的文件）：
+
+ 在 head 标签加入下面几行：
+
+ #+BEGIN_SRC javascript
+ <script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='ueditor/ueditor.config.js') }}"></script>
+ <script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='ueditor/ueditor.all.min.js') }}"> </script>
+ <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+ <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+ <script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='ueditor/lang/zh-cn/zh-cn.js') }}"></script>
+ #+END_SRC
+
+ 在 body 标签加入：
+
+ #+BEGIN_SRC javascript
+ <script id="editor" type="text/plain"></script>
+
+
+
+ <script type="text/javascript">
+     //实例化编辑器
+     //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+     var ue = UE.getEditor('editor', {
+         serverUrl: "/upload/"
+     });
+ </script>
+
+
+ #+END_SRC
+
+** 请求路径配置
+ UEditor 1.4.2+ 起，推荐使用统一的请求路径，在部署好前端代码后，需要修改 ueditor.config.js 里的 serverUrl 参数（或者初始化时指定，见上面的代码），改成 '/upload/' 。
+
+ UEditor 初始化时，会向后端请求配置文件，后端收到请求后返回 JSON 格式的配置文件。具体实现参照后面的代码。
+
+ 详细配置内容参见文档。
+
+** 创建 Flask 应用程序（app.py）
+
+ #+BEGIN_SRC python
+ # -*- coding: utf-8 -*-
+ # filename: app.py
+
+ from flask import Flask, render_template
+
+ app = Flask(__name__)
+
+ @app.route('/')
+ def index():
+     return render_template('index.html')
+
+ @app.route('/upload/', methods=['GET', 'POST'])
+ def upload():
+     pass
+
+ if __name__ == '__main__':
+     app.run(debug=True)
+ #+END_SRC
+
+ 应用程序运行之后，我们访问 http://localhost:5000/ 就可以看到 UEditor 编辑器了，上图：
+
+ #+CAPTION: flask-ueditor-demo
+ [[/img/bVkl4n]]
+
+** UEditor 后端请求规范说明
+
+** 与后台通信的功能列表：
+ -  上传图片
+ -  拖放图片上传、粘贴板图片上传
+ -  word 文档图片转存
+ -  截图工具上传
+ -  上传涂鸦
+ -  上传视频
+ -  上传附件
+ -  在线图片管理
+ -  粘贴转存远程图片
+
+** 统一请求格式说明：
+ -  前端请求通过唯一的后台文件 /upload/ 处理前端的请求
+ -  /upload/通过 GET 上的 action 参数，判断是什么类型的请求
+ -  省去不必要的请求，去除涂鸦添加背景的请求，用前端 FileReader 读取本地图片代替
+ -  请求返回数据的格式，常规返回 json 字符串，数据包含 state 属性（成功时返回'SUCCESS'，错误时返回错误信息）。
+ -  请求支持 jsonp 请求格式，当请求有通过 GET 方式传 callback 的参数时，返回 json 数据前后加上括号，再在前面加上 callback 的值，格式类似这样：
+ cb({"key": "value"})
+
+ 详细说明：[[http://fex-team.github.io/ueditor/#dev-request_specification][http://fex-team.github.io/ueditor/#dev-request_specification]]
+
+* Flask 实现后端请求
+*** 获取配置信息
+
+由于接口升级，编辑器初始化时，首先会向后端请求配置信息，后端收到请求后，返回相应的配置信息即可。
+
+** 请求参数：
+
+#+BEGIN_SRC json
+GET {"action": "config"}
+POST "upfile": File Data
+#+END_SRC
+
+** 返回格式：
+
+#+BEGIN_SRC json
+// 需要支持callback参数,返回jsonp格式
+{
+    "imageUrl": "http://localhost/ueditor/php/controller.php?action=uploadimage",
+    "imagePath": "/ueditor/php/",
+    "imageFieldName": "upfile",
+    "imageMaxSize": 2048,
+    "imageAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"]
+}
+#+END_SRC
+
+** 主要功能代码：
+
+#+BEGIN_SRC python
+@app.route('/upload/', methods=['GET', 'POST'])
+def upload():
+    action = request.args.get('action')
+
+    # 解析JSON格式的配置文件
+    # 这里使用PHP版本自带的config.json文件
+    with open(os.path.join(app.static_folder, 'ueditor', 'php',
+                           'config.json')) as fp:
+        try:
+            # 删除 `/**/` 之间的注释
+            CONFIG = json.loads(re.sub(r'\/\*.*\*\/', '', fp.read()))
+        except:
+            CONFIG = {}
+
+    if action == 'config':
+        # 初始化时，返回配置文件给客户端
+        result = CONFIG
+
+    return json.dumps(result)
+#+END_SRC
+
+* 文件、视频、图片上传
+
+图片上传包括：本地图片上传、拖拽图片上传、粘贴板图片上传。
+
+这些功能实现的方法是一样的，所以放到一起来讲。上传的文件可用 request.files['upfile']获取。
+
+** 请求参数：
+
+#+BEGIN_SRC json
+GET {"action": "uploadimage"}
+POST "upfile": File Data
+#+END_SRC
+
+action 说明：
+-  uploadimage 上传图片
+-  uploadvideo 上传视频文件
+-  uploadfile 上传附件（文件）
+
+** 返回格式：
+
+#+BEGIN_SRC json
+{
+    "state": "SUCCESS",
+    "url": "upload/demo.jpg",
+    "title": "demo.jpg",
+    "original": "demo.jpg"
+}
+#+END_SRC
+
+** 主要功能代码：
+
+#+BEGIN_SRC python
+@app.route('/upload/', methods=['GET', 'POST'])
+def upload():
+    result = {}
+    action = request.args.get('action')
+
+    if action in ('uploadimage', 'uploadvideo', 'uploadfile'):
+        upfile = request.files['upfile']  # 这个表单名称以配置文件为准
+        # upfile 为 FileStorage 对象
+        # 这里保存文件并返回相应的URL
+        upfile.save(filename_to_save)
+        result = {
+            "state": "SUCCESS",
+            "url": "upload/demo.jpg",
+            "title": "demo.jpg",
+            "original": "demo.jpg"
+        }
+
+    return json.dumps(result)
+#+END_SRC
+
+* 涂鸦功能
+涂鸦功能上传经过 BASE64 编码的图片（一般为 PNG 格式），可用 ~request.form['upfile']~ 获取，后端收到之后需要先解码，再保存。
+
+** 请求参数：
+
+#+BEGIN_SRC json
+GET {"action": "uploadscrawl"}
+POST "content": Base64 Data
+#+END_SRC
+
+** 返回格式：
+
+#+BEGIN_SRC json
+{
+    "state": "SUCCESS",
+    "url": "upload/demo.jpg",
+    "title": "demo.jpg",
+    "original": "demo.jpg"
+}
+#+END_SRC
+
+** 主要功能代码：
+
+#+BEGIN_SRC python
+@app.route('/upload/', methods=['GET', 'POST'])
+def upload():
+    result = {}
+    action = request.args.get('action')
+
+    if action in ('uploadscrawl'):
+        base64data = request.form['upfile']  # 这个表单名称以配置文件为准
+        img = base64.b64decode(base64data)
+        # 这里保存文件并返回相应的URL
+        with open(filename_to_save, 'wb') as fp:
+            fp.write(img)
+        result = {
+            "state": "SUCCESS",
+            "url": "upload/demo.jpg",
+            "title": "demo.jpg",
+            "original": "demo.jpg"
+        }
+
+    return json.dumps(result)
+#+END_SRC
+
+* 远程抓图
+
+远程抓图主要是把站外的图片保存到本地或者指定的图片服务器。
+
+当复制粘贴其他网站的网页的图片时，会触发远程抓图功能。
+
+远程图片列表可通过 request.form.getlist('source[]')获取。这里暂时不清楚是
+什么原因，为什么 request.form.getlist('source') 为空。
+
+** 核心思路：
+遍历远程图片列表，通过 urllib 把图片下载并保存，下载完成之后按照格式返回结果。
+
+** 请求参数：
+
+#+BEGIN_SRC json
+GET {
+    "action": "catchimage",
+     "source": [
+        "http://a.com/1.jpg",
+        "http://a.com/2.jpg"
+    ]
+}
+#+END_SRC
+
+** 返回格式：
+
+ #+BEGIN_SRC json
+ // 需要支持callback参数,返回jsonp格式
+ // list项的state属性和最外面的state格式一致
+ {
+     "state": "SUCCESS",
+     "list": [{
+         "url": "upload/1.jpg",
+         "source": "http://b.com/2.jpg",
+         "state": "SUCCESS"
+     }, {
+         "url": "upload/2.jpg",
+         "source": "http://b.com/2.jpg",
+         "state": "SUCCESS"
+     }, ]
+ }
+ #+END_SRC
+
+** 完整 DEMO：
+Flask UEditor 完整 DEMO：[[https://coding.net/u/wtx358/p/flask-ueditor-demo/git][https://coding.net/u/wtx358/p/flask-ueditor-demo/git]]
+
+实现了图片上传、附件上传、视频上传、涂鸦、远程抓图等功能。

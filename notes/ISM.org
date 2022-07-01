@@ -1,0 +1,21 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/ISM/")); -*-
+:PROPERTIES:
+:ID:       A3BD715C-EFFE-4980-BB3C-9ADCD468E49B
+:ROAM_ALIASES: "IOSA 标准手册"
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-15 Tue 16:38>
+#+TITLE: ISM
+
+#+ROAM_KEY:
+
+
+The IOSA Standards Manual (ISM) is published in order to provide the IOSA standards, recommended
+practices ([[id:57A30C28-71FA-4CE1-8EA4-30B25556AEFF][ISARPs]]), associated guidance material and other supporting information necessary for an operator
+to successfully prepare for an audit.
+
+The ISM is the sole source of assessment criteria to be used by auditors when conducting an audit against
+the ISARPs.
+
+The ISM may also be used as a guide for any operator desiring to structure its operational management and
+control systems in conformity with the latest industry operational practices.

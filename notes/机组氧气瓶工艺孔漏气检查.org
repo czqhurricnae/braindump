@@ -1,0 +1,15 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/机组氧气瓶工艺孔漏气检查/")); -*-
+:PROPERTIES:
+:ID:       7A8BAEC8-8409-4283-9B67-CFD9DE3E4158
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-15 Sat 21:16>
+#+TITLE: 机组氧气瓶工艺孔漏气检查
+
+[[file:./static/机组氧气瓶工艺孔漏气检查/2021-05-15_21-16-58_screenshot.jpg]]
+
+[[file:./static/机组氧气瓶工艺孔漏气检查/2021-05-15_21-17-23_screenshot.jpg]]
+
+[[file:./static/机组氧气瓶工艺孔漏气检查/2021-05-15_21-17-40_screenshot.jpg]]
+- 从厂家手册中的关断活门装配图 2 可以看出漏气处小孔为关断活门组件生产时预留的工艺孔，而下部的两个小孔为氧气瓶压力表固定螺钉的安装孔。
+- 从图 3 的件号图可以看出该工艺孔并没有释压功能，是不允许漏气的。如果发生漏气，很可能是由于下部的封圈老化或者错位造成的，应及时送厂家检查维修。

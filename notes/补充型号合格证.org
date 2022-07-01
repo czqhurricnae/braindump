@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/补充型号合格证/")); -*-
+:PROPERTIES:
+:ID:       C6AF3FDB-F18B-4E44-A87E-EBDF4AC4130A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-20 Tue 13:13>
+#+TITLE: 补充型号合格证
+
+

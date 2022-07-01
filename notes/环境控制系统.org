@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/环境控制系统/")); -*-
+:PROPERTIES:
+:ID:       6A240950-58ED-4F36-9223-EA385181F7E9
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-10 Sun 15:15>
+#+TITLE: 环境控制系统
+选择 Environment :
+只有后 ACP 能对环境系统进行控制和操作。
+环境控制系统对以下机上系统进行监控和控制：
+- 饮用水。
+- 污水。
+- LAVINOP。
+LAV INOP 只是一个显示灯，不是控制按键。
+真空废水籍满了或者废水传感器有故障，后 ACP 的 Environment 菜单键格变成橙色，并且如果是第一次出现，Environment 页面自动弹出显示 ，并伴随有一声响提示。
+当乘务员获知该信息后，Environment 菜单页面不会总是在当前显示 ，但是 Environment 菜单按键始终保持橙色。
+注：当一个传感器故障或被污染后，CLEAN CHECK SENSOR 和将点亮（ 在 Maintenance 页 ）指示传感器需要维护，此时废水系统仍然可以使用。

@@ -1,0 +1,29 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/在修改运行文件后如何重新载入 uWSGI/")); -*-
+:PROPERTIES:
+:ID:       906C7B82-5973-4599-BD04-ABADE0EE7E72
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-19 Wed 11:38>
+#+TITLE: 在修改运行文件后如何重新载入 uWSGI
+
+* 发送终端终端信号
+在 shell 中运行命令：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+killall -s HUP $(ps -ef | grep uwsgi)
+#+END_SRC
+
+或者：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+kill -HUP $(ps -ef | grep uwsgi)
+#+END_SRC
+
+[[file:sigint sigterm 的区别.org::SIGHUP][HUP]] 给出的信号代表终端断线。
+
+* 使用 uwsgi 的 reload 命令进行重新载入
+这条命令是必须在激活相关的虚拟环境下运行的，也就是说有安装 uWSGI 包的环境中运行：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+uwsgi --reload $(ps -ef | grep uwsgi)
+#+END_SRC

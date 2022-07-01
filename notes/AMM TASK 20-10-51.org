@@ -1,0 +1,34 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AMM TASK 20-10-51/")); -*-
+:PROPERTIES:
+:ID:       BB3146A7-3192-46DC-B7F6-7DB4F8F55541
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-18 Sun 22:21>
+#+TITLE: AMM TASK 20-10-51
+
+* AMM TASK 20-10-51-000-802 Flareless Fittings in Pressurized Areas Installation
+:PROPERTIES:
+:ID:       249F8CB5-1893-4606-A69A-DB37536BB41E
+:END:
+* AMM TASK 20-10-51/201 - DETERMINE INSTALLATION TORQUE FOR TUBES/FITTINGS/HOSES
+:PROPERTIES:
+:ID:       1578DD21-6892-4BBF-A76F-FE167BCA43BF
+:END:
+** AMM TASK 20-10-51-910-801 - Tube Material and End Fitting Determination for Hydraulic Tube Assembly
+:PROPERTIES:
+:ID:       74F641E9-071D-4A51-89EF-30F21AE116BC
+:END:
+- Table 201.Service Letter for All Models
+- Table 202.Typical Tube Size Designation/Corresponding Thread
+- Table 203.Tube Specification and Wall Thickness Table for All Models
+- Table 204.Cross Reference of Tubing table to correspond to Boeing Material Specification(BMS)
+- Table 205.Multi-Model Maitenance Tip Table for All Models
+- Table 206.Hydraulic Fitting Material Codes
+- Table 207.Installation Torque for Flareless Tubing Fittings Table for All Models
+- Table 208.Installation Torque for Flareless Fittings in Pressurized Area
+
+** AMM TASK 20-10-51-910-802 - Torque Values for Tubes, Hoses or Fittings installed to Components Determination
+:PROPERTIES:
+:ID:       493F4A66-546A-4E9B-9C09-6EFF25900BAB
+:END:
+- Table 210.Selecting Torque for Tube or Hose Assembly on Mating Union or Component

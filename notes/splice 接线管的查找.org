@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/splice 接线管的查找/")); -*-
+:PROPERTIES:
+:ID:       34B7723A-49C8-4C81-8835-0B55DB7D8817
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-19 Mon 21:58>
+#+TITLE: splice 接线管的查找
+
+接线管件号的查找有两种方法：
+以 E/E 舱照明灯线路中接线管为例。
+* Wire list
+类似于查找接线片的方法，利用导线的线号 W6110-0020-20，找到导线终端代码 S，利用终端代码找到相应的件号 NAS1388-() 或者 NAS1389()。
+
+[[file:./static/splice 接线管的查找/2021-07-19_22-01-40_screenshot.jpg]]
+
+* Splice list

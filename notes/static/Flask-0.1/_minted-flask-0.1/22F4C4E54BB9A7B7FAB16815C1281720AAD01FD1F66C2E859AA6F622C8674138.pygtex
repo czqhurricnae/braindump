@@ -1,0 +1,136 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{MapAdapter}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+
+    \PYG{k}{def} \PYG{n+nf}{match}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{path\PYGZus{}info}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{method}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{return\PYGZus{}rule}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The usage is simple: you just pass the match method the current}
+\PYG{l+s+sd}{        path info as well as the method (which defaults to `GET`).  The}
+\PYG{l+s+sd}{        following things can then happen:}
+
+\PYG{l+s+sd}{        \PYGZhy{} you receive a `NotFound` exception that indicates that no URL is}
+\PYG{l+s+sd}{          matching.  A `NotFound` exception is also a WSGI application you}
+\PYG{l+s+sd}{          can call to get a default page not found page (happens to be the}
+\PYG{l+s+sd}{          same object as `werkzeug.exceptions.NotFound`)}
+
+\PYG{l+s+sd}{        \PYGZhy{} you receive a `MethodNotAllowed` exception that indicates that there}
+\PYG{l+s+sd}{          is a match for this URL but not for the current request method.}
+\PYG{l+s+sd}{          This is useful for RESTful applications.}
+
+\PYG{l+s+sd}{        \PYGZhy{} you receive a `RequestRedirect` exception with a `new\PYGZus{}url`}
+\PYG{l+s+sd}{          attribute.  This exception is used to notify you about a request}
+\PYG{l+s+sd}{          Werkzeug requests from your WSGI application.  This is for example the}
+\PYG{l+s+sd}{          case if you request ``/foo`` although the correct URL is ``/foo/``}
+\PYG{l+s+sd}{          You can use the `RequestRedirect` instance as response\PYGZhy{}like object}
+\PYG{l+s+sd}{          similar to all other subclasses of `HTTPException`.}
+
+\PYG{l+s+sd}{        \PYGZhy{} you get a tuple in the form ``(endpoint, arguments)`` if there is}
+\PYG{l+s+sd}{          a match (unless `return\PYGZus{}rule` is True, in which case you get a tuple}
+\PYG{l+s+sd}{          in the form ``(rule, arguments)``)}
+
+\PYG{l+s+sd}{        If the path info is not passed to the match method the default path}
+\PYG{l+s+sd}{        info of the map is used (defaults to the root URL if not defined}
+\PYG{l+s+sd}{        explicitly).}
+
+\PYG{l+s+sd}{        All of the exceptions raised are subclasses of `HTTPException` so they}
+\PYG{l+s+sd}{        can be used as WSGI responses.  The will all render generic error or}
+\PYG{l+s+sd}{        redirect pages.}
+
+\PYG{l+s+sd}{        Here is a small example for matching:}
+
+\PYG{l+s+sd}{        \PYGZgt{}\PYGZgt{}\PYGZgt{} m = Map([}
+\PYG{l+s+sd}{        ...     Rule(\PYGZsq{}/\PYGZsq{}, endpoint=\PYGZsq{}index\PYGZsq{}),}
+\PYG{l+s+sd}{        ...     Rule(\PYGZsq{}/downloads/\PYGZsq{}, endpoint=\PYGZsq{}downloads/index\PYGZsq{}),}
+\PYG{l+s+sd}{        ...     Rule(\PYGZsq{}/downloads/\PYGZlt{}int:id\PYGZgt{}\PYGZsq{}, endpoint=\PYGZsq{}downloads/show\PYGZsq{})}
+\PYG{l+s+sd}{        ... ])}
+\PYG{l+s+sd}{        \PYGZgt{}\PYGZgt{}\PYGZgt{} urls = m.bind(\PYGZdq{}example.com\PYGZdq{}, \PYGZdq{}/\PYGZdq{})}
+\PYG{l+s+sd}{        \PYGZgt{}\PYGZgt{}\PYGZgt{} urls.match(\PYGZdq{}/\PYGZdq{}, \PYGZdq{}GET\PYGZdq{})}
+\PYG{l+s+sd}{        (\PYGZsq{}index\PYGZsq{}, \PYGZob{}\PYGZcb{})}
+\PYG{l+s+sd}{        \PYGZgt{}\PYGZgt{}\PYGZgt{} urls.match(\PYGZdq{}/downloads/42\PYGZdq{})}
+\PYG{l+s+sd}{        (\PYGZsq{}downloads/show\PYGZsq{}, \PYGZob{}\PYGZsq{}id\PYGZsq{}: 42\PYGZcb{})}
+
+\PYG{l+s+sd}{        And here is what happens on redirect and missing URLs:}
+
+\PYG{l+s+sd}{        \PYGZgt{}\PYGZgt{}\PYGZgt{} urls.match(\PYGZdq{}/downloads\PYGZdq{})}
+\PYG{l+s+sd}{        Traceback (most recent call last):}
+\PYG{l+s+sd}{          ...}
+\PYG{l+s+sd}{        RequestRedirect: http://example.com/downloads/}
+\PYG{l+s+sd}{        \PYGZgt{}\PYGZgt{}\PYGZgt{} urls.match(\PYGZdq{}/missing\PYGZdq{})}
+\PYG{l+s+sd}{        Traceback (most recent call last):}
+\PYG{l+s+sd}{          ...}
+\PYG{l+s+sd}{        NotFound: 404 Not Found}
+
+\PYG{l+s+sd}{        :param path\PYGZus{}info: the path info to use for matching.  Overrides the}
+\PYG{l+s+sd}{                          path info specified on binding.}
+\PYG{l+s+sd}{        :param method: the HTTP method used for matching.  Overrides the}
+\PYG{l+s+sd}{                       method specified on binding.}
+\PYG{l+s+sd}{        :param return\PYGZus{}rule: return the rule that matched instead of just the}
+\PYG{l+s+sd}{                            endpoint (defaults to `False`).}
+
+\PYG{l+s+sd}{        .. versionadded:: 0.6}
+\PYG{l+s+sd}{            `return\PYGZus{}rule` was added.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{path\PYGZus{}info} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{path\PYGZus{}info} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{path\PYGZus{}info}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{path\PYGZus{}info}\PYG{p}{,} \PYG{n+nb}{unicode}\PYG{p}{)}\PYG{p}{:}
+            \PYG{n}{path\PYGZus{}info} \PYG{o}{=} \PYG{n}{path\PYGZus{}info}\PYG{o}{.}\PYG{n}{decode}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{charset}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{ignore}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+            \PYG{n}{method} \PYG{o}{=} \PYG{p}{(}\PYG{n}{method} \PYG{o+ow}{or} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{default\PYGZus{}method}\PYG{p}{)}\PYG{o}{.}\PYG{n}{upper}\PYG{p}{(}\PYG{p}{)}
+            \PYG{n}{path} \PYG{o}{=} \PYG{l+s+sa}{u}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{|/}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{subdomain}\PYG{p}{,} \PYG{n}{path\PYGZus{}info}\PYG{o}{.}\PYG{n}{lstrip}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{)}
+            \PYG{n}{have\PYGZus{}match\PYGZus{}for} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{rule} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{\PYGZus{}rules}\PYG{p}{:}
+            \PYG{k}{try}\PYG{p}{:}
+                \PYG{n}{rv} \PYG{o}{=} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{match}\PYG{p}{(}\PYG{n}{path}\PYG{p}{)}
+            \PYG{k}{except} \PYG{n}{RequestSlash}\PYG{p}{:}
+                \PYG{k}{raise} \PYG{n}{RequestRedirect}\PYG{p}{(}
+                    \PYG{n+nb}{str}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{://}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{/}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}}
+                        \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}scheme}\PYG{p}{,}
+                         \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{subdomain} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{subdomain} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}
+                         \PYG{o+ow}{or} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{script\PYGZus{}name}\PYG{p}{[}\PYG{p}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}
+                         \PYG{n}{url\PYGZus{}quote}\PYG{p}{(}\PYG{n}{path\PYGZus{}info}\PYG{o}{.}\PYG{n}{lstrip}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{charset}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{rv} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{continue}
+            \PYG{k}{if} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{methods} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None} \PYG{o+ow}{and} \PYG{n}{method} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{methods}\PYG{p}{:}
+                \PYG{n}{have\PYGZus{}match\PYGZus{}for}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{rule}\PYG{o}{.}\PYG{n}{methods}\PYG{p}{)}
+                \PYG{k}{continue}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{redirect\PYGZus{}defaults}\PYG{p}{:}
+                \PYG{k}{for} \PYG{n}{r} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{\PYGZus{}rules\PYGZus{}by\PYGZus{}endpoint}\PYG{p}{[}\PYG{n}{rule}\PYG{o}{.}\PYG{n}{endpoint}\PYG{p}{]}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{n}{r}\PYG{o}{.}\PYG{n}{provides\PYGZus{}defaults\PYGZus{}for}\PYG{p}{(}\PYG{n}{rule}\PYG{p}{)} \PYG{o+ow}{and} \PYGZbs{}
+                       \PYG{n}{r}\PYG{o}{.}\PYG{n}{suitable\PYGZus{}for}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{,} \PYG{n}{method}\PYG{p}{)}\PYG{p}{:}
+                        \PYG{n}{rv}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{r}\PYG{o}{.}\PYG{n}{defaults}\PYG{p}{)}
+                        \PYG{n}{subdomain}\PYG{p}{,} \PYG{n}{path} \PYG{o}{=} \PYG{n}{r}\PYG{o}{.}\PYG{n}{build}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{)}
+                        \PYG{k}{raise} \PYG{n}{RequestRedirect}\PYG{p}{(}
+                            \PYG{n+nb}{str}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{://}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{/}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}}
+                                \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}scheme}\PYG{p}{,} \PYG{n}{subdomain} \PYG{o+ow}{and} \PYG{n}{subdomain} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}
+                                 \PYG{o+ow}{or} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}name}\PYG{p}{,}
+                                 \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{script\PYGZus{}name}\PYG{p}{[}\PYG{p}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,}
+                                 \PYG{n}{url\PYGZus{}quote}\PYG{p}{(}\PYG{n}{path}\PYG{o}{.}\PYG{n}{lstrip}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{,}
+                                           \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{map}\PYG{o}{.}\PYG{n}{charset}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{redirect\PYGZus{}to} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{rule}\PYG{o}{.}\PYG{n}{redirect\PYGZus{}to}\PYG{p}{,} \PYG{n+nb}{basestring}\PYG{p}{)}\PYG{p}{:}
+
+                    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}handle\PYGZus{}match}\PYG{p}{(}\PYG{n}{match}\PYG{p}{)}\PYG{p}{:}
+                        \PYG{n}{value} \PYG{o}{=} \PYG{n}{rv}\PYG{p}{[}\PYG{n}{match}\PYG{o}{.}\PYG{n}{group}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{]}
+                        \PYG{k}{return} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{\PYGZus{}converters}\PYG{p}{[}\PYG{n}{match}\PYG{o}{.}\PYG{n}{group}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{]}\PYG{o}{.}\PYG{n}{to\PYGZus{}url}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+
+                    \PYG{n}{redirect\PYGZus{}url} \PYG{o}{=} \PYG{n}{\PYGZus{}simple\PYGZus{}rule\PYGZus{}re}\PYG{o}{.}\PYG{n}{sub}\PYG{p}{(}\PYG{n}{\PYGZus{}handle\PYGZus{}match}\PYG{p}{,}
+                                                       \PYG{n}{rule}\PYG{o}{.}\PYG{n}{redirect\PYGZus{}to}\PYG{p}{)}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{n}{redirect\PYGZus{}url} \PYG{o}{=} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{redirect\PYGZus{}to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{o}{*}\PYG{n}{rv}\PYG{p}{)}
+                \PYG{k}{raise} \PYG{n}{RequestRedirect}\PYG{p}{(}
+                    \PYG{n+nb}{str}\PYG{p}{(}
+                        \PYG{n}{urljoin}\PYG{p}{(}
+                            \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{://}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+si}{\PYGZpc{}s}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}}
+                            \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{url\PYGZus{}scheme}\PYG{p}{,}
+                             \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{subdomain} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{subdomain} \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}
+                             \PYG{o+ow}{or} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}name}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{script\PYGZus{}name}\PYG{p}{)}\PYG{p}{,}
+                            \PYG{n}{redirect\PYGZus{}url}\PYG{p}{)}\PYG{p}{)}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{return\PYGZus{}rule}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{rule}\PYG{p}{,} \PYG{n}{rv}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{rule}\PYG{o}{.}\PYG{n}{endpoint}\PYG{p}{,} \PYG{n}{rv}
+        \PYG{k}{if} \PYG{n}{have\PYGZus{}match\PYGZus{}for}\PYG{p}{:}
+            \PYG{k}{raise} \PYG{n}{MethodNotAllowed}\PYG{p}{(}\PYG{n}{valid\PYGZus{}methods}\PYG{o}{=}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{have\PYGZus{}match\PYGZus{}for}\PYG{p}{)}\PYG{p}{)}
+        \PYG{k}{raise} \PYG{n}{NotFound}\PYG{p}{(}\PYG{p}{)}
+
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

@@ -1,0 +1,82 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Filter_python_list/")); -*-
+:PROPERTIES:
+:ID:       175BDFDE-8F77-4042-81B2-67385C143781
+:END:
+#+DATE: <2020-10-21 Wed 19:20>
+#+TITLE: Filter_Python_list
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I have an list in Python that looks like this:
+
+#+BEGIN_SRC python
+    myarray = [('31.10', 'John', 'Smith', 'ZK'),('01.11', 'John', 'Smith', 'OK'),('31.10', 'John', 'Doe', 'ZK'),('01.11', 'John', 'Doe', 'ZK')]
+#+END_SRC
+
+I would like to filter by 2 keys. The 2 Name keys.
+
+ex. filter myarray contains John and Doe to get:
+
+#+BEGIN_SRC python
+    01.11 John Doe ZK
+    31.10 John Doe ZK
+#+END_SRC
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+You'll need to test each tuple in the list:
+
+#+BEGIN_SRC python
+    for entry in myarray:
+        if entry[1:3] == ('John', 'Doe'):
+            print ' '.join(entry)
+#+END_SRC
+
+I used slicing to select just the parts at index =1= and =2= there, but
+you could also use tuple unpacking:
+
+#+BEGIN_SRC python
+    for num1, first, last, token in myarray:
+        if (first, last) == ('John', 'Doe'):
+            print num1, first, last, token
+#+END_SRC
+
+or if the tuple equality there is not as clear to you what it does, use
+separate comparisons and =and=:
+
+#+BEGIN_SRC python
+    for num1, first, last, token in myarray:
+        if first == 'John' and last == 'Doe':
+            print num1, first, last, token
+#+END_SRC
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+There is good discussion of the principles here:
+[[file:./static/list-filtering-list-comprehension-vs-lambda-filter][List filtering: list comprehension vs. lambda + filter]]
+
+Slightly adapting it to your problem:
+
+#+BEGIN_SRC python
+    def filterbyvalue(seq, position, value):
+       for el in seq:
+           if el[position]==value: yield el
+
+    myarray = [('31.10', 'John', 'Smith', 'ZK'),('01.11', 'John', 'Smith', 'OK'),('31.10', 'John', 'Doe', 'ZK'),('01.11', 'John', 'Doe', 'ZK')]
+
+    results = filterbyvalue(myarray, 2, "Doe")
+    for x in results:
+        print(x)
+#+END_SRC
+
+The filterbyvalue function returns a generator, which can be called as
+normal.

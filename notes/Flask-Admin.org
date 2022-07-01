@@ -1,0 +1,527 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Flask-Admin/")); -*-
+:PROPERTIES:
+:ID:       D3035B26-4B3D-4744-AF03-89DCD3B61147
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-06-15 Mon 16:52>
+#+TITLE: Flask-Admin
+
+[[file:./static/Flask-Admin/2019-12-01_12-01-03_1016603-20161126094159346-1706820130.png]]
+
+#+BEGIN_SRC python :results values list :exports no-eval
+from flask_admin import Admin, BaseView, expose, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+#+END_SRC
+
+* 模型视图
+管理新闻，管理公告，管理文件，管理展示栏是四个与数据库表同步的模型视图，如果你想要在后台管理程序中数据库中的表在初始化 admin 后仅需一句代码：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+admin = Admin(app)
+admin.add_view(ModelView(User, db.session))
+#+END_SRC
+
+但是有时候 flask-admin 的默认设置并不能满足你的条件，如果我们在后台只打算让表中固定的几列数据显示，
+这时候我们就不能直接像上面那样直接 ModelView，我们需自定义一个类并继承 ~ModelView~ ，并重写一些代码，把想要显示出来的列名写在 ~column_list~ 中。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyV1(ModelView):
+
+    column_list = ('id', 'title','timestamp','count','content')
+    def __init__(self, session, **kwargs):
+        super(MyV1, self).__init__(News, session, **kwargs)
+#+END_SRC
+
+然后在程序中再加入代码如下，然后就 OK 了。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+admin.add_view(MyV1(db.session,name = u'管理新闻'))
+#+END_SRC
+
+如果我们使用 flask 做网站是给自己使用，后台和数据库中同步的列名是英文显示没有多大影响，自己写的数据库难道还不知道什么意思，但是当我们是写给非技术人员使用时，
+他们可能不能理解每个列名是什么意思，所以现在我们就需要将列名中文化，也是需要重写 ~column_labels~ 。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyV1(ModelView):
+
+    column_labels = {
+        'id':u'序号',
+        'title' : u'新闻标题',
+        'timestamp':u'发布时间',
+        'count':u'浏览次数',
+        'content':u'新闻内容'
+    }
+    column_list = ('id', 'title','timestamp','count','content')
+    def __init__(self, session, **kwargs):
+        super(MyV1, self).__init__(News, session, **kwargs)
+#+END_SRC
+
+有时候当同步数据库表成功后，扩展会有一个默认新建数据插入数据库表中的功能，但是我们有时候发表博客，新闻这些需要排版的文章但是默认的新建数据不支持这个功能怎么办，我们可以把默认创建功能先关掉。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyV1(ModelView):
+    can_create = False
+
+    column_labels = {
+        'id':u'序号',
+        'title' : u'新闻标题',
+        'timestamp':u'发布时间',
+        'count':u'浏览次数',
+        'content':u'新闻内容'
+    }
+    column_list = ('id', 'title','timestamp','count','content')
+    def __init__(self, session, **kwargs):
+        super(MyV1, self).__init__(News, session, **kwargs)
+#+END_SRC
+
+* 创建视图
+上面我们说到讲默认创建功能关掉，但是我们怎么新建数据呢，我们可以自己写一个视图，关联自己的模板，再在模板中集成富文本。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyNews(BaseView):
+    @expose('/', methods=['GET', 'POST'])
+    def index(self):
+        form = NameForm()
+        return self.render('donews.html', form=form)
+#+END_SRC
+
+然后再程序中加入代码：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+admin.add_view(MyNews(name=u'发表新闻'))
+#+END_SRC
+
+* 对主页面的修改
+flask-admin 默认主页面标题是 Home，而且界面一片空白，由于各种需要，我们需要对这些进行更改，参考以下代码
+
+#+BEGIN_SRC python :results values list :exports no-eval
+admin = Admin(
+    app,
+    index_view=AdminIndexView(
+        name='导航栏',
+        template='welcome.html',
+        url='/admin'
+    )
+)
+#+END_SRC
+
+将标题修改为导航栏，并将主页设置为 welcome.html，进入后台对应的 url 也可以修改。
+
+* 权限设置
+一般后台并不是对所有用户开放的，所有牵扯到了管理员权限，这一块我是依靠 flask-login 这个扩展实现的，关于 flask-login 会再写一遍进行总结，新加代码如下：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyV1(ModelView):
+    def is_accessible(self):
+        if current_user.is_authenticated and current_user.username == "admin":
+            return True
+        return False
+    can_create = False
+
+    column_labels = {
+        'id':u'序号',
+        'title' : u'新闻标题',
+        'timestamp':u'发布时间',
+        'count':u'浏览次数',
+        'content':u'新闻内容'
+    }
+    column_list = ('id', 'title','timestamp','count','content')
+    def __init__(self, session, **kwargs):
+        super(MyV1, self).__init__(News, session, **kwargs)
+
+class MyNews(BaseView):
+    def is_accessible(self):
+        if current_user.is_authenticated and current_user.username == "admin":
+            return True
+        return False
+    @expose('/', methods=['GET', 'POST'])
+    def index(self):
+        form = NameForm()
+        return self.render('donews.html', form=form)
+#+END_SRC
+
+通过判断当前用户登录状态和当前登录的用户名进行权限设置。
+
+* 增加 model 后端
+Flask-Admin 对与之配合的数据库模型做了一些假设。如果要实现自己的数据库后端，并且 Flask-Admin 的模型视图仍可按预期工作，则应注意以下事项：
+- 每一个 model 必须有主键, 但不限定数据类型和主键名
+- 确保每一个 model 的属性都是可以访问的
+
+在此基础上，你可以通过继承 ~BaseModelView~ 类来实现数据库后端的扩展，并实现下面列出的一系列方法：
+** 扩展 BaseModelView
+首先定义一个从 BaseModelView 派生的新类：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyDbModel(BaseModelView):
+        pass
+#+END_SRC
+
+这个类继承了 ~BaseModelView~ 的 ~__init__~ 方法，它接受一个模型类作为第一个参数。模型类存储为属性 ~self.model~， 以便其他方法可以访问它。
+
+现在，为新的类实现以下脚手架方法：
+
+*** get_pk_value()
+该方法从模型实例中返回一个主键值。在 SQLAlchemy 后端，它使用 ~scaffold_pk()~ 从模型获得主键，缓存它，然后在需要时从模型返回值。
+例子：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyDbModel(BaseModelView):
+    def get_pk_value(self, model):
+    return self.model.id
+#+END_SRC
+
+*** scaffold_list_columns()
+返回列表视图要展示的列。 例子：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyDbModel(BaseModelView):
+    def scaffold_list_columns(self):
+        columns = []
+
+          for p in dir(self.model):
+              attr = getattr(self.model, p)
+            if isinstance(attr, MyDbColumn):
+                columns.append(p)
+
+           return columns
+#+END_SRC
+
+*** scaffold_sortable_columns()
+返回可排序列的字典。字典中的键应该对应于模型的字段名称。值应该是那些将用于排序的变量。
+
+例如，在 SQLAlchemy 后端可以按外键字段进行排序。
+所以，如果有一个名为 user 的字段，它是 Users 表的一个外键，并且 Users 表也有一个名称字段，那么这个键将是 user 的 value 将是： ~Users.name~ 。
+
+如果您的后端不支持排序，则返回 None 或空字典。
+
+*** init_search()
+初始化搜索功能。如果您的后端支持全文搜索，请进行初始化并返回 True。如果您的后端不支持全文搜索，请返回 False。
+
+例如，SQLAlchemy 后端读取 ~self.searchable_columns~ 的值，并验证是否所有字段都是文本类型，如果它们定位到当前的模型（如果不是，则会添加一个连接等）并缓存这些信息以备将来使用。
+
+*** scaffold_form()
+在模型里定义 WTForms 表单，例子：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyDbModel(BaseModelView):
+        def scaffold_form(self):
+        class MyForm(Form):
+              pass
+
+      # Do something
+       return MyForm
+#+END_SRC
+
+*** get_list()
+这个方法应该返回带有分页，排序等应用的模型实例列表。
+
+对于 SQLAlchemy 后端，它看起来像：
+- 如果搜索已启用且提供的搜索值不为空，将会为 ~self.searchable_columns~ 中的每个字段生成 ~LIKE~ 语句
+
+- 如果传递过滤值，请使用值调用 ~apply~ 方法：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+for flt, value in filters:
+    query = self._filters[flt].apply(query, value)
+#+END_SRC
+
+- 执行查询获取数据库中的总行数（count）
+- 如果 sort_column 被传递，会做类似的事情（带有一些额外的 FK 逻辑，在这个例子中省略）：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+if sort_desc:
+    query = query.order_by(desc(sort_field))
+else:
+    query = query.order_by(sort_field)
+#+END_SRC
+
+- 应用分页
+- 返回总条数和列表的元组
+
+*** get_one()
+根据主键返回 model 数据。
+
+*** create_model()
+通过表单创建一个 model 的实例。
+
+*** update_model()
+更新表单 model 的实例。
+
+*** delete_model()
+从数据存储中删除特定的 model 数据。
+
+*** is_valid_filter()
+验证返回的数据是否是有效的。
+
+*** scaffold_filters()
+返回一个模型字段的过滤器对象列表。
+对于 ~self.column_filters~ 设置中的每个条目，该方法都会被调用一次。
+如果后端不知道如何为提供的字段生成过滤器，则应该返回 None。
+
+例如：
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyDbModel(BaseModelView):
+       def scaffold_filters(self, name):
+           attr = getattr(self.model, name)
+
+        if isinstance(attr, MyDbTextField):
+        return [MyEqualFilter(name, name)]
+#+END_SRC
+
+** 实现过滤
+每个模型后端都应该有自己的一组过滤器实现。
+在非 SQLAlchemy 后端不能使用 SQLAlchemy 模型中的过滤器。这也意味着不同的后端可能有不同的可用过滤器集合。
+
+过滤器是从 ~BaseFilter~ 派生的类，它实现了至少两种方法：
+- apply()
+- operation()
+
+apply 方法接受两个参数： ~查询对象~ 和 ~来自客户端的值~ 。在这里您可以为过滤器类型添加过滤逻辑。
+
+让我们以 SQLAlchemy 模型后端为例：
+所有 SQLAlchemy 过滤器都从 BaseSQLAFilter 类派生。
+每个过滤器都实现一个简单的过滤器 SQL 操作（如 not， like， 大于等），并接受一列作为输入参数。
+每当模型视图要将筛选器应用于查询对象时，它将在具有查询和值的筛选器类中调用 apply 方法。过滤器将应用实际的过滤器操作。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyBaseFilter(BaseFilter):
+    def __init__(self, column, name, options=None, data_type=None):
+        super(MyBaseFilter, self).__init__(name, options, data_type)
+
+        self.column = column
+
+class MyEqualFilter(MyBaseFilter):
+    def apply(self, query, value):
+        return query.filter(self.column == value)
+
+    def operation(self):
+        return gettext('equals')
+
+    # You can validate values. If value is not valid,
+    # return `False`, so filter will be ignored.
+    def validate(self, value):
+        return True
+
+    # You can "clean" values before they will be
+    # passed to the your data access layer
+    def clean(self, value):
+        return value
+#+END_SRC
+
+如果您在添加新模型后端时遇到问题，请随时提问。此外，如果遇到困难，请尝试查看 SQLAlchemy 模型后端并将其用作参考。
+
+* 增加自定义 Action
+默认情况下，Flask Admin 提供了两个 Row Action，即 delete 和 edit。但是大多数情况下，这些并不能满足有其他快捷操作需求，好在 Flask-Admin 提供增加这种按钮的接口。
+
+~UserView.py~
+
+这是我原本的 Admin ModelView 实现，很明显我没有对 row actions 做任务的定制。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class UserView(ModelView):
+    column_default_sort = ('active', False)
+    column_list = ('name', 'email', 'active', 'roles')
+    column_filters = ('name', 'active')
+    form_create_rules = ('name', 'avatar', 'email', 'active', 'roles')
+#+END_SRC
+
+** 增加 row action 按钮
+我们可以通过 ~[[https://flask-admin.readthedocs.io/en/latest/api/mod_model/#flask_admin.model.BaseModelView.column_extra_row_actions][column_extra_row_actions~]] 属性增加 row action。
+
+#+BEGIN_QUOTE
+ column_extra_row_actions = None
+
+ List of row actions (instances of BaseListRowAction).
+
+ Flask-Admin will generate standard per-row actions (edit, delete, etc) and will append custom actions from this list right after them.
+
+ For example:
+
+  from flask_admin.model.template import EndpointLinkRowAction, LinkRowAction
+
+  class MyModelView(BaseModelView):
+      column_extra_row_actions = [
+          LinkRowAction('glyphicon glyphicon-off', 'http://direct.link/?id={row_id}'),
+          EndpointLinkRowAction('glyphicon glyphicon-test', 'my_view.index_view')
+      ]
+#+END_QUOTE
+
+#+BEGIN_SRC python :results values list :exports no-eval
+from flask_admin.model.template import EndpointLinkRowAction
+
+class UserView(ModelView):
+    column_default_sort = ('active', False)
+    column_list = ('name', 'email', 'active', 'roles')
+    column_filters = ('name', 'active')
+    form_create_rules = ('name', 'avatar', 'email', 'active', 'roles')
+
+    column_extra_row_actions = [
+        EndpointLinkRowAction(
+            'off glyphicon glyphicon-off',
+            'user.activate_user_view',
+        )
+    ]
+#+END_SRC
+
+Flask-admin 提供了 ~row action~ 的模版，其中上面使用的 ~EndpointLinkRowAction~ ，传入的是一个 ~view(user.activate_user_view)~ 。
+它是定义在 ~UserView~ 上的一个 ~view~ 方法（请看下面代码）。同时 ~row action~ 也有 ~LinkRowAction~ 类型，它接受 ~icon class~ 和一个 ~url~ 。
+另外它支持更多的类型, 请看[[https://github.com/flask-admin/flask-admin/blob/master/flask_admin/model/template.py#L66][Github]]
+
+** 增加对应的 endpoint
+在上面我们增加了一个 ~EndpointLinkRowAction~ ，但是我们还没有定义动作具体的逻辑。下面我们定义 ~user.activate_user_view~ 来接收这个动作的参数，并实现相应的功能。
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class UserView(ModelView):
+    column_default_sort = ('active', False)
+    column_list = ('name', 'email', 'active', 'roles')
+    column_filters = ('name', 'active')
+    form_create_rules = ('name', 'avatar', 'email', 'active', 'roles')
+
+    # XXX: user.activate_user_view 中的 user 是和数据模型 User 相关的,
+    # activate_user_view 是和视图函数相关的.
+    column_extra_row_actions = [
+        EndpointLinkRowAction(
+            'off glyphicon glyphicon-check',
+            'user.activate_user_view',
+        )
+    ]
+
+    @expose('/activate/', methods=('GET', ))
+    def activate_user_view(self):
+        """
+            Activate user model view. Only GET method is allowed.
+        """
+        return_url = get_redirect_target() or self.get_url('.index_view')
+
+        id = request.args["id"]
+        model = self.get_one(id)
+
+        if model is None:
+            flash(gettext('用户不存在'), 'error')
+            return redirect(return_url)
+
+        if model.active:
+            flash(gettext('已经激活, 无需重复激活.'), 'warning')
+            return redirect(return_url)
+
+        model.active = True
+        model.save()
+
+        flash(gettext('已激活'), 'success')
+        return redirect(return_url)
+#+END_SRC
+
+到此我们增加一个快速激活用户的方法就完成了。
+
+* Export and import for MongoEngine model in Flask-Admin
+Another tip for Flask-Admin. The task’s requirements are:
+
+- possibility to choose some model’s objects and download them in JSON
+- possibility to upload them back
+
+There is a ModelView property [[http://flask-admin.readthedocs.io/en/latest/api/mod_model/#flask_admin.model.BaseModelView.can_export][can_export]], it adds an action to export in CSV or another format
+supported by [[https://github.com/kennethreitz/tablib/][tablib]], but it does not allow to select records and there is no import. So for my task it’s not a solution.
+
+The export is easy to do with an [[http://flask-admin.readthedocs.io/en/latest/advanced/#customizing-batch-actions][action decorathor]].
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyModel(Document)
+name = StringField(max_lengt=255)
+data = DictField()
+date = DateTimeField(default=datetime.utcnow)
+
+
+class MyView(ModelView):
+    @action('export', 'Export')
+    def action_export(self, ids):
+        try:
+            items = list(MyModel.objects(id__in=ids))
+
+            if items:
+                items = [
+                    {'name': item.name,'data': item.data}
+                    for item in items
+                ]
+
+                return (
+                    json.dumps(items, indent=4),
+                    200,
+                    {
+                        'Content-Type': 'application/json',
+                        'Pragma': 'no-cache',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Expires': '0',
+                        'Content-Disposition': 'attachment; filename="mymodel.json"'
+                    }
+                )
+
+            return ''
+        except Exception as e:
+            if not self.handle_view_exception(e):
+                raise
+
+            flash('Failed to export: {}'.format(str(e)), 'error')
+#+END_SRC
+
+The import is a little more complex, it requires to customize the template.
+In this example I put it at the bottom of the list page admin/mymodel_list.html.
+
+#+BEGIN_SRC html :results values list :exports no-eval
+{% extends 'admin/model/list.html' %}
+
+{% block body %}
+{{ super() }}
+
+<form action="{{ url_for('admin_mymodel.import_json') }}"
+      method="POST"
+      enctype="multipart/form-data"
+      class="admin-form form-inline">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="form-group">
+    <input type="file" name="file" class="form-control"/>
+    <button type="submit" class="btn btn-default">Import</button>
+  </div>
+</form>
+{% endblock %}
+#+END_SRC
+
+And added a view with @expose decorathor to proccess this form.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyView(ModelView):
+    list_template = 'admin/mymodel_list.html'
+
+    @expose('/import', methods=['POST'])
+    def import_json(self):
+        redirect_response = redirect(url_for('admin_mymodel.index_view'))
+
+        if 'file' not in request.files:
+            flash('No file part', 'error')
+            return redirect_response
+
+        uploaded_file = request.files['file']
+        if uploaded_file.filename == '':
+            flash('No selected file', 'error')
+            return redirect_response
+
+        if uploaded_file:
+            try:
+                items = json.loads(uploaded_file.read().decode('utf-8'))
+            except (json.JSONDecodeError, TypeError, UnicodeDecodeError) as e:
+                flash('Can not read json from the file. {}'.format(e), 'error')
+                return redirect_response
+
+            for item in items:
+                MyModel(**item).save()
+
+        return redirect_response
+#+END_SRC
+
+To add view to admin:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+adm = Admin()
+adm.add_view(MyView(MyModel, endpoint='admin_mymodel'))
+#+END_SRC

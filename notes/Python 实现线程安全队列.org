@@ -1,0 +1,185 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 实现线程安全队列/")); -*-
+:PROPERTIES:
+:ID:       2982B6B4-08A2-4632-B913-BEA2D4FAD1FD
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-07 Mon 19:48>
+#+TITLE: Python 实现线程安全队列
+
+* 互斥量
+互斥量（mutex）从本质上说是一把锁，在访问共享资源前对互斥量进行加锁，在访问完成后释放互斥量上的锁。
+对互斥量进行加锁以后，任何其他试图再次对互斥锁加锁的线程将会阻塞直到当前线程释放该互斥锁。
+如果释放互斥锁时有多个线程阻塞，所有在该互斥锁上的阻塞线程都会变成可运行状态，第一个变为运行状态的线程可以对互斥锁加锁，其他线程将会看到互斥锁依然被锁住，只能回去再次等待它重新变为可用。
+
+* 条件变量
+条件变量（cond）是在多线程程序中用来实现“等待–->唤醒”逻辑常用的方法。
+条件变量利用线程间共享的全局变量进行同步的一种机制。
+主要包括两个动作：
+一个线程等待“条件变量的条件成立”而挂起；
+另一个线程使“条件成立”。
+
+为了防止竞争，条件变量的使用总是和一个互斥锁结合在一起。
+使“条件成立”线程在改变条件状态前必须首先锁住互斥量，函数 ~pthread_cond_wait~ 把自己放到等待“条件变量的条件成立”的线程列表上，
+然后对互斥锁解锁（这两个操作是原子操作）。
+在函数返回时，互斥量再次被锁住。
+
+* 条件变量总是和互斥锁一起使用
+Python 的 threading 中定义两种锁： ~threading.Lock~ 和 ~threading.RLock~ 。
+
+后者是可重入锁，也就是说在一个线程内重复 LOCK 同一个锁不会发生死锁，
+这与 POSIX 中的 ~PTHREAD_MUTEX_RECURSIVE~ 也就是可递归锁的概念是相同的, 互斥锁的 API 有三个函数，分别执行 =分配锁= ，=上锁= ，=解锁= 操作。
+
+- 分配锁
+
+#+begin_example
+threading.Lock()
+#+end_example
+
+- 上锁
+阻塞或者非阻塞，非阻塞时相当于 ~try_lock~ ，通过返回 ~False~ 表示已经被其他线程锁住。
+
+#+begin_example
+acquire(blocking=1)
+#+end_example
+
+- 解锁
+
+#+begin_example
+release()
+#+end_example
+
+Python 的 threading 中的条件变量默认绑定了一个 ~RLock~ ，也可以在初始化条件变量的时候传进去一个自己定义的锁。
+
+- 分配条件变量
+
+#+begin_example
+threading.Condition([Lock])
+#+end_example
+
+- 条件变量上锁
+
+#+begin_example
+self.__cond.acquire(*args)
+#+end_example
+
+- 条件变量解锁
+
+#+begin_example
+release()
+#+end_example
+
+- 等待唤醒，timeout 表示超时
+
+#+begin_example
+wait([timeout])
+#+end_example
+
+- 唤醒最大 n 个等待的线程
+
+#+begin_example
+notify(n=1)
+#+end_example
+
+- 唤醒所有等待的线程
+
+#+begin_example
+notifyAll()
+notify_all()
+#+end_example
+
+* 示例
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+# -*- coding: utf-8 -*-
+import Queue
+import threading
+import time
+
+
+class ConcurrentQueue():
+    def __init__(self, capacity = -1):
+        self.__capacity = capacity    # 初始化队列大小
+        self.__mutex = threading.Lock()    # 初始化互斥量
+        self.__cond = threading.Condition(self.__mutex)    # 初始化条件变量
+        self.__queue = Queue.Queue()
+
+    def get(self):
+       if self.__cond.acquire():    # 获取互斥量和条件变量，python 中 threading 条件变量默认包含互斥量，因此只需要获取条件变量即可
+           while self.__queue.empty():
+               self.__cond.wait()    # 条件变量等待
+
+           element = self.__queue.get()
+
+           self.__cond.notify()
+           self.__cond.release()
+
+        return element
+
+    def put(self, element):
+        if self.__cond.acquire():
+            while self.__queue.qszie() >= self.__capacity:
+                self.__cond.wait()
+            self.__queue.put(element)
+
+            self.__cond.notify()
+            self.__cond.release()
+
+
+    def clear(self):
+        if self.__cond.acquire():
+            self.__queue.queue.clear()
+
+            self.__cond.release()
+            self.__cond.notifyAll()
+
+    def empty(self):
+        is_empty = False
+        if self.__mutex.acquire():    # 只需要获取互斥量
+            is_empty = self.__queue.empty()
+            self.__mutex.release()
+
+        return is_empty
+
+    def size(self):
+        size = 0
+        if self.__mutex.acquire():
+            size = self.__queue.qsize()
+            self.__mutex.release()
+
+        return size
+
+    def resize(self, capacity = -1):
+        self.__capacity = capacity
+
+
+Class CQTest():
+    def __init__(self):
+        self.queue = ConcurrentQueue(10)
+
+    def consumer(self):
+        while True:
+            task = self.queue.get()
+            print 'get', task, 'from queue.'
+
+    def producer(self):
+        while True:
+            for i in range(10):
+                time.sleep(0.2)
+                self.queue.put(i)
+
+    def run(self):
+        t1 = threading.Thread(target = self.consumer)
+        t2 = threading.Thread(target = self.producer)
+
+        t1.start()
+        t2.start()
+
+
+cq_test = CQTest()
+cq_test.run()
+  #+END_SRC
+
+  #+RESULTS:
+  :results:
+  :end:

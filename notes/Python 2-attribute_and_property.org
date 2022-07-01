@@ -1,0 +1,443 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 2-attribute_and_property/")); -*-
+:PROPERTIES:
+:ID:       0422A293-435A-4B95-A1E2-95AFF75253C8
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-11 Thu 17:17>
+#+TITLE: Python 2-attribute_and_property
+
+在 Python 中，数据的属性和处理数据的方法统称为属性（attribute）。 方法只是可调用的属性。
+
+#+BEGIN_SRC ipython :session :results output :exports no-eval
+  from urllib2 import urlopen
+  import warnings
+  import os
+  import json
+
+  URL = "http://www.oreilly.com/pub/sc/osconfeed"
+  JSON = "/Users/c/Python/data/osconfeed.json"
+
+
+  def load():
+      if not os.path.exists(JSON):
+          msg = "downloading {} to {}".format(URL, JSON)
+          warnings.warn(msg)
+          remote = urlopen(URL)
+          with open(JSON, "wb") as local:
+              local.write(remote.read())
+
+      with open(JSON) as fp:
+          return json.load(fp)
+
+
+  if __name__ == "__main__":
+      feed = load()
+      print sorted(feed["Schedule"].keys())
+#+END_SRC
+
+#+RESULTS:
+: [u'conferences', u'events', u'speakers', u'venues']
+
+[[*property 的实现][property 的实现]]
+
+#+BEGIN_SRC ipython :session :results output :exports no-eval
+  class LineItem(object):
+
+      def __init__(self, weight):
+          self.weight = weight    # 在初始化时就能够调用 weight 特性了
+
+      @property
+      def weight(self):
+          print "Read value function called"
+          return self.__dict__["weight"]
+
+      @weight.setter
+      def weight(self, value):
+          print "Set value function called, the value is set to %s" % value
+          self.__dict__["weight"] = value
+
+
+  raisin = LineItem(10)
+  raisin.__dict__["weight"] = 20
+  print raisin.weight
+  raisin.weight = 30
+#+END_SRC
+
+#+RESULTS:
+: Set value function called, the value is set to 10
+: Read value function called
+: 20
+: Set value function called, the value is set to 30
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example1
+  class Animal(object):
+      run = True
+
+
+  class Dog(Animal):
+      fly = False
+
+      def __init__(self, age):
+          self.age = age
+
+      def sound(self):
+          return "wang wang~"
+
+
+  print Animal.__dict__
+  print hasattr(Animal, "run")
+  print getattr(Animal, "run")
+  print Dog.__dict__
+  print hasattr(Dog, "run")
+  print getattr(Dog, "run")
+#+END_SRC
+
+#+RESULTS:
+: {'__dict__': <attribute '__dict__' of 'Animal' objects>, '__weakref__': <attribute '__weakref__' of 'Animal' objects>, '__module__': '__main__', 'run': True, '__doc__': None}
+: True
+: True
+: {'fly': False, 'sound': <function sound at 0x10862b140>, '__module__': '__main__', '__doc__': None, '__init__': <function __init__ at 0x10862b0c8>}
+: True
+: True
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results value :exports no-eval :session example1
+  Animal.__dict__
+#+END_SRC
+
+#+RESULTS:
+: # Out[4]:
+: #+BEGIN_EXAMPLE
+:   dict_proxy({'__dict__': <attribute '__dict__' of 'Animal' objects>,
+:   '__doc__': None,
+:   '__module__': '__main__',
+:   '__weakref__': <attribute '__weakref__' of 'Animal' objects>,
+:   'run': True})
+: #+END_EXAMPLE
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results value :exports no-eval :session example1
+  Dog.__dict__
+#+END_SRC
+
+#+RESULTS:
+: # Out[5]:
+: #+BEGIN_EXAMPLE
+:   dict_proxy({'__doc__': None,
+:   '__init__': <function __main__.__init__>,
+:   '__module__': '__main__',
+:   'fly': False,
+:   'sound': <function __main__.sound>})
+: #+END_EXAMPLE
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eva :session example1
+  dog = Dog(1)
+  print dog.__dict__
+#+END_SRC
+
+#+RESULTS:
+: {'age': 1}
+
+- 类 Animal 定义了属性 run，run 属性只出现在 Animal 的 ~__dict__~ 中，而不会出现在其子类中。
+- 类 Dog 定义了属性 fly 和两个函数，这些属性和方法只出现在 Dog 的 ~__dict__~ 中，不会出现在其实例的 ~__dict__~ 中。
+- 实例对象 dog 的 ~__dict__~ 中，出现属性 age，是在初始化实例对象时添加的，在 ~__dict__~ 中没有父类的属性和方法。
+- Python 的对象的属性具有 ~层次性~ ， 属性在哪个对象上定义，便出现在该对象的 ~__dict__~ 中。
+
+* __getattribute__
+在 ~__getattribute__~ 方法中，不能使用对象的点运算来访问属性，这样会导致再次调用 ~__getattribute__~ 方法，陷入无限递归。
+使用： ~super()~ 方法，或者使用 object 对象的方法。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports no-eval :session example2
+  class Animal(object):
+      run = True
+
+
+  class Dog(Animal):
+      fly = False
+
+      def __init__(self, age):
+          self.age = age
+
+      def __getattribute__(self, key):
+          print "calling __getattribute__\n"
+          # return object.__getattribute__(self, key)
+          return super(Dog, self).__getattribute__(key)
+
+      def sound(self):
+          return "wang wang~"
+#+END_SRC
+
+#+RESULTS:
+:results:
+
+:end:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example2
+  dog = Dog(1)
+  print dog.age
+  print dog.fly
+  print dog.run
+  print dog.sound
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+calling __getattribute__
+
+1
+calling __getattribute__
+
+False
+calling __getattribute__
+
+True
+calling __getattribute__
+
+<bound method Dog.sound of <__main__.Dog object at 0x10ce21d10>>
+#+end_example
+
+~__getattribute__~ 是实例对象查找属性或方法的入口，实例对象访问属性或者方法先调用 ~__getattribute__~ ，如果没有，根据一定规则在各个 ~__dict__~ 中查找属性或者方法，如果没有，则调用 ~__getattr__~ 方法。
+
+* __getattr__(self, name)
+当用户试图访问一个根本不存在（或者暂时不存在）的属性时，被调用，可以用于捕捉错误和灵活的处理 ~AttributeError~ 。
+
+* __setattr__(self, name, value)
+- 用来定义属性的赋值行为，不管属性存在与否，这点与 ~__getattribute__~ 类似，也要注意无限递归的陷阱。
+- 必须区分实例对象属性和类属性。
+
+* __delattr__(self, name)
+处理删除属性的行为，注意无限递归的陷阱， 不应该出现 ~del self.name~ 。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example3
+  class Animal(object):
+      run = True
+
+
+  class Dog(Animal):
+      fly = False
+
+      def __init__(self, age):
+          self.age = age
+
+      def __getattr__(self, name):
+          print "calling __getattr__\n"
+          if name == "adult":
+              return True if self.age > 2 else False
+          else:
+              raise AttributeError
+
+      def __setattr__(self, name, value):
+          print "calling __setattr__\n"
+          super(Dog, self).__setattr__(name, value)
+
+      def __delattr__(self, name):
+          print "calling __delattr__\n"
+          super(Dog, self).__delattr__(name)
+
+      def sound(self):
+          return "wang wang~"
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example3
+  dog = Dog(1)
+  print dog.__dict__
+  print Dog.__dict__
+  print dog.age
+  print dog.adult
+  try:
+      print dog.name
+  except AttributeError as e:
+      print e
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+calling __setattr__
+
+{'age': 1}
+{'fly': False, 'sound': <function sound at 0x1049178c0>, '__module__': '__main__', '__init__': <function __init__ at 0x104917848>, '__delattr__': <function __delattr__ at 0x104917500>, '__setattr__': <function __setattr__ at 0x1049177d0>, '__getattr__': <function __getattr__ at 0x104917e60>, '__doc__': None}
+1
+calling __getattr__
+
+False
+calling __getattr__
+
+
+#+end_example
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example3
+  print "setting dog.age: "
+  dog.age = 2
+  print "calling dog.age: "
+  print dog.age
+  print "setting dog.fly: "
+  dog.fly = True
+  print "calling dog.fly: "
+  print dog.fly
+  print "calling dog.__dict__:", dog.__dict__
+  print "calling Dog.__dict__:", Dog.__dict__
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+setting dog.age:
+calling __setattr__
+
+calling dog.age:
+2
+setting dog.fly:
+calling __setattr__
+
+calling dog.fly:
+True
+calling dog.__dict__: {'fly': True, 'age': 2}
+calling Dog.__dict__: {'fly': False, 'sound': <function sound at 0x1049178c0>, '__module__': '__main__', '__init__': <function __init__ at 0x104917848>, '__delattr__': <function __delattr__ at 0x104917500>, '__setattr__': <function __setattr__ at 0x1049177d0>, '__getattr__': <function __getattr__ at 0x104917e60>, '__doc__': None}
+#+end_example
+
+实例对象的 =__setattr__= 方法定义属性的赋值行为，不管该属性是否存在，如果存在则改变其值，
+如果不存在， =__setattr__= 方法则添加一个新的实例对象属性到实例对象的 =__dict__= 中，但是不影响类的 =__dict__= 。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example3
+  print "deleting dog.fly"
+  del dog.fly
+  print "calling dog.__dict__"
+  print dog.__dict__
+#+END_SRC
+
+#+RESULTS:
+: deleting dog.fly
+: calling __delattr__
+:
+: calling dog.__dict__
+: {'age': 2}
+
+* 描述符
+用来实现对象系统的底层功能，如绑定和非绑定方法，类方法，静态方法等。
+~__getattribute__~ ， ~_getattr__~ ， ~_setattr__~ ， ~_delattr__~ 这些方法只能解决属性查找，设置，删除问题，不能解决对某个具体属性的控制行为，例如在 ~dog.age = 2~ 时限制 ~age~ 的赋值只能是整数。
+而描述符通过分离出属性对象，通过属性对象来实现属性的控制行为，这个属性对象就是描述符。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example4
+  class RevealAcess(object):
+      def __init__(self, initval=None, name="var"):
+          self.val = initval
+          self.name = name
+
+      def __get__(self, obj, objtype):
+          print "Retrieving", self.name
+          return self.val
+
+      def __set__(self, obj, val):
+          print "updating", self.name
+          self.val = val
+
+
+  class MyClass(object):
+      x = RevealAcess(10, "var x")
+      y = 5
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results value :exports no-eval :session example4
+MyClass.__dict__
+#+END_SRC
+
+#+RESULTS:
+: # Out[2]:
+: #+BEGIN_EXAMPLE
+:   dict_proxy({'__dict__': <attribute '__dict__' of 'MyClass' objects>,
+:   '__doc__': None,
+:   '__module__': '__main__',
+:   '__weakref__': <attribute '__weakref__' of 'MyClass' objects>,
+:   'x': <__main__.RevealAcess at 0x10cb8ed90>,
+:   'y': 5})
+: #+END_EXAMPLE
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results value :exports no-eval :session example4
+m = MyClass()
+m.__dict__
+#+END_SRC
+
+#+RESULTS:
+: # Out[3]:
+: : {}
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example4
+print "calling m.x"
+print m.x
+print "setting m.x"
+m.x = 20
+print "calling m.__dict__"
+print m.__dict__
+print "calling m.x again"
+print m.x
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+calling m.x
+Retrieving var x
+10
+setting m.x
+updating var x
+calling m.__dict__
+{}
+calling m.x again
+Retrieving var x
+20
+#+end_example
+
+=m.x= 会触发 =__getattribute__= 方法，但是由于 =x= 属性的值是一个描述符， 会触发描述符的 =__get__= 方法。
+~m.x = 20~ 会触发描述符的 =__set__= 方法，在 =__set__= 方法中还会触发 =__setattr__= 方法。
+
+* [[id:CBACC63C-317D-4BBB-8B55-1B3A4A5F8518][属性的查找顺序]]
+1. 查找属性的第一步是搜索基类列表，即 ~type(b).__mro__~ ，直到找到该属性的第一个定义，并将该属性的值赋值给 descr。
+2. 判断 descr 的类型，它的类型可分为数据描述符，非数据描述符，普通属性，未找到等类型。
+3. 若 descr 为数据描述符，则调用 ~desc.__get__(b, type(b))~ , 并将结果返回， 结束执行。否则进行下一步。
+4. 如果 descr 为非数据描述符，普通属性，未找到等类型，则查找实例 b 的实例属性，即 ~b.__dict__~ 。如果找到，则将结果返回，结束执行。否则进行下一步。
+5. 如果在 ~b.__dict__~ 未找到相关属性，则重新回到 descr 值的判断上：
+   - 若 descr 为非数据描述符, 则调用 ~desc.__get__(b, type(b))~ ， 将结果返回， 结束执行
+   - 若 descr 为普通属性，直接返回结果并结束执行
+   - 若 descr 为空（未找到），则最终抛出 ~AttributeError~ 异常，结束查找
+
+#+DOWNLOADED: https://images2018.cnblogs.com/blog/1283612/201806/1283612-20180627040547518-539095131.png @ 2019-07-21 22:07:40
+[[file:./static/Python 2-attribute_and_property/1283612-20180627040547518-539095131_2019-07-21_22-07-40.png]]
+
+* property 的实现
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class property:
+    def __init__(self, fget=None, fset=None, fdel=None):
+        self.fget = fget
+        self.fset = fset
+        self.fdel = fdel
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        elif self.fget is None:
+            raise AttributeError("unreadable attribute")
+        else:
+            return self.fget(instance)
+
+        def __set__(self, instance, value):
+            if self.fset is None:
+                raise AttributeError("can't set attribute")
+            else:
+                self.fset(instance, value)
+
+        def __delete__(self, instance):
+            if self.fdel is None:
+                raise AttributeError("can't delete attribute")
+            else:
+                self.fdel(instance)
+
+        def getter(self, fget):
+            return type(self)(fget, self.fset, self.fdel)
+
+        def setter(self, fset):
+            return type(self)(self.fget, fset, self.fdel)
+
+        def deleter(self, fdel):
+            return type(self)(self.fget, self.fset, fdel)
+#+END_SRC

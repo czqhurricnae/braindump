@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/升降舵平衡板/")); -*-
+:PROPERTIES:
+:ID:       5FB8C012-DF5C-42F6-8478-E7DADCA9C93C
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-19 Sat 17:41>
+#+TITLE: 升降舵平衡板
+
+[[file:./static/升降舵平衡板/2020-12-19_17-41-53_screenshot.jpg]]

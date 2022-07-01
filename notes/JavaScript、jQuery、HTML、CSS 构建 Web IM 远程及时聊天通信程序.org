@@ -1,0 +1,1611 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/")); -*-
+:PROPERTIES:
+:ID:       00F6FBEC-2DE5-4E08-B55D-D1BAE51CA9FD
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-06 Wed 08:46>
+#+TITLE: JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序
+这篇文章主要介绍用 JavaScript 和 jQuery、HTML、CSS 以及用第三方聊天 JavaScript（jsjac）框架构建一个 BS Web 的聊天应用程序。
+此程序可以和所有连接到 Openfire 服务器的应用进行通信、发送消息。
+如果要运行本程序还需要一个聊天服务器 Openfire，以及需要用到 Http 方式和 Openfire 通信的第三方库（JabberHTTPBind）。
+JabberHTTPBind 是 jabber 提供的 XMPP 协议通信的 Http bind 发送的形式，它可以完成 WebBrowser 和 Openfire 建立长连接通信。
+
+主要通信流程如下图所示：
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/1.png]]
+
+用户 A 通过 JavaScript jsjac.js 库发送一条消息到 JabberHTTPBind 这个 Servlet 容器，然后 JabberHTTPBind 的 Servlet 容器会向 Openfire 发送 XMPP 协议的 XML 报文。
+Openfire Server 接收到报文后解析，然后发送给指定的用户 B。
+JabberHTTPBind 获取到 Openfire Server 发送的数据后，解析报文向当前 Servlet 容器中的链接的 Session 中找到指定的用户再发送数据给用户 B。
+WebBrowser 端用的是 jsjac 和 JabberHTTPBind 建立的连接，所有数据都要经过 JabberHTTPBind 解析/转换发送给 Openfire。
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/2.png]]
+
+可以发送表情、改变字体样式（对方界面也可以看到你的字体样式），同时右侧是显示/收缩详情的信息。
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/3.png]]
+
+收缩详情：
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/4.png]]
+
+聊天界面部分截图：
+用户登录、注册，sendTo 表示你登录后向谁发送聊天消息、并且建立一个聊天窗口：
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/5.png]]
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/6.png]]
+
+登录成功后，你可以在日志控制台看到你的登陆状态、或是在 firebug 控制台中看到你的连接请求状态。
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/7.png]]
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/8.png]]
+
+登陆失败：
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/9.png]]
+
+只有 connecting，就没有下文了。
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/10.png]]
+
+登陆成功后，你就可以给指定用户发送消息，且设置你想发送消息的新用户点击 new Chat 按钮创建新会话。
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/11.png]]
+
+如果你来了新消息，在浏览器的标题栏会有新消息提示：
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/12.png]]
+
+如果你当前聊天界面的窗口都是关闭状态，那么在右下角会有消息提示的闪动图标：
+
+这里已经贴出了所有的源代码了，如果你非常的需要源代码（但我希望你能自己创建一个工程去复制源代码，这是我希望看到的），那么你可以通过以下方式联系我
+Email：hoojo_@126.com
+Blog：
+[[http://blog.csdn.net/IBM_hoojo][http://blog.csdn.net/IBM_hoojo]]
+[[http://hoojo.cnblogs.com/][http://hoojo.cnblogs.com/]]
+[[http://hoojo.blogjava.net][http://hoojo.blogjava.net]]
+
+* 导读
+如果你对 openfire 还不是很了解或是不知道安装，建议你看看这 2 篇文章：
+[[http://www.cnblogs.com/hoojo/archive/2012/05/17/2506769.html][http://www.cnblogs.com/hoojo/archive/2012/05/17/2506769.html]]
+[[http://www.cnblogs.com/hoojo/archive/2012/05/13/2498151.html][http://www.cnblogs.com/hoojo/archive/2012/05/13/2498151.html]]
+
+因为这里还用到了 JabberHTTPBind 以及在使用它或是运行示例的时候会遇到些问题，那么你可以看看这篇文章：
+[[http://www.cnblogs.com/hoojo/archive/2012/05/17/2506845.html][http://www.cnblogs.com/hoojo/archive/2012/05/17/2506845.html]]
+
+* 开发环境
+System：Windows
+
+JavaEE Server：Tomcat 5.0.28+/Tomcat 6
+
+WebBrowser：IE6+、Firefox3.5+、Chrome 已经兼容浏览器
+
+JavaSDK：JDK 1.6+
+
+Openfire 3.7.1
+
+IDE：eclipse 3.2、MyEclipse 6.5
+
+* 开发依赖库
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/13.png]]
+- jdk1.4+
+- serializer.jar
+- xalan.jar
+- jhb-1.0.jar
+- log4j-1.2.16.jar
+
+jhb-1.0.jar 这个就是 JabberHTTPBind，我把编译的 class 打成 jar 包了。
+
+* JavaScript lib
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/14.png]]
+
+- jquery.easydrag.js 窗口拖拽 JavaScript lib
+- jquery-1.7.1.min.js jquery lib
+- jsjac.js 通信核心库
+- local.chat-2.0.js 本地会话窗口发送消息 JavaScript 库
+- remote.jsjac.chat-2.0.js 远程会话消息 JavaScript 库
+- send.message.editor-1.0.js 窗口编辑器 JavaScript 库
+
+* 准备工作
+[[http://blog.jwchat.org/jsjac/][jsjac]]
+JavaScript lib 下载：[[https://github.com/sstrigler/JSJaC/][https://github.com/sstrigler/JSJaC/]]
+
+如果你不喜欢用 jsjac JavaScript lib 和 Openfire 通信，那么有一款 jQuery 的 plugin 可以供你使用，下载地址：jQuery-XMPP-plugin。
+[[https://github.com/maxpowel/jQuery-XMPP-plugin][https://github.com/maxpowel/jQuery-XMPP-plugin]]
+
+这里有所以能支持 Openfire 通信的第三方库，有兴趣的可以研究下：
+[[http://xmpp.org/xmpp-software/libraries/][http://xmpp.org/xmpp-software/libraries/]]
+
+jquery.easydrag 下载：
+[[http://fromvega.com/code/easydrag/jquery.easydrag.js][http://fromvega.com/code/easydrag/jquery.easydrag.js]]
+
+jquery 下载：
+[[http://code.jquery.com/jquery-1.7.1.min.js][http://code.jquery.com/jquery-1.7.1.min.js]]
+
+JabberHTTPBind jhb.jar 下载：
+[[http://download.csdn.net/detail/ibm_hoojo/4489188][http://download.csdn.net/detail/ibm_hoojo/4489188]]
+
+images 图片素材：
+[[http://download.csdn.net/detail/ibm_hoojo/4489439][http://download.csdn.net/detail/ibm_hoojo/4489439]]
+
+工程目录结构：
+
+[[file:./static/JavaScript、jQuery、HTML、CSS 构建 Web IM 远程及时聊天通信程序/15.png]]
+
+* 核心代码演示
+** 主界面（登陆、消息提示、日志、建立新聊天窗口）代码 index.jsp
+ #+BEGIN_SRC js :results values list :exports no-eval
+   <%@ page language="java" pageEncoding="UTF-8" %>
+   <%
+   String path = request.getContextPath();
+   String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+   %>
+
+   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+   <html>
+     <head>
+       <base href="<%=basePath%>">
+
+       <title>WebIM Chat</title>
+       <meta http-equiv="pragma" content="no-cache">
+       <meta http-equiv="cache-control" content="no-cache">
+       <meta http-equiv="expires" content="0">
+       <meta http-equiv="author" content="hoojo">
+       <meta http-equiv="email" content="hoojo_@126.com">
+       <meta http-equiv="blog" content="http://blog.csdn.net/IBM_hoojo">
+       <meta http-equiv="blog" content="http://hoojo.cnblogs.com">
+       <link rel="stylesheet" type="text/css" href="css/chat-2.0.css" />
+       <script type="text/javascript">
+           window.contextPath = "<%=path%>";
+           window["serverDomin"] = "192.168.8.22";
+       </script>
+       <script type="text/javascript" src="jslib/jquery-1.7.1.min.js"></script>
+       <script type="text/javascript" src="jslib/jsjac.js"></script>
+       <!-- script type="text/javascript" src="debugger/Debugger.js"></script-->
+       <script type="text/javascript" src="jslib/send.message.editor-1.0.js"></script>
+       <script type="text/javascript" src="jslib/jquery.easydrag.js"></script>
+       <script type="text/javascript" src="jslib/remote.jsjac.chat-2.0.js"></script>
+       <script type="text/javascript" src="jslib/local.chat-2.0.js"></script>
+       <script type="text/javascript">
+           $(function () {
+
+               $("#login").click(function () {
+                   var userName = $(":text[name='userName']").val();
+                   var receiver = $("*[name='to']").val();
+                   // 建立一个聊天窗口应用，并设置发送者和消息接收者
+                   $.WebIM({
+                       sender: userName,
+                       receiver: receiver
+                   });
+                   // 登陆到 openfire 服务器
+                    remote.jsjac.chat.login(document.userForm);
+                    $("label").text(userName);
+                    $("form").hide();
+                    $("#newConn").show();
+               });
+
+               $("#logout").click(function () {
+                    // 退出 openfire 登陆，断开链接
+                    remote.jsjac.chat.logout();
+                    $("form").show();
+                    $("#newConn").hide();
+                    $("#chat").hide(800);
+               });
+
+               $("#newSession").click(function () {
+                   var receiver = $("#sendTo").val();
+                   // 建立一个新聊天窗口，并设置消息接收者（发送给谁？）
+                   $.WebIM.newWebIM({
+                       receiver: receiver
+                   });
+               });
+           });
+       </script>
+     </head>
+
+     <body>
+       <!-- 登陆表单 -->
+       <form name="userForm" style="background-color: #fcfcfc; width: 100%;">
+           userName：<input type="text" name="userName" value="boy"/>
+           password：<input type="password" name="password" value="boy"/>
+
+           register: <input type="checkbox" name="register"/>
+           sendTo： <input type="text" id="to" name="to" value="hoojo" width="10"/>
+           <input type="button" value="Login" id="login"/>
+       </form>
+       <!-- 新窗口聊天 -->
+       <div id="newConn" style="display: none; background-color: #fcfcfc; width: 100%;">
+              User：<label></label>
+              sendTo： <input type="text" id="sendTo" value="hoojo" width="10"/>
+              <input type="button" value="new Chat" id="newSession"/>
+              <input type="button" value="Logout" id="logout"/>
+       </div>
+       <!-- 日志信息 -->
+       <div id="error" style="display: ; background-color: red;"></div>
+       <div id="info" style="display: ; background-color: #999999;"></div>
+       <!-- 聊天来消息提示 -->
+       <div class="chat-message">
+           <img src="images/write_icon.png" class="no-msg"/>
+           <img src="images/write_icon.gif" class="have-msg" style="display: none;"/>
+       </div>
+     </body>
+   </html>
+   #+END_SRC
+
+ 下面这段代码尤为重要，它是设置你链接 openfire 的地址。这个地址一段错误你将无法进行通信！
+
+ #+BEGIN_SRC js :results values list :exports no-eval
+   <script type="text/javascript">
+      window.contextPath = "<%=path%>";
+      window["serverDomin"] = "192.168.8.22";
+   </script>
+ #+END_SRC
+
+ =$.WebIM= 方法是主函数，用它可以覆盖 local.chat 中的基本配置，它可以完成聊天窗口的创建。
+ =$.WebIM.newWebIM= 方法是新创建一个窗口，只是消息的接收者是一个新用户。
+
+ #+BEGIN_SRC js :results values list :exports no-eval
+ $.WebIM({
+     sender: userName,
+     receiver: receiver
+ });
+
+ $.WebIM.newWebIM({
+     receiver: receiver
+ });
+ #+END_SRC
+
+ ~remote.jsjac.chat.login(document.userForm);~ 方法是用户登录到 Openfire 服务器。
+
+ 参数如下：
+
+ #+BEGIN_QUOTE
+ - httpbase: window.contextPath + "/JHB/", //请求后台 http-bind 服务器 url
+ - domain: window["serverDomin"], //"192.168.5.231", // 192.168.5.231 当前有效域名
+ - username: "", // 登录用户名
+ - pass: "", // 密码
+ - timerval: 2000, // 设置请求超时
+ - resource: "WebIM", // 链接资源标识
+ - register: true // 是否注册
+ #+END_QUOTE
+
+ ~remote.jsjac.chat.logout();~ 是退出、断开 openfire 的链接。
+
+** 本地聊天应用核心代码 local.chat-2.0.js
+
+ #+BEGIN_SRC js :results values list :exports no-eval
+   /***
+    * jquery local chat
+    * @version v2.0
+    * @createDate -- 2012-5-28
+    * @author hoojo
+    * @email hoojo_@126.com
+    * @blog http://hoojo.cnblogs.com & http://blog.csdn.net/IBM_hoojo
+    * @requires jQuery v1.2.3 or later, send.message.editor-1.0.js
+    * Copyright (c) 2012 M. hoo
+    **/
+
+   (function ($) {
+
+       if (/1\.(0|1|2)\.(0|1|2)/.test($.fn.jquery) || /^1.1/.test($.fn.jquery)) {
+           alert('WebIM requires jQuery v1.2.3 or later!  You are using v' + $.fn.jquery);
+           return;
+       }
+
+       var faceTimed, count = 0;
+
+       var _opts = defaultOptions = {
+           version: 2.0,
+           chat: "#chat",
+           chatEl: function () {
+               var $chat = _opts.chat;
+               if ((typeof _opts.chat) == "string") {
+                   $chat = $(_opts.chat);
+               } else if ((typeof _opts.chat) == "object") {
+                   if (!$chat.get(0)) {
+                       $chat = $($chat);
+                   }
+               }
+               return $chat;
+           },
+           sendMessageIFrame: function (receiverId) {
+               return $("iframe[name='sendMessage" + receiverId + "']").get(0).contentWindow;
+           },
+           receiveMessageDoc: function (receiverId) {
+               receiverId = receiverId || "";
+               var docs = [];
+               $.each($("iframe[name^='receiveMessage" + receiverId + "']"), function () {
+                   docs.push($(this.contentWindow.document));
+               });
+               return docs;
+               //return $($("iframe[name^='receiveMessage" + receiverId + "']").get(0).contentWindow.document);
+           },
+           sender: "", // 发送者
+           receiver: "", // 接收者
+           setTitle: function (chatEl) {
+               var receiver = this.getReceiver(chatEl);
+               chatEl.find(".title").html("和" + receiver + "聊天对话中");
+           },
+           getReceiver: function (chatEl) {
+               var receiver = chatEl.attr("receiver");
+               if (~receiver.indexOf("@")) {
+                   receiver = receiver.split("@")[0];
+               }
+               return receiver;
+           },
+
+           // 接收消息 iframe 样式
+           receiveStyle: [
+               '<html>',
+                   '<head><style type="text/css">',
+                   'body{border:0;margin:0;padding:3px;height:98%;cursor:text;background-color:white;font-size:12px;font-family:Courier,serif,monospace;}',
+                   '.msg{margin-left: 1em;}p{margin:0;padding:0;}.me{color: blue;}.you{color:green;}',
+                   '</style></head>',
+                   '<body></body>',
+               '</html>'
+           ].join(""),
+           writeReceiveStyle: function (receiverId) {
+               this.receiveMessageDoc(receiverId)[0].get(0).write(this.receiveStyle);
+           },
+
+           datetimeFormat: function (v) {
+               if (~~v < 10) {
+                   return "0" + v;
+               }
+               return v;
+           },
+           getDatetime: function () {
+               // 设置当前发送日前
+               var date = new Date();
+               var datetime = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+               datetime = " " + _opts.datetimeFormat(date.getHours())
+                           + ":" + _opts.datetimeFormat(date.getMinutes())
+                           + ":" + _opts.datetimeFormat(date.getSeconds());
+               return datetime;
+           },
+
+           /***
+            * 发送消息的格式模板
+            * flag = true 表示当前 user 是自己，否则就是对方
+            **/
+           receiveMessageTpl: function (userName, styleTpl, content, flag) {
+               var userCls = flag ? "me" : "you";
+               if (styleTpl && flag) {
+                   content = [ "<span style='", styleTpl, "'>", content, "</span>" ].join("");
+               }
+               return [
+                   '<p class="', userCls, '">', _opts.getDatetime(), '  ', userName, ':</p>',
+                   '<p class="msg">', content, '</p>'
+               ].join("");
+           },
+
+           // 工具类按钮触发事件返回 html 模板
+           sendMessageStyle: {
+                cssStyle: {
+                    bold: "font-weight: bold;",
+                    underline: "text-decoration: underline;",
+                    italic: "font-style: oblique;"
+                },
+                setStyle: function (style, val) {
+                    if (val) {
+                        _opts.sendMessageStyle[style] = val;
+                    } else {
+                        var styleVal = _opts.sendMessageStyle[style];
+                        if (styleVal === undefined || !styleVal) {
+                            _opts.sendMessageStyle[style] = true;
+                        } else {
+                            _opts.sendMessageStyle[style] = false;
+                        }
+                    }
+                },
+                getStyleTpl: function () {
+                    var tpl = "";
+                    $.each(_opts.sendMessageStyle, function (style, item) {
+                        //alert(style + "#" + item + "#" + (typeof item));
+                        if (item === true) {
+                            tpl += _opts.sendMessageStyle.cssStyle[style];
+                        } else if ((typeof item) === "string") {
+                            //alert(style + "-------------" + sendMessageStyle[style]);
+                            tpl += style + ":" + item + ";";
+                        }
+                    });
+                    return tpl;
+                }
+           },
+           // 向接收消息 iframe 区域写消息
+           writeReceiveMessage: function (receiverId, userName, content, flag) {
+               if (content) {
+                   // 发送消息的样式
+                   var styleTpl = _opts.sendMessageStyle.getStyleTpl();
+                   var receiveMessageDoc = _opts.receiveMessageDoc(receiverId);
+                   $.each(receiveMessageDoc, function () {
+                       var $body = this.find("body");
+                       // 向接收信息区域写入发送的数据
+                       $body.append(_opts.receiveMessageTpl(userName, styleTpl, content, flag));
+                       // 滚动条滚到底部
+                       this.scrollTop(this.height());
+                   });
+               }
+           },
+           // 发送消息
+           sendHandler: function ($chatMain) {
+               var doc = $chatMain.find("iframe[name^='sendMessage']").get(0).contentWindow.document;
+
+               var content = doc.body.innerHTML;
+               content = $.trim(content);
+               content = content.replace(new RegExp("<br>", "gm"), "");
+               // 获取即将发送的内容
+               if (content) {
+                   var sender = $chatMain.attr("sender");
+                   var receiverId = $chatMain.attr("id");
+                   // 接收区域写消息
+                   _opts.writeReceiveMessage(receiverId, sender, content, true);
+
+                   //############# XXX
+                   var receiver = $chatMain.find("#to").val();
+                   //var receiver = $chatMain.attr("receiver");
+                   // 判断是否是手机端会话，如果是就发送纯 text，否则就发送 html 代码
+                   var flag = _opts.isMobileClient(receiver);
+                   if (flag) {
+                       var text = $(doc.body).text();
+                       text = $.trim(text);
+                       if (text) {
+                           // 远程发送消息
+                           remote.jsjac.chat.sendMessage(text, receiver);
+                       }
+                   } else { // 非手机端通信 可以发送 html 代码
+                       var styleTpl = _opts.sendMessageStyle.getStyleTpl();
+                       content = [ "<span style='", styleTpl, "'>", content, "</span>" ].join("");
+                       remote.jsjac.chat.sendMessage(content, receiver);
+                   }
+
+                   // 清空发送区域
+                   $(doc).find("body").html("");
+               }
+           },
+
+           faceImagePath: "images/emotions/",
+           faceElTpl: function (i) {
+               return [
+                   "<img src='",
+                   this.faceImagePath,
+                   (i - 1),
+                   "fixed.bmp' gif='",
+                   this.faceImagePath,
+                   (i - 1),
+                   ".gif'/>"
+               ].join("");
+           },
+           // 创建表情 html elements
+           createFaceElement: function ($chat) {
+               var faces = [];
+               for (var i = 1; i < 100; i++) {
+                    faces.push(this.faceElTpl(i));
+                    if (i % 11 == 0) {
+                        faces.push("<br/>");
+                    }
+               }
+               $chat.find("#face").html(faces.join(""));
+               this.faceHandler($chat);
+           },
+           // 插入表情
+           faceHandler: function ($chat) {
+               $chat.find("#face img").click(function () {
+                    $chat.find("#face").hide(150);
+                    var imgEL = "<img src='" + $(this).attr("gif") + "'/>";
+                    var $chatMain = $(this).parents(".chat-main");
+                    var win = $chatMain.find("iframe[name^='sendMessage']").get(0).contentWindow;
+                    var doc = win.document;
+                    sendMessageEditor.insertAtCursor(imgEL, doc, win);
+               });
+               // 表情隐藏
+               $chat.find("#face, #face img").mouseover(function () {
+                   window.clearTimeout(faceTimed);
+               }).mouseout(function () {
+                   window.clearTimeout(faceTimed);
+                   faceTimed = window.setTimeout(function () {
+                       $chat.find("#face").hide(150);
+                   }, 700);
+               });
+           },
+           /***
+            * 发送消息工具栏按钮事件方法
+            **/
+           toolBarHandler: function () {
+               var $chat = $(this).parents(".chat-main");
+               var targetCls = $(this).attr("class");
+               if (targetCls == "face") {
+                   $chat.find("#face").show(150);
+                   window.clearTimeout(faceTimed);
+                   faceTimed = window.setTimeout(function () {
+                       $chat.find("#face").hide(150);
+                   }, 1000);
+               } else if (this.tagName == "DIV") {
+                   _opts.sendMessageStyle.setStyle(targetCls);
+               } else if (this.tagName == "SELECT") {
+                   _opts.sendMessageStyle.setStyle($(this).attr("name"), $(this).val());
+                   if ($(this).attr("name") == "color") {
+                       $(this).css("background-color", $(this).val());
+                   }
+               }
+
+               // 设置 sendMessage iframe 的 style css
+               _opts.writeSendStyle();
+           },
+           // 设置 sendMessage iframe 的 style css
+           writeSendStyle: function () {
+               var styleTpl = _opts.sendMessageStyle.getStyleTpl();
+               var styleEL = ['<style type="text/css">body{', styleTpl,'}</style>'].join("");
+
+               $("body").find("iframe[name^='sendMessage']").each(function () {
+                   var $head = $(this.contentWindow.document).find("head");
+                   if ($head.find("style").size() > 1) {
+                       $head.find("style:gt(0)").remove();
+                   }
+                   if (styleTpl) {
+                       $head.append(styleEL);
+                   }
+               });
+           },
+
+           isMobileClient: function (receiver) {
+               var moblieClients = ["iphone", "ipad", "ipod", "wp7", "android", "blackberry", "Spark", "warning", "symbian"];
+               var flag = false;
+               for (var i in moblieClients) {
+                   if (~receiver.indexOf(moblieClients[i])) {
+                       return true;
+                   }
+               }
+               return false;
+           },
+
+           // 聊天界面 html 元素
+           chatLayoutTemplate: function (userJID, sender, receiver, product, flag) {
+               var display = "";
+               if (flag) {
+                   display = "style='display: none;'";
+               }
+               return [
+               '<div class="chat-main" id="', userJID,
+                   '" sender="', sender, '" receiver="', receiver, '">',
+
+                   '<div id="chat"><div class="radius">',
+                       '<table>',
+                           '<tr>',
+                               '<td colspan="3" class="title"></td>',
+                           '</tr>',
+                           '<tr>',
+                               '<td class="receive-message">',
+                                   '<iframe name="receiveMessage', userJID,'" frameborder="0" width="100%" height="100%"></iframe>',
+                               '</td>',
+                               '<td rowspan="4" class="split" ', display, '></td>',
+                               '<td rowspan="4" class="product-info" ', display, '>',
+                                   '<ul>',
+                                       '<div class="header">商品详情</div>',
+                                       '<li class="pic">',
+                                       '<img src="', product.pic, '"/></li>',
+                                       '<li class="product-name">', product.name, '</li>',
+                                       '<li class="price">团购价：<span>', product.price, '</span>元</li>',
+                                       '<li class="market-price">市场价：<s><i>', product.marketPrice, '</i></s>元</li>',
+                                       '<li>快递公司：', product.deliverOrgs, '</li>',
+                                       '<li>仓库：', product.wareHouses, '</li>',
+                                       product.skuAttrs,
+                                   '</ul>',
+                               '</td>',
+                           '</tr>',
+                           '<tr class="tool-bar">',
+                               '<td>',
+                                   '<select name="font-family" class="family">',
+                                       '<option>宋体</option>',
+                                       '<option>黑体</option>',
+                                       '<option>幼圆</option>',
+                                       '<option>华文行楷</option>',
+                                       '<option>华文楷体</option>',
+                                       '<option>华文楷体</option>',
+                                       '<option>华文彩云</option>',
+                                       '<option>华文隶书</option>',
+                                       '<option>微软雅黑</option>',
+                                       '<option>Fixedsys</option>',
+                                   '</select>',
+
+                                   '<select name="font-size">',
+                                       '<option value="12px">大小</option>',
+                                       '<option value="10px">10</option>',
+                                       '<option value="12px">12</option>',
+                                       '<option value="14px">14</option>',
+                                       '<option value="16px">16</option>',
+                                       '<option value="18px">18</option>',
+                                       '<option value="20px">20</option>',
+                                       '<option value="24px">24</option>',
+                                       '<option value="28px">28</option>',
+                                       '<option value="36px">36</option>',
+                                       '<option value="42px">42</option>',
+                                       '<option value="52px">52</option>',
+                                   '</select>',
+                                   '<select name="color">',
+                                       '<option value="" selected="selected">颜色</option>',
+                                       '<option value="#000000" style="background-color:#000000"></option>',
+                                       '<option value="#FFFFFF" style="background-color:#FFFFFF"></option>',
+                                       '<option value="#008000" style="background-color:#008000"></option>',
+                                       '<option value="#800000" style="background-color:#800000"></option>',
+                                       '<option value="#808000" style="background-color:#808000"></option>',
+                                       '<option value="#000080" style="background-color:#000080"></option>',
+                                       '<option value="#800080" style="background-color:#800080"></option>',
+                                       '<option value="#808080" style="background-color:#808080"></option>',
+                                       '<option value="#FFFF00" style="background-color:#FFFF00"></option>',
+                                       '<option value="#00FF00" style="background-color:#00FF00"></option>',
+                                       '<option value="#00FFFF" style="background-color:#00FFFF"></option>',
+                                       '<option value="#FF00FF" style="background-color:#FF00FF"></option>',
+                                       '<option value="#FF0000" style="background-color:#FF0000"></option>',
+                                       '<option value="#0000FF" style="background-color:#0000FF"></option>',
+                                       '<option value="#008080" style="background-color:#008080"></option>',
+                                   '</select>',
+                                   '<div class="bold"></div>',
+                                   '<div class="underline"></div>',
+                                   '<div class="italic"></div>',
+                                   '<div class="face"></div>',
+                                   '<div class="history">消息记录</div>',
+                               '</td>',
+                           '</tr>',
+                           '<tr class="send-message">',
+                               '<td>',
+                                   '<iframe name="sendMessage', userJID,'" width="100%" height="80px" frameborder="0"></iframe>',
+                               '</td>',
+                           '</tr>',
+                           '<tr class="bottom-bar">',
+                               '<td><input type="text" id="to" name="to" value="hoojo" style="width: 100px; display: none;"/><input type="button" value="关闭" id="close"/>',
+                               '<input type="button" value="发送(Enter)" id="send"/> </td>',
+                           '</tr>',
+                       '</table></div>',
+                       '<div id="face"></div>',
+                   '</div>',
+               '</div>'
+               ].join("");
+           },
+
+           initWebIM: function (userJID, receiver) {
+               var product = {
+                   name: "小玩熊",
+                   pic: "http://avatar.csdn.net/9/7/A/2_ibm_hoojo.jpg",
+                   price: "198.00",
+                   marketPrice: "899.90",
+                   deliverOrgs: "EMS",
+                   wareHouses: "A 库",
+                   skuAttrs: ""
+               };
+               var chatEl = $(_opts.chatLayoutTemplate(userJID, _opts.sender, receiver, product));
+               $("body").append(chatEl);
+
+               // 拖拽
+               $("#" + userJID).easydrag();
+               // 初始化 sendMessageEditor 相关信息
+               sendMessageEditor.iframe = this.sendMessageIFrame(userJID);
+               sendMessageEditor.init(userJID);
+
+               _opts.setTitle(chatEl);
+               _opts.writeReceiveStyle(userJID);
+               _opts.writeSendStyle();
+               _opts.createFaceElement(chatEl);
+
+               // 查看更多详情
+               chatEl.find(".more").click(function () {
+                   var $ul = $(this).parents("ul");
+                   $ul.find(".more").toggle();
+                   $ul.find(".info").toggle();
+                   $ul.find(".pic").toggle();
+               });
+
+               // 收缩详情
+               chatEl.find(".split").toggle(function () {
+                   $(".product-info").hide();
+                   $(this).parents(".radius").css("border-right-width", "0");
+               }, function () {
+                   $(".product-info").show();
+                   $(this).parents(".radius").css("border-right-width", "8px");
+               });
+
+               // 工具类绑定事件 settings.toolBarHandler
+               chatEl.find(".tool-bar td").children().click(this.toolBarHandler);
+                chatEl.find("#send").click(function () {
+                    var $chatMain = $(this).parents(".chat-main");
+                   _opts.sendHandler($chatMain);
+                });
+                chatEl.find("#close").click(function () {
+                    var $chatMain = $(this).parents(".chat-main");
+                   $chatMain.hide(500);
+                });
+
+                // 首先取消事件绑定，当一次性发多条消息的情况下会同时绑定多个相同事件
+               $(".have-msg, .no-msg, .chat-main").unbind("click");
+                $(".have-msg").bind("click", function () {
+                   $(this).hide();
+                   $(".no-msg").show();
+                   $(".chat-main:hidden").show(150);
+               });
+
+               $(".no-msg").click(function () {
+                   $(".chat-main:hidden").each(function (i, item) {
+                       var top = i * 10 + 50;
+                       var left = i * 20 + 50;
+                       $(this).show(500).css({top: top, left: left});
+                   });
+               });
+
+               $(".chat-main").click(function () {
+                   $(".chat-main").css("z-index", 9999);
+                   $(this).css({"z-index": 10000});
+               });
+
+                $(this.sendMessageIFrame(userJID).document).keyup(function (event) {
+                    var e = event || window.event;
+                    var keyCode = e.which || e.keyCode;
+                    if (keyCode == 13) {
+                        var $chatMain = $("#" + $(this).find("body").attr("jid"));
+                        _opts.sendHandler($chatMain);
+                    }
+                });
+           },
+
+           // 建立新聊天窗口
+           newWebIM: function (settings) {
+               var chatUser = remote.userAddress(settings.receiver);
+               var userJID = "u" + hex_md5(chatUser);
+               _opts.initWebIM(userJID, chatUser);
+
+               $("#" + userJID).find(remote.receiver).val(chatUser);
+               $("#" + userJID).show(220);
+           },
+
+           // 远程发送消息时执行函数
+           messageHandler: function (user, content) {
+               var userName = user.split("@")[0];
+               var tempUser = user;
+               if (~tempUser.indexOf("/")) {
+                   tempUser = tempUser.substr(0, tempUser.indexOf("/"));
+               }
+               var userJID = "u" + hex_md5(tempUser);
+
+               // 首次初始 webIM
+               if (!$("#" + userJID).get(0)) {
+                   // 初始 IM 面板；
+                   _opts.initWebIM(userJID, user);
+               }
+               // 设置消息接受者的名称
+               $("#" + userJID).find(remote.receiver).val(user);
+
+               if ($("#" + userJID).get(0)) {
+                   // 消息提示
+                   if ($("div[id='" + userJID + "']:hidden").get(0)) {
+                       var haveMessage = $(".have-msg");
+                       haveMessage.show();
+                       $(".no-msg").hide();
+                   }
+
+                   _opts.messageTip("闪聊有了新消息，请查收！");
+                   // 向 chat 接收信息区域写消息
+                   remote.jsjac.chat.writeMessage(userJID, userName, content);
+               }
+           },
+
+           // 消息提示
+           messageTip: function () {
+               if (count % 2 == 0) {
+                   window.focus();
+                   document.title = "你来了新消息，请查收！";
+               } else {
+                   document.title = "";
+               }
+               if (count > 4) {
+                   document.title = "";
+                   count = 0;
+               } else {
+                   window.setTimeout(_opts.messageTip, 1000);
+                   count ++;
+               }
+           }
+       };
+
+       // 初始化远程聊天程序相关方法
+       var initRemoteIM = function (settings) {
+
+           // 初始化远程消息
+           remote.jsjac.chat.init();
+
+           // 设置客户端写入信息方法
+           remote.jsjac.chat.writeReceiveMessage = settings.writeReceiveMessage;
+
+           // 注册事件
+           $(window).bind({
+                unload: remote.jsjac.chat.unloadHandler,
+                error: remote.jsjac.chat.errorHandler,
+                beforeunload: remote.jsjac.chat.logout
+           });
+       }
+
+       $.extend({
+           WebIM: function (opts) {
+               opts = opts || {};
+               // 覆盖默认配置
+               defaultOptions = $.extend(defaultOptions, defaultOptions, opts);
+               var settings = $.extend({}, defaultOptions, opts);
+               initRemoteIM(settings);
+
+               settings.newWebIM(settings);
+
+               $.WebIM.settings = settings;
+           }
+       });
+
+       $.WebIM.settings = $.WebIM.settings || _opts;
+       $.WebIM.initWebIM = _opts.initWebIM;
+       $.WebIM.newWebIM = _opts.newWebIM;
+       $.WebIM.messageHandler = _opts.messageHandler;
+
+   })(jQuery);
+   #+END_SRC
+
+ 这里的方法基本上是聊天窗口上的应用，主要是本地聊天程序的 js、HTML 元素的操作。如字体、字体大小、颜色、表情、消息的发送等，不涉及到聊天消息发送的核心代码，其中有用到发送远程消息的方法。
+
+ ~remote.jsjac.chat.sendMessage(text, receiver);~ 这个是发送远程消息的方法，参数 1 是消息内容、参数 2 是消息的接收者。
+
+ 如果你有看到这篇文章 [[http://www.cnblogs.com/hoojo/archive/2012/06/18/2553886.html][http://www.cnblogs.com/hoojo/archive/2012/06/18/2553886.html]] 它是一个单
+ 纯的 WebIM 本地的聊天界面。
+
+** 远程聊天 JavaScript 核心代码，它是和 jsjac 库关联的
+ =remote.jsjac.chat-2.0.js=
+
+ #+BEGIN_SRC js :results values list :exports no-eval
+ /**
+  * IM chat jsjac remote message
+  * @author: hoojo
+  * @email: hoojo_@126.com
+  * @blog http://hoojo.cnblogs.com & http://blog.csdn.net/IBM_hoojo
+  * @createDate: 2012-5-24
+  * @version 2.0
+  * @requires jQuery v1.2.3 or later
+  * Copyright (c) 2012 M. hoo
+  **/
+
+ var remote = {
+     debug: "info, error",
+     chat: "body",
+     receiver: "#to", // 接受者 jquery expression
+     console: {
+         errorEL: function () {
+             if ($(remote.chat).get(0)) {
+                 return $(remote.chat).find("#error");
+             } else {
+                 return $("body").find("#error");
+             }
+         },
+         infoEL: function () {
+             if ($(remote.chat).get(0)) {
+                 return $(remote.chat).find("#info");
+             } else {
+                 return $("body").find("#info");
+             }
+         },
+         // debug info
+         info: function (html) {
+             if (~remote.debug.indexOf("info")) {
+                 remote.console.infoEL().append(html);
+                 remote.console.infoEL().get(0).lastChild.scrollIntoView();
+             }
+         },
+         // debug error
+         error: function (html) {
+             if (~remote.debug.indexOf("error")) {
+                 remote.console.errorEL().append(html);
+             }
+         },
+         // clear info/debug console
+         clear: function (s) {
+             if ("debug" == s) {
+                 remote.console.errorEL().html("");
+             } else {
+                 remote.console.infoEL().html("");
+             }
+         }
+     },
+
+     userAddress: function (user) {
+         if (user) {
+             if (!~user.indexOf("@")) {
+                 user += "@" + remote.jsjac.domain;// + "/" + remote.jsjac.resource;
+             } else if (~user.indexOf("/")) {
+                 user = user.substr(0, user.indexOf("/"));
+             }
+         }
+         return user;
+     },
+     jsjac: {
+         httpbase: window.contextPath + "/JHB/", //请求后台 http-bind 服务器 url
+         domain: window["serverDomin"], //"192.168.5.231", // 192.168.5.231 当前有效域名
+         username: "",
+         pass: "",
+         timerval: 2000, // 设置请求超时
+         resource: "WebIM", // 链接资源标识
+         register: true // 是否注册
+     }
+ };
+ remote.jsjac.chat = {
+     writeReceiveMessage: function () {
+     },
+     setState: function () {
+         var onlineStatus = new Object();
+         onlineStatus["available"] = "在线";
+         onlineStatus["chat"] = "欢迎聊天";
+         onlineStatus["away"] = "离开";
+         onlineStatus["xa"] = "不可用";
+         onlineStatus["dnd"] = "请勿打扰";
+         onlineStatus["invisible"] = "隐身";
+         onlineStatus["unavailable"] = "离线";
+         remote.jsjac.chat.state = onlineStatus;
+         return onlineStatus;
+     },
+     state: null,
+     init: function () {
+         // Debugger plugin
+         if (typeof (Debugger) == "function") {
+             remote.dbger = new Debugger(2, remote.jsjac.resource);
+             remote.dbger.start();
+         } else {
+             // if you're using firebug or safari, use this for debugging
+             // oDbg = new JSJaCConsoleLogger(2);
+             // comment in above and remove comments below if you don't need debugging
+             remote.dbger = function () {
+             };
+             remote.dbger.log = function () {
+             };
+         }
+
+         try {
+             // try to resume a session
+             if (JSJaCCookie.read("btype").getValue() == "binding") {
+                 remote.connection = new JSJaCHttpBindingConnection({ "oDbg": remote.dbger});
+                 rdbgerjac.chat.setupEvent(remote.connection);
+                 if (remote.connection.resume()) {
+                     remote.console.clear("debug");
+                 }
+             }
+         } catch (e) {
+             remote.console.errorEL().html(e.name + ":" + e.message);
+         } // reading cookie failed - never mind
+
+         remote.jsjac.chat.setState();
+     },
+     login: function (loginForm) {
+         remote.console.clear("debug"); // reset
+         try {
+             // 链接参数
+             var connectionConfig = remote.jsjac;
+
+             // Debugger console
+             if (typeof (oDbg) != "undefined") {
+                 connectionConfig.oDbg = oDbg;
+             }
+             var connection = new JSJaCHttpBindingConnection(connectionConfig);
+             remote.connection = connection;
+             // 安装（注册）Connection 事件模型
+             remote.jsjac.chat.setupEvent(connection);
+
+             // setup args for connect method
+             if (loginForm) {
+                 //connectionConfig = new Object();
+                 //connectionConfig.domain = loginForm.domain.value;
+                 connectionConfig.username = loginForm.userName.value;
+                 connectionConfig.pass = loginForm.password.value;
+                 connectionConfig.register = loginForm.register.checked;
+             }
+             // 连接服务器
+             connection.connect(connectionConfig);
+
+             //remote.jsjac.chat.changeStatus("available", "online", 1, "chat");
+         } catch (e) {
+             remote.console.errorEL().html(e.toString());
+         } finally {
+             return false;
+         }
+     },
+     // 改变用户状态
+     changeStatus: function (type, status, priority, show) {
+         type = type || "unavailable";
+         status = status || "online";
+         priority = priority || "1";
+         show = show || "chat";
+         var presence = new JSJaCPresence();
+         presence.setType(type); // unavailable invisible
+         if (remote.connection) {
+             //remote.connection.send(presence);
+         }
+
+         //presence = new JSJaCPresence();
+         presence.setStatus(status); // online
+         presence.setPriority(priority); // 1
+         presence.setShow(show); // chat
+         if (remote.connection) {
+             remote.connection.send(presence);
+         }
+     },
+
+     // 为 Connection 注册事件
+     setupEvent: function (con) {
+         var remoteChat = remote.jsjac.chat;
+         con.registerHandler('message', remoteChat.handleMessage);
+         con.registerHandler('presence', remoteChat.handlePresence);
+         con.registerHandler('iq', remoteChat.handleIQ);
+         con.registerHandler('onconnect', remoteChat.handleConnected);
+         con.registerHandler('onerror', remoteChat.handleError);
+         con.registerHandler('status_changed', remoteChat.handleStatusChanged);
+         con.registerHandler('ondisconnect', remoteChat.handleDisconnected);
+
+         con.registerIQGet('query', NS_VERSION, remoteChat.handleIqVersion);
+         con.registerIQGet('query', NS_TIME, remoteChat.handleIqTime);
+     },
+     // 发送远程消息
+     sendMessage: function (msg, to) {
+         try {
+             if (msg == "") {
+                 return false;
+             }
+             var user = "";
+             if (to) {
+                 if (!~to.indexOf("@")) {
+                     user += "@" + remote.jsjac.domain;
+                     to += "/" + remote.jsjac.resource;
+                 } else if (~to.indexOf("/")) {
+                     user = to.substr(0, to.indexOf("/"));
+                 }
+             } else {
+                 // 向 chat 接收信息区域写消息
+                 if (remote.jsjac.chat.writeReceiveMessage) {
+                     var html = "你没有指定发送者的名称";
+                     alert(html);
+                     //remote.jsjac.chat.writeReceiveMessage(receiverId, "server", html, false);
+                 }
+                 return false;
+             }
+             var userJID = "u" + hex_md5(user);
+             $("#" + userJID).find(remote.receiver).val(to);
+             // 构建 jsjac 的 message 对象
+             var message = new JSJaCMessage();
+             message.setTo(new JSJaCJID(to));
+             message.setType("chat"); // 单独聊天，默认为广播模式
+             message.setBody(msg);
+             // 发送消息
+             remote.connection.send(message);
+             return false;
+         } catch (e) {
+             var html = "<div class='msg error''>Error: " + e.message + "</div>";
+             remote.console.info(html);
+             return false;
+         }
+     },
+     // 退出、断开链接
+     logout: function () {
+         var presence = new JSJaCPresence();
+         presence.setType("unavailable");
+         if (remote.connection) {
+             remote.connection.send(presence);
+             remote.connection.disconnect();
+         }
+     },
+     errorHandler: function (event) {
+         var e = event || window.event;
+         remote.console.errorEL().html(e);
+         if (remote.connection && remote.connection.connected()) {
+             remote.connection.disconnect();
+         }
+         return false;
+     },
+     unloadHandler: function () {
+         var con = remote.connection;
+         if (typeof con != "undefined" && con && con.connected()) {
+               // save backend type
+             if (con._hold) { // must be binding
+                 (new JSJaCCookie("btype", "binding")).write();
+             }
+             if (con.suspend) {
+                 con.suspend();
+             }
+         }
+     },
+     writeMessage: function (userJID, userName, content) {
+         // 向 chat 接收信息区域写消息
+         if (remote.jsjac.chat.writeReceiveMessage && !!content) {
+             remote.jsjac.chat.writeReceiveMessage(userJID, userName, content, false);
+         }
+     },
+     // 重新连接服务器
+     reconnection: function () {
+         remote.jsjac.register = false;
+         if (remote.connection.connected()) {
+             remote.connection.disconnect();
+         }
+         remote.jsjac.chat.login();
+     },
+     /* ########################### Handler Event ############################# */
+
+     handleIQ: function (aIQ) {
+         var html = "<div class='msg'>IN (raw): " + aIQ.xml().htmlEnc() + "</div>";
+         remote.console.info(html);
+         remote.connection.send(aIQ.errorReply(ERR_FEATURE_NOT_IMPLEMENTED));
+     },
+     handleMessage: function (aJSJaCPacket) {
+         var user = aJSJaCPacket.getFromJID().toString();
+         //var userName = user.split("@")[0];
+         //var userJID = "u" + hex_md5(user);
+         var content = aJSJaCPacket.getBody();
+         var html = "";
+         html += "<div class=\"msg\"><b>消息来自 " + user + ":</b><br/>";
+         html += content.htmlEnc() + "</div>";
+         remote.console.info(html);
+
+         $.WebIM.messageHandler(user, content);
+     },
+     handlePresence: function (aJSJaCPacket) {
+         var user = aJSJaCPacket.getFromJID();
+         var userName = user.toString().split("@")[0];
+         var html = "<div class=\"msg\">";
+         if (!aJSJaCPacket.getType() && !aJSJaCPacket.getShow()) {
+             html += "<b>" + userName + " 上线了.</b>";
+         } else {
+             html += "<b>" + userName + " 设置 presence 为： ";
+             if (aJSJaCPacket.getType()) {
+                 html += aJSJaCPacket.getType() + ".</b>";
+             } else {
+                 html += aJSJaCPacket.getShow() + ".</b>";
+             }
+             if (aJSJaCPacket.getStatus()) {
+                 html += " (" + aJSJaCPacket.getStatus().htmlEnc() + ")";
+             }
+         }
+         html += "</div>";
+         remote.console.info(html);
+
+         // 向 chat 接收信息区域写消息
+         remote.jsjac.chat.writeMessage("", userName, html);
+     },
+     handleError: function (event) {
+         var e = event || window.event;
+         var html = "An error occured:<br />"
+             + ("Code: " + e.getAttribute("code")
+             + "\nType: " + e.getAttribute("type")
+             + "\nCondition: " + e.firstChild.nodeName).htmlEnc();
+         remote.error(html);
+
+         var content = "";
+         switch (e.getAttribute("code")) {
+             case "401":
+                 content = "登陆验证失败！";
+                 break;
+             // 当注册发现重复，表明该用户已经注册，那么直接进行登陆操作
+             case "409":
+                 //content = "注册失败！\n\n 请换一个用户名！";
+                 remote.jsjac.chat.reconnection();
+                 break;
+             case "503":
+                 content = "无法连接到 IM 服务器，请检查相关配置！";
+                 break;
+             case "500":
+                 var contents = "服务器内部错误！\n\n 连接断开！<br/><a href='javascript: self.parent.remote.jsjac.chat.reconnection();'>重新连接</a>";
+                 remote.jsjac.chat.writeMessage("", "系统", contents);
+                 break;
+             default:
+                 break;
+         }
+         if (content) {
+             alert("WeIM: " + content);
+         }
+         if (remote.connection.connected()) {
+             remote.connection.disconnect();
+         }
+     },
+     // 状态变化触发事件
+     handleStatusChanged: function (status) {
+         remote.console.info("<div>当前用户状态: " + status + "</div>");
+         remote.dbger.log("当前用户状态: " + status);
+         if (status == "disconnecting") {
+             var html = "<b style='color:red;'>你离线了！</b>";
+             // 向 chat 接收信息区域写消息
+             remote.jsjac.chat.writeMessage("", "系统", html);
+         }
+     },
+     // 建立链接触发事件方法
+     handleConnected: function () {
+         remote.console.clear("debug"); // reset
+         remote.connection.send(new JSJaCPresence());
+     },
+     // 断开链接触发事件方法
+     handleDisconnected: function () {
+
+     },
+     handleIqVersion: function (iq) {
+         remote.connection.send(iq.reply([
+             iq.buildNode("name", remote.jsjac.resource),
+             iq.buildNode("version", JSJaC.Version),
+             iq.buildNode("os", navigator.userAgent)
+         ]));
+         return true;
+     },
+     handleIqTime: function (iq) {
+         var now = new Date();
+         remote.connection.send(iq.reply([
+             iq.buildNode("display", now.toLocaleString()),
+             iq.buildNode("utc", now.jabberDate()),
+             iq.buildNode("tz", now.toLocaleString().substring(now.toLocaleString().lastIndexOf(" ") + 1))
+         ]));
+         return true;
+     }
+ };
+ #+END_SRC
+
+ 这个文件的代码就是用 jsjac 库和 openfire 建立通信的核心代码，代码中已经有注释，这里我就不再
+ 赘述。如果有什么不懂的可以给我留言。
+
+** 消息区域、编辑器代码 send.message.editor-1.0.js
+
+#+BEGIN_SRC js :results values list :exports no-eval
+   /**
+    * IM chat Send Message iframe editor
+    * @author: hoojo
+    * @email: hoojo_@126.com
+    * @blog: http://blog.csdn.net/IBM_hoojo
+    * @createDate: 2012-5-24
+    * @version 1.0
+    **/
+   var agent = window.navigator.userAgent.toLowerCase();
+   var sendMessageEditor = {
+
+        // 获取 iframe 的 window 对象
+       getWin: function () {
+           return /*!/firefox/.test(agent)*/false ? sendMessageEditor.iframe.contentWindow : window.frames[sendMessageEditor.iframe.name];
+       },
+
+       //获取 iframe 的 document 对象
+       getDoc: function () {
+           return !/firefox/.test(agent) ? sendMessageEditor.getWin().document : (sendMessageEditor.iframe.contentDocument || sendMessageEditor.getWin().document);
+       },
+
+       init: function (userJID) {
+           //打开 document 对象，向其写入初始化内容，以兼容 FireFox
+           var doc = sendMessageEditor.getDoc();
+           doc.open();
+           var html = [
+               '<html>',
+               '<head><style type="text/css">body{border:0;margin:0;padding:3px;height:98%;cursor:text;background-color:white;font-size:12px;font-family:Courier,serif,monospace;}</style></head>',
+               '<body jid="', userJID, '"></body>',
+               '</html>'].join("");
+           doc.write(html);
+           //打开 document 对象编辑模式
+           doc.designMode = "on";
+           doc.close();
+       },
+
+        getContent: function () {
+            var doc = sendMessageEditor.getDoc();
+            //获取编辑器的 body 对象
+           var body = doc.body || doc.documentElement;
+           //获取编辑器的内容
+           var content = body.innerHTML;
+           //对内容进行处理，例如替换其中的某些特殊字符等等
+           //Some code
+
+           //返回内容
+           return content;
+        },
+
+         //统一的执行命令方法
+       execCmd: function (cmd, value, d){
+           var doc = d || sendMessageEditor.getDoc();
+           //doc 对象的获取参照上面的代码
+           //调用 execCommand 方法执行命令
+           doc.execCommand(cmd, false, value === undefined ? null : value);
+       },
+
+       getStyleState: function (cmd) {
+           var doc = sendMessageEditor.getDoc();
+           //doc 对象的获取参考上面的对面
+           //光标处是否是粗体
+           var state = doc.queryCommandState(cmd);
+           if(state){
+             //改变按钮的样式
+           }
+           return state;
+       },
+       insertAtCursor: function (text, d, w){
+           var doc = d || sendMessageEditor.getDoc();
+           var win = w || sendMessageEditor.getWin();
+           //win 对象的获取参考上面的代码
+           if (/msie/.test(agent)) {
+               win.focus();
+               var r = doc.selection.createRange();
+               if (r) {
+                   r.collapse(true);
+                   r.pasteHTML(text);
+               }
+           } else if (/gecko/.test(agent) || /opera/.test(agent)) {
+               win.focus();
+               sendMessageEditor.execCmd('InsertHTML', text, doc);
+           } else if (/safari/.test(agent)) {
+               sendMessageEditor.execCmd('InsertText', text, doc);
+           }
+       }
+   };
+ #+END_SRC
+
+** CSS 样式 chat-2.0.css
+ #+BEGIN_SRC js :results values list :exports no-eval
+    /**
+     * function: im web chat css
+     * author: hoojo
+     * createDate: 2012-5-26 上午 11:42:10
+     */
+    @CHARSET "UTF-8";
+
+    *, body {
+        font-family: Courier,serif,monospace;
+        font-size: 12px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .chat-main {
+        position: absolute;
+        /*right: 80px;*/
+        left: 50px;
+        top: 20px;
+        z-index: 999;
+        display: none;
+    }
+
+    .chat-main .radius {
+        background-color: white;
+        border: 8px solid #94CADF;
+        border-radius: 1em;
+    }
+
+    #chat {
+        position: relative;
+        /*left: 150px;*/
+        padding: 0;
+        margin: 0;
+    }
+    #chat table {
+        border-collapse: collapse;
+        width: 435px;
+        ,*width: 460px;
+        /*width: 410px;*/
+        /*width: 320px;*/
+    }
+
+    #chat table .title {
+        font-weight: bold;
+        color: green;
+        padding: 3px;
+        background-color: #94CADF;
+    }
+
+    /* 收缩条 */
+    #chat table .split {
+        background-color: #94CADF;
+        cursor: pointer;
+    }
+
+    /* ################## product info #################### */
+    #chat table .product-info {
+        width: 30%;
+        /*display: none;*/
+        padding: 0;
+        margin: 0;
+        vertical-align: top;
+    }
+
+    #chat table .product-info ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    #chat table .product-info ul div.header {
+        background-color: #EBEFFE;
+        line-height: 22px;
+        font-size: 12px;
+        color: black;
+    }
+
+    #chat table .product-info ul li {
+        list-style: none outside none;
+        background-color: white;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-left: 5px;
+        line-height: 22px;
+        font-size: 11px;
+        color: #6F6F6F;
+        width: 140px;
+    }
+
+    #chat table .product-info ul li.pic {
+        height: 200px;
+        padding: 0 5px 0 5px;
+        border: 1px dashed #ccc;
+        text-align: center;
+    }
+
+    #chat table .product-info ul li.pic img {
+    }
+
+    #chat table .product-info ul li.product-name {
+        font-weight: bold;
+        color: black;
+    }
+
+    #chat table .product-info ul li.price span {
+        font-family: Courier;
+        font-size: 16px;
+        font-weight: bold;
+        color: #ED4E08;
+    }
+
+    #chat table .product-info ul li.market-price s {
+        color: black;
+    }
+
+    #chat table .product-info ul li a {
+        float: right;
+    }
+
+    #chat table .product-info ul li.info {
+        display: none;
+    }
+
+    /*########### 接收消息区域 ############ */
+    #chat table .receive-message {
+        height: 250px;
+    }
+
+    #chat table .send-message {
+        width: 100%;
+        /*height: auto;*/
+    }
+
+    #chat table td {
+        /*border: 1px solid white;*/
+    }
+
+    #chat table .bottom-bar {
+        background-color: #94CADF;
+        text-align: right;
+    }
+
+    /* ############## 工具条 ################# start */
+    #chat table .tool-bar {
+        height: 25px;
+        background-color: #94CADF;
+    }
+
+    #chat table .tool-bar select {
+        float: left;
+    }
+
+    #chat table .tool-bar select.family {
+        width: 45px;
+        ,*width: 55px;
+    }
+
+    #chat table .tool-bar div {
+        width: 17px;
+        height: 16px;
+        float: left;
+        cursor: pointer;
+        margin-right: 2px;
+        margin-top: 1px;
+        ,*margin-top: 2px;
+        background: transparent url("../images/tb-sprite.gif") no-repeat scroll 0 0;
+    }
+
+    #chat table .tool-bar .color {
+        margin-left: 2px;
+        background-position: -159px 0;
+    }
+    #chat table .tool-bar .bold {
+        /*background-position: 0 0;*/
+    }
+    #chat table .tool-bar .italic {
+        background-position: -18px 0;
+    }
+    #chat table .tool-bar .underline {
+        background-position: -32px 0;
+    }
+    #chat table .tool-bar .face {
+        margin: 2px 0 0 3px;
+        background-image: url("../images/facehappy.gif");
+    }
+    #chat table .tool-bar .history {
+        background-image: none;
+        width: 60px;
+        float: right;
+        margin-top: 3px;
+        font-size: 12px;
+        display: none;
+    }
+    /* ###### 表情 ###### */
+    #chat #face {
+        border: 1px solid black;
+        width: 275px;
+        ,*width: 277px;
+        position: relative;
+        left: 8px;
+        top: -370px;
+        _top: -359px;
+        z-index: 3;
+        display: none;
+    }
+
+    #chat #face img {
+        border: 1px solid #ccc;
+        border-right: none;
+        border-bottom: none;
+        cursor: pointer;
+    }
+
+    #send {
+        width: 90px;
+        height: 25px;
+    }
+    #close {
+        width: 40px;
+        height: 25px;
+    }
+
+    .chat-message {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 25px;
+        background-color: #fcfcfc;
+    }
+
+    .no-msg, .have-msg {
+        cursor: pointer;
+        float: right;
+        margin: 5px 5px 0 0;
+
+ }
+ #+END_SRC
+
+** web.xml 配置
+ #+BEGIN_SRC html :results raw drawer values list :exports no-eval
+   <?xml version="1.0" encoding="UTF-8"?>
+   <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+       http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+       <servlet>
+           <servlet-name>Jabber HTTP Binding Servlet</servlet-name>
+           <servlet-class>org.jabber.JabberHTTPBind.JHBServlet</servlet-class>
+           <!--
+           <init-param>
+               <param-name>debug</param-name>
+               <param-value>1</param-value>
+           </init-param>
+            -->
+       </servlet>
+
+       <servlet-mapping>
+           <servlet-name>Jabber HTTP Binding Servlet</servlet-name>
+           <url-pattern>/JHB/</url-pattern>
+       </servlet-mapping>
+
+       <welcome-file-list>
+           <welcome-file>index.jsp</welcome-file>
+       </welcome-file-list>
+   </web-app>
+ #+END_SRC
+
+ 至此，这个应用的全部代码已经贴出来，如果你按照我这边的结构形式应该是可以完成这个聊天应用的。如果你有什么问题或想法，欢迎你给我留言或评论！

@@ -1,0 +1,16 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 减速板预位电门/")); -*-
+:PROPERTIES:
+:ID:       C23266EE-2273-4462-B116-DA260A6C7A01
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-18 Thu 18:53>
+#+TITLE: 737NG 减速板预位电门
+#+FILETAGS: :S276:
+
+[[file:./static/737NG 减速板预位电门/2021-02-18_18-53-11_screenshot.jpg]]
+
+[[file:./static/737NG 减速板预位电门/2021-02-18_18-53-23_screenshot.jpg]]
+
+[[file:./static/737NG 减速板预位电门/2021-02-18_18-56-53_screenshot.jpg]]
+
+当减速板从下卡槽位移到预位槽位时，电门作动。

@@ -1,0 +1,33 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React spread attributes/")); -*-
+:PROPERTIES:
+:ID:       5B5A3CDC-5A5C-4C8F-980F-035DCAC7712D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:42>
+#+TITLE: React spread attributes
+
+#+BEGIN_SRC js
+var data = [{
+    "when": "2 minutes ago",
+    "who": "Jill Dupre",
+    "description": "Created new account"
+},
+            {
+                "when": "1 hour ago",
+                "who": "Lose White",
+                "description": "Added fist chapter"
+            },
+            {
+                "when": "2 hours ago",
+                "who": "Jordan Whash",
+                "description": "Created new account"
+            }];
+
+var headings = ["When", "Who", "Description"];
+
+var props = {"data": data, "headings": headings, "title": "Recent Changes"};
+
+ReactDOM.render(<App {...props}/>,
+document.getElementById("container"));
+#+END_SRC
+

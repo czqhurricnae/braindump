@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/MPD/")); -*-
+:PROPERTIES:
+:ID:       BBA9C4D5-AC51-421C-A603-811689B32C6F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 22:16>
+#+TITLE: MPD
+
+#+ROAM_KEY:
+
+
+维修计划文件

@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Flask}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{match\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Matches the current request against the URL map and also}
+\PYG{l+s+sd}{        stores the endpoint and view arguments on the request object}
+\PYG{l+s+sd}{        is successful, otherwise the exception is stored.}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{rv} \PYG{o}{=} \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{top}\PYG{o}{.}\PYG{n}{url\PYGZus{}adapter}\PYG{o}{.}\PYG{n}{match}\PYG{p}{(}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} \PYGZus{}request\PYGZus{}ctx\PYGZus{}stack.top.url\PYGZus{}adapter.match() =\PYGZgt{} \PYGZlt{}type \PYGZsq{}tuple\PYGZsq{}\PYGZgt{}: (\PYGZsq{}hello\PYGZsq{}, \PYGZob{}\PYGZsq{}name\PYGZsq{}: u\PYGZsq{}test\PYGZsq{}\PYGZcb{})}
+        \PYG{n}{request}\PYG{o}{.}\PYG{n}{endpoint}\PYG{p}{,} \PYG{n}{request}\PYG{o}{.}\PYG{n}{view\PYGZus{}args} \PYG{o}{=} \PYG{n}{rv}
+        \PYG{k}{return} \PYG{n}{rv}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

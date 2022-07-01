@@ -1,0 +1,148 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/组件嵌套/")); -*-
+:PROPERTIES:
+:ID:       3E5E2AE8-46FD-4367-BC3F-836331038410
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:41>
+#+TITLE: 组件嵌套
+
+#+BEGIN_SRC js
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+// function Heading(props) {
+//         return (<th>{props.heading}</th>);
+// }
+
+// function Row(props) {
+//         return (
+//                 <tr>
+//                 <td>{props.changeSet.when}</td>
+//                 <td>{props.changeSet.who}</td>
+//                 <td>{props.changeSet.description}</td>
+//                 </tr>
+//         );
+// }
+
+// function Headings(props) {
+//         let headings = props.headings;
+//         headings = headings.map((value, index) => (
+//             <Heading heading={value}/>
+//         ));
+//         return (
+//                 <thead>
+//                 <tr>
+//                 {headings}
+//                 </tr>
+//                 </thead>
+//         );
+// }
+
+// function Rows(props) {
+//         let rows = props.rows;
+//         rows = rows.map((value, index) => (
+//             <Row changeSet={value}/>
+//         ));
+//         return (
+//                 <tbody>
+//                 {rows}
+//                 </tbody>
+//         );
+// }
+
+class Heading extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        return (<th>{this.props.heading}</th>);
+    }
+}
+
+class Row extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render () {
+        return (
+                <tr>
+                <td>{this.props.changeSet.when}</td>
+                <td>{this.props.changeSet.who}</td>
+                <td>{this.props.changeSet.description}</td>
+                </tr>
+        );
+    }
+}
+
+class Headings extends Component {
+    constructor(props) {
+        super(props);
+}
+    render () {
+        const children = this.props.children;
+        return (
+            <thead>
+            <tr>
+            {
+                React.Children.map(children, (child, index) => {
+                    return React.cloneElement(child,
+                               {"heading": this.props.headings.shift()})
+                })
+            }
+            </tr>
+            </thead>
+        );
+    }
+}
+
+class Rows extends Component {
+    constructor(props) {
+        super(props);
+}
+
+    render () {
+    let rows = this.props.rows;
+    rows = rows.map((value, index) => (
+            <Row changeSet={value}/>
+    ));
+    return (
+            <tbody>
+            {rows}
+        </tbody>
+    );
+    }
+}
+
+class App extends Component {
+    constructor(props) {
+          super(props);
+    }
+
+    render() {
+        return (
+                <div>
+                    <h1>
+                        {this.props.title}
+                    </h1>
+                    <table>
+                    <Headings headings={this.props.headings}>
+                        <Heading/>
+                        <Heading/>
+                        <Heading/>
+                        </Headings>
+                        <Rows rows={this.props.data}/>
+                    </table>
+                </div>
+        );
+  }
+}
+
+export default App;
+#+END_SRC
+
+使用 Reach.children.map() 这种方法，其子组件结构是固定的，但是对各个子组件的定制是更灵活的。
+使用 this.props.map() 处理子组件，子组件的个数取决于传入的数据长度。
+

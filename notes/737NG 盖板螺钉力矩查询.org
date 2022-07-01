@@ -1,0 +1,170 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 盖板螺钉力矩查询/")); -*-
+:PROPERTIES:
+:ID:       4E3BB42F-E395-4587-AB0A-17498A7BBAAD
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-04-19 Apr 12:16>
+#+TITLE: 737NG 盖板螺钉力矩查询
+
+* 事件背景
+由于南航副翼钢索断裂，局方要求普查特定位置副翼钢索，各个航空公司都应该已经下发了普查指令。
+
+2019 年 11 月 14 日，南航 B737-800/B-5719 飞机执行 CZ8355（揭阳-曼谷）航班，机组完成正常开车程序进行舵面检查时发现右侧副翼卡阻后滑回，地面检查发现右副翼操作钢索腐蚀断裂。
+南航立即对公司 737NG 机队所有 189 架进行了普查，另发现 4 架飞机钢索断丝超标，16 架飞机钢索有轻微锈迹。
+
+#+caption: 钢索损伤情况
+[[file:./static/737NG 盖板螺钉力矩查询/7171.jpeg]]
+
+#+caption: 损伤位置
+[[file:./static/737NG 盖板螺钉力矩查询/7500.jpeg]]
+
+#+caption: 损伤位置示意图
+[[file:./static/737NG 盖板螺钉力矩查询/7833.jpeg]]
+
+执行此普查工作需要打开 571BB 和 671BB 盖板：
+
+[[file:./static/737NG 盖板螺钉力矩查询/8852.jpeg]]
+
+最近由于不规范维修，很多人都受到了处罚，所以目前大家规范施工的意识也越来越强。
+
+[[file:./static/737NG 盖板螺钉力矩查询/10428.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/10825.jpeg]]
+
+问题来了：安装这两块盖板时，上面的螺钉力矩是多少呢？手册和工卡里并没有给出。
+
+* 螺钉力矩查询通用方法
+详细的方法，机务在线已经有总结了：
+
+[[http://mp.weixin.qq.com/s?__biz=MzA3MjAwMzkzNQ==&mid=2650286749&idx=1&sn=2dc06ec114a96f850fdd90d90ee79911&chksm=872872adb05ffbbb01993071789eac77d8e9d552d34dfbb55a12a04b5cc8fd41ed51940d9642&scene=21#wechat_redirect][B737NG标准力矩值查询指南]]
+
+下面以 571BB 和 671BB 盖板上的螺钉力矩为例，带大家查一次。
+
+首先，我们要在 IPC 查到螺钉的件号：IPC57-50-00-15 FIGURE 15(SHEET 3)。
+
+[[file:./static/737NG 盖板螺钉力矩查询/18846.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/19534.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/19930.jpeg]]
+
+- ITEM120：BACB30ZE4-7
+- ITEM125：BACB30NN3K5
+
+* 查询 BACB30ZE4-7 的力矩
+
+[[file:./static/737NG 盖板螺钉力矩查询/22809.jpeg]]
+
+Product Standards:BACB30ZE4
+
+[[file:./static/737NG 盖板螺钉力矩查询/24135.jpeg]]
+在“Standards Search -> [[file:737NG 更换一号风挡固定拖把耗材工程图纸查询.org::Product Standards Search][Product Standards Search]]” Standard Numbers 搜索框里输入 BACB30ZE，点 Search。
+
+[[file:./static/737NG 盖板螺钉力矩查询/24805.jpeg]]
+
+选择 BACB30ZE 打开，打开其规范说明文件：
+
+[[file:./static/737NG 盖板螺钉力矩查询/25417.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/25924.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/26325.jpeg]]
+
+Toolbox 里选 AMM 里搜索 BACB30ZE：
+
+[[file:./static/737NG 盖板螺钉力矩查询/26961.jpeg]]
+
+可以发现在 AMM 20-50-11-910-801,Standard Torque Values，表 210 和 237 里都有：
+
+[[file:./static/737NG 盖板螺钉力矩查询/27761.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/28291.jpeg]]
+
+此时我们需要看力矩表的使用说明：
+
+[[file:./static/737NG 盖板螺钉力矩查询/28988.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/29522.jpeg]]
+
+可以看出这里我们需要使用表 210：
+
+[[file:./static/737NG 盖板螺钉力矩查询/30273.jpeg]]
+
+从 BACB30ZE 规范里可以看出，它是 self-locking and nonlocking 螺钉，所以选择 NON-CASTELLATED NUTS（无槽螺母）。
+件号 BACB30ZE4-7 可以看出其螺纹尺寸 0.2500-28。从而可得出 BACB30ZE4-7 螺钉的力矩为 40 磅寸（39-41 磅寸）。
+
+#+caption: locking Fasteners
+[[file:./static/737NG 盖板螺钉力矩查询/31239.jpeg]]
+
+* 查询 BACB30NN3K5 的力矩
+很多波音标准件，除了从 Product Standards 查出其规范说明文件，再根据件号得出其详细信息外，也可以 *使用件号直接从 Parts Wizard 查出其信息。*
+
+[[file:./static/737NG 盖板螺钉力矩查询/33442.jpeg]]
+
+这样会更方便快捷：
+
+[[file:./static/737NG 盖板螺钉力矩查询/34261.jpeg]]
+
+比如输入 BACB30ZE4-7，点击 Start Report：
+
+[[file:./static/737NG 盖板螺钉力矩查询/34949.jpeg]]
+
+点击 BACB30ZE4-7：
+
+[[file:./static/737NG 盖板螺钉力矩查询/35556.jpeg]]
+
+直接就出来了，比使用 PSDS 更快。
+
+这里我们使用 Parts Wizard 查出 BACB30NN3K5 的信息：
+
+[[file:./static/737NG 盖板螺钉力矩查询/36472.jpeg]]
+
+Toolbox 里选 AMM 里搜索 BACB30NN，可以发现在 AMM 20-50-11-910-801,Standard Torque Values，表 204 和 230 里都有：
+
+[[file:./static/737NG 盖板螺钉力矩查询/37435.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/37834.jpeg]]
+
+看表之前的使用说明：
+
+[[file:./static/737NG 盖板螺钉力矩查询/38563.jpeg]]
+
+[[file:./static/737NG 盖板螺钉力矩查询/38960.jpeg]]
+
+可以看出这里我们需要使用表 204：
+
+[[file:./static/737NG 盖板螺钉力矩查询/39804.jpeg]]
+
+可得出力矩为 35 磅寸（34-36 磅寸）。
+
+* 补充说明
+** Myboeingfleet 上找不到 Parts Wizard
+ 可能原因：没有加入到首页快捷显示或者没有开通 Parts Wizard 权限。
+
+ [[file:./static/737NG 盖板螺钉力矩查询/44250.jpeg]]
+
+ 点击 Apps：
+
+ [[file:./static/737NG 盖板螺钉力矩查询/44840.jpeg]]
+
+ 在 Material Management 里找到 Standard Part Wizard，勾选 ADD TO WORKSPACE。
+
+ 如果 Material Management 没有 Standard Part Wizard，说明你的账号没有开通 Parts Wizard 权限，可以找自己公司的管理员来开通。
+
+ [[file:./static/737NG 盖板螺钉力矩查询/45958.jpeg]]
+
+ 点击自己的账号，就可以看到管理员是谁。
+
+** 使用专门的螺钉力矩工具*
+ #+caption: 数字式力矩螺刀
+ [[file:./static/737NG 盖板螺钉力矩查询/47494.jpeg]]
+
+ 俗话说： *螺钉是七分靠顶，三分靠拧* 。
+
+ 如果我们使用力矩扳手来拧螺钉（一字/十字头）的话，是很难拧的，螺刀头会压不住。
+
+ #+caption: 1/4" Adjustable Drive Torque Screwdriver Set, Primary Scale Range of 5.00 ft.-lb
+ [[file:./static/737NG 盖板螺钉力矩查询/48909.jpeg]]
+
+ 给螺钉上力矩，需要使用专门螺钉上力矩的工具。

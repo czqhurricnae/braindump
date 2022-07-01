@@ -1,0 +1,1128 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/数据类型和流程控制/")); -*-
+:PROPERTIES:
+:ID:       3347E201-B16C-42EF-A729-E655C86848B6
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-05 Sat 13:10>
+#+TITLE: 数据类型和流程控制
+
+* 一. 编程规范
+
+=for= ， =if= 与其后面的 =()= 有空格。
+运算级别最低的地方有空格。
+
+* 二.导入标准输入输出库
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+#+END_EXAMPLE
+
+* 三. 数据类型
+** 基本类型数据
+ - 整数
+   - 整型 int，4 个字节
+   - 短整型 short int，2 个字节
+   - 长整型 long int，8 个字节
+
+ - 浮点数[实数，就是实型小数]
+   - 单精度浮点数 float，4 个字节，7 位有效数字，不是指有效小数
+   - 双精度浮点数 double，8 个字节，15-16 位有效数字，不是指有效小数
+   - 科学计数法
+     - 1.23e9 //1.23 乘以 10 的 9 次方
+     - 1.23e-6//1.23 乘以 10 的-6 次方
+
+
+     e,E 都可以。
+     现在比较常用的是 double 类型，因为当今电脑内存大，而且在计算时 float 类型要转换成 double 类型再进行计算。
+
+ - 字符
+   - char，1 个字节
+   - 没有字符串的概念
+
+** 复合类型数据
+ - 结构体
+ - 枚举
+ - 共用体
+
+* 四. 什么是变量
+
+#+BEGIN_EXAMPLE
+int i;
+i = 3;
+#+END_EXAMPLE
+
+这两句话是如何运行的？
+
+~int i~ ，先在内存中找出一块空闲单元使之与 ~i~ 产生关联， ~i= 3~ 将数据存储在 ~i~ 指向的内存空闲单元。
+变量的本质就是内存中一段存储空间。
+
+* 五. 变量为什么必须初始化？即赋值
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    printf("i = %d\n", i);
+    return 0;
+}
+#+END_EXAMPLE
+
+结果输出
+
+#+BEGIN_EXAMPLE
+i = -858993460
+#+END_EXAMPLE
+
+若一个变量不初始化， =vc6= 就会对 ~i~ 赋值一个以 =8= 开头的大绝对值负数，叫做 =填充字= 。
+
+* 六. 常量在 C 语言中是如何表示的
+- 整数
+  - 十进制，传统的写法
+  - 十六进制，前面加 0 或者 ~0X~ (不是字母 o)
+  - 八进制，前面加数字 0(不是字母 o)
+  - 在汇编中，在数字后加字母 =B= 表示二进制， =O= 表示八进制， =D= 表示十进制， =H= 表示十六进制
+
+- 浮点数
+  - 传统的写法， ~float x = 3.2;~
+  - 科学计数法， ~float x = 123.45e-2;~
+
+
+    在 C 语言中，实数默认是使用双精度浮点数表示的，因此 ~float x = 123.45e-2;~ 这种写法可能会产生警告，若改写成 ~float x = 123.45e-2F;~ 则表示使用单精度浮点数来表示实数，警告就会消失
+
+- 字符
+  - 单个字符使用单引号
+  - 字符串使用双引号
+
+
+    ~'A'~ 表示单个字符 =A= ， ~"A"~ 也是正确的，表示 ~'A'~ 和 ~'\0'~ 的组合。
+
+** 第一种错误
+
+#+BEGIN_EXAMPLE
+char ch = "A";
+#+END_EXAMPLE
+
+是错误的。
+
+[[file:./static/数据类型和流程控制/31230781.png]]
+
+** 第二种错误
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    char ch = 'abc';
+    printf("%c\n", ch);
+}
+#+END_EXAMPLE
+
+是错误的，结果只会输出 =c= 。
+
+** 第三种错误
+
+#+BEGIN_EXAMPLE
+char ch = "AB";
+#+END_EXAMPLE
+
+是错误的，原因和第一错误一样。
+
+* 七. 常量是以什么样的二进制代码存储在计算机中
+- 整数
+
+
+  是以补码的形式转化为二进制代码存储在计算机中的
+
+- 实数
+
+
+  是以 =IEEE754= 标准转化为二进制代码存储在计算机中的
+
+- 字符
+
+
+  实际与整数存储方式相同
+
+* 八. 什么是字节
+
+字节就是存储数据的单位，并且是硬件所能访问的最小单位。
+
+* 九. 不同类型数据之间相互赋值的问题
+* 十. 什么是 ASCII
+ASCII 不是一个值，而是一种规定，规定了不同的字符是使用哪个整数值表示的。
+
+* 十一. 输出控制符
+- %d --- int
+- %ld --- long int
+- %f --- float
+- %lf --- double
+- %c --- char
+- %o --- int 或者 long int 或者 short int 的八进制表示
+- %x（或%X，%#x，%#X） --- int 或者 long int 或者 short int 的十六进制表示
+- %s --- 字符串
+- %p -- 地址
+
+** 为什么需要输出控制符
+- ~01~ 组成的代码可以表示数据也可以表示指令
+- 如果 ~01~ 组成的代码表示的是数据的话，那么相同的 ~01~ 代码组合以不同的输出格式输出就会有不同的输出结果
+
+#+BEGIN_SRC C :results output list :exports no-eval
+# include <stdio.h>
+
+int main(void)
+{
+    int i = 10;
+    printf("%o\n", i);        // 注意：这里“%o”是字母“o”不要与字符串八进制表示“012”混淆，所以就认为应该是使用数字0
+    printf("%#o\n", i);       // 八进制，以“0”开头表示
+    printf("%x\n", i);        // 十六进制，小写字母表示
+    printf("%X\n", i);        // 十六进制，大写字母表示
+    printf("%#x\n", i);       // 十六进制，以“0x”开头表示，小写字母表示
+    printf("%#X\n", i);       // 十六进制，以“0X”开头表示，大写字母表示
+}
+#+END_SRC
+
+#+RESULTS:
+: - 12
+: - 012
+: - a
+: - A
+: - 0xa
+: - 0XA
+
+总结 =%#x= 表示格式化输出十六进制 =0x= 开头(小写 x)， =%#X= 表示格式化输出十六进制 =0X= 开头（大写 X），如果没有 =#= 则没有 =0x= 或者 =0X= 开头的十六进制输出，对于八进制一样的道理。
+
+** 输出一个变量的地址
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+int main(void)
+{
+    int a[5] = {1, 2, 3, 4, 5};
+    printf("%p\n", a);
+    /* printf("%#X\n", a); */
+    return 0;
+}
+#+END_EXAMPLE
+
+编译时出现错误:
+
+#+BEGIN_EXAMPLE
+test.c: In function ‘main’:test.c:8:12: warning: format ‘%X’ expects argument of type ‘unsigned int’, but argument 2 has type ‘int *’ [-Wformat=]     printf("%#X\n", a);            ^
+#+END_EXAMPLE
+
+#+BEGIN_SRC C :results output list :exports no-eval
+# include <stdio.h>
+
+int main(void)
+{
+    int a[5] = {1, 2, 3, 4, 5};
+    printf("%p\n", a);
+    printf("%p\n", a+1);
+    printf("%p\n", a+2);
+    printf("%p\n", a+3);
+    printf("%p\n", &a[4]);
+    printf("%p\n", &a[5]);
+    printf("%d\n", *(a+5));
+    return 0;
+}
+#+END_SRC
+
+#+RESULTS:
+: - 0x7ffee7da56c0
+: - 0x7ffee7da56c4
+: - 0x7ffee7da56c8
+: - 0x7ffee7da56cc
+: - 0x7ffee7da56d0
+: - 0x7ffee7da56d4
+: - 32766
+
+* 十二.scanf 的用法
+  - ~scanf()~ 函数使用空白（换行符，制表符，空格）把输入分成多个字段。在依次把转换说明和字段匹配时跳过空白。
+  - 如果使用 ~scanf()~ 读取基本变量类型的值，在变量名前加上一个 ~&~ 。
+  - 如果使用 ~scanf()~ 把字符串读入字符数组中，则不需要使用 ~&~ 。
+
+** 普通用法
+
+#+BEGIN_EXAMPLE
+/*
+    时间：
+        2016-10-04
+    作用：
+        1.了解&取地址符的作用。
+        2.了解scanf的用法。
+*/
+
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    scanf("%d", &i);//&是取地址符，&i表示取变量i所指向的存储空间的地址。
+    printf("i = %d\n", i);
+    printf("address = %d\n", &i);
+    scanf("%d", &i);
+    printf("i = %d\n", i);
+    printf("address = %d\n", &i);
+    return 0;
+}
+/*
+    输入：
+        分别输入12，123，再查看变量i地址。
+    输出结果：
+            12
+            i = 12
+            address = 1376060
+            123
+            i = 123
+            address = 1376060
+    总结：
+        可以看出变量i的地址是没有变化的。
+*/
+#+END_EXAMPLE
+
+** 空白符可以是空格（space，用空格键输入），制表符（tab，用 Tab 键输入）和新行符（newline，用回车键输入），或者它们的组合
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    int i, j, k;
+    scanf("%d %d %d", &i, &j, &k);
+    printf("i = %d, j = %d, k = %d\n", i, j, k);
+    return 0;
+}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+@ubuntu: ~
+$ ./a.out                                                            [17:29:30]
+1 2 3
+i = 1, j = 2, k = 3
+c@ubuntu: ~
+$ ./a.out                                                            [17:29:37]
+1
+2
+3
+i = 1, j = 2, k = 3
+#+END_EXAMPLE
+
+可以看出输入的时候使用空格或者回车来分隔数据也是可以的。
+
+** 输入控制符前面或者后面有空格
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    int i, j, k;
+    scanf("    %d %d %d    ", &i, &j, &k);
+    printf("i = %d, j = %d, k = %d\n", i, j, k);
+    return 0;
+}
+#+END_EXAMPLE
+
+在上面的例子中在最前格式控制符前有四个空格，在最后格式控制符有四个空格，那么在输入时最前的四个空格不必额外输入，
+而最后的四个空格会导致输入 =1 2 3= 三个数字后回车但是程序没有响应，光标移动到下一行预示需要再输入一个数字，但是额外输入的这个数字不会被程序收入，运行结果如下所示：
+
+#+BEGIN_EXAMPLE
+c@ubuntu: ~
+$ ./a.out                                                            [17:32:44]
+1 2 3
+5
+i = 1, j = 2, k = 3
+#+END_EXAMPLE
+
+也就是说：输入控制符前空格没有影响，后面的空格会导致多输入数据。
+
+#+BEGIN_EXAMPLE
+c@ubuntu: ~
+$ ./a.out                                                            [17:32:44]
+1 2 3
+5
+i = 1, j = 2, k = 3
+#+END_EXAMPLE
+
+** 如果需要将空格，制表符，换行符也当作输入来保存时，在输入控制符之间就不能有空格出现了，因为你本来欲作为输入的空格，制表符，换行符都将统统被匹配为输入控制符之间的空格，永远无法被接收到
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    char c1, c2, c3;
+    scanf("%c %c %c", &c1, &c2, &c3);    // 输入控制符之间有空格
+    printf("[%c][%c][%c]\n", c1, c2,c3);
+    return 0;
+}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+$ ./a.out                                                            [20:13:24]
+1
+// 此处有多次换行符，空格符，制表符，都统统
+// 被匹配为输入控制符之间的空格，无法存
+// 入程序。
+2
+2
+[1][2][2]
+#+END_EXAMPLE
+
+如果将输入控制符之间的空格删除，修改如下：
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    char c1, c2, c3;
+    scanf("%c%c%c", &c1, &c2, &c3);
+    printf("[%c][%c][%c]\n", c1, c2,c3);
+    return 0;
+}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+c@ubuntu: ~
+$ ./a.out                                                            [20:21:50]
+1
+[1][    ][
+]
+#+END_EXAMPLE
+
+可以看到在输入字符 =1= 之后我们输入了一个制表符，一个回车符都被存储到程序变量中了。
+再次修改程序如下：
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    int c1, c2, c3;
+    scanf("%d%d%d", &c1, &c2, &c3);
+    printf("[%d][%d][%d]\n", c1, c2,c3);
+    return 0;
+}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+1
+// 此处有多次换行符，空格符，制表符，都无法存储到程序变量中。
+
+
+
+
+2
+3
+[1][2][3]
+#+END_EXAMPLE
+
+这是为什么呢？这是因为只有在使用 ~%c~ 格式符时，空格字符串和转义字符才会被当作有效数字输入，而在上面的例子里，我们定义的是 ~int~ 类型变量，它们只收录非空白字符串。
+理解下面的话：
+
+- 以回车作为下达开始解析命令，整个输入以回车结束，如果输入的数据满足了 scanf 的需要，则输入结果，如果回车后数据还是不够，则回车只当作一个空白符（这就解释了为什么在使用 ~%c~ 收录回车过程中，如果 ~%c~ 之间有空格，就算敲回车也还是没有进行收录，因为回车被当作空白符）。
+- scanf 解析数据，下列情况认为解析出来一个数据：
+  - 1. 读入 =非字符型= 数据（即非 ~%c~ 控制符的，就像此例中所示），遇到空白字符。
+  - 2. 有宽度指示时，读入到相应的宽度，如 ~%3d~ ，则只解析 3 个数字即认为读入这个整数完毕。
+
+** scanf 带非输入控制符
+
+#+BEGIN_EXAMPLE
+/*
+    时间：
+        2016-10-04
+    作用：
+        1.scanf带非输入控制符。
+,*/
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    scanf("m%d", &i);
+    printf("i with prefix 'm' is %d\n", i);
+    scanf("n%d", &i);
+    printf("i with prefix 'n' is %d\n", i);
+    return 0;
+}
+
+/*
+    说明：
+        本来希望第一个 scanf 语句，输入“m12”后，第一个 printf 语句输出 i with prefix 'm' is 12。
+                第二个 scanf 语句，输入“n123”后，第二个 printf 语句输出 i with prefix 'n' is 123。
+    输入：
+        m12
+    输出：
+        i with prefix 'm' is 12
+        i with prefix 'n' is 12
+    总结：
+        实验情况是在第一个 scanf 语句，输入“m12”后，第一个和第二个 printf 语句就全部直接执行了，
+        输出如上所示。
+        为什么第二个 scanf 语句会被跳过，不执行？
+*/
+#+END_EXAMPLE
+
+对代码修改如下，修改 ~scanf("m%d", &i);~ 为 ~scanf("m%d\n", &i);~ ：
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    scanf("m%d\n", &i);
+    printf("i with prefix 'm' is %d\n", i);
+    scanf("n%d", &i);
+    printf("i with prefix 'n' is %d\n", i);
+    return 0;
+}
+#+END_EXAMPLE
+
+#+BEGIN_SRC C :results output list :exports no-eval
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    scanf("m%d\n", &i);
+    printf("i with prefix 'm' is %d\n", i);
+    scanf("n%d", &i);
+    printf("i with prefix 'n' is %d\n", i);
+    return 0;
+}
+#+END_SRC
+
+#+begin_example
+~:master*? λ ./a.out
+m12
+n123
+i with prefix 'm' is 12
+i with prefix 'n' is 123
+
+~:master*? λ ./a.out
+m12\n
+i with prefix 'm' is 12
+i with prefix 'n' is 12
+#+end_example
+
+就能够达到预期的效果了。
+
+** 如何使用 scanf 编写出高质量代码
+- 使用 scanf 之前最好先使用 printf 提示用户以什么样的方式输入。
+- scanf 中尽量不要使用非输入控制符，尤其是不要使用 ~\n~ 。
+
+#+BEGIN_EXAMPLE
+/*
+    时间：
+        2016-10-06-1459
+    作用：
+        测试 scanf 函数带 “\n”。
+,*/
+
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    printf("请输入\n");
+    scanf("%d\n", &i);
+    printf("i = %d\n", i);
+    return i;
+}
+/*
+    输入：
+        123\n
+    输出：
+        i = 123
+    总结：
+        原来的预想是输入“123”然后回车换行，程序会自动将换行这个动作转换成“\n”输入，
+        然后输出“i = 123”。
+        实际的情况是，必须输入整个字符串“123\n”，也就是说“\n”使用函数 printf 输出为
+        换行，但是反过来使用函数 scanf 无法将换行输入为“\n”。
+*/
+#+END_EXAMPLE
+
+- 应该编写代码对用户的非法输入做适当的处理。
+
+#+BEGIN_EXAMPLE
+/*
+    时间：
+        2016-10-06-15:11
+    作用：
+        1.scanf 没有对用户非法输入进行处理，会出现什么异常。
+        2.如何对用户非法输入进行处理。
+,*/
+
+# include <stdio.h>
+
+int main(void)
+{
+    int i;
+    scanf("%d", &i);
+    printf("i = %d\n", i);
+    //...
+    int j;
+    scanf("%d", &j);
+    printf("j = %d\n", j);
+    return 0;
+}
+
+/*
+    输入：
+        123m
+    输出：
+        i = 123
+        j = -858993460
+    总结：
+        没有因为有两个 scanf 函数而出现两次等待输入的光标，实际的情况是在第一次非法输入“123m”后，后一次的
+        scanf 函数就被跳过没有执行，这是因为程序在第一个 scanf 函数中变量“i”匹配输入控制符“%d”从输入字符串
+        “123m”中得到整数“123”，而字符串剩下的部分“m”是被第二个 scanf 函数截获，但是与第二个 scanf 函数的输入控制
+        符“%d”不匹配，程序就使用填充字赋值给变量“j”。
+    改进：
+        int main(void)
+        {
+            int i;
+            char ch;
+            scanf("%d", &i);
+            printf("i = %d\n", i);
+            //...
+            while((ch=getchar()) != '\n') //注意此处应该是“\n”，而不是“"\n"”，因为“"\n"”代表的是'\n'+'\0'。
+                continue;
+            int j;
+            scanf("%d", &j);
+            printf("j = %d\n", j);
+            return 0;
+        }
+*/
+#+END_EXAMPLE
+
+#+begin_example
+c@ubuntu: ~
+$ ./a.out                                                            [20:21:50]
+123m
+i = 123
+144444
+j = 144444
+#+end_example
+
+** scanf 扫描集合
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+# include <string.h>
+
+int main(void)
+{
+    char str[30] = { 0 };
+    scanf("%[xyz]", str);
+    printf("%s\n", str);
+    return 0;
+}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+c@ubuntu: ~
+$ ./a.out                                                            [21:41:58]
+ddd        // 只要遇到输入非[xyz]集合内的任一字符
+           // 时,scanf就会停止输入,因为str没有接受到
+           // 合法的输入,printf输出str为空
+c@ubuntu: ~
+$ ./a.out                                                            [21:42:07]
+xzx
+xzx
+c@ubuntu: ~
+$ ./a.out                                                            [21:45:59]
+z2z
+z
+#+END_EXAMPLE
+
+- %[xyz]
+- %[^xyz\n]，加入 ~\n~ 的目的是避免程序将用户的终止输入的回车符也进行收录，否则此时不管用户敲多少次回车程序都不会终止录入，因为回车符都被当成 ~\n~ 收录了
+- %[A-Z]
+- %[a-z]
+- %[0-9]
+
+* 十三.运算符
+- 算术运算符
+  +，-，*，/，％
+
+
+- 关系运算符
+  <，>，>=，<=，==，!=
+
+
+- 逻辑运算符
+  !，&&，||
+
+
+- 赋值运算符
+  ~=~ ， ~+=~ ， ~-=~ ， ~*=~ ， ~/=~
+
+
+- 优先级别
+  =算术>关系>逻辑>赋值=
+
+
+- 三目运算符
+  A?B:C
+
+
+  等价于
+
+  #+begin_example
+  if (A)
+  B
+  else
+  C
+  #+end_example
+
+- 逗号表达式
+
+
+  #+begin_example
+  （A,B,C,D）
+  #+end_example
+
+  从左到右执行，最终表达式的值是最后一项的值。
+
+  #+BEGIN_EXAMPLE
+  # include <stdio.h>
+
+  int main(void)
+  {
+      int i;
+      int j = 2;
+      i = (j++, ++j, j+2, j-3);
+      printf("%d\n", i);
+      return 0;
+  }
+  #+END_EXAMPLE
+
+** 除法与取模运算符
+
+[[file:./static/数据类型和流程控制/19411625.png]]
+
+** 注意区分 ~=~ 与 ~==~ 的意义区别和注意运算符优先级
+   :PROPERTIES:
+   :CUSTOM_ID: wiz-toc-28-1955170509
+   :END:
+
+#+BEGIN_EXAMPLE
+/*
+    时间：
+         2016-10-06-17:50
+    作用：
+         运算符中赋值运算符等号与关系运算符两个等号的区别。
+,*/
+
+#include <stdio.h>
+
+int main(void)
+{
+    int i, j, k, m;
+    k = 20;
+    m = 20;
+    i = (3>2)&&(k=8);
+    //
+    //注意:
+    //i = (3>2)&&k=8;
+    //因为逻辑运算符&&的优先级高于k=8中的赋值运算符，所以会导致下列的错误
+    //.cpp(14) : warning C4305: '=' : truncation from 'const int' to 'bool'
+    //.cpp(14) : error C2106: '=' : left operand must be l-value
+    //须更改为;
+    //i = (3>2)&&(k=8);
+    //
+    printf("i = %d,k = %d\n",i , k);
+    j = (3>2)&&m==20;
+    printf("j = %d,m = %d\n",i , m);
+    return 0;
+}
+/*
+    输出：
+    i = 1,k = 8
+    j = 1,m = 20
+    总结：
+    在i = (3>2)&&(k=8) 中注意k原来的值为20，但是 (k=8) 的bool值是为1的，并且k被重新
+    赋值了，这点与j = (3>2)&&m==20是有着本质上的不同的。
+,*/
+#+END_EXAMPLE
+
+** 注意&&和||的旁通特性
+   :PROPERTIES:
+   :CUSTOM_ID: wiz-toc-29-907325914
+   :END:
+
+* 十四.流程控制
+** 流程控制的分类
+- 顺序
+- 选择
+- 循环
+
+** c 语言选择流程控制
+例如判断一个分数是否在 90-100 分之间，使用 ~90<=score<=100~ 是错误的，
+因为整个表达式是从左到右执行，先执行 ~90<=score~ ，得出是一个 =bool= 值为 1 或者 0，
+后执行 ~1 或者 0<=100~ ，但是后半部分的表达式总是为真的（因为 0 或者 1 总是小于 100），所以
+
+#+BEGIN_EXAMPLE
+if (90<=score<=100)
+    {
+    //...
+    }
+#+END_EXAMPLE
+
+这种写选择流程控制的表达式是错误的，这一点与 python 有着很大的不同，
+在 python 中 ~90<=score<=100~ 这样的写法是正确的。
+
+所以判断一个分数值是否在 90 到 100 之间，使用数学表达式写法 ~90<=score<=100~ ，而使用 C 语言这种写法是错误，需要注意。
+
+正确的写法是 ~score>=90 && score<= 100~ 。
+
+在 c 语言中 ~if~ 语句的形式：
+
+#+BEGIN_EXAMPLE
+if (expression1)
+    {do something1}
+else if (expression2)
+    {do something2}
+else if (expression3)
+    {do something3}
+else
+    {do something4}
+#+END_EXAMPLE
+
+在 python 中 ~if~ 语句的形式：
+
+#+BEGIN_EXAMPLE
+if expression:
+    do something
+else:
+    do something
+#+END_EXAMPLE
+
+注意：
+- 在 C 语句中 =if= 语句后没有冒号 =:= 这点与 python 语言不同，同时在大括号 ={do somethin}= 后不用加分号 =;= 。
+- 在 ~if (表达式)~ 后不要加分号 =;= 。
+
+#+BEGIN_EXAMPLE
+if (3 > 2);
+等价于
+if (3 > 2)
+    ;    //这是一个空语句
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+if (表达式1);
+    A;
+else
+    B;
+#+END_EXAMPLE
+
+这样写法是错误的。
+
+- ~else~ 从句后若跟着表达式 ~(expression)~ 而不写成 ~else if~ 会导致错误。
+即：
+
+#+BEGIN_EXAMPLE
+if (表达式1)
+    A
+else (表达式2)
+    B
+#+END_EXAMPLE
+
+这样的写法是错误的。
+应该改成：
+
+#+BEGIN_EXAMPLE
+if (表达式1)
+    A
+else if (表达式2)
+    B
+#+END_EXAMPLE
+
+或者：
+
+#+BEGIN_EXAMPLE
+if (表达式1)
+    A
+else
+    B
+#+END_EXAMPLE
+
+- ~else (表达式);~ 这样的写法语法不会出错，但是逻辑是错误的，其等价于：
+
+#+BEGIN_EXAMPLE
+else ...;    //else后面为空语句
+    表达式;    //该语句不在判断语句内...
+#+END_EXAMPLE
+
+这样的话 else 判断后的部分没有执行任何东西，是为空语句。
+
+-
+
+
+#+BEGIN_EXAMPLE
+if (表达式1)
+    A
+else if (表达式2)
+    B
+else if (表达式3)
+    C
+else
+    D
+#+END_EXAMPLE
+
+即便表达式 1 和表达式 2 都成立，也只会执行 A 语句（而不是只执行表达式 2）。
+
+#+BEGIN_EXAMPLE
+#include <stdio.h>
+
+int main()
+{
+    int i = 1;
+    int j = 2;
+    int k = 3;
+    if (j > i)
+        printf("%c\n", 'a');
+    else if (k > i)
+        printf("%c\n", 'b');
+    else
+        printf("%c\n", 'c');
+    return 0;
+}
+#+END_EXAMPLE
+
+结果是输出 a。
+
+** c 语言循环流程控制
+
+#+BEGIN_QUOTE
+  for
+  while
+  do while
+#+END_QUOTE
+
+** for 的格式
+
+~for(A; B; C)~ for 内的语句使用分号 =;= 分开，而不是逗号 =,= 。
+
+** 多个 for 循环的嵌套
+
+[[file:./static/数据类型和流程控制/4865437.png]]\\
+
+注意：当表达式 2 成立只会执行内部的 for 循环，不会执行 B 语句。
+当表达式 2 不成立才会执行 B 语句，此时已经跳出嵌套循环。
+
+整体看成两个语句,即绿色框内和语句 B。
+
+[[file:./static/数据类型和流程控制/9080537.png]]
+
+这个例子中，整体是一个语句。
+
+** for 和 while
+for 和 while 可以互相转换。
+
+#+BEGIN_EXAMPLE
+for (1; 2; 3)
+A;
+
+等价于：
+
+1;
+while(2)
+{
+   A;
+   3;
+}
+#+END_EXAMPLE
+
+while 和 for 可以互相转换；但 for 逻辑性更强；可读性更好。
+
+** do...while
+
+#+BEGIN_EXAMPLE
+do{
+...
+} while(表达式);
+#+END_EXAMPLE
+
+主要用于人机交互，
+并不等价于 while。
+
+** 计算 0-100 之间奇数和
+
+使用下面的写法不好
+
+#+BEGIN_EXAMPLE
+# include<stdio.h>
+
+int main(void)
+{
+    int i;
+    int sum = 0;
+    for (i=0; i<101; i+=2)
+        sum = sum + i;
+    printf("%d\n", sum);
+    return 0;
+}
+#+END_EXAMPLE
+
+应该使用下面的写法，这样写更直观，更符合逻辑：
+
+#+BEGIN_EXAMPLE
+# include<stdio.h>
+
+int main(void)
+{
+    int i;
+    int sum = 0;
+    for (i=0; i<101; i+=1)
+        if (i%2==1)
+            sum = sum + i;
+    printf("%d\n", sum);
+    return 0;
+}
+#+END_EXAMPLE
+
+** switch
+
+[[file:./static/数据类型和流程控制/520c73800a9e920b7e36e540a0eeec34.jpg]]
+[[file:./static/数据类型和流程控制/2bd8f2f6eced5e347a34593851ab8be3.jpg]]
+[[file:./static/数据类型和流程控制/21da98d02daae291a57b0d361ae8bfc0.jpg]]
+[[file:./static/数据类型和流程控制/e44cafe8eafe86fd6f7819807c095f7d.jpg]]
+
+#+BEGIN_EXAMPLE
+#include <stdio.h>
+
+int main()
+{
+    int i = 2;
+    switch (i) {
+        case 1:
+            printf("%s\n", "1");
+        case 2:
+            printf("%s\n", "2");
+        case 3:
+            printf("%s\n", "3");
+        default:
+            printf("%s\n", "default");
+    }
+    return 0;
+}
+#+END_EXAMPLE
+
+输出结果是：
+
+#+BEGIN_EXAMPLE
+2
+3
+default
+#+END_EXAMPLE
+
+*这就是为什么在每个 =case= 分句当中需要使用 break 的原因*
+
+** break(重要)
+用于终止循环，该终止是指整个循环语句跳出，不再执行。
+可以使用在 ~switch~ 语句中。
+不能直接用于 ~if~ ，但如果 ~if~ 是 ~for~ 内部的一个子句，则可以使用。
+
+#+BEGIN_EXAMPLE
+if (3 > 2)
+    break;
+#+END_EXAMPLE
+
+这种写法是错误的
+
+#+BEGIN_EXAMPLE
+for (i=0; i<3; ++i)
+{
+    if (3 > 2)
+        break;
+    printf("ok\n");
+}
+#+END_EXAMPLE
+
+这种写法是正确的，同时 ~break~ 不是用来终止 ~if~ 语句的，而是用来终止 ~for~ 循环的，此时 ok 不会循环输出三次，
+也就是 ~break~ 虽然是 ~if~ 的内部语句，但是却是用来终止外部 ~for~ 循环语句。
+
+在多层嵌套 ~for~ 循环中， ~break~ 只能终止距离其最近的 ~for~ 循环。
+在多层嵌套 ~switch~ 中， ~break~ 只能终止距离其最近的 ~switch~ 语句。
+
+** continue
+用于跳过本次循环余下的语句，转去判断是否需要执行下次循环。
+
+* 十五.强制类型转换
+
+#+BEGIN_QUOTE
+  float(100) >>> 100.000000
+  形式：（转换类型）（数值）
+#+END_QUOTE
+
+* 十六.浮点数的存储带来的问题
+** =float= 和 =double= 都不能保证可以精确的存储一个小数
+
+#+BEGIN_EXAMPLE
+# include <stdio.h>
+
+int main(void)
+{
+    float i = 99.9;
+    printf("%f\n", i);
+    return 0;
+}
+#+END_EXAMPLE
+
+输出结果是：
+
+#+BEGIN_EXAMPLE
+$ ./a.out                                                            [15:14:42]
+99.900002
+#+END_EXAMPLE
+
+** 有一个浮点型变量 x，如何判断 x 的值是否为零
+
+#+BEGIN_EXAMPLE
+if (|x-0.000001| <= 0.000001)
+    x是零
+else
+    x不是零
+#+END_EXAMPLE
+
+** 循环更新的变量不要使用浮点型 变量，例如
+
+#+BEGIN_EXAMPLE
+float i;
+float sum;
+
+for (i=1.0; i<=100; ++i)
+{
+    sum = sum + 1/i;
+}
+#+END_EXAMPLE
+
+也就是说在循环中的自增和自减不要使用浮点型。
+应该如下：
+
+#+BEGIN_EXAMPLE
+int i;
+float sum = 0;
+
+for (i=1; i<=100; i++)
+    sum = sum + 1.0/i;
+    /*
+        使用类型转换
+        sum =sum + 1/float(i);
+    ,*/
+#+END_EXAMPLE
+
+* 十七.十进制转 R 进制
+
+#+BEGIN_QUOTE
+  将十进制数除以 R 直至商为 0，最后将所有的余数倒置。
+
+  [[file:./static/数据类型和流程控制/9836736.png]]
+#+END_QUOTE

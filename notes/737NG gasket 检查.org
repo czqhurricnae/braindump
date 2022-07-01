@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG gasket 检查/")); -*-
+:PROPERTIES:
+:ID:       77FD152A-8007-47E3-9D28-A0DDF66E07F4
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-17 Wed 09:34>
+#+TITLE: 737NG gasket 检查
+
+TASK 70-30-01-910-802-F00

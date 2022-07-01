@@ -1,0 +1,63 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/requires a peer of webpack@^3.0.0 || ^4.0.0/")); -*-
+:PROPERTIES:
+:ID:       F2F5ABB4-E5A7-4822-8CB1-A55EBC23D305
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-20 Thu 17:51>
+#+TITLE: requires a peer of webpack@^3.0.0 || ^4.0.0
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm install --save-dev @tarojs/cli@2.2.17
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_eslint-plugin-import@2.18.2@eslint-plugin-import/node_modules/resolve
+npm WARN @webpack-contrib/schema-utils@1.0.0-beta.0 requires a peer of webpack@^3.0.0 || ^4.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN webpack-dev-middleware@3.4.0 requires a peer of webpack@^4.0.0 but none is installed. You must install peer dependencies yourself.
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm i webpack webpack-cli --save-dev
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_copy-webpack-plugin@5.0.5@copy-webpack-plugin/node_modules/p-limit
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/is-callable
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/is-regex
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/string.prototype.trimleft
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/string.prototype.trimright
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.2@es-abstract/node_modules/is-callable
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.2@es-abstract/node_modules/string.prototype.trimleft
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.2@es-abstract/node_modules/string.prototype.trimright
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_eslint-import-resolver-node@0.3.2@eslint-import-resolver-node/node_modules/resolve
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_eslint-plugin-import@2.18.2@eslint-plugin-import/node_modules/resolve
+npm WARN @webpack-contrib/schema-utils@1.0.0-beta.0 requires a peer of webpack@^3.0.0 || ^4.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN webpack-dev-middleware@3.4.0 requires a peer of webpack@^4.0.0 but none is installed. You must install peer dependencies yourself.
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm install webpack@^4.0.0
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm WARN deprecated chokidar@2.1.8: Chokidar 2 will break on node v14+. Upgrade to chokidar 3 with 15x less dependencies.
+npm WARN deprecated fsevents@1.2.13: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_copy-webpack-plugin@5.0.5@copy-webpack-plugin/node_modules/p-limit
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/is-callable
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/is-regex
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/string.prototype.trimleft
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.0@es-abstract/node_modules/string.prototype.trimright
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.2@es-abstract/node_modules/is-callable
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.2@es-abstract/node_modules/string.prototype.trimleft
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_es-abstract@1.16.2@es-abstract/node_modules/string.prototype.trimright
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_eslint-import-resolver-node@0.3.2@eslint-import-resolver-node/node_modules/resolve
+npm WARN checkPermissions Missing write access to /Users/c/WeChatProjects/wxContainer/node_modules/_eslint-plugin-import@2.18.2@eslint-plugin-import/node_modules/resolve
+npm WARN @webpack-contrib/schema-utils@1.0.0-beta.0 requires a peer of webpack@^3.0.0 || ^4.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN webpack-dev-middleware@3.4.0 requires a peer of webpack@^4.0.0 but none is installed. You must install peer dependencies yourself.
+#+END_SRC
+
+解决方法：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+npm install webpack@^4.0.0 -g
+#+END_SRC

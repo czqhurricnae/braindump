@@ -1,0 +1,7 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG REU/")); -*-
+:PROPERTIES:
+:ID:       1D92EDCA-67F7-42BD-BF8F-2B8C450E0E06
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-23 Sat 09:09>
+#+TITLE: 737NG REU

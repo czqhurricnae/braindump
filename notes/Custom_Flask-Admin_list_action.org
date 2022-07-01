@@ -1,0 +1,782 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Custom_Flask-Admin_list_action")); -*-
+:PROPERTIES:
+:ID:       EA6F665F-6262-410E-98BD-A702F0ABEA86
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-18 Sat 16:11>
+#+TITLE: Custom_Flask-Admin_list_action
+
+* Customizing batch actions
+If you want to add other batch actions to the list view, besides the default delete action, then you can define a function that implements the desired logic and wrap it with the ~@action~ decorator.
+
+The action decorator takes three parameters: ~name~, ~text~ and ~confirmation~. While the wrapped function should accept only one parameter - ~ids~:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+from flask_admin.actions import action
+
+class UserView(ModelView):
+    @action('approve', 'Approve', 'Are you sure you want to approve selected users?')
+    def action_approve(self, ids):
+        try:
+            query = User.query.filter(User.id.in_(ids))
+
+            count = 0
+            for user in query.all():
+                if user.approve():
+                    count += 1
+
+            flash(ngettext('User was successfully approved.',
+                           '%(count)s users were successfully approved.',
+                           count,
+                           count=count))
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash(gettext('Failed to approve users. %(error)s', error=str(ex)), 'error')
+#+END_SRC
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issue-101579712][Aug 18, 2015]]
+ Greetings, Python database heads!
+
+ When making database interfaces, on each row I usually add several custom buttons.
+ For instance, on this image, you can see that apart from Edit and Delete, there is "Where?" and "+Movie".
+ Each  interface ends up needing some custom buttons ("Duplicate", "Preview", etc.)
+
+ [[file:./static/Custom_Flask-Admin_list_action/2019-12-01_09-54-14_6db81e82-45d0-11e5-94dd-c6fc66552ee2.jpg]]
+
+ The list on the image is from a CRUD framework I made years ago in php (kss kss....)
+ Now that all my new development is in Python, I am very excited about exploring flask-admin... and not
+ having to reinvent the wheel! It looks like the job has already been done beautifully.
+
+ So now I'm trying to understand how to add these custom buttons / actions in flask-admin. In the docs,
+ I saw some sample code about the very useful [[https://flask-admin.readthedocs.org/en/latest/advanced/#customizing-batch-actions][Batch Actions]], which would appear not on each row,
+ but within the "With Selected" menu.
+
+ [[https://cloud.githubusercontent.com/assets/7551671/9323141/3af3b226-45d1-11e5-9837-2a667be6717d.jpg][actions-bulk]]
+
+ To add actions at the row level, I found a couple of short [[https://github.com/flask-admin/flask-admin/issues/155][posts in the issue tracker]]
+ but no detailed  explanation either in the docs or in the [[https://github.com/flask-admin/flask-admin/tree/master/examples][examples section of the repo]].
+
+ For me adding custom actions next to Edit and Delete is a key need for my database interfaces.
+
+ [[https://cloud.githubusercontent.com/assets/7551671/9323231/67001fac-45d2-11e5-85dc-e1249c497f6a.png][actions-list]]
+
+ flask-admin is really rich (yum), but that makes it quite a learning curve when considering all the other components it interacts with.
+
+ Is there a chance that someone for whom adding a custom action is a "piece of cake" would consider adding an example to the [[https://github.com/flask-admin/flask-admin/tree/master/examples][examples section]], or even in the docs?
+
+ In advance, huge thanks!!!
+
+ [[file:./static/Custom_Flask-Admin_list_action/1.png]]
+
+ [[file:./static/Custom_Flask-Admin_list_action/2.png]]
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-132465963][Aug 19, 2015]]
+
+Okay, mrjoes's brief answer [[https://github.com/flask-admin/flask-admin/issues/155][here]] put me on the right track. Thank you mrjoes (for this and everything else.)
+
+One problem when you start out in something as large as flask-admin is figuring out exactly what to do with a correct but brief answer.
+So in case anyone else follows on the same track, here is a working example:
+
+- A. In the templates folder, add a file called =custom_list.html= which contains exactly this:
+
+#+BEGIN_SRC html :exports no-eval
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    <h1>Custom List View</h1>
+    {{ super() }}
+{% endblock %}
+
+{% block list_row_actions %}
+    {{ super() }}
+    <a href="http://python.org">{{ get_pk_value(row) }}</a>
+{% endblock %}
+#+END_SRC
+
+The body block is optional but gives an idea of where else this can go.
+
+Now in the ModelView declaration, add this line:
+
+~list_template = 'custom_list.html'~
+
+- B. A new item should appear next to Edit and Delete: the PK value, linking to Python.org... It's not very useful yet, but it's a start...
+
+Next on my wishlist would be if someone could provide a stub that shows how an action in the ~list_row_actions~ block can do something useful (for instance, execute a raw SQL query via sqla.)
+
+In the meantime, the next step is probably to study
+~flaskadmin\Lib\site-packages\flask_admin\templates\bootstrap3\admin\model\list.html~
+
+Thanks in advance. :)
+
+** [[https://github.com/xmm][xmm]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148710273][Oct 16, 2015]]
+This example show how to use the same method decorated by ~@action~ for single (used by clicking on icon) and several entities (used from with selected menu):
+
+#+BEGIN_SRC html :exports no-eval
+{% extends 'admin/model/list.html' %}
+{% block list_row_actions %}
+    {{ super() }}
+  <form class="icon" method="POST" action="/admin/user/action/">
+    <input id="action" name="action" value="approve" type="hidden">
+    <input name="rowid" value="{{ get_pk_value(row) }}" type="hidden">
+    <button onclick="return confirm('Are you sure you want to approve selected users?');" title="Approve">
+      <span class="fa fa-ok glyphicon glyphicon-ok"></span>
+    </button>
+  </form>
+{% endblock %}
+#+END_SRC
+
+The next code taken from [[http://flask-admin.readthedocs.org/en/latest/advanced/#customizing-batch-actions][flask-admin documentation]]
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class UserView(ModelView):
+   @action('approve', 'Approve', 'Are you sure you want to approve selected users?')
+    def action_approve(self, ids):
+        try:
+            query = User.query.filter(User.id.in_(ids))
+
+            count = 0
+            for user in query.all():
+                if user.approve():
+                    count += 1
+
+            flash(ngettext('User was successfully approved.',
+                           '%(count)s users were successfully approved.',
+                           count,
+                           count=count))
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash(gettext('Failed to approve users. %(error)s', error=str(ex)), 'error')
+#+END_SRC
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148884672][Oct 17, 2015]]
+Thank you [[https://github.com/xmm][@xmm]] I'm sure that will be a useful example.
+
+Would you or anyone have any idea of how to make a new button that executes some SQL (directly or using SQLA?)
+
+It looks to me like there's a function to get the ID of the row: ~get_pk_value(row)~.
+
+But I haven't found a clean way to get the table name.
+
+** [[https://github.com/xmm][xmm]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148915466][Oct 17, 2015]]
+add the next code to get access to the current model.
+
+#+BEGIN_SRC html :exports no-eval
+<input name="rowid" value="{{ admin_view.model.__name__ }}" type="text">
+    <input name="rowid" value="{{ admin_view.model.query.get(get_pk_value(row)).first_name }}" type="text">
+#+END_SRC
+
+or add some data to context manager:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+app = Flask(...)
+...
+import my_admin_helper
+@app.context_processor
+    def admin_context_processor():
+        return dict(my_h = my_admin_helper)
+
+#+END_SRC
+
+define some functions or variables in ~my_admin_helper~ module:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+def my_select():
+    return db.session.query(...)...
+#+END_SRC
+
+and then you can use it in template
+
+#+BEGIN_SRC html :exports no-eval
+<input name="rowid" value="{{ my_h.my_select() }}" type="hidden">
+#+END_SRC
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148963891][Oct 18, 2015]]
+[[https://github.com/xmm][@xmm]]
+
+Thank you so much for your kind reply... Learning heaps!
+
+- A. I hadn't noticed ~admin_view~ in the documentation, that looks tremendously helpful. Looks like using ~admin_view.model.__tablename__~ I might be able to issue some raw SQL.
+
+This makes me wonder how you became so skilled at working with flask-admin!
+Did you find learning resources outside of the repo and the documentation?
+
+- B. Love your idea of making a ~my_admin_helper~ file with some custom queries.
+You suggest something like ~return db.session.query(...)~. ~db~ is unknown in ~my_admin_helper~ but defined in ~flaskadmin.py~, which imports ~my_admin_helper~...
+To avoid cross-dependencies, moved the app creation and ~db = SQLAlchemy(app)~ to a ~create_app~ script imported by both ~flaskadmin.py~ and ~my_admin_helper.py~.
+That seems to work, is that what you would do?
+
+- C. While what you suggest is hugely interesting, my goals are a little different. Within ~{% block list_row_actions %}~, I want to add a link or button.
+This button should open a view that shows the result of a custom query.
+
+Making up an example, next to the Edit and Delete icons, there would be a 'SHOW THIS USER'S SUBSCRIPTIONS' link.
+That link would pass the ~admin_view.model.__tablename__~ and ~get_pk_value~ (row) parameters to a function that builds the query.
+Then the results of the query are displayed in a view.
+
+The picture at the very top of the original post gives you an idea of possible actions.
+
+If I can figure this out this will open the door to a lot of things I'd like to add.
+I'm sure it would be useful to loads of people so if I can understand it I'd like to add a gist for others on the same track.
+
+Thank you again for your tremendous help. My flask-admin experiments have been stuck for weeks and it's a big relief to be moving forward.
+
+** [[https://github.com/xmm][xmm]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148974273][Oct 18, 2015]]
+- A: look to [[http://flask-admin.readthedocs.org/en/latest/_modules/flask_admin/base/#BaseView.render][BaseView.render]], but sometimes it is easier use a debugger to view in a context.
+- B: yep
+- C:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+class MyAdmin(Admin):
+    def add_extra_view(self, view):
+        '''Like Admin.add_view() method, but does not add an item to menu'''
+        self._views.append(view)
+        if self.app is not None:
+            self.app.register_blueprint(view.create_blueprint(self))
+
+admin = MyAdmin(...)
+class SomeViews(BaseView):
+    '''The view called from action bar'''
+    @expose('/', methods=('POST',))
+    def index(self):
+        tbl_name=request.form['tbl_name']
+        rowid = request.form['rowid']
+        some_data = db.session.query(...)
+        return self.render('some_template.html', tbl_name=tbl_name, some_data=some_data)
+
+app_admin.add_extra_view(SomeViews())
+#+END_SRC
+
+#+BEGIN_SRC html :exports no-eval
+{% extends 'admin/model/list.html' %}
+{% block list_row_actions %}
+  {{ super() }}
+  <form class="icon" method="POST" action="/admin/someviews/">
+    <input name="tbl_name" value="{{ admin_view.model.__tablename__ }}" type="hidden">
+    <input name="rowid" value="{{ get_pk_value(row) }}" type="hidden">
+    <button onclick="return confirm('Are you sure you want to approve selected users?');" title="Accept request">
+      <span class="fa fa-star glyphicon glyphicon-star"></span>
+    </button>
+  </form>
+{% endblock %}
+#+END_SRC
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148981101][Oct 18, 2015]]
+[[https://github.com/xmm][@xmm]] Wow, that's absolutely wonderful. Huge thanks.
+
+This will be useful to others, so I've been trying to reduce it to a simple example. I have working draft that I will post now.
+When the example is complete maybe it could find its way to the examples folder of the repo.
+
+There's one small improvement to the working draft that I'd like to ask you about in case you know a simple solution.
+I can get around it in a couple of ways but I'm wondering if you know a better way.
+
+In the template, we can get the row id via ~get_pk_value(row)~ I notice in the source code that this is just return ~model.id~
+so I was wondering if there would be an easy way to get the value of a database field (in the example, favorite_food) instead of coding a bunch of getters.
+
+I tried this:
+
+#+BEGIN_SRC html :exports no-eval
+<input name="favorite_food" value="{{ admin_view.model.favorite_food }}" type="hidden">
+#+END_SRC
+
+But the value returned is ~Dog.favorite_food (a sqlalchemy.orm.attributes.InstrumentedAttribute object)~, not the value.
+Are there ways to get this value without issuing one query per row?
+
+In the meantime, my (working) draft example will follow in the next post in a couple of minutes.
+
+Again, big thanks. :)
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-148981992][Oct 18, 2015]]
+[[https://github.com/xmm][@xmm]]
+
+Part 2 of the previous post: a working draft using your ideas.
+
+The idea is that when you click on the STAR icon, you see a list of pets who have the same favorite food.
+
+The draft has three files:
+
+- one Python file (new_action.py)
+- two templates that should live in the templates folder (star_list.html, star_action.html)
+
+#+BEGIN_SRC python :results values list :exports no-eval
+""" new_action.py
+Demonstrates how to add a custom action at the left of a row
+
+In this case, the action is under the STAR icon in each row
+
+All credit goes to xmm
+ See https://github.com/flask-admin/flask-admin/issues/998
+"""
+
+from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import String, Enum
+from flask_admin.contrib import sqla
+from flask_admin import Admin, expose, BaseView
+
+# Create application
+app = Flask(__name__)
+
+# Create dummy secrey key so we can use sessions
+app.config['SECRET_KEY'] = '123456790'
+
+# Create in-memory database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///a_sample_database.sqlite'
+app.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(app)
+
+
+# Flask views
+@app.route('/')
+def index():
+   return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+class Dog(db.Model):
+   __tablename__ = 'pet'
+   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+   name = db.Column(String(20), nullable=False, unique=True)
+   favorite_food = db.Column(Enum('Bones', 'Shoes', 'Newspaper', 'Roadkill'),
+                             nullable=True)
+
+
+class DogAdmin(sqla.ModelView):
+   column_editable_list = ('name', 'favorite_food')
+   list_template = 'star_list.html'
+
+
+class MyAdmin(Admin):
+   def add_extra_view(self, view):
+       '''Like Admin.add_view() method, but does not add an item to menu'''
+       self._views.append(view)
+       if self.app is not None:
+           self.app.register_blueprint(view.create_blueprint(self))
+
+
+# Create admin
+admin = MyAdmin(app, name='STAR = custom action', template_mode='bootstrap3')
+
+admin.add_view(DogAdmin(Dog, db.session))
+
+
+class StarView(BaseView):
+   ''' The view called by the Star icon in each row'''
+
+   @expose('/', methods=('POST', ))
+   def index(self):
+       tbl_name = request.form['tbl_name']
+       rowid = request.form['rowid']
+       adminview_dict = request.form['adminview_dict']
+       result = db.engine.execute("""SELECT name FROM pet
+                                  WHERE favorite_food =
+                                    (SELECT favorite_food FROM pet
+                                     WHERE id = """ + rowid + ")")
+       pets_who_like_same_food = [row[0] for row in result]
+
+       return self.render('star_action.html',
+                          tbl_name=tbl_name,
+                          rowid=rowid,
+                          some_data=pets_who_like_same_food,
+                          admin_data=adminview_dict)
+
+   admin.add_extra_view(StarView())
+
+
+if __name__ == '__main__':
+
+   # Create DB
+   db.drop_all()
+   db.create_all()
+   db.session.add(Dog(name='Kiki', favorite_food='Shoes'))
+   db.session.add(Dog(name='Lassie', favorite_food='Shoes'))
+   db.session.add(Dog(name='Plato', favorite_food='Shoes'))
+   db.session.add(Dog(name='Scoobydoo', favorite_food='Bones'))
+   db.session.add(Dog(name='Belle', favorite_food='Bones'))
+   db.session.add(Dog(name='Einstein', favorite_food='Bones'))
+   db.session.commit()
+
+   # Start app
+   app.run(debug=True)
+#+END_SRC
+
+#+BEGIN_SRC html :exports no-eval
+{# star_list.html #}
+{# here is the template being extended: #}
+{# C:\Python\Python34\Envs\flaskadmin\Lib\site-packages\flask_admin\templates\bootstrap3\admin\model\list.html #}
+{# go to line 103 #}
+
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    <h1>Custom List View</h1>
+    {{ super() }}
+{% endblock %}
+
+{% block list_row_actions %}
+    {{ super() }}
+
+    {# Trying to Add a Special Action #}
+    <form class="icon" method="POST" action="/admin/starview/">
+        <input name="tbl_name" value="{{ admin_view.model.__tablename__ }}" type="hidden">
+        <input name="adminview_dict" value="{{ admin_view.model.__dict__ }}" type="hidden">
+        <input name="rowid" value="{{ get_pk_value(row) }}" type="hidden">
+        <button onclick="return confirm('Are you sure you want to run this?');" title="Accept request">
+            <span class="fa fa-star glyphicon glyphicon-star"></span>
+        </button>
+    </form>
+
+{% endblock %}
+#+END_SRC
+
+#+BEGIN_SRC html :exports no-eval
+{# star_action.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<h1>Table Name: {{ tbl_name }}</h1>
+
+<h2>Pets Who Favor the Same Food {{ favorite_food }}</h2>
+<br />
+
+{% for item in some_data %}
+    {{ item }}
+    <br />
+{%- endfor %}
+
+<h2>Admin Data that Could be Used in star_list.html</h2>
+<br />
+{{ admin_data }}
+
+
+</body>
+</html>
+#+END_SRC
+
+** [[https://github.com/xmm][xmm]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-149039383][Oct 18, 2015]]
+You can use:
+
+#+BEGIN_SRC html :exports no-eval
+<input name="favorite_food" value="{{ row.favorite_food) }}" type="hidden">
+#+END_SRC
+
+or
+
+#+BEGIN_SRC html :exports no-eval
+<input name="favorite_food" value="{{ get_value(row, 'favorite_food') }}" type="hidden">
+#+END_SRC
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-149047400][Oct 18, 2015]]
+[[https://github.com/xmm][@xmm]]
+
+Hi Marat, thank you so much! Couldn't have hoped for something simpler.
+
+I now understand that I could have found that out by inspecting ~list.html~... The battle is knowing where to look and what to look for.
+
+To show what data is available in the forms, the revised demo outputs the content of the dicts for ~admin_view~, ~admin_view.model~ and ~row~, one item per line.
+
+The ~star_action.html~ template is very rough --- it doesn't take advantage of flask-admin to display the dog names in a pretty way,
+or add actions (Delete) in each row, because I haven't yet learned to do that.
+Maybe at some stage someone will add another action to the demo, with a more beautiful and useful template.
+
+In the meantime this is super useful to explain how to add a custom action in a row and pass some of the row and table data. A million thanks to you.
+
+[[https://github.com/pawl][@pawl]] Are the files below an example you could see adding to the examples folder of the repo (one Python file, two templates)?
+They show how to add a custom action on each row. (Please see two paragraphs up about potential addition of another action as the ~star_action.html~ is rough as guts.)
+
+Wishing you all a great week.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+""" new_action.py
+Demonstrates how to add a custom action at the left of a row
+
+In this case, the action is under the STAR icon in each row
+
+All credit goes to xmm
+ See https://github.com/flask-admin/flask-admin/issues/998
+"""
+
+from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import String, Enum
+from flask_admin.contrib import sqla
+from flask_admin import Admin, expose, BaseView
+
+import re
+
+# Create application
+app = Flask(__name__)
+
+# Create dummy secrey key so we can use sessions
+app.config['SECRET_KEY'] = '123456790'
+
+# Create in-memory database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///a_sample_database.sqlite'
+app.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(app)
+
+
+# Flask views
+@app.route('/')
+def index():
+   return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+class Dog(db.Model):
+   __tablename__ = 'dog'
+   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+   name = db.Column(String(20), nullable=False, unique=True)
+   favorite_food = db.Column(Enum('Bones', 'Shoes', 'Newspaper', 'Roadkill'),
+                             nullable=True)
+
+
+class Cat(db.Model):
+   __tablename__ = 'cat'
+   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+   name = db.Column(String(20), nullable=False, unique=True)
+   favorite_food = db.Column(Enum('Bones', 'Shoes', 'Newspaper', 'Roadkill'),
+                             nullable=True)
+
+
+class DogAdmin(sqla.ModelView):
+   column_editable_list = ('name', 'favorite_food')
+   list_template = 'star_list.html'
+
+
+class CatAdmin(sqla.ModelView):
+   column_editable_list = ('name', 'favorite_food')
+   list_template = 'star_list.html'
+
+
+class MyAdmin(Admin):
+   def add_extra_view(self, view):
+       """Like Admin.add_view() method, but does not add an item to menu"""
+       self._views.append(view)
+       if self.app is not None:
+           self.app.register_blueprint(view.create_blueprint(self))
+
+
+# Create admin
+admin = MyAdmin(app, name='STAR = custom action', template_mode='bootstrap3')
+admin.add_view(DogAdmin(Dog, db.session))
+admin.add_view(CatAdmin(Cat, db.session))
+
+
+class StarView(BaseView):
+   """ The view called by the Star icon in each row """
+
+   @expose('/', methods=('POST', ))
+   def index(self):
+       tbl_name = request.form['tbl_name']
+       rowid = request.form['rowid']
+       pet_name = request.form['pet_name']
+       favorite_food = request.form['favorite_food']
+       adminview_dict = request.form['adminview_dict']
+       adminview_model_dict = request.form['adminview_model_dict']
+       row_dict = request.form['row_dict']
+
+       result = db.engine.execute('''SELECT name FROM pet
+                                  WHERE favorite_food = :favorite_food''',
+                                  favorite_food=favorite_food)
+       similar_pets = [row[0] for row in result]
+
+       # The next three lines are only to show available variables
+       # in star_action.html for demo purposes
+       DICT_REGEX = re.compile(r"'[^']+':(?:(?!'[^']+':).)+(?=[,}])")
+       adminview_data = DICT_REGEX.findall(adminview_dict)
+       adminview_model_data = DICT_REGEX.findall(adminview_model_dict)
+       row_data = DICT_REGEX.findall(row_dict)
+
+       return self.render(
+           'star_action.html',
+           tbl_name=tbl_name,
+           rowid=rowid,
+           pet_name=pet_name,
+           favorite_food=favorite_food,
+           # similar_pets=similar_pets,
+           adminview_data=adminview_data,
+           adminview_model_data=adminview_model_data,
+           row_data=row_data)
+
+
+admin.add_extra_view(StarView())
+
+if __name__ == '__main__':
+
+   # Create DB
+   db.drop_all()
+   db.create_all()
+   db.session.add(Dog(name='Kiki', favorite_food='Shoes'))
+   db.session.add(Dog(name='Lassie', favorite_food='Shoes'))
+   db.session.add(Dog(name='Plato', favorite_food='Shoes'))
+   db.session.add(Dog(name='Scoobydoo', favorite_food='Bones'))
+   db.session.add(Dog(name='Belle', favorite_food='Bones'))
+   db.session.add(Dog(name='Einstein', favorite_food='Bones'))
+   db.session.commit()
+
+   # Start app
+   app.run(debug=True)
+#+END_SRC
+
+#+BEGIN_SRC html :exports no-eval
+{# star_list.html #}
+{# extends this template: #}
+{# [path to Python]\Envs\flaskadmin\Lib\site-packages\flask_admin\templates\bootstrap3\admin\model\list.html #}
+
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    <h1>Custom List View</h1>
+    {{ super() }}
+{% endblock %}
+
+{% block list_row_actions %}
+    {{ super() }}
+
+    {# Trying to Add a Special Action #}
+    {# Icons you can use: http://getbootstrap.com/components/ #}
+    <form class="icon" method="POST" action="/admin/starview/">
+        <input name="tbl_name" value="{{ admin_view.model.__tablename__ }}" type="hidden">
+        <input name="favorite_food" value="{{ row.favorite_food }}" type="hidden">
+        <input name="pet_name" value="{{ row.name }}" type="hidden">
+        <input name="rowid" value="{{ get_pk_value(row) }}" type="hidden">
+        <input name="adminview_model_dict" value="{{ admin_view.model.__dict__ }}" type="hidden">
+        <input name="adminview_dict" value="{{ admin_view.__dict__ }}" type="hidden">
+        <input name="row_dict" value="{{ row.__dict__ }}" type="hidden">
+        <button onclick="return confirm('Are you sure you want to run this?');" title="Accept request">
+            <span class="fa fa-star glyphicon glyphicon-star"></span>
+        </button>
+    </form>
+
+{% endblock %}
+#+END_SRC
+
+#+BEGIN_SRC html :exports no-eval
+{# star_action.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<h1>Table Name: {{ tbl_name }}</h1>
+
+<h2>Pets Who Favor {{ favorite_food }}, just like {{ pet_name }}</h2>
+
+{% for pet_name in similar_pets %}
+    {{ pet_name }}
+    <br />
+{%- endfor %}
+<br />
+
+<h2>admin_view Data that Could be Used in star_list.html</h2>
+{% for item in adminview_data %}
+    {{ item }}
+    <br /><br />
+{%- endfor %}
+<br />
+
+<h2>admin_view.model Data that Could be Used in star_list.html</h2>
+{% for item in adminview_model_data %}
+    {{ item }}
+    <br /><br />
+{%- endfor %}
+<br />
+
+<h2>row Data that Could be Used in star_list.html</h2>
+{% for item in row_data %}
+    {{ item }}
+    <br /><br />
+{%- endfor %}
+
+</body>
+</html>
+#+END_SRC
+
+** [[https://github.com/boolbag][boolbag]] commented [[https://github.com/flask-admin/flask-admin/issues/998#issuecomment-154604043][Nov 7, 2015]]
+[[https://github.com/xmm][@xmm]]
+
+Please feel free to ignore this message, just thought I'd ask in case this was obvious for you,
+as you seem entirely at home in flask-admin.
+
+I've been stuck on this question:
+
+- Within a form, you've selected an enum value in one field.
+- Now you move to the next field, and you want the options to be narrowed down based on the choice in the previous field.
+
+I made a gist about this in [[https://github.com/flask-admin/flask-admin/issues/1041][this issue]] a couple months ago but haven't made progress.
+
+If you have a chance to look at it some day that's wonderful, otherwise no worries at all and thank you again for your wonderful guidance on the previous question.
+
+* ~admin.add_extra_view(StarView())~ 可以为 ~DogAdmin~ 和 ~CatAdmin~ 的都添加星号按钮
+* 点击星号后发出的请求中的 ~Form Data~
+
+#+BEGIN_SRC html :exports no-eval
+tbl_name: pet
+favorite_food: Bones
+pet_name: Einstein
+rowid: 6
+adminview_model_dict:
+{
+  '__module__': '__main__',
+  '_sa_class_manager': <ClassManager of <class '__main__.Dog'> at 1067123c8>,
+  'name': <sqlalchemy.orm.attributes.InstrumentedAttribute object at 0x106727890>,
+  '__table__': Table('pet',
+      MetaData(bind=None), Column('id', Integer(), table=<pet>, primary_key=True, nullable=False),
+      Column('name', String(length=20), table=<pet>, nullable=False),
+      Column('favorite_food', Enum('Bones', 'Shoes', 'Newspaper', 'Roadkill'), table=<pet>), schema=None),
+      '__mapper__': <Mapper at 0x106724a50; Dog>,
+  'favorite_food': <sqlalchemy.orm.attributes.InstrumentedAttribute object at 0x106727950>,
+  'id': <sqlalchemy.orm.attributes.InstrumentedAttribute object at 0x106727710>,
+  '__tablename__': 'pet',
+  '__doc__': None,
+  '__init__': <function __init__ at 0x10672a410>
+}
+adminview_dict: {
+  '_export_columns': [('name', 'Name'), ('favorite_food', 'Favorite Food')],
+  '_action_form_class': <class 'flask_admin.model.base.ActionForm'>,
+  '_list_form_class': <class 'flask_admin.model.form.ListForm'>,
+  '_auto_joins': [],
+  'session': <sqlalchemy.orm.scoping.scoped_session object at 0x106702950>,
+  '_cache_column_labels': {},
+  '_edit_form_class': <class 'flask_admin.contrib.sqla.form.DogForm'>,
+  'admin': <__main__.MyAdmin object at 0x106289150>,
+  'category': None,
+  '_search_supported': False,
+  '_sortable_joins': {},
+  '_search_fields': None,
+  '_filters': None,
+  '_create_form_class': <class 'flask_admin.contrib.sqla.form.DogForm'>,
+  'menu_icon_type': None,
+  'menu': <flask_admin.menu.MenuView object at 0x106758b90>,
+  'form_widget_args': {},
+  'column_choices': {},
+  '_sortable_columns': {'favorite_food': Column('favorite_food', Enum('Bones', 'Shoes', 'Newspaper', 'Roadkill'), table=<pet>),
+  'name': Column('name', String(length=20), table=<pet>, nullable=False)},
+  '_form_ajax_refs': {},
+  '_filter_groups': None,
+  'form_choices': {},
+  'blueprint': <flask.blueprints.Blueprint object at 0x106758ad0>,
+  'column_formatters_export': {},
+  '_filter_args': None,
+  'column_type_formatters_export': {<type 'NoneType'>: <function empty_formatter at 0x1066b1c08>, <type 'list'>: <function list_formatter at 0x1066b1cf8>, <type 'dict'>: <function dict_formatter at 0x1066b1de8>},
+  'static_url_path': None,
+  'column_descriptions': {},
+  'menu_class_name': None,
+  '_column_choices_map': {},
+  '_form_edit_rules': None,
+  '_form_create_rules': None,
+  '_filter_joins': {},
+  '_delete_form_class': <class 'flask_admin.model.base.DeleteForm'>, 'endpoint': 'dog', 'name': 'Dog', 'menu_icon_value': None, '_primary_key': 'id', 'url': '/admin/dog',
+  '_list_columns': [('name', 'Name'), ('favorite_food', 'Favorite Food')], 'static_folder': None, 'model': <class '__main__.Dog'>,
+  '_actions': [('delete', lu'Delete')],
+  '_actions_data': {'delete': (<bound method DogAdmin.action_delete of <__main__.DogAdmin object at 0x106758050>>, lu'Delete', lu'Are you sure you want to delete selected records?')}
+}
+
+row_dict: {'favorite_food': u'Bones', '_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x1077c7f10>, 'name': u'Einstein', 'id': 6}
+#+END_SRC

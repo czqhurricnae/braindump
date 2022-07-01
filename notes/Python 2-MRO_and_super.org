@@ -1,0 +1,817 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 2-MRO_and_super/")); -*-
+:PROPERTIES:
+:ID:       D9EDB036-21BC-4D24-A99F-3DF8574515BF
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-10 Wed 00:18>
+#+TITLE: Python 2-MRO_and_super
+
+* C3 算法的实现
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session C3
+import itertools
+
+
+def c3(cls, *mro_lists):
+    # Make a copy so we don't change existing content
+    mro_lists = [list(mro_list[:]) for mro_list in mro_lists]
+
+    # Set up the new MRO with the class itself
+    _mro = [cls]
+
+    while True:
+        # Reset for the next round of tests
+        candidate_found = False
+
+        for mro_list in mro_lists:
+            if not len(mro_list):
+                # Any empty lists are of no use to the algorithm
+                continue
+
+            # Get the first item as a potential candidate for the MRO
+            candidate = mro_list[0]
+
+            if candidate_found:
+                # Candidate promoted to the MRO are no longer of use
+                if candidate in _mro:
+                    mro_list.pop(0)
+                    # Don't bother checking any more candidate if one was found
+                    # 注意这里continue的对齐是与 if condidate_found 对齐， 如果是与 if candidate in _mro 对齐
+                    # 则会导致结果不正确
+                    # continue
+                continue
+
+            if candidate in itertools.chain(*(x[1:] for x in mro_lists)):
+                # The candidate was found in an invalid position,
+                # so we move on to the next MRO list to get a new candidate
+                continue
+            else:
+                # The candidate is valid and should be promoted to the MRO
+                _mro.append(candidate)
+                mro_list.pop(0)
+                candidate_found = True
+
+        if not sum(len(mro_list) for mro_list in mro_lists):
+            # There are no MROs th cycle through, so we're all done
+            break
+    return _mro
+
+
+print c3("C", ["B", "A", "object"], ["A", "object"], ["B", "A"])
+#+END_SRC
+
+#+RESULTS:
+: ['C', 'B', 'A', 'object']
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session C3
+  print c3("C", ["B", "A", "object"], ["A", "object"])
+  print c3("C", ["A", "object"], ["B", "A", "object"])
+#+END_SRC
+
+#+RESULTS:
+: ['C', 'B', 'A', 'object']
+: ['C', 'B', 'A', 'object']
+
+可见当没有 “base classes” 即 “B， A” 或者 “A， B” 参与 C3 算法时， 结果会都是一样的，这明显和用户写类继承的寄望值不一致。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  def c3(*mro_lists):
+      mro_lists = [list(mro_list) for mro_list in mro_lists]
+      return mro_lists
+
+
+  print c3("C", ["B", "A", object], ["A", object], ["B", "A"])
+#+END_SRC
+
+#+RESULTS:
+: [['C'], ['B', 'A', <type 'object'>], ['A', <type 'object'>], ['B', 'A']]
+
+* C3 算法与现实的冲突
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  class A(object):
+      pass
+
+
+  class B(A):
+      pass
+
+
+  class C(B, A):
+      pass
+
+
+  # class D(A, B):
+  #     pass
+
+
+  print C.__mro__
+  # print D.__mro__
+#+END_SRC
+
+#+RESULTS:
+: (<class '__main__.C'>, <class '__main__.B'>, <class '__main__.A'>, <type 'object'>)
+
+#+BEGIN_SRC python :exports no-eval
+  class A(object):
+      pass
+
+
+  class B(A):
+      pass
+
+
+  class D(A, B):
+      pass
+
+
+  print D.__mro__
+#+END_SRC
+
+#+RESULTS:
+: TypeErrorTraceback (most recent call last)
+: <ipython-input-19-9349c6f8ca52> in <module>()
+:       7
+:       8
+: ----> 9 class D(A, B):
+:      10     pass
+:      11
+:
+: TypeError: Error when calling the metaclass bases
+:     Cannot create a consistent method resolution
+: order (MRO) for bases B, A
+
+
+为什么会出现上述的错误？
+因为如果使用 C3 算法在计算 “D.__mro__” 时会进入无限循环状态，
+即 “c3("C", ["A", "object"], ["B", "A", "object"], ["A", "B"])”。
+所以 Python 为了让开发者写出有意义的类也是尽了很大的努力。
+
+* C3 算法的改进
+增加抛出异常功能，防止进入无限循环。
+
+#+BEGIN_SRC python :exports no-eval
+  import itertools
+
+
+  def c3(cls, *mro_lists):
+      # Make a copy so we don't change existing content
+      mro_lists = [list(mro_list) for mro_list in mro_lists]
+
+      # Set up the new MRO with the class itself
+      _mro = [cls]
+
+      while True:
+          # Reset for the next round of tests
+          candidate_found = False
+
+          for mro_list in mro_lists:
+              if not len(mro_list):
+                  # Any empty lists are of no use to the algorithm
+                  continue
+
+              # Get the first item as a potential candidate for the MRO
+              candidate = mro_list[0]
+
+              if candidate_found:
+                  # Candidate promoted to the MRO are no longer of use
+                  if candidate in _mro:
+                      mro_list.pop(0)
+                      # Don't bother checking any more candidate if one was found
+                  continue
+
+              if candidate in itertools.chain(*(x[1:] for x in mro_lists)):
+                  # The candidate was found in an invalid position,
+                  # so we move on to the next MRO list to get a new candidate
+                  continue
+              else:
+                  # The candidate is valid and should be promoted to the MRO
+                  _mro.append(candidate)
+                  mro_list.pop(0)
+                  candidate_found = True
+
+          if not sum(len(mro_list) for mro_list in mro_lists):
+              # There are no MROs th cycle through, so we're all done
+              break
+
+          if not candidate_found:
+              # No valid candidate was available, so we have to bail out
+              raise TypeError("Inconsistent MRO")
+              break
+      return _mro
+
+
+  print c3("C", ["B", "A", object], ["A", object], ["B", "A"])
+  print c3("C", ["A", "object"], ["B", "A", "object"], ["A", "B"])
+#+END_SRC
+
+#+RESULTS:
+: ['C', 'B', 'A', <type 'object'>]
+: TypeErrorTraceback (most recent call last)
+: <ipython-input-4-6991f94a6c7f> in <module>()
+:      50
+:      51 print c3("C", ["B", "A", object], ["A", object], ["B", "A"])
+: ---> 52 print c3("C", ["A", "object"], ["B", "A", "object"], ["A", "B"])
+:
+: <ipython-input-4-6991f94a6c7f> in c3(cls, *mro_lists)
+:      44         if not candidate_found:
+:      45             # No valid candidate was available, so we have to bail out
+: ---> 46             raise TypeError("Inconsistent MRO")
+:      47             break
+:      48     return _mro
+:
+: TypeError: Inconsistent MRO
+
+* C3 算法在棱形继承中的表现
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+class BaseBase(object):
+    def method(self):
+        print "BaseBase"
+
+
+class Base1(BaseBase):
+    pass
+
+
+class Base2(BaseBase):
+    def method(self):
+        print "Base2"
+
+
+class MyClass(Base1, Base2):
+    pass
+
+
+here = MyClass()
+here.method()
+print MyClass.__mro__
+#+END_SRC
+
+#+RESULTS:
+: Base2
+: (<class '__main__.MyClass'>, <class '__main__.Base1'>, <class '__main__.Base2'>, <class '__main__.BaseBase'>, <type 'object'>)
+
+* super()
+
+#+BEGIN_SRC python :exports no-eval :session
+  import logging
+
+  logging.basicConfig(level=logging.DEBUG)
+
+
+  class LoggingDict(dict):
+      def __setitem__(self, key, value):
+          logging.warning("Setting to %r" % key)
+          super(LoggingDict, self).__setitem__(key, value)
+
+
+  my_dict = LoggingDict()
+  my_dict["hello"] = "world"
+#+END_SRC
+
+#+RESULTS:
+: WARNING:root:Setting to 'hello'
+
+使用 =super()= 的好处就是改变了父类 “LoggingDict” 但是可以不改变 “super(LoggingDict, self).__setitem__()” 程序可以继续使用。
+
+#+BEGIN_SRC python :exports no-eval
+  import logging
+  import collections
+
+  logging.basicConfig(level=logging.DEBUG)
+
+
+  class LoggingDict(dict):
+      def __setitem__(self, key, value):
+          logging.warning("Setting to %r" % key)
+          super(LoggingDict, self).__setitem__(key, value)
+
+
+  class LoggingOD(LoggingDict, collections.OrderedDict):
+      pass
+
+
+  my_dict = LoggingOD()
+  my_dict["hello"] = "world"
+#+END_SRC
+
+#+RESULTS:
+: WARNING:root:Setting to 'hello'
+
+* 理解__mro__和元类
+以下为 Python 2 的输出结果:
+
+#+BEGIN_SRC python :results output
+  class M(type):
+      def __init__(cls, name, bases, attrs, **kwargs):
+          super(M, cls).__init__(name, bases, attrs, **kwargs)
+
+          def f(self):
+              try:
+                  super(cls, self).f()
+              except AttributeError:
+                  pass
+              print name, type(self).__name__
+          cls.f = f
+
+
+  class A():
+      __metaclass__ = M
+      pass
+
+
+  class AA(A):
+      pass
+
+
+  class AAA(AA):
+      pass
+
+
+  class B():
+      __metaclass__ = M
+      pass
+
+
+  class C(AAA, B):
+      __metaclass__ = M
+      pass
+
+
+  C().f()
+  print(C.__mro__)
+#+END_SRC
+
+#+RESULTS:
+: B C
+: A C
+: AA C
+: AAA C
+: C C
+: (<class '__main__.C'>, <class '__main__.AAA'>, <class '__main__.AA'>, <class '__main__.A'>, <class '__main__.B'>, <type 'object'>)
+
+以下为 Python 3 的输出结果:
+
+#+BEGIN_SRC python
+  class M(type):
+      def __init__(cls, name, bases, attrs, **kwargs):
+          super().__init__(name, bases, attrs, **kwargs)
+
+          def f(self):
+              try:
+                  super(cls, self).f()
+              except AttributeError:
+                  pass
+              print (name, type(self).__name__)
+          cls.f = f
+
+
+  class A(metaclass=M):
+      pass
+
+
+  class AA(A):
+      pass
+
+
+  class AAA(AA):
+      pass
+
+
+  class B(metaclass=M):
+      pass
+
+
+  class C(AAA, B, metaclass=M):
+      pass
+
+
+  C().f()
+  print(C.__mro__)
+#+END_SRC
+
+#+RESULTS:
+: B C
+: A C
+: AA C
+: AAA C
+: C C
+: (<class '__main__.C'>, <class '__main__.AAA'>, <class '__main__.AA'>, <class '__main__.A'>, <class '__main__.B'>, <class 'object'>)
+
+* super() 的建议
+** The caller and callee need to have a matching argument signature
+=super= 用法的一个问题是初始化中的参数传递，类在没有相同签名的情况下如何调用其基类的 =__init__= 方法。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  class BaseBase(object):
+      def __init__(self):
+          print("BaseBase")
+          super(BaseBase, self).__init__()
+
+
+  class Base1(object):
+      def __init__(self):
+          print("Base1")
+          super(Base1, self).__init__()
+
+
+  class Base2(object):
+      def __init__(self, arg):
+          print("Base2")
+          super(Base2, self).__init__()
+
+
+  class MyClass(Base1, Base2):
+      def __init__(self, arg):
+          print("my class")
+          super(MyClass, self).__init__(arg)
+
+
+  m = MyClass(10)
+#+END_SRC
+#+RESULTS:
+: TypeErrorTraceback (most recent call last)
+: <ipython-input-38-1e3b9c6ad7cb> in <module>()
+:      23
+:      24
+: ---> 25 m = MyClass(10)
+:
+: <ipython-input-38-1e3b9c6ad7cb> in __init__(self, arg)
+:      20     def __init__(self, arg):
+:      21         print("my class")
+: ---> 22         super(MyClass, self).__init__(arg)
+:      23
+:      24
+:
+: TypeError: __init__() takes exactly 1 argument (2 given)
+
+可以使用 =*args= 和 =**kwds= 魔法进行解决。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  class BaseBase(object):
+      def __init__(self, *args, **kwds):
+          print("BaseBase")
+          super(BaseBase, self).__init__(*args, **kwds)
+
+
+  class Base1(object):
+      def __init__(self, *args, **kwds):
+          print("Base1")
+          super(Base1, self).__init__(*args, **kwds)
+
+
+  class Base2(object):
+      def __init__(self, arg, *args, **kwds):
+          print("Base2")
+          super(Base2, self).__init__(*args, **kwds)
+
+
+  class MyClass(Base1, Base2):
+      def __init__(self, arg, *args, **kwds):
+          print("my class")
+          super(MyClass, self).__init__(arg, *args, **kwds)
+
+
+  m = MyClass(10)
+#+END_SRC
+
+#+RESULTS:
+: my class
+: Base1
+: Base2
+
+但是这是一个糟糕的修复方法，因为它使用所有构造函数接受任何类型的参数，这会导致代码变得脆弱，因为任何参数都被传递并且通过。
+另一个解决方法是使用经典的 =__init__= 调用, 但是会导致混合 =super= 调用的缺陷。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  class Shape(object):
+      def __init__(self, shapename, **kwds):
+          self.shapename = shapename
+          super(Shape, self).__init__(**kwds)
+
+
+  class ColorShape(Shape):
+      def __init__(self, color, **kwds):
+          self.color = color
+          super(ColorShape, self).__init__(**kwds)
+
+
+  cs = ColorShape(color="red", shapename="circle")
+#+END_SRC
+
+每一层都剥下所需的关键字参数，到最后剩下一个空字典用来送给一个不需要任何参数的初始化函数， 比如 =object.__init__= 。
+
+** Make sure the target method exists
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example
+  class Root(object):
+      def draw(self):
+          # the delegation chain stops here
+          assert not hasattr(super(Root, self), 'draw')
+
+
+  class Shape(Root):
+      def __init__(self, shapename, **kwds):
+          self.shapename = shapename
+          super(Shape, self).__init__(**kwds)
+
+      def draw(self):
+          print('Drawing.  Setting shape to:', self.shapename)
+          super(Shape, self).draw()
+
+
+  class ColoredShape(Shape):
+      def __init__(self, color, **kwds):
+          self.color = color
+          super(ColoredShape, self).__init__(**kwds)
+
+      def draw(self):
+          print('Drawing.  Setting color to:', self.color)
+          super(ColoredShape, self).draw()
+
+
+  cs = ColoredShape(color='blue', shapename='square')
+  cs.draw()
+#+END_SRC
+
+#+RESULTS:
+: ('Drawing.  Setting color to:', 'blue')
+: ('Drawing.  Setting shape to:', 'square')
+
+#+BEGIN_SRC python :exports no-eval
+  class OtherShape(object):
+      # def __init__(self, shapename, **kwds):
+      #     self.shapename = shapename
+      #     super(OtherShape, self).__init__(**kwds)
+
+      def draw(self):
+          print("OtherShape drawing.")
+
+
+  class ColoredShape(Shape, OtherShape):
+      def __init__(self, color, **kwds):
+          self.color = color
+          super(ColoredShape, self).__init__(**kwds)
+
+      def draw(self):
+          print('Drawing.  Setting color to:', self.color)
+          super(ColoredShape, self).draw()
+
+
+  cs = ColoredShape(color='blue', shapename='square')
+  print([_.__name__ for _ in ColoredShape.__mro__])
+  cs.draw()
+#+END_SRC
+
+#+RESULTS:
+: ['ColoredShape', 'Shape', 'Root', 'OtherShape', 'object']
+: AssertionErrorTraceback (most recent call last)
+: <ipython-input-13-2e9fc128f5ba> in <module>()
+: 20 cs = ColoredShape(color='blue', shapename='square')
+: 21 print([_.__name__ for _ in ColoredShape.__mro__])
+: ---> 22 cs.draw()
+:
+: <ipython-input-13-2e9fc128f5ba> in draw(self)
+: 15     def draw(self):
+: 16         print('Drawing.  Setting color to:', self.color)
+: ---> 17         super(ColoredShape, self).draw()
+: 18
+: 19
+:
+: <ipython-input-6-d501db64976e> in draw(self)
+: 12     def draw(self):
+: 13         print('Drawing.  Setting shape to:', self.shapename)
+: ---> 14         super(Shape, self).draw()
+: 15
+: 16
+:
+: <ipython-input-6-d501db64976e> in draw(self)
+: 2     def draw(self):
+: 3         # the delegation chain stops here
+: ----> 4         assert not hasattr(super(Root, self), 'draw')
+: 5
+: 6
+:
+: AssertionError:
+
+原本期望的结果是：
+
+#+RESULTS:
+: ('Drawing.  Setting color to:', 'blue')
+: ('Drawing.  Setting shape to:', 'square')
+: ("OtherShape drawing.")
+
+但是却出现了断言异常， 这是为什么？
+在类 “Root” 中有一句断言 ~assert not hasattr(super, draw)~ 它的作用是防止类 =ColorShape= 继承其他不是来自继承类 =Root= 类以外的 =draw= 方法。
+那么它是如何在判断到这种情况来抛出断言异常呢？
+原因在于 =__mro__= 中 类 =OtherShape= 排在类 =Root= 后面的，那么 ~super(Root, self)~ 向类 =OtherShape= 通过断言 =Root= 后续类没有 =draw= 方法来及时抛出异常，从而保证了 =ColorShape= ， =draw= 方法不能从非继承类 =Root= 的其他类来继承。
+
+#+BEGIN_QUOTE
+If subclasses want to inject other classes into the MRO,
+those other classes also need to inherit from Root so that no path for calling draw()
+can reach object without having been stopped by Root.draw.
+This should be clearly documented
+so that someone writing new cooperating classes
+will know to subclass from Root.
+This restriction is not much different than
+Python’s own requirement that
+all new exceptions must inherit from BaseException.
+#+END_QUOTE
+
+注意，在 Python 2 中：
+1. 在 ~class Root~ 中类 =Root= 须显示的继承自 =object= 否则会出现如下错误：
+
+#+begin_example
+TypeErrorTraceback (most recent call last)
+<ipython-input-30-e3d6d6753f06> in <module>()
+     25
+     26
+---> 27 cs = ColoredShape(color='blue', shapename='square')
+     28 cs.draw()
+
+<ipython-input-30-e3d6d6753f06> in __init__(self, color, **kwds)
+     18     def __init__(self, color, **kwds):
+     19         self.color = color
+---> 20         super(ColoredShape, self).__init__(**kwds)
+     21
+     22     def draw(self):
+
+TypeError: must be type, not classobj
+#+end_example
+
+1. ~super()~ 方法必须显示写明参数，即 ~super(type[,obj-or-type])~ 。
+2. 在 Python 3 没有上述注意点。
+
+** Every occurrence of the method needs to user SUPER()
+这是因为混用 =super= 和传统调用可能导致异常发生。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+class A(object):
+    def __init__(self):
+        print("A")
+        super(A, self).__init__()
+
+
+class B(object):
+    def __init__(self):
+        print("B")
+        super(B, self).__init__()
+
+
+class C(A, B):
+    def __init__(self):
+        print("C")
+        A.__init__(self)
+        B.__init__(self)
+
+
+c = C()
+print([_.__name__ for _ in C.__mro__])
+print([_.__name__ for _ in A.__mro__])
+#+END_SRC
+
+#+RESULTS:
+: C
+: A
+: B
+: B
+: ['C', 'A', 'B', 'object']
+: ['A', 'object']
+
+类 =B= 的初始化函数被调用两次，因为类 =C= 实例化对象调用 ~A.__init__(self)~ 。
+根据 =__mro__= 从而 ~super(A, self)~ 沿着类 =C= 的 =__mro__= 两次调用了类 =B= 初始化函数。
+
+为了避免这些问题，应该总是在子类化之前看看 =__mro__= 特性，如果它不存在，将要处理的就是一个旧式的类，避免使用 =super= 能更安全。
+例如：
+
+#+BEGIN_SRC python :exports no-eval
+  from SimpleHTTPServer import SimpleHTTPRequestHandler
+  print(SimpleHTTPRequestHandler.__mro__)
+#+END_SRC
+#+RESULTS:
+: AttributeErrorTraceback (most recent call last)
+: <ipython-input-35-ed0221b0b0fe> in <module>()
+:       1 from SimpleHTTPServer import SimpleHTTPRequestHandler
+: ----> 2 print(SimpleHTTPRequestHandler.__mro__)
+:
+: AttributeError: class SimpleHTTPRequestHandler has no attribute '__mro__'
+
+如果 =__mro__= 存在，则快速查看每个 =MRO= 所涉及的类的构造程序代码，如果到处都使用了 =super= 那么可以使用它，否则请保持一致。
+
+=collections.deque= 能够安全的被子类化，可以使用 =super= 因为它直接子类化 =object= 。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results value list :exports no-eval :session
+  from collections import deque
+  deque.__mro__
+#+END_SRC
+
+#+RESULTS:
+: (collections.deque, object)
+
+=random.Random= 是存在于 =_random= 模块中的另一个类的封装，是一个 C 模块，所以是安全的。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output value :exports no-eval :session
+  from random import Random
+  Random.__mro__
+#+END_SRC
+
+#+RESULTS:
+: (random.Random, _random.Random, object)
+
+* 如何解决第三方类不兼容问题
+有时会遇到需要使用第三方类来继承，但是第三方类方法或者不支持 =super()= 或者没有继承自类 =Root= （就像前面的例子）。
+这时的解决方法是使用适配器类。
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session adapter
+  class Root(object):
+      def draw(self):
+          # the delegation chain stops here
+          assert not hasattr(super(Root, self), 'draw')
+
+
+  class Shape(Root):
+      def __init__(self, shapename, **kwds):
+          self.shapename = shapename
+          super(Shape, self).__init__(**kwds)
+
+      def draw(self):
+          print('Drawing.  Setting shape to:', self.shapename)
+          super(Shape, self).draw()
+
+
+  class ColoredShape(Shape):
+        def __init__(self, color, **kwds):
+            self.color = color
+            super(ColoredShape, self).__init__(**kwds)
+
+        def draw(self):
+            print('Drawing.  Setting color to:', self.color)
+            super(ColoredShape, self).draw()
+
+
+  class Moveable(object):
+      def __init__(self, x, y):
+          self.x = x
+          self.y = y
+
+      def draw(self):
+          print("Drawing at position: ", self.x, self.y)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session adapter
+  class MoveableAdapter(Root):
+      def __init__(self, x, y, **kwds):
+          self.movable = Moveable(x, y)
+          super(MoveableAdapter, self).__init__(**kwds)
+
+      def draw(self):
+          self.movable.draw()
+          super(MoveableAdapter, self).draw()
+
+
+  class MovableColoredShape(ColoredShape, MoveableAdapter):
+      pass
+  mcs = MovableColoredShape(color="red", shapename="circle",
+                          x=10, y=20)
+  mcs.draw()
+#+END_SRC
+
+#+RESULTS:
+: ('Drawing.  Setting color to:', 'red')
+: ('Drawing.  Setting shape to:', 'circle')
+: ('Drawing at position: ', 10, 20)
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session adapter
+print [_.__name__ for _ in MovableColoredShape.__mro__]
+#+END_SRC
+
+#+RESULTS:
+: ['MovableColoredShape', 'ColoredShape', 'Shape', 'MoveableAdapter', 'Root', 'object']
+
+* Just for fun
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
+  from collections import Counter, OrderedDict
+
+
+  class OrderedCounter(Counter, OrderedDict):
+      "Counter that remembers the order elements are first see"
+      def __repr__(self):
+        return "%s(%r)" % (self.__class__.__name__,
+                          OrderedDict(self))
+
+      def __reduce__(self):
+          return self.__class__, (OrderedDict(self),)
+
+
+  oc = OrderedCounter("abracadabra")
+  print(repr(oc))
+  print oc.__class__
+#+END_SRC
+
+#+RESULTS:
+: OrderedCounter(OrderedDict([('a', 5), ('b', 2), ('r', 2), ('c', 1), ('d', 1)]))
+: <class '__main__.OrderedCounter'>

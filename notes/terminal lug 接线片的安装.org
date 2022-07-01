@@ -1,0 +1,18 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/terminal lug 接线片的安装/")); -*-
+:PROPERTIES:
+:ID:       C15ABB34-8F29-4E9F-B6C5-5ED7619BBC4B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-20 Tue 00:15>
+#+TITLE: terminal lug 接线片的安装
+
+- 通常接线⽚孔径要与接线柱⼀致。若⽆适合尺⼨的接线⽚，接线⽚尺⼨为 10 的装在尺⼨为 8 的接线柱上，依次类推，8—6；6-4 接线。
+- 当接线⽚的孔径⽐接线柱的尺⼨⼤⼀个规格时，在接线柱与 lock washer 之间加装⼀个 pressure washer AN960。
+- pressure washer AN960 的孔径与接线柱的尺⼨⼀致。
+- 1 个接线柱最多装 4 个接线⽚。
+- 油⽓区域的电⽓接线⽚需要密封。
+- 弯曲：只能弯曲⼀次，向上最⼤ 30 度，向下最⼤ 90 度。弯曲半径不⼤于 5/32±1/32 英⼨。
+- 接线柱或螺杆必须超出螺帽的最⼩尺⼨为 1+1/2 螺纹。
+- 安装构型：电源端的接线⽚线头向上，负载端的线头向下。
+
+[[file:./static/terminal lug 接线片的安装/2021-07-20_00-18-34_screenshot.jpg]]

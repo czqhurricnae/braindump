@@ -1,0 +1,33 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/SRM 52-57 5X-XX-XX 中最后两位数字代表含义/")); -*-
+:PROPERTIES:
+:ID:       F0D7C5FE-41A6-4C70-96D0-0445878EBB02
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-15 Tue 21:55>
+#+TITLE: SRM 52-57 5X-XX-XX 中最后两位数字代表含义
+
+- 00 概述（General）
+- 01 蒙皮和板（Skins and Plate）
+- 02 结构完整性（Structure Complete）
+- 03 桁条和蒙皮加强件（Stringers and Skin Stiffeners）
+- 04 肋间桁条、支撑桁条（Intercostals）
+- 05 纵梁（Longerons）
+- 06 翼肋、隔框（Formers）
+- 07 框架（Frames）
+- 08 隔框（Bulkheads）
+- 09 翼肋（Ribs）
+- 10 翼梁（Spars）
+- 11 辅助梁（Intermediate，Auxiliary and Subspars ）
+- 12 龙骨梁结构（Keel Structure）
+- 13 大梁（Beams）
+- 14 起落架支撑结构（Landing gear Support Structure）
+- 15 门框结构（Door Surround Structure）
+- 16 缘条（Edge Members）
+- 30 辅助结构（Auxiliary）
+- 50 地板（Floor Panels）
+- 51 地板结构（Floor Structure）
+- 53 货舱特殊结构（Cargo Compartment Special Structure）
+- 70 整流罩、搭接带，蒙皮和板（Fillets and Fairings，Skins and Plating）
+- 71 整流罩支撑结构（Fillets and Fairings， structure）
+- 72 雷达罩和天线整流罩（Radomes and Fairings）
+- 90 接头(Attachment Fittings)

@@ -1,0 +1,41 @@
+<!DOCTYTE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <div id="box" style="background: #abcdef; width: 300px; height: 300px;">
+            <input name="" type="button" value="test" id="btn"/>
+        </div>
+        <script type="text/javascript">
+         var box = document.getElementById("box");
+         var btn = document.getElementById("btn");
+         btn.onclick = function(e){
+             alert("Button clicked");
+             var e = e||window.event;
+             if (typeof e.cancelBubble == "undefinded"){
+                 e.stopPropagation();
+             }else{
+                 e.cancelBubble = true;
+             }
+         };
+
+         box.onclick = function(){
+             alert("Box clicked");
+         };
+
+         document.body.onclick = function(){
+             alert("Body clicked");
+         };
+
+         document.documentElement.onclick = function(){
+             alert("Html clicked");
+         };
+
+         document.onclick = function(){
+             alert("Document clicked");
+         };
+        </script>
+    </body>
+</html>

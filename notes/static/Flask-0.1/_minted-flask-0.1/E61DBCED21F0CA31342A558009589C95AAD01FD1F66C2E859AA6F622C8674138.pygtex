@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Flask}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{wsgi\PYGZus{}app}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{,} \PYG{n}{start\PYGZus{}response}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}The actual WSGI application.  This is not implemented in}
+\PYG{l+s+sd}{        `\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}` so that middlewares can be applied:}
+
+\PYG{l+s+sd}{            app.wsgi\PYGZus{}app = MyMiddleware(app.wsgi\PYGZus{}app)}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{push}\PYG{p}{(}\PYG{n}{\PYGZus{}RequestContext}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{environ}\PYG{p}{)}\PYG{p}{)}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{rv} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{preprocess\PYGZus{}request}\PYG{p}{(}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{rv} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{n}{rv} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{dispatch\PYGZus{}request}\PYG{p}{(}\PYG{p}{)}
+                \PYG{n}{response} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{make\PYGZus{}response}\PYG{p}{(}\PYG{n}{rv}\PYG{p}{)}
+                \PYG{n}{response} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{process\PYGZus{}response}\PYG{p}{(}\PYG{n}{response}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{response}\PYG{p}{(}\PYG{n}{environ}\PYG{p}{,} \PYG{n}{start\PYGZus{}response}\PYG{p}{)}
+        \PYG{k}{finally}\PYG{p}{:}
+            \PYG{n}{\PYGZus{}request\PYGZus{}ctx\PYGZus{}stack}\PYG{o}{.}\PYG{n}{pop}\PYG{p}{(}\PYG{p}{)}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

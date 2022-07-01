@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Mitmproxy/")); -*-
+:PROPERTIES:
+:ID:       EDD9CF8F-E5CA-46CE-8846-7041B47868C8
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-05 Tue 09:18>
+#+TITLE: Mitmproxy
+* 安装
+  #+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+  pip3 install mitmproxy
+  #+END_SRC
+
+* 启动
+
+  #+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+  mitmweb
+  #+END_SRC

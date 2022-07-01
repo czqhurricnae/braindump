@@ -1,0 +1,74 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Setting locale failed/")); -*-
+:PROPERTIES:
+:ID:       7F1F2FB0-939D-4F92-924E-FD51A7A491CA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-27 Thu 11:36>
+#+TITLE: Setting locale failed
+
+[[file:./static/Setting locale failed/2021-05-27_11-36-25.png]]
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ locale
+LANG="zh_CN.UTF-8"
+LC_COLLATE="zh_CN.UTF-8"
+LC_CTYPE="zh_CN.UTF-8"
+LC_MESSAGES="zh_CN.UTF-8"
+LC_MONETARY="zh_CN.UTF-8"
+LC_NUMERIC="zh_CN.UTF-8"
+LC_TIME="zh_CN.UTF-8"
+LC_ALL=
+#+END_SRC
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+➜ locale -a | grep en
+en_NZ
+en_US.US-ASCII
+en_US.UTF-8
+en_NZ.ISO8859-1
+en_AU.US-ASCII
+en_US
+en_NZ.UTF-8
+en_AU.ISO8859-15
+en_US.ISO8859-15
+en_NZ.ISO8859-15
+en_AU.UTF-8
+en_CA
+en_NZ.US-ASCII
+en_GB.ISO8859-1
+en_CA.US-ASCII
+en_CA.ISO8859-15
+en_US.ISO8859-1
+en_GB.UTF-8
+en_GB.US-ASCII
+en_AU
+en_GB
+en_CA.UTF-8
+en_IE.UTF-8
+en_CA.ISO8859-1
+en_AU.ISO8859-1
+en_IE
+en_GB.ISO8859-15
+#+END_SRC
+
+可见 除了 =LC_ALL= 值没有设置，其他的值都已经设置，并且 =en_CN.UTF-8= 在系统没有安装好。
+
+#+BEGIN_QUOTE
+你的 region 设置的 US，所以你的 AppleLocale 是 en_US，而我的 Region 是 China Mainland，所以我的 AppleLocale 是 en_CN，后者不是个合法的 locale。
+#+END_QUOTE
+
+但是 =en_CN= 并不是一个合法的 locale。
+
+在 emacs 中添加：
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(exec-path-from-shell-setenv "LC_ALL" "en_US.UTF-8")
+
+(defun hurricane-programming/init-exec-path-from-shell ()
+  (use-package exec-path-from-shell
+    :init
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize)
+      (exec-path-from-shell-copy-envs '("LC_ALL"))
+      (message "Initialized PATH and other variables from SHELL."))))
+#+END_SRC

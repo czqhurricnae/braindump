@@ -1,0 +1,53 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/前后端分离，nginx 解决跨域问题/")); -*-
+:PROPERTIES:
+:ID:       46520E70-B0EA-4156-BB40-760465C7F958
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-18 Tue 20:37>
+#+TITLE: 前后端分离，nginx 解决跨域问题
+* 问题描述：
+前端 react-app 使用 nginx 部署到服务器，浏览器访问 80 端口，页面请求同一服务器的后台 api，由于端口不同，产生跨域。（域名不同也会跨域）
+
+* 解决
+nginx 修改，在监听 80 端口的同时，对前端的请求转发的实际的后台服务。
+
+#+BEGIN_SRC css
+//nginx 部分修改
+server {
+        listen 80;
+        server_name  localhost;
+
+        location / {
+            root   /webserver;
+            index  index.html index.htm;
+            autoindex on;
+            autoindex_exact_size on;
+            autoindex_localtime on;
+        }
+
+        location /api/ {
+            proxy_pass  http://120.78.202.210:7001/;
+        }
+    }
+#+END_SRC
+
+如上，将前端/api 下的请求转发到配置地址。
+
+#+BEGIN_SRC groovy
+//前端代码修改
+const getData = () => {
+    axios.get("http://120.78.202.210/api/v1/zhihu/topimage/")
+        .then(res => {
+            console.log(res)
+        }).catch(res => {
+        console.log(res)
+    })
+}
+#+END_SRC
+
+如上，由于直接请求“http://120.78.202.210:7001/v1/zhihu/topimage/”
+端口不同导致跨域，因此修改全部请求代码，将/api/下的请求转发到实际的服务器。
+
+若是本地调试，可以添加 chrome 扩展。
+
+[[file:./static/前后端分离，nginx 解决跨域问题/2021-05-18_20-38-17_screenshot.jpg]]

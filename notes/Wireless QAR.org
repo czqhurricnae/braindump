@@ -1,0 +1,44 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Wireless QAR/")); -*-
+:PROPERTIES:
+:ID:       A09FCD82-B696-48A6-8329-2814D7E1663D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-17 Sat 21:12>
+#+TITLE: Wireless QAR
+
+[[file:./static/Wireless QAR/2021-07-17_21-13-27_screenshot.jpg]]
+
+* 机载 WQAR 手机 SIM 卡
+- WQAR 内置 4 个手机模块，用于传输数据，需要安装 SIM 卡 才能使用
+- SIM 卡要求：开通 GPRS 和短信，开通国际漫游（用于出厂 测试），可以不开通语音
+- 每架飞机每天飞 10 小时，每月的数据量（压缩后）约 120M
+- 北京地区中国移动随 E 行，每月 20 元包 150M，如绑定由全 球通支付，则月租费为 0
+- 具体费用需要和中国移动或中国联通协商
+- 建议每架飞机安装 4 张卡
+- 手机卡需要在部件出厂前寄给 Teledyne（可以快递给 Teledyne 北京办公室）
+
+* 无线 QAR 地面基站 WGBS
+- 机架式服务器，Windows 2003，安装在机房，24 小时 开机。需要安装 Teledyne 的 WGBS 软件，件号 710407-1
+- 如故障或关机，数据会保留在飞机上（200 飞行小时）需要指定（或映射）一个公网的静态 IP 地址，这个 IP 地址需要设置在机载 WQAR 设备里
+- 对外网开通以下数据端口
+ - UDP 3000，3001，3002 用于 WQAR 数据传输
+ - 根据需要，开通远程监控（远程桌面、PC Anywhere 或 其他）
+ - 根据需要，开通 Windows 自动更新
+- 对内网开通以下数据端口
+ - 标准 FTP（TCP 21 和 20），用于和 AirFASE 服务器和 FTP 服务器数据传输
+ - TCP 3003 和 3005，用于 WGBS 和 AirFASE、FTP 服务器之间握手确认
+
+* WQAR 数据处理
+- AirFASE 经过配置后，均可以自动处理 WQAR 数据，同时也可以人工处理。AirFASE 的机器会同时保存 WQAR 的加密压缩文件.wgl，解密解压缩的文件（类似现有 FDIMU 数据的格式）
+- 数据也可以自动解密解压缩，存放在一台 FTP 服务器上（类似把现有的 FDIMU 数据分别复制到各个文件夹下）
+- AirFASE 和 FTP 服务器端需要安装 Teledyne 的 WFRC 软件，件号 710407-2
+- 也可以将 WGBS 和 WFRC 都安装在 AirFASE 机器 里
+
+* 配置
+- WQAR 地面基站（WGBS）只能自动给 2 个客户端送数据，客户端可以是 AirFASE、或 FTP 服务 器
+- 建议将 WGBS、WFRC 和 AIRFASE 都装在一台服务器里
+
+* 机载 WQAR 的使用
+- 飞机就必须在 WQAR 设置飞机注册号和 WGBS 的 IP 地址
+- 设置一般通过 WQAR 前面板进行，也可以通过内置的 PCMCIA 卡装置配置文件进行设置，还可以通过 WGBS 进行远程装载设置
+- IP 地址确定后，以后的 WQAR 出厂时会设置好 IP地址

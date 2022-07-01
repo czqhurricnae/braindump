@@ -1,0 +1,68 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/PEP 328: Absolute and Relative Imports")); -*-
+:PROPERTIES:
+:ID:       3ACB6261-EBF4-4846-B8F2-BFC06ADC4833
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-22 Thu 15:58>
+#+TITLE: PEP 328 Absolute and Relative Imports
+
+The simpler part of PEP [[https://www.python.org/dev/peps/pep-0328/][328]] was implemented in Python 2.4: parentheses could now be used to enclose the names imported from a module using the ~from ... import ...~ statement,
+making it easier to import many different names.
+
+The more complicated part has been implemented in Python 2.5: importing a module can be specified to use absolute or package-relative imports.
+The plan is to move toward making absolute imports the default in future versions of Python.
+
+Let’s say you have a package directory like this:
+
+#+begin_example
+pkg/
+pkg/__init__.py
+pkg/main.py
+pkg/string.py
+#+end_example
+
+This defines a package named =pkg= containing the =pkg.main= and =pkg.string= submodules.
+
+Consider the code in the =main.py= module.
+What happens if it executes the statement ~import string~?
+In Python 2.4 and earlier, it will first look in the package’s directory to perform a relative import, finds =pkg/string.py=,
+imports the contents of that file as the =pkg.string= module, and that module is bound to the name string in the =pkg.main= module’s namespace.
+
+That’s fine if =pkg.string= was what you wanted.
+But what if you wanted Python’s standard string module?
+There’s no clean way to ignore =pkg.string= and look for the standard module;
+generally you had to look at the contents of ~sys.modules~, which is slightly unclean.
+Holger Krekel’s =py.std= package provides a tidier way to perform imports from the standard library, ~import py; py.std.string.join()~,
+but that package isn’t available on all Python installations.
+
+Reading code which relies on relative imports is also less clear,
+because a reader may be confused about which module, =string= or =pkg.string=, is intended to be used.
+Python users soon learned not to duplicate the names of standard library modules in the names of their packages’ submodules,
+but you can’t protect against having your submodule’s name being used for a new module added in a future version of Python.
+
+In Python 2.5, you can switch import’s behaviour to absolute imports using a ~from __future__ import absolute_import~ directive.
+This [[id:91B0F184-FB7B-4804-A94E-D19A090A411D][absolute-import]] behaviour will become the default in a future version (probably Python 2.7).
+Once absolute imports are the default, ~import string~ will always find the standard library’s version.
+It’s suggested that users should begin using absolute imports as much as possible,
+so it’s preferable to begin writing ~from pkg import string~ in your code.
+
+Relative imports are still possible by adding a leading period to the module name when using the ~from ... import~ form:
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+# Import names from pkg.string
+from .string import name1, name2
+# Import pkg.string
+from . import string
+#+END_SRC
+
+This imports the string module relative to the current package, so in =pkg.main= this will import =name1= and =name2= from =pkg.string=.
+Additional leading periods perform the relative import starting from the parent of the current package.
+For example, code in the =A.B.C= module can do:
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+from . import D                 # Imports A.B.D
+from .. import E                # Imports A.E
+from ..F import G               # Imports A.F.G
+#+END_SRC
+
+Leading periods cannot be used with the ~import modname~ form of the import statement, only the ~from ... import~ form.

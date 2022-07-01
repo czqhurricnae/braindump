@@ -1,0 +1,100 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Nginx 怎么转发/")); -*-
+:PROPERTIES:
+:ID:       8116882A-FEE0-4C21-B0AF-75F98ECE2C5F
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-28 Mon 16:10>
+#+TITLE: Nginx 怎么转发
+
+* Nginx 工作原理
+
+Nginx 由内核和模块组成，Nginx 本身做的工作实际很少，当它接到一个 HTTP 请求时，它仅仅是通过查找配置文件将此次请求映射到一个 location block。
+
+此 location 中所配置的各个指令则会启动不同的模块去完成工作，因此模块可以看做 Nginx 真正的劳动工作者。
+
+通常一个 location 中的指令会涉及一个 handler 模块和多个 filter 模块（当然，多个 location 可以复用同一个模块）。
+
+handler 模块负责处理请求，完成响应内容的生成，而 filter 模块对响应内容进行处理。
+
+用户根据自己的需要开发的模块都属于第三方模块，正是有了这么多模块的支撑，Nginx 的功能才会如此强大。
+
+Nginx 的模块从结构上分为核心模块，基础模块和第三方模块：
+
+- 核心模块：HTTP 模块，EVENT 模块和 MAIL 模块
+- 基础模块：HTTP Access 模块，HTTP FastCGI 模块，HTTP Proxy 模块和 HTTP Rewrite 模块
+- 第三方模块：HTTP Upstream Request Hash 模块，Notice 模块和 HTTP Access Key 模块
+
+Nginx 的模块从功能上分为如下三类:
+
+- Handlers（处理器模块）， 此类模块直接处理请求，并进行输出内容和修改 headers 信息等操作，Handlers 处理器模块一般只能有一个
+- Filters （过滤器模块），此类模块主要对其他处理器模块输出的内容进行修改操作，最后由 Nginx 输出
+- Proxies （代理类模块）， 此类模块是 Nginx 的 HTTP Upstream 之类的模块，这些模块主要与后端一些服务比如 FastCGI 等进行交互，实现服务代理和负载均衡等功能
+
+下面用一张图来展示一下：
+
+[[file:./static/Nginx 怎么转发/1.png]]
+
+* Nginx 进程模型
+Nginx 默认采用多进程工作方式，Nginx 启动后，会运行一个 master 进程和多个 worker 进程。
+
+- master 进程充当整个进程组与用户的交互接口，同时对进程进行监护，管理
+
+- worker 进程来实现重启服务，平滑升级，更换日志文件，配置文件实时生效等功能
+
+- worker 用来处理基本的网络事件，worker 之间是平等的，他们共同竞争来处理来自客户端的请求
+
+nginx 的进程模型如图所示：
+
+[[file:./static/Nginx 怎么转发/2.png]]
+
+在创建 master 进程时， 先建立需要监听的 socket（listenfd）。
+
+然后从 master 进程中 fork() 出多个 worker 进程，如此一来每个 worker 进程都可以监听用户请求的 socket。
+
+一般来说，当一个连接进来后，所有 worker 都会收到通知，但是只有一个进程可以接受这个连接请求，其它的都失败，这是所谓的惊群现象。
+
+nginx 提供了一个 accept_mutex（互斥锁），有了这把锁之后，同一时刻，就只会有一个进程在 accpet 连接，这样就不会有惊群问题了。
+
+先打开 accept_mutex 选项，只有获得了 accept_mutex 的进程才会去添加 accept 事件。
+
+nginx 使用一个叫 ngx_accept_disabled 的变量来控制是否去竞争 accept_mutex 锁。
+
+ngx_accept_disabled = nginx 单进程的所有连接总数 / 8 -空闲连接数量。
+
+当 ngx_accept_disabled 大于 0 时，不会去尝试获取 accept_mutex 锁。
+
+ngx_accept_disable 越大，让出的机会就越多，其它进程获取锁的机会也就越大。
+不去 accept，每个 worker 进程的连接数就控制下来了，其它进程的连接池就会得到利用，这样，nginx 就控制了多进程间连接的平衡。
+
+每个 worker 进程都有一个独立的连接池，连接池的大小是 worker_connections。
+
+这里的连接池里面保存的其实不是真实的连接，它只是一个 worker_connections 大小的一个 ngx_connection_t 结构的数组。
+
+并且 nginx 会通过一个链表 free_connections 来保存所有的空闲 ngx_connection_t。
+
+每次获取一个连接时，就从空闲连接链表中获取一个，用完后，再放回空闲连接链表里面。
+
+一个 nginx 能建立的最大连接数，应该是 worker_connections * worker_processes。
+
+当然，这里说的是最大连接数，对于 HTTP 请求本地资源来说，能够支持的最大并发数量是 worker_connections * worker_processes，
+
+而如果是 HTTP 作为反向代理来说，最大并发数量应该是 worker_connections * worker_processes / 2。
+
+因为作为反向代理服务器，每个并发会建立与客户端的连接和与后端服务的连接，会占用两个连接。
+
+* Nginx 处理 HTTP 请求流程
+http 请求是典型的请求-响应类型的的网络协议。
+http 是文件协议，所以我们在分析请求行与请求头，以及输出响应行与响应头，往往是一行一行的进行处理。
+
+通常在一个连接建立好后，读取一行数据，分析出请求行中包含的 method，uri，http_version 信息。
+
+然后再一行一行处理请求头，并根据请求 method 与请求头的信息来决定是否有请求体以及请求体的长度，然后再去读取请求体。
+
+得到请求后，我们处理请求产生需要输出的数据，然后再生成响应行，响应头以及响应体。
+
+在将响应发送给客户端之后，一个完整的请求就处理完了。
+
+整个处理流程图如下：
+
+[[file:./static/Nginx 怎么转发/3.png]]

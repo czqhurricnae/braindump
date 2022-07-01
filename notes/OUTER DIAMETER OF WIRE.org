@@ -1,0 +1,20 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/OUTER DIAMETER OF WIRE/")); -*-
+:PROPERTIES:
+:ID:       8F7C219D-9BBD-483C-BC1C-FDE804614F2C
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-19 Fri 08:06>
+#+TITLE: OUTER DIAMETER OF WIRE
+#+FILETAGS: :SWPM_20_00_16:
+
+导线的外径简称 =O.D= ，包括其最内的导体和离导体最近的绝缘层。
+
+[[file:./static/OUTER DIAMETER OF WIRE/2021-03-19_08-08-06_screenshot.jpg]]
+
+[[file:./static/OUTER DIAMETER OF WIRE/2021-03-19_08-08-16_screenshot.jpg]]
+
+[[file:./static/OUTER DIAMETER OF WIRE/2021-03-19_08-08-22_screenshot.jpg]]
+
+[[file:./static/OUTER DIAMETER OF WIRE/2021-03-19_08-08-33_screenshot.jpg]]
+
+[[file:./static/OUTER DIAMETER OF WIRE/2021-03-19_08-08-45_screenshot.jpg]]

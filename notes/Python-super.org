@@ -1,0 +1,412 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python-super/")); -*-
+:PROPERTIES:
+:ID:       51686FBF-FA26-4AE9-8A17-57A5E5FFD143
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-18 Sun 18:52>
+#+TITLE: Python-super
+
+* 约定
+在开始之前我们来约定一下本文所使用的 Python 版本。默认用的是 Python3，也就是说：本文所定义的类都是新式类。如果你用到是 Python2 的话，记得继承 =object= ：
+
+#+BEGIN_EXAMPLE
+    # 默认， Python 3
+    class A:
+        pass
+
+    # Python 2
+    class A(object):
+        pass
+#+END_EXAMPLE
+
+Python 3 和 Python 2 的另一个区别是: Python 3 可以使用直接使用 =super().xxx= 代替 =super(Class, self).xxx= ：
+
+#+BEGIN_EXAMPLE
+    # 默认，Python 3
+    class B(A):
+        def add(self, x):
+            super().add(x)
+
+    # Python 2
+    class B(A):
+        def add(self, x):
+            super(B, self).add(x)
+#+END_EXAMPLE
+
+所以，你如果用的是 Python 2 的话，记得将本文的 =super()= 替换为 =suepr(Class, self)= 。
+
+如果还有其他不兼容 Python 2 的情况，我会在文中注明的。
+
+* 单继承
+在单继承中 =super= 就像大家所想的那样，主要是用来调用父类的方法的。
+
+#+BEGIN_EXAMPLE
+    class A:
+        def __init__(self):
+            self.n = 2
+
+        def add(self, m):
+            print('self is {0} @A.add'.format(self))
+            self.n += m
+
+
+    class B(A):
+        def __init__(self):
+            self.n = 3
+
+        def add(self, m):
+            print('self is {0} @B.add'.format(self))
+            super().add(m)
+            self.n += 3
+#+END_EXAMPLE
+
+你觉得执行下面代码后， =b.n= 的值是多少呢？
+
+#+BEGIN_EXAMPLE
+    b = B()
+    b.add(2)
+    print(b.n)
+#+END_EXAMPLE
+
+执行结果如下:
+
+#+BEGIN_EXAMPLE
+    self is <__main__.B object at 0x106c49b38> @B.add
+    self is <__main__.B object at 0x106c49b38> @A.add
+    8
+#+END_EXAMPLE
+
+这个结果说明了两个问题:
+
+- =super().add(m)= 确实调用了父类 A 的 =add= 方法。
+- =super().add(m)= 调用父类方法 =def add(self, m)= 时, 此时父类中 =self= 并不是父类的实例而是子类的实例, 所以 =super().add(m)= 之后 =self.n= 的结果是 =5= 而不是 =4= 。
+
+* 多继承
+这次我们再定义一个 =class C=，一个 =class D=:
+
+#+BEGIN_EXAMPLE
+    class C(A):
+        def __init__(self):
+            self.n = 4
+
+        def add(self, m):
+            print('self is {0} @C.add'.format(self))
+            super().add(m)
+            self.n += 4
+
+
+    class D(B, C):
+        def __init__(self):
+            self.n = 5
+
+        def add(self, m):
+            print('self is {0} @D.add'.format(self))
+            super().add(m)
+            self.n += 5
+#+END_EXAMPLE
+
+下面的代码又输出啥呢？
+
+#+BEGIN_EXAMPLE
+    d = D()
+    d.add(2)
+    print(d.n)
+#+END_EXAMPLE
+
+这次的输出如下:
+
+#+BEGIN_EXAMPLE
+    self is <__main__.D object at 0x10ce10e48> @D.add
+    self is <__main__.D object at 0x10ce10e48> @B.add
+    self is <__main__.D object at 0x10ce10e48> @C.add
+    self is <__main__.D object at 0x10ce10e48> @A.add
+    19
+#+END_EXAMPLE
+
+你说对了吗？你可能会认为上面代码的输出类似:
+
+#+BEGIN_EXAMPLE
+    self is <__main__.D object at 0x10ce10e48> @D.add
+    self is <__main__.D object at 0x10ce10e48> @B.add
+    self is <__main__.D object at 0x10ce10e48> @A.add
+    15
+#+END_EXAMPLE
+
+为什么会跟预期的不一样呢？下面我们将一起来看看 =super= 的奥秘。
+
+* super 是个类
+当我们调用 =super()= 的时候，实际上是实例化了一个 =super= 类。你没看错， =super= 是个类，既不是关键字也不是函数等其他数据结构:
+
+#+BEGIN_EXAMPLE
+    >>> class A: pass
+    ...
+    >>> s = super(A)
+    >>> type(s)
+    <class 'super'>
+    >>>
+#+END_EXAMPLE
+
+在大多数情况下， =super= 包含了两个非常重要的信息: 一个 [[id:453DDDE1-959C-47C0-A6EA-B97BFBC4A9C7][MRO]](Method Resolution Order) 列表以及 MRO 中的一个类。当以如下方式调用 =super= 时:
+
+#+BEGIN_EXAMPLE
+    super(a_type, obj)
+#+END_EXAMPLE
+
+MRO 列表指的是 =type(obj)= 的 MRO 列表, MRO 中的那个类就是 =a_type= , 同时 =isinstance(obj, a_type) == True= 。
+
+当这样调用时:
+
+#+BEGIN_EXAMPLE
+    super(type1, type2)
+#+END_EXAMPLE
+
+MRO 指的是 =type2= 的 MRO 列表, MRO 中的那个类就是 =type1= ，同时 =issubclass(type2, type1) == True= 。
+
+那么， =super()= 实际上做了啥呢？简单来说就是：提供一个 MRO 列表以及一个 MRO 中的类 =C= ， =super()= 将返回一个从 MRO 列表中 =C= 之后的类中查找方法的对象。
+
+也就是说，查找方式时不是像常规方法一样从所有的 MRO 类中查找，而是从 MRO 列表的 tail 中查找。
+
+举个栗子, 有个 MRO 列表：
+
+#+BEGIN_EXAMPLE
+    [A, B, C, D, E, object]
+#+END_EXAMPLE
+
+下面的调用:
+
+#+BEGIN_EXAMPLE
+    super(C, A).foo()
+#+END_EXAMPLE
+
+=super= 只会从 =C= 之后查找，即: 只会在 =D= 或 =E= 或 =object= 中查找 =foo= 方法。
+
+* 多继承中 super 的工作方式
+再回到前面的：
+
+#+BEGIN_EXAMPLE
+    d = D()
+    d.add(2)
+    print(d.n)
+#+END_EXAMPLE
+
+现在你可能已经有点眉目，为什么输出会是：
+
+#+BEGIN_EXAMPLE
+    self is <__main__.D object at 0x10ce10e48> @D.add
+    self is <__main__.D object at 0x10ce10e48> @B.add
+    self is <__main__.D object at 0x10ce10e48> @C.add
+    self is <__main__.D object at 0x10ce10e48> @A.add
+    19
+#+END_EXAMPLE
+
+下面我们来具体分析一下：
+- =D= 的 MRO 是: =[D, B, C, A, object]= 。可以通过 =D.mro()= (Python 2 使用 =D.__mro__= ) 来查看 =D= 的 MRO 信息）
+- 详细的代码分析如下：
+
+#+BEGIN_EXAMPLE
+    class A:
+        def __init__(self):
+            self.n = 2
+
+        def add(self, m):
+            # 第四步
+            # 来自 D.add 中的 super
+            # self == d, self.n == d.n == 5
+            print('self is {0} @A.add'.format(self))
+            self.n += m
+            # d.n == 7
+
+
+    class B(A):
+        def __init__(self):
+            self.n = 3
+
+        def add(self, m):
+            # 第二步
+            # 来自 D.add 中的 super
+            # self == d, self.n == d.n == 5
+            print('self is {0} @B.add'.format(self))
+            # 等价于 suepr(B, self).add(m)
+            # self 的 MRO 是 [D, B, C, A, object]
+            # 从 B 之后的 [C, A, object] 中查找 add 方法
+            super().add(m)
+
+            # 第六步
+            # d.n = 11
+            self.n += 3
+            # d.n = 14
+
+    class C(A):
+        def __init__(self):
+            self.n = 4
+
+        def add(self, m):
+            # 第三步
+            # 来自 B.add 中的 super
+            # self == d, self.n == d.n == 5
+            print('self is {0} @C.add'.format(self))
+            # 等价于 suepr(C, self).add(m)
+            # self 的 MRO 是 [D, B, C, A, object]
+            # 从 C 之后的 [A, object] 中查找 add 方法
+            super().add(m)
+
+            # 第五步
+            # d.n = 7
+            self.n += 4
+            # d.n = 11
+
+
+    class D(B, C):
+        def __init__(self):
+            self.n = 5
+
+        def add(self, m):
+            # 第一步
+            print('self is {0} @D.add'.format(self))
+            # 等价于 super(D, self).add(m)
+            # self 的 MRO 是 [D, B, C, A, object]
+            # 从 D 之后的 [B, C, A, object] 中查找 add 方法
+            super().add(m)
+
+            # 第七步
+            # d.n = 14
+            self.n += 5
+            # self.n = 19
+
+    d = D()
+    d.add(2)
+    print(d.n)
+#+END_EXAMPLE
+
+调用过程图如下:
+
+#+BEGIN_EXAMPLE
+    D.mro() == [D, B, C, A, object]
+    d = D()
+    d.n == 5
+    d.add(2)
+
+    class D(B, C):          class B(A):            class C(A):             class A:
+        def add(self, m):       def add(self, m):      def add(self, m):       def add(self, m):
+            super().add(m)  1.--->  super().add(m) 2.--->  super().add(m)  3.--->  self.n += m
+            self.n += 5   <------6. self.n += 3    <----5. self.n += 4     <----4. <--|
+            (14+5=19)               (11+3=14)              (7+4=11)                (5+2=7)
+#+END_EXAMPLE
+
+[[file:./static/super-没那么简单/1613833330-1445ad691a48fd450eea9051c5f7d62a.png]]
+
+现在你知道为什么 =d.add(2)= 后 =d.n= 的值是 19 了吧 ;)
+
+如果感觉上面的解释还不是很清楚的话，下面我们一起来根据 super 的功能实现一个我们自己的 Super 类，相信这样会更直观一点。
+
+* 实现一个 Super 类
+在实现这个 Super 类之前，我们先来复习一下前面说的 super 的信息：
+
+#+BEGIN_QUOTE
+  super() 实际上做了啥呢？简单来说就是：提供一个 MRO 列表以及一个 MRO 中的类 C ， super() 将返回一个从 MRO 列表中 C 之后的类中查找方法的对象。
+#+END_QUOTE
+
+根据这个信息我们可以写一个简陋版本的 =Super= 类：
+
+#+BEGIN_EXAMPLE
+    from functools import partial
+
+
+    class Super:
+        def __init__(self, sub_cls, instance):
+            # 假设 sub_cls = B, instance = D()
+            # Super(B, self).add(233)
+            mro = instance.__class__.mro()
+            # mro == [D, B, C, A, object]
+            # sub_cls is B
+            # 从 mro 中 sub_cls 后面的类中进行查找
+            # __mro_tail == [C, A, object]
+            self.__mro_tail = mro[mro.index(sub_cls)+1:]
+            self.__sub_cls = sub_cls
+            self.__instance = instance
+
+        def __getattr__(self, name):
+            # 从 mro tail 列表的各个类中查找方法
+            for cls in self.__mro_tail:
+                if not hasattr(cls, name):
+                    continue
+
+                print('call {}.{}'.format(cls, name))
+                # 获取类中定义的方法
+                attr = getattr(cls, name)
+                # 因为 d = D(); d.add(233)  等价于 D.add(d, 233)
+                # 所以返回的函数需要自动填充第一个 self 参数
+                return partial(attr, self.__instance)
+
+            raise AttributeError(name)
+#+END_EXAMPLE
+
+然后我们把上面的那个例子中的 =super= 替换为这个简陋版本的 =Super= 类，看看效果：
+
+#+BEGIN_EXAMPLE
+    class A:
+        def __init__(self):
+            self.n = 2
+
+        def add(self, m):
+            print('self is {0} @A.add'.format(self))
+            self.n += m
+
+
+    class B(A):
+        def __init__(self):
+            self.n = 3
+
+        def add(self, m):
+            print('self is {0} @B.add'.format(self))
+            Super(B, self).add(m)
+            self.n += 3
+
+
+    class C(A):
+        def __init__(self):
+            self.n = 4
+
+        def add(self, m):
+            print('self is {0} @C.add'.format(self))
+            Super(C, self).add(m)
+            self.n += 4
+
+
+    class D(B, C):
+        def __init__(self):
+            self.n = 5
+
+        def add(self, m):
+            print('self is {0} @D.add'.format(self))
+            Super(D, self).add(m)
+            self.n += 5
+
+
+    d = D()
+    d.add(2)
+    print(d.n)
+#+END_EXAMPLE
+
+修改后的例子运行结果如下:
+
+#+BEGIN_EXAMPLE
+    self is <__main__.D object at 0x10d02cf98> @D.add
+    call <class '__main__.B'>.add
+    self is <__main__.D object at 0x10d02cf98> @B.add
+    call <class '__main__.C'>.add
+    self is <__main__.D object at 0x10d02cf98> @C.add
+    call <class '__main__.A'>.add
+    self is <__main__.D object at 0x10d02cf98> @A.add
+    19
+#+END_EXAMPLE
+
+可以看到使用简陋版 =Super= 和内置的 =super= 的效果是一样的。希望这个简陋的 =Super= 类可以帮助大家初步理解 =super= 的工作方式。
+
+** 参考资料
+- [[http://sixty-north.com/blog/series/pythons-super-explained][Python's super() Explained]]
+- [[https://docs.python.org/3/library/functions.html#super][Built-in Functions --- Python 3.5.2 documentation]]
+- [[https://docs.python.org/3/reference/datamodel.html#object.__getattr__][Data model --- Python 3.7.1 documentation]]
+- [[https://docs.python.org/3/library/functools.html#functools.partial][functools --- Higher-order functions and operations on callable objects --- Python 3.7.1 documentation]]
+- [[https://fuhm.net/super-harmful/][Python's Super Considered Harmful]]
+- [[https://mozillazg.github.io/2016/11/python-mro-compute.html][Python 多继承模式下 MRO(Method Resolution Order) 的计算方式]]

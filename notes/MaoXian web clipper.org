@@ -1,0 +1,186 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/MaoXian web clipper/")); -*-
+:PROPERTIES:
+:ID:       A1DAF7A9-BBFE-464F-B571-FF13FE621934
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-07 Sun 22:53>
+#+TITLE: MaoXian web clipper
+
+* 项目 GitHub 地址
+https://github.com/mika-cn/maoxian-web-clipper/
+
+* 主页
+https://mika-cn.github.io/maoxian-web-clipper/index-zh-CN.html
+
+* 本地程序主页
+搭配这个本地程序，增强 MaoXian 功能，建议安装。
+https://mika-cn.github.io/maoxian-web-clipper/native-app/index-zh-CN.html
+
+* 配置
+** 本地程序配置
+~config.yaml~ 文件：
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+# ATTENTION: restart the browser to apply your changes.
+environment: 'production'
+data_dir: '/Users/c/Downloads/'
+# avariable handler: 'default', 'vnote_v1'
+msg_handler: 'default'
+#+END_SRC
+
+=data_dir= 字段设置了下载文件所在的文件夹。
+
+** Chrome 插件配置
+[[file:./static/MaoXian web clipper/2021-02-07_23-05-17_Setting - MaoXian.jpeg]]
+[[file:./static/MaoXian web clipper/2021-02-07_23-05-47_Setting - MaoXian 3.jpeg]]
+[[file:./static/MaoXian web clipper/2021-02-07_23-05-39_Setting - MaoXian 2.jpeg]]
+** 自定义计划
+助手设置 - 自定义计划
+
+#+BEGIN_SRC comment :results raw drawer values list :exports no-eval
+[
+  {
+    "name": "cnki",
+    "pattern": "https://kns.cnki.net/KXReader/*",
+    "pick": ".content",
+    "hide": [".tips", ".top-title", "h2", ".link", ".data", "#a_abstract", "#a_keywords", ".brief", "#a_abstractEN", "#a_keywordsEN"]
+  }
+]
+#+END_SRC
+
+
+** json 配置文件备份
+
+- Note taken on [2022-01-12 Wed 23:35] \\
+  mx-wc-backup_2022-01-12_23.32.31.json
+
+#+BEGIN_SRC comment :results raw drawer values list :exports no-eval
+{
+  "data": {
+    "assistant.custom-plan.text": "[\n  {\n    \"name\": \"cnki\",\n    \"pattern\": \"https://kns.cnki.net/KXReader/*\",\n    \"pick\": \".content\",\n    \"hide\": [\".tips\", \".top-title\", \"h2\", \".link\", \".data\", \"#a_abstract\", \"#a_keywords\", \".brief\", \"#a_abstractEN\", \"#a_keywordsEN\"]\n  }\n]",
+    "assistant.custom-plans": [
+      {
+        "name": "cnki",
+        "pattern": "https://kns.cnki.net/KXReader/*",
+        "pick": ".content",
+        "hide": [
+          ".tips",
+          ".top-title",
+          "h2",
+          ".link",
+          ".data",
+          "#a_abstract",
+          "#a_keywords",
+          ".brief",
+          "#a_abstractEN",
+          "#a_keywordsEN"
+        ]
+      }
+    ],
+    "assistant.global-plan": {
+      "name": "the global plan",
+      "disabled": true
+    },
+    "assistant.global-plan.text": "{\n  \"name\": \"the global plan\",\n  \"disabled\": true\n}",
+    "assistant.public-plan.subscription-urls": [
+      "https://mika-cn.github.io/maoxian-web-clipper/assistant/plans/default/index.json"
+    ],
+    "assistant.public-plan.subscriptions": [],
+    "config": {
+      "inputFieldSaveFormatEnabled": false,
+      "clippingFolderName": "$TITLE",
+      "handlerWizNotePlusEnabled": false,
+      "htmlCaptureObject": "saveImage",
+      "communicateWithThirdParty": false,
+      "autoRunContentScripts": false,
+      "htmlCompressCss": false,
+      "customBodyBgCssEnabled": false,
+      "backupSettingPageConfig": true,
+      "frameFileFolder": "$CLIPPING-PATH/frames",
+      "mainFileName": "$TITLE.$FORMAT",
+      "handlerBrowserEnabled": true,
+      "saveTitleFile": false,
+      "requestReferrerPolicy": "originWhenCrossOrigin",
+      "titleFileFolder": "$CLIPPING-PATH",
+      "infoFileFolder": "$CLIPPING-PATH",
+      "titleFileName": "a-title_$TITLE",
+      "mainFileFolder": "$STORAGE-PATH",
+      "assetFolder": "$CLIPPING-PATH",
+      "saveInfoFile": false,
+      "htmlCaptureCssImage": "remove",
+      "autogenerateClippingJs": false,
+      "htmlCaptureApplet": "remove",
+      "htmlCaptureIcon": "remove",
+      "autoUpdatePublicPlan": false,
+      "htmlCaptureAudio": "remove",
+      "defaultCategory": "./static",
+      "htmlCaptureEmbed": "saveImage",
+      "backupSelectionData": true,
+      "requestCacheWebFont": false,
+      "htmlCaptureWebFont": "remove",
+      "rootFolder": "mx-wc",
+      "clippingJsPath": "$STORAGE-PATH/history/clippings.js",
+      "autoInputLastCategory": true,
+      "infoFileName": "index.json",
+      "requestTimeout": 60,
+      "htmlCaptureImage": "saveAll",
+      "handlerNativeAppEnabled": true,
+      "htmlCaptureCssRules": "saveUsed",
+      "backupAssistantData": true,
+      "assistantEnabled": true,
+      "refreshHistoryHandler": "NativeApp",
+      "requestMaxTries": 3,
+      "assetFileName": "$TIME-INTSEC-$MD5URL$EXT",
+      "htmlSaveClippingInformation": false,
+      "backupHistoryPageConfig": true,
+      "htmlObjectFilter": "<images>",
+      "allowFileSchemeAccess": false,
+      "requestCacheCss": false,
+      "version": "2.6",
+      "htmlEmbedFilter": "<images>",
+      "frameFileName": "$TIME-INTSEC-$MD5URL.frame.html",
+      "saveDomainAsTag": false,
+      "offlinePageHandler": "Browser",
+      "clippingHandler": "NativeApp",
+      "htmlWebFontFilterList": "woff2|woff|otf|ttf",
+      "requestCacheSize": 80,
+      "rememberSelection": true,
+      "htmlCaptureVideo": "remove",
+      "autoRefreshHistory": false,
+      "mouseModeEnabled": false,
+      "saveFormat": "html",
+      "markdownTemplate": "\n{{content}}\n",
+      "customBodyBgCssValue": "#000000",
+      "requestCacheImage": true
+    },
+    "selectionStore.kns.cnki.net": {
+      "name": "__ROOT__",
+      "children": [
+        {
+          "name": "KXReader",
+          "children": [
+            {
+              "name": "Detail",
+              "selection": {
+                "tagName": "DIV",
+                "selector": ".content",
+                "ancestors": [
+                  "html",
+                  "body",
+                  "div#mainBody",
+                  "div.main"
+                ],
+                "deletion": {
+                  "selectors": []
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "backupAt": "2022-01-12 23:32:31"
+}
+#+END_SRC

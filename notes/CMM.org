@@ -1,0 +1,20 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/CMM/")); -*-
+:PROPERTIES:
+:ID:       44521FF8-ED70-4655-ABAE-BD1DADDDCC9D
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-11-17 Tue 15:10>
+#+TITLE: CMM
+
+CMM is divided into separate sections:
+- Title Page
+- Record of Revisions
+- Record of Temporary Revisions
+- Service Bulletin List
+- List of Effective Pages
+- Table of Contents
+- List of Illustrations
+- List of Tables
+- Introduction
+- Procedural sections and Illustrated Parts List (IPL)

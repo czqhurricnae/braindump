@@ -1,0 +1,9 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static")); -*-
+:PROPERTIES:
+:ID:       176D260F-01AE-4565-A1AD-0C2801EA2337
+:END:
+#+DATE: <2022-06-28 Tue 03:13>
+#+TITLE: 件号
+
+* 烤箱螺钉
+BACB30LU4-6

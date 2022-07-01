@@ -1,0 +1,40 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       86E0056A-2DE4-4259-A0E5-1914678AF430
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-09-05 Sat 12:28>
+#+TITLE: 两个兼容的不同类型的操作，哪个能表示更大的数就转换为哪个类型
+
+两个兼容的不同类型的操作，哪个能表示更大的数就转换为哪个类型, 因为计算机不是编译器也不是操作系统，希望能尽量大的囊括结果，防止溢出产生错误。
+
+- short + long -> long
+- int + unsigned int -> unsigned int
+
+#+BEGIN_SRC C :results output list :exports no-eval
+#include <stdio.h>
+
+int main()
+{
+    int i=-20;
+    unsigned int j=10;
+    printf("%u" ,i+j);
+    return 0;
+}
+#+END_SRC
+
+#+RESULTS:
+: - 4294967286
+
+#+BEGIN_SRC C :results output list :exports no-eval
+#include <stdio.h>
+
+int main() {
+    unsigned int i;
+    for (i=9;i>=0;i--)
+    {
+        printf("%u\n" ,i);
+    }
+    return 0;
+}
+#+END_SRC

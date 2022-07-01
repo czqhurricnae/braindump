@@ -1,0 +1,36 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 使用 combineReducers/")); -*-
+:PROPERTIES:
+:ID:       40830A94-230F-412E-9F57-980FB9CEE7A5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:50>
+#+TITLE: React 使用 combineReducers
+
+#+BEGIN_SRC javascript :results values list :exports both
+import { createStore, applyMiddleware, compose } from 'redux'
+import { thunk } from 'redux-thunk'
+import { Provider } from 'react-redux'
+
+const store = createStore(reducer, compose(
+  applyMiddleware(thunk),
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+))
+#+END_SRC
+
+#+BEGIN_SRC javascript :results values list :exports both
+import { combineReducers } from 'redux'
+import reducer1 from 'reducer1'
+import reducer2 from 'reducer2'
+
+export default const combineReducers({reducer1, reducer2})
+#+END_SRC
+
+#+BEGIN_SRC javascript :results values list :exports both
+import { connect } from react-redux
+import { logout } from './Auth.redux'
+
+@connect(
+  state=>state.auth,
+  {logout}
+)
+#+END_SRC

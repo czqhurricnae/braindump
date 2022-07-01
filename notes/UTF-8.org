@@ -1,0 +1,22 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/UTF-8/")); -*-
+:PROPERTIES:
+:ID:       0ED41343-5BB1-4598-AAB4-52B30CEE727C
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-21 Thu 08:55>
+#+TITLE: UTF-8
+
+* UTF-8 Advantages
+- Will work with traditional null terminated string functions.
+- Many web pages are coded in UTF-8.
+- XML and ]SON usually use UTF-8 and are used for transmitting data.
+- UTF-8 can encode UNICODE character without having to choose the correct "code page”.
+- Character boundaries in UTF-8 can be easily identified for scanning in either direction.
+- UTF-8 can be encoded using only bit operations.
+
+* UTF-8 Disadvantages
+- UTF-8 will be larger than some other encodings.
+- Can be double the size of some Cyrillic and Greek Encodings.
+- Can triple the size when compared to some encodings for Hindi and Thai.
+-Asian scripts like ]apanese，Chinese, and Korean require 3 bytes in UTF-8 and 2 in UTF-16

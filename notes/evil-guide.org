@@ -1,0 +1,69 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/evil-guide/")); -*-
+:PROPERTIES:
+:ID:       1DFDB9E9-74AA-423D-896F-F258DC355E4E
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-02 Fri 13:38>
+#+TITLE: evil-guide
+
+| Keys | Description                              | Vim                                                 |
+|------+------------------------------------------+-----------------------------------------------------|
+| C-p  | evil-paste-pop (normal state)            |                                                     |
+| C-p  | evil-complete-previous (insert state)    |                                                     |
+| C-p  |                                          | lines upward                                        |
+| C-n  | evil-paste-pop-next (normal state)       |                                                     |
+| C-n  | evil-complete-next (insert state)        |                                                     |
+| C-n  |                                          | lines downward                                      |
+|------+------------------------------------------+-----------------------------------------------------|
+| C-y  |                                          | scroll window [count] lines upwards in the buffer   |
+| C-y  | evil-scroll-line-up (normal state)       |                                                     |
+| C-y  | evil-copy-from-above (insert state)      |                                                     |
+| C-e  |                                          | scroll window [count] lines downwards in the buffer |
+| C-e  | evil-scroll-line-down (normal state)     |                                                     |
+| C-e  | evil-copy-from-below (insert state)      |                                                     |
+|------+------------------------------------------+-----------------------------------------------------|
+| C-w  | evil-window-map (normal state)           |                                                     |
+| C-w  | evil-delete-backward-word (insert state) |                                                     |
+| C-w  |                                          | window-commands                                     |
+| C-w  | kill-region (ivy-minibuffer-map)         |                                                     |
+|------+------------------------------------------+-----------------------------------------------------|
+| C-r  | undo-tree-redo (normal state)            |                                                     |
+| C-r  | evil-paste-from-registor (insert state)  |                                                     |
+|      | Isearch-backward (Spacemace)             |                                                     |
+
+* Keybindings in Emacs
+~evil-define-key~
+~global~set-key~
+~evil-global-set-key~
+~evil-local-set-key~
+~evil-define-minor-mode-key~
+
+都是对 ~define-key~ 的包装。
+
+* Keymap Precedence
+In emacs, there is a hierarchy of keymaps that are searched one by one until a definition for a key is found.
+Evil keymaps are found in ~emulation-mode-map-alists~ which puts them close to the top in terms of precedence.
+Here is the order of precedence of evil’s keymaps as explained in evil-core.el:
+
+- Intercept keymaps - evil-make-intercept-map
+- Local state keymap - evil-local-set-key
+- Minor-mode keymaps - evil-define-minor-mode-key
+- Auxiliary keymaps - evil-define-key
+- Overriding keymaps - evil-make-overriding-map
+- Global state keymap - evil-global-set-key
+
+* evil-state
+evil-insert-state-map
+evil-emacs-state-map
+evil-normal-state-map
+evil-visual-state-map
+evil-motion-state-map
+evil-operator-state-map
+evil-outer-text-objects-map
+evil-inner-text-objects-map
+evil-replace-state-map
+
+* Normal state 和 Visual state 的区别
+Similarly, if you look up the operator keys such as d, you will find that they are only explicitly bound in normal state and not in visual state.
+Generally, keys are only bound directly in visual state when they have a different behavior from the normal state keys (e.g. u and U for altering case).

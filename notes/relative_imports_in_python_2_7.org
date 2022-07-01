@@ -1,0 +1,633 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       FD6557F5-4F75-463F-935F-36282438B881
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-07-28 Tue 00:13>
+#+TITLE: relative_imports_in_python_2_7
+
+* Question
+I've been here:
+
+- [[http://www.python.org/dev/peps/pep-0328/]]
+- [[http://docs.python.org/2/tutorial/modules.html#packages]]
+- [[https://stackoverflow.com/questions/10059002/python-packages-relative-imports][Python packages: relative imports]]
+- [[https://stackoverflow.com/questions/9123062/python-relative-import-example-code-does-not-work][python relative import example code does not work]]
+- [[https://stackoverflow.com/questions/8299270/ultimate-answer-to-relative-python-imports][Relative imports in python 2.5]]
+- [[https://stackoverflow.com/questions/4175534/relative-imports-in-python][Relative imports in Python]]
+- [[https://stackoverflow.com/questions/13233931/python-disabling-relative-import?rq=1][Python:Disabling relative import]]
+
+and plenty of URLs that I did not copy, some on SO, some on other sites, back when I thought I'd have the solution quickly.
+
+The forever-recurring question is this:
+
+With *Windows 7*, *32-bit* *Python 2.7.3*, how do I solve this =Attempted relative import in non-package= message?
+
+I built an exact replica of the package on pep-0328:
+
+#+BEGIN_SRC python
+    package/
+        __init__.py
+        subpackage1/
+            __init__.py
+            moduleX.py
+            moduleY.py
+        subpackage2/
+            __init__.py
+            moduleZ.py
+        moduleA.py
+#+END_SRC
+
+The imports were done from the console.
+
+I did make functions named spam and eggs in their appropriate modules.
+Naturally, it didn't work. The answer is apparently in the 4th URL I listed, but it's all alumni to me.
+There was this response on one of the URLs I visited:
+
+#+BEGIN_QUOTE
+  Relative imports use a module's name attribute to determine that
+  module's position in the package hierarchy. If the module's name does
+  not contain any package information (e.g. it is set to 'main') then
+  relative imports are resolved as if the module were a top level
+  module, regardless of where the module is actually located on the file
+  system.
+#+END_QUOTE
+
+The above response looks promising, but it's all hieroglyphs to me. So
+my question, how do I make Python not return to me "Attempted relative
+import in non-package"? has an answer that involves -m, supposedly.
+
+Can somebody please tell me why Python gives that error message, what it
+means by "non-package", why and how do you define a 'package', and /the
+precise answer put in terms easy enough for a kindergartener to
+understand/.
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1-2
+  :END:
+
+*Script vs. Module*
+
+Here's an explanation. The short version is that there is a big difference between directly running a Python file,
+and importing that file from somewhere else.
+*Just knowing what directory a file is in does not determine what package Python thinks it is in.* That depends,
+additionally, on how you load the file into Python (by running or by importing).
+
+There are two ways to load a Python file: as the top-level script, or as a module.
+*A file is loaded as the top-level script if you execute it directly*,
+for instance by typing =python myfile.py= on the command line.
+It is loaded as a module if you do =python -m myfile=, or if it is
+loaded when an =import= statement is encountered inside some other file.
+There can only be one top-level script at a time; the top-level script
+is the Python file you ran to start things off.
+
+*Naming*
+
+When a file is loaded, it is given a name (which is stored in its
+=__name__= attribute). If it was loaded as the top-level script, its
+name is =__main__=. If it was loaded as a module, its name is the
+filename, preceded by the names of any packages/subpackages of which it
+is a part, separated by dots.
+
+So for instance in your example:
+
+#+BEGIN_SRC python
+    package/
+        __init__.py
+        subpackage1/
+            __init__.py
+            moduleX.py
+        moduleA.py
+#+END_SRC
+
+if you imported =moduleX= (note: /imported/, not directly executed), its
+name would be =package.subpackage1.moduleX=. If you imported =moduleA=,
+its name would be =package.moduleA=. However, if you /directly run/
+=moduleX= from the command line, its name will instead be =__main__=,
+and if you directly run =moduleA= from the command line, its name will
+be =__main__=. When a module is run as the top-level script, it loses
+its normal name and its name is instead =__main__=.
+
+*Accessing a module NOT through its containing package*
+
+There is an additional wrinkle: the module's name depends on whether it
+was imported "directly" from the directory it is in, or imported via a
+package. This only makes a difference if you run Python in a directory,
+and try to import a file in that same directory (or a subdirectory of
+it). For instance, if you start the Python interpreter in the directory
+=package/subpackage1= and then do =import moduleX=, the name of
+=moduleX= will just be =moduleX=, and not =package.subpackage1.moduleX=.
+This is because Python adds the current directory to its search path on
+startup; if it finds the to-be-imported module in the current directory,
+it will not know that that directory is part of a package, and the
+package information will not become part of the module's name.
+
+A special case is if you run the interpreter interactively (e.g., just
+type =python= and start entering Python code on the fly). In this case
+the name of that interactive session is =__main__=.
+
+Now here is the crucial thing for your error message: *if a module's
+name has no dots, it is not considered to be part of a package*. It
+doesn't matter where the file actually is on disk. All that matters is
+what its name is, and its name depends on how you loaded it.
+
+Now look at the quote you included in your question:
+
+#+BEGIN_QUOTE
+  Relative imports use a module's name attribute to determine that
+  module's position in the package hierarchy. If the module's name does
+  not contain any package information (e.g. it is set to 'main') then
+  relative imports are resolved as if the module were a top level
+  module, regardless of where the module is actually located on the file
+  system.
+#+END_QUOTE
+
+*Relative imports...*
+
+Relative imports use the module's /name/ to determine where it is in a
+package. When you use a relative import like =from .. import foo=, the
+dots indicate to step up some number of levels in the package hierarchy.
+For instance, if your current module's name is
+=package.subpackage1.moduleX=, then =..moduleA= would mean
+=package.moduleA=. For a =from .. import= to work, the module's name
+must have at least as many dots as there are in the =import= statement.
+
+*... are only relative in a package*
+
+However, if your module's name is =__main__=, it is not considered to be
+in a package. Its name has no dots, and therefore you cannot use
+=from .. import= statements inside it. If you try to do so, you will get
+the "relative-import in non-package" error.
+
+*Scripts can't import relative*
+
+What you probably did is you tried to run =moduleX= or the like from the
+command line. When you did this, its name was set to =__main__=, which
+means that relative imports within it will fail, because its name does
+not reveal that it is in a package. Note that this will also happen if
+you run Python from the same directory where a module is, and then try
+to import that module, because, as described above, Python will find the
+module in the current directory "too early" without realizing it is part
+of a package.
+
+Also remember that when you run the interactive interpreter, the "name"
+of that interactive session is always =__main__=. Thus *you cannot do
+relative imports directly from an interactive session*. Relative imports
+are only for use within module files.
+
+*Two solutions:*
+
+1. If you really do want to run =moduleX= directly, but you still want
+   it to be considered part of a package, you can do
+   =python -m package.subpackage1.moduleX=. The =-m= tells Python to
+   load it as a module, not as the top-level script.
+
+2. Or perhaps you don't actually want to /run/ =moduleX=, you just want
+   to run some other script, say =myfile.py=, that /uses/ functions
+   inside =moduleX=. If that is the case, put =myfile.py= /somewhere
+   else/ -- /not/ inside the =package= directory -- and run it. If
+   inside =myfile.py= you do things like
+   =from package.moduleA import spam=, it will work fine.
+
+*Notes*
+
+- For either of these solutions, the package directory (=package= in
+  your example) must be accessible from the Python module search path
+  (=sys.path=). If it is not, you will not be able to use anything in
+  the package reliably at all.
+
+- Since Python 2.6, the module's "name" for package-resolution purposes
+  is determined not just by its =__name__= attributes but also by the
+  =__package__= attribute. That's why I'm avoiding using the explicit
+  symbol =__name__= to refer to the module's "name". Since Python 2.6 a
+  module's "name" is effectively =__package__ + '.' + __name__=, or just
+  =__name__= if =__package__= is =None=.)
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2-2
+  :END:
+
+This is really a problem within python. *The origin of confusion is that
+people mistakenly takes the relative import as path relative which is
+not.*
+
+For example when you write in /faa.py/:
+
+#+BEGIN_SRC python
+    from .. import foo
+#+END_SRC
+
+This has a meaning only if /faa.py/ was /identified and loaded/ by
+python, during execution, as a part of a package. In that case,the
+*module's name* for /faa.py/ would be for example
+/some_packagename.faa/. If the file was loaded just because it is in the
+current directory, when python is run, then its name would not refer to
+any package and eventually relative import would fail.
+
+A simple solution to refer modules in the current directory, is to use
+this:
+
+#+BEGIN_SRC python
+    if __package__ is None or __package__ == '':
+        # uses current directory visibility
+        import foo
+    else:
+        # uses current package visibility
+        from . import foo
+#+END_SRC
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3-2
+  :END:
+
+Here's a general recipe, modified to fit as an example, that I am using
+right now for dealing with Python libraries written as packages, that
+contain interdependent files, where I want to be able to test parts of
+them piecemeal. Let's call this =lib.foo= and say that it needs access
+to =lib.fileA= for functions =f1= and =f2=, and =lib.fileB= for class
+=Class3=.
+
+I have included a few =print= calls to help illustrate how this works.
+In practice you would want to remove them (and maybe also the
+=from __future__ import print_function= line).
+
+This particular example is too simple to show when we really need to
+insert an entry into =sys.path=. (See
+[[https://stackoverflow.com/a/38455936/1256452][Lars' answer]] for a
+case where we /do/ need it, when we have two or more levels of package
+directories, and then we use
+=os.path.dirname(os.path.dirname(__file__))=---but it doesn't really
+/hurt/ here either.) It's also safe enough to do this without the
+=if _i in sys.path= test. However, if each imported file inserts the
+same path---for instance, if both =fileA= and =fileB= want to import
+utilities from the package---this clutters up =sys.path= with the same
+path many times, so it's nice to have the =if _i not in sys.path= in the
+boilerplate.
+
+#+BEGIN_SRC python
+    from __future__ import print_function # only when showing how this works
+
+    if __package__:
+        print('Package named {!r}; __name__ is {!r}'.format(__package__, __name__))
+        from .fileA import f1, f2
+        from .fileB import Class3
+    else:
+        print('Not a package; __name__ is {!r}'.format(__name__))
+        # these next steps should be used only with care and if needed
+        # (remove the sys.path manipulation for simple cases!)
+        import os, sys
+        _i = os.path.dirname(os.path.abspath(__file__))
+        if _i not in sys.path:
+            print('inserting {!r} into sys.path'.format(_i))
+            sys.path.insert(0, _i)
+        else:
+            print('{!r} is already in sys.path'.format(_i))
+        del _i # clean up global name space
+
+        from fileA import f1, f2
+        from fileB import Class3
+
+    ... all the code as usual ...
+
+    if __name__ == '__main__':
+        import doctest, sys
+        ret = doctest.testmod()
+        sys.exit(0 if ret.failed == 0 else 1)
+#+END_SRC
+
+The idea here is this (and note that these all function the same across
+python2.7 and python 3.x):
+
+1. If run as =import lib= or =from lib import foo= as a regular package
+   import from ordinary code, =__package= is =lib= and =__name__= is
+   =lib.foo=. We take the first code path, importing from =.fileA=, etc.
+
+2. If run as =python lib/foo.py=, =__package__= will be None and
+   =__name__= will be =__main__=.
+
+   We take the second code path. The =lib= directory will already be in
+   =sys.path= so there is no need to add it. We import from =fileA=,
+   etc.
+
+3. If run within the =lib= directory as =python foo.py=, the behavior is
+   the same as for case 2.
+
+4. If run within the =lib= directory as =python -m foo=, the behavior is
+   similar to cases 2 and 3. However, the path to the =lib= directory is
+   not in =sys.path=, so we add it before importing. The same applies if
+   we run Python and then =import foo=.
+
+   (Since =.= /is/ in =sys.path=, we don't really need to add the
+   absolute version of the path here. This is where a deeper package
+   nesting structure, where we want to do
+   =from ..otherlib.fileC import ...=, makes a difference. If you're not
+   doing this, you can omit all the =sys.path= manipulation entirely.)
+
+Notes
+There is still a quirk. If you run this whole thing from outside:
+
+#+BEGIN_SRC python
+    $ python2 lib.foo
+#+END_SRC
+
+or:
+
+#+BEGIN_SRC python
+    $ python3 lib.foo
+#+END_SRC
+
+the behavior depends on the contents of =lib/__init__.py=. If that
+exists and /is empty/, all is well:
+
+#+BEGIN_SRC python
+    Package named 'lib'; __name__ is '__main__'
+#+END_SRC
+
+But if =lib/__init__.py= /itself/ imports =routine= so that it can
+export =routine.name= directly as =lib.name=, you get:
+
+#+BEGIN_SRC python
+    $ python2 lib.foo
+    Package named 'lib'; __name__ is 'lib.foo'
+    Package named 'lib'; __name__ is '__main__'
+#+END_SRC
+
+That is, the module gets imported twice, once via the package and then
+again as =__main__= so that it runs your =main= code. Python 3.6 and
+later warn about this:
+
+#+BEGIN_SRC python
+    $ python3 lib.routine
+    Package named 'lib'; __name__ is 'lib.foo'
+    [...]/runpy.py:125: RuntimeWarning: 'lib.foo' found in sys.modules
+    after import of package 'lib', but prior to execution of 'lib.foo';
+    this may result in unpredictable behaviour
+      warn(RuntimeWarning(msg))
+    Package named 'lib'; __name__ is '__main__'
+#+END_SRC
+
+The /warning/ is new, but the warned-about behavior is not. It is part
+of what some call
+[[http://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html#the-double-import-trap][the double import trap]]. (For additional details see
+[[https://bugs.python.org/issue27487][issue 27487]].) Nick Coghlan says:
+
+#+BEGIN_QUOTE
+  This next trap exists in all current versions of Python, including
+  3.3, and can be summed up in the following general guideline: "Never
+  add a package directory, or any directory inside a package, directly
+  to the Python path".
+#+END_QUOTE
+
+Note that while we violate that rule here, we do it /only/ when the file
+being loaded is /not/ being loaded as part of a package, and our
+modification is specifically designed to allow us to access other files
+in that package. (And, as I noted, we probably shouldn't do this at all
+for single level packages.) If we wanted to be extra-clean, we might
+rewrite this as, e.g.:
+
+#+BEGIN_SRC python
+        import os, sys
+        _i = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _i not in sys.path:
+            sys.path.insert(0, _i)
+        else:
+            _i = None
+
+        from sub.fileA import f1, f2
+        from sub.fileB import Class3
+
+        if _i:
+            sys.path.remove(_i)
+        del _i
+#+END_SRC
+
+That is, we modify =sys.path= long enough to achieve our imports, then
+put it back the way it was (deleting one copy of =_i= if and only if we
+added one copy of =_i=).
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4-2
+  :END:
+
+So after carping about this along with many others, I came across a note
+posted by [[https://stackoverflow.com/users/5420054/dorian-b][Dorian B]]
+in this
+[[https://stackoverflow.com/questions/5286210/is-there-a-way-to-access-parent-modules-in-python][article]]
+that solved the specific problem I was having where I would develop
+modules and classes for use with a web service, but I also want to be
+able to test them as I'm coding, using the debugger facilities in
+PyCharm. To run tests in a self-contained class, I would include the
+following at the end of my class file:
+
+#+BEGIN_SRC python
+    if __name__ == '__main__':
+       # run test code here...
+#+END_SRC
+
+but if I wanted to import other classes or modules in the same folder, I
+would then have to change all my import statements from relative
+notation to local references (i.e. remove the dot (.)) But after reading
+Dorian's suggestion, I tried his 'one-liner' and it worked! I can now
+test in PyCharm and leave my test code in place when I use the class in
+another class under test, or when I use it in my web service!
+
+#+BEGIN_SRC python
+    # import any site-lib modules first, then...
+    import sys
+    parent_module = sys.modules['.'.join(__name__.split('.')[:-1]) or '__main__']
+    if __name__ == '__main__' or parent_module.__name__ == '__main__':
+        from codex import Codex # these are in same folder as module under test!
+        from dblogger import DbLogger
+    else:
+        from .codex import Codex
+        from .dblogger import DbLogger
+#+END_SRC
+
+The if statement checks to see if we're running this module as *main* or
+if it's being used in another module that's being tested as *main*.
+Perhaps this is obvious, but I offer this note here in case anyone else
+frustrated by the relative import issues above can make use of it.
+
+* Answer5
+  :PROPERTIES:
+  :CUSTOM_ID: answer5-2
+  :END:
+
+Here is one solution that I would not recommend, but might be useful in
+some situations where modules were simply not generated:
+
+#+BEGIN_SRC python
+    import os
+    import sys
+    parent_dir_name = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    sys.path.append(parent_dir_name + "/your_dir")
+    import your_script
+    your_script.a_function()
+#+END_SRC
+
+* Answer6
+  :PROPERTIES:
+  :CUSTOM_ID: answer6-2
+  :END:
+
+I had a similar problem where I didn't want to change the Python module
+search path and needed to load a module relatively /from a script/ (in
+spite of /"scripts can't import relative with all"/ as BrenBarn
+explained nicely above).
+
+So I used the following hack. Unfortunately, it relies on the =imp=
+module that became deprecated since version 3.4 to be dropped in favour
+of =importlib=. (Is this possible with =importlib=, too? I don't know.)
+Still, the hack works for now.
+
+Example for accessing members of =moduleX= in =subpackage1= from a
+script residing in the =subpackage2= folder:
+
+#+BEGIN_SRC python
+    #!/usr/bin/env python3
+
+    import inspect
+    import imp
+    import os
+
+    def get_script_dir(follow_symlinks=True):
+        """
+        Return directory of code defining this very function.
+        Should work from a module as well as from a script.
+        """
+        script_path = inspect.getabsfile(get_script_dir)
+        if follow_symlinks:
+            script_path = os.path.realpath(script_path)
+        return os.path.dirname(script_path)
+
+    # loading the module (hack, relying on deprecated imp-module)
+    PARENT_PATH = os.path.dirname(get_script_dir())
+    (x_file, x_path, x_desc) = imp.find_module('moduleX', [PARENT_PATH+'/'+'subpackage1'])
+    module_x = imp.load_module('subpackage1.moduleX', x_file, x_path, x_desc)
+
+    # importing a function and a value
+    function = module_x.my_function
+    VALUE = module_x.MY_CONST
+#+END_SRC
+
+A cleaner approach seems to be to modify the sys.path used for loading
+modules as mentioned by Federico.
+
+#+BEGIN_SRC python
+    #!/usr/bin/env python3
+
+    if __name__ == '__main__' and __package__ is None:
+        from os import sys, path
+        # __file__ should be defined in this case
+        PARENT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
+       sys.path.append(PARENT_DIR)
+    from subpackage1.moduleX import *
+#+END_SRC
+
+* Answer7
+  :PROPERTIES:
+  :CUSTOM_ID: answer7-2
+  :END:
+
+=__name__= changes depending on whether the code in question is run in
+the global namespace or as part of an imported module.
+
+If the code is not running in the global space, =__name__= will be the
+name of the module. If it is running in global namespace -- for example,
+if you type it into a console, or run the module as a script using
+=python.exe yourscriptnamehere.py= then =__name__= becomes ="__main__"=.
+
+You'll see a lot of python code with =if __name__ == '__main__'= is used
+to test whether the code is being run from the global namespace -- that
+allows you to have a module that doubles as a script.
+
+Did you try to do these imports from the console?
+
+* Answer8
+  :PROPERTIES:
+  :CUSTOM_ID: answer8-2
+  :END:
+
+@BrenBarn's answer says it all, but if you're like me it might take a
+while to understand. Here's my case and how @BrenBarn's answer applies
+to it, perhaps it will help you.
+
+*The case*
+
+#+BEGIN_SRC python
+    package/
+        __init__.py
+        subpackage1/
+            __init__.py
+            moduleX.py
+        moduleA.py
+#+END_SRC
+
+Using our familiar example, and add to it that moduleX.py has a relative
+import to ..moduleA. Given that I tried writing a test script in the
+subpackage1 directory that imported moduleX, but then got the dreaded
+error described by the OP.
+
+*Solution*
+
+Move test script to the same level as package and import
+package.subpackage1.moduleX
+
+*Explanation*
+
+As explained, relative imports are made relative to the current name.
+When my test script imports moduleX from the same directory, then module
+name inside moduleX is moduleX. When it encounters a relative import the
+interpreter can't back up the package hierarchy because it's already at
+the top
+
+When I import moduleX from above, then name inside moduleX is
+package.subpackage1.moduleX and the relative import can be found
+
+* Answer9
+  :PROPERTIES:
+  :CUSTOM_ID: answer9-2
+  :END:
+
+#+BEGIN_QUOTE
+  Relative imports use a module's name attribute to determine that
+  module's position in the package hierarchy. If the module's name does
+  not contain any package information (e.g. it is set to 'main') then
+  relative imports are resolved as if the module were a top level
+  module, regardless of where the module is actually located on the file
+  system.
+#+END_QUOTE
+
+Wrote a little python package to PyPi that might help viewers of this
+question. The package acts as workaround if one wishes to be able to run
+python files containing imports containing upper level packages from
+within a package / project without being directly in the importing
+file's directory.[[https://pypi.org/project/import-anywhere/]]
+
+* Answer10
+  :PROPERTIES:
+  :CUSTOM_ID: answer10-2
+  :END:
+
+To make Python not return to me "Attempted relative import in
+non-package". package/
+
+*init*.py subpackage1/ *init*.py moduleX.py moduleY.py subpackage2/
+*init*.py moduleZ.py moduleA.py
+
+This error occurs only if you are applying relative import to the parent
+file. For example parent file already returns *main* after you code
+"print(*name*)" in moduleA.py .so THIS file is already *main* it cannot
+return any parent package further on. relative imports are required in
+files of packages subpackage1 and subpackage2 you can use ".." to refer
+to the parent directory or module .But parent is if already top level
+package it cannot go further above that parent directory(package). Such
+files where you are applying relative importing to parents can only work
+with the application of absolute import. If you will use ABSOLUTE IMPORT
+IN PARENT PACKAGE NO ERROR will come as python knows who is at the top
+level of package even if your file is in subpackages because of the
+concept of PYTHON PATH which defines the top level of the project

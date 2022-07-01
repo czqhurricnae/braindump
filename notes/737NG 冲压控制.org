@@ -1,0 +1,29 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 冲压控制/")); -*-
+:PROPERTIES:
+:ID:       636526E8-0F5A-460F-B20C-F51AED827EF6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-06-30 Wed 22:41>
+#+TITLE: 737NG 冲压控制
+* 冲压空气控制器 + 冲压进气作动器构型
+** Flight(Flaps Not Up)
+ [[file:./static/737NG 冲压控制/2021-06-30_22-41-10_screenshot2.png]]
+
+** Flight(Flaps UP)
+ [[file:./static/737NG 冲压控制/2021-06-30_23-08-55_screenshot.png]]
+
+* PZTC + 冲压进气作动器构型
+** Ground
+[[file:./static/737NG 冲压控制/2021-07-01_18-50-08_screenshot.jpg]]
+
+** Flight(Flaps Up)
+[[file:./static/737NG 冲压控制/2021-07-01_18-41-09_screenshot.jpg]]
+
+** Flight(Flaps Not UP)
+[[file:./static/737NG 冲压控制/2021-06-30_23-48-34_2021-06-30_23-31-56_screenshot.jpg]]
+
+* PZTC + SRADA 构型
+[[file:./static/737NG 冲压控制/2021-06-30_23-52-58_screenshot.jpg]]
+
+* FPTC + SRADA 构型
+[[file:./static/737NG 冲压控制/2021-06-30_23-53-34_screenshot.jpg]]

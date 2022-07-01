@@ -1,0 +1,202 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 天空内饰厕所灯不亮/")); -*-
+:PROPERTIES:
+:ID:       CA7C6B27-051D-4A67-9936-88DFA4EB976B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-27 Dec 15:28>
+#+TITLE: 737NG 天空内饰厕所灯不亮
+
+* 背景
+
+新构型天空内饰前卫生间，镜灯测试位时开关正常，灯是好的，关门锁定后就是不亮，门锁也拆开看了里面好了，电路也是通着的，这个怎么解，手册没查到？
+
+[[file:./static/737NG 天空内饰厕所灯不亮/7156.jpeg]]
+
+所以抽空分析一下安装了 B/E 公司厕所的天空内饰 737NG 飞机，厕所灯光不亮的问题。
+
+其实类似的分析在机务在线上早有人发过了：
+
+[[http://mp.weixin.qq.com/s?__biz=MzA3MjAwMzkzNQ==&mid=2650288225&idx=8&sn=e5163c284cd8f8ebddd6b3e9b65b1401&chksm=87286851b05fe147b4577d16e4f0a53156b7ea86f04921c93192a608641eae951f1c031ba346&scene=21#wechat_redirect][B/E卫生间灯光分析]]
+
+2020 年 12 月 15 日，天空内饰的 737-800 飞机，石家庄短停左后厕所灯不亮，依据 MEL38-02B 办理时间不足故障保留。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/13805.jpeg]]
+
+18 日值班看这个保留转为了无航材，故障件给的是 S22 开关：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/56794.jpeg]]
+
+其实如果稍微看一下这个电路图，就知道不可能是 S22 开关的问题，最可能的是 R24 继电器的问题。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/16973.jpeg]]
+
+今天再看了一下这个保留，发现果然确认为 R24 继电器故障，又继续转为了无航材保留。
+
+* 问题分析
+
+询问了下石家庄当天办保留的人员，当时的故障现象是只有镜灯上部亮一小截，其他灯都不亮，锁闭厕所门后也不亮：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/48431.jpeg]]
+
+照片是我自己模拟的前厕所，LAV A
+
+[[file:./static/737NG 天空内饰厕所灯不亮/23460.jpeg]]
+
+参考 SSM 33-26-31：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/24658.jpeg]]
+
+天空内饰 737NG 飞机厕所灯为 LED 的，分为 BLUE WASH LIGHT、OVERHEAD LIGHT、MIRROR LIGHT ASSEMBLY，具体如下：
+
+** 蓝色染色灯：
+- L20 BLUE WASH LIGHT（仅前厕所 LAV A 有）
+
+- L21 BLUE WASH LIGHT
+
+** 顶灯：
+- L23 OVERHEAD LIGHT（仅两个后厕所 LAV D 和 LAV E 有）
+
+** 镜灯组件：
+- L22 MIRROR LIGHT
+
+- L25 AUXLIARY LIGHT
+
+实际如下图：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/30737.jpeg]]
+
+前厕所，LAV A
+
+[[file:./static/737NG 天空内饰厕所灯不亮/32095.jpeg]]
+
+后厕所，LAV D&E
+
+下面简单分析下灯的控制原理。
+
+首先是电源：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/34907.jpeg]]
+
+[[file:./static/737NG 天空内饰厕所灯不亮/35293.jpeg]]
+
+如图所示，红色是电源线，绿色是地线，可以看出蓝色染色灯、顶灯、镜灯的电源是插钉是共用的，来自于 115V
+AC GND SVC BUS 1，跳开关 P18-3 E14。
+
+** R24 继电器：
+在厕所内部受 R24 UTILITY SHUT OFF RELAY 继电器控制，R24 吸合，灯就得电。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/38670.jpeg]]
+
+而 R24 继电器吸合受 115 VAC WATER HEATER
+PWR 控制。*如果航后放完水后，严格按 AMM 操作，拨出厕所水加热跳开关，R24 继电器失去吸合，这几个厕所灯就会熄灭，就是这个原因。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/39364.jpeg]]
+
+** R22 继电器
+另外还有 R22 SERVICE
+RELAY，这个继电器吸合后会旁通掉 R24 继电器，使电源通过其吸合触点 A2-A1 供到厕所灯上。
+
+R22 继电器受厕所门开关 S21 和 SERVICE LIGHTS SWITCH
+S22 控制。S22 是一个三位开关，ON/AUTO/OFF，正常在中间 AUTO 位置。
+
+当厕所门未锁闭时，此时，如果我们把 S22 放到 ON 位：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/42825.jpeg]]
+
+R22 继电器会吸合，R22 吸合后，其 A2-A1 导通，可以旁通 R24 继电器，此时如果拨出厕所水加热跳开关，厕所灯还能亮。另外，由于 C2-C1 导通，此时，将 S22 开关放回 AUTO，R22 继电器还是会保持吸合。将 S22 放到 OFF 位可使 R22 断电断开。
+
+R22 吸合后，将厕所门锁闭，S21 接通后，由于 R22 的 B1-B2 接通，也能使 R22 保持吸合状态。并且此时 R22 不受 S22 开关控制。
+
+R22 吸合后，也会使 R23 通电吸合。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/43685.jpeg]]
+
+* R23 继电器
+LAV OCCUPIED RELAY R23，从名字也能 R23 继电器控制的厕所占用信号。
+
+除 R22 继电器吸合后，会使 R23 通电吸合外，厕所门开关 S21 闭合后，也会使 R23 吸合。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/46337.jpeg]]
+
+R23 吸合后，提供接地 TOKEN 信号（SIGNAL GROUND TOKEN SINGAL IN）给顶灯和镜灯，从而使其点亮。
+
+另外，R23 吸合后，其 A1-A2 触点导通，提供接地，使厕所外部的占用灯点亮。
+
+顺便也看看 L25 AUXLIARY
+LIGHT 吧，这个灯容易被忽略，因为其位于镜灯上部特别小的一截：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/48431.jpeg]]
+
+其电源来源参考 SSM 33-27-11：P18-3 A8 跳开关，正常就是亮的，没有开关控制。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/49675.jpeg]]
+
+[[file:./static/737NG 天空内饰厕所灯不亮/50083.jpeg]]
+
+* 维护提示
+当遇到天空内饰厕所灯不亮时，利用 SERVICE LIGHTS SWITCHS 22 可以很容易判断故障。S22 开关位于镜子后面。
+
+比如此案例中，将 S22 放到 ON 位，如果厕所灯能亮，就说明灯的上游电源和下游线路部分都没有问题，故障原因是 R24 继电器没有吸合。最可能原因是：
+
+- R24 继电器
+
+- 无厕所水加热器电源
+[[file:./static/737NG 天空内饰厕所灯不亮/54764.jpeg]]
+
+厕所水加热器电源可以通过水加热器是否工作来判断。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/56794.jpeg]]
+
+另外个人建议：碰到天空内饰厕所灯不亮时，如果将 S22 开关放到 ON 位后，厕所灯能亮，可以不用按 MEL 办理保留锁闭厕所，开缺陷卡控制就行，唯一影响就是厕所外面的占用灯会一直亮。
+
+[[file:./static/737NG 天空内饰厕所灯不亮/58400.jpeg]]
+
+
+关于件号，可以参考 WDM，再反查 IPC：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/59746.jpeg]]
+
+先在 SSM/WDM 33-26-31 上找到厕所的设备号，比如左后厕所 LAV D 是 Y7，设备号就是 Y007：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/61161.jpeg]]
+
+R24 继电器就是 Y007R24，可以得到件号是 M83536-11-002L：
+
+[[file:./static/737NG 天空内饰厕所灯不亮/62518.jpeg]]
+
+* 附：
+** A B737-700 captain reports the MEL does not address lavatory mirror lights.
+Inbound flight crew requested maintenance on arrival; but failed to write up the item.
+They informed me as they were leaving; that maintenance was coming to the aircraft to repair a light.
+When maintenance arrived they informed me that both the aft lavatory occupied sign and aft lavatory mirror light were inoperative.
+They placed the occupied light on a maintenance note. They MEL'ed the mirror light in the aft lavatory.
+They informed me of their action just prior to push back.
+After reviewing MEL 33-2 cabin lighting; I advised ZZZ1 maintenance along with ZZZ2 maintenance that MEL 33-2 makes no reference to lavatory lighting at all.
+ZZZ1 maintenance told me that the lavatory lighting issues fall under MEL 33-2 (cabin lighting).
+I again informed him as to my disagreement with lavatory lighting being released under MEL 33-2 due to the fact the MEL 33-2 makes no reference to lavatory lighting.
+ZZZ1 maintenance told me that is the way we have been doing it over 20 yrs captain.
+Now; do you want to cancel a flight just for a lavatory light? That is the only relief we have under the MEL.
+I told him that I would research this issue with others in the company and call him back.
+He wanted an answer there and now.
+I called dispatch; after consulting with dispatch and reviewing the MEL.
+The dispatcher wanted to release the aircraft with the aft lavatory locked out (inoperative).
+But ZZZ1 maintenance would not hear of it.
+They told him to take the aircraft as is under MEL 33-2.
+Unable to contact my chief pilot; the dispatch supervisor called me to inform me that he saw no problem with releasing the aircraft under MEL 33-2;
+and that lavatory lights did not represent a safety issue.
+At this point; I was getting nowhere with either ZZZ1 maintenance or dispatch.
+Lavatory lighting did not represent a safety issue; and further discussions with either maintenance or the dispatch supervisor would not have accomplished any further reasonable or useful information.
+I informed the first flight attendant as to the status of the aft lavatory; and to try to minimize its use.
+Having exhausted all possible avenues at this point in time;
+a decision was made between the dispatcher and I to continue the flight as safety was not a concern;
+and to take this matter up with ZZZ1 maintenance at a later time.
+Later I called my chief pilot and informed him as to what had taken place.
+To correct this disagreement in the future; a change to the master MEL making clear reference to lavatory lighting either under MEL 33-2 or any other under an additional MEL would more than correct any disagreement between maintenance and flight crews.
+Inbound flight crew to complete log entries maintenance to stop using the term 'we have been doing it for ___ yrs that way.
+This type comment does not make it correct nor useful!
+Correct the MEL to reflect lavatory lighting issues either under MEL 33-2 or under another MEL that directly concerns lavatory items.
+
+这是一个机组的报告信息（NASA ASRS），当时是一架 737-700 厕所，后厕所占用信号和镜灯不工作，机务 MEL 33-2，机组觉得 MEL 33-2 不适用这种情况。
+
+另外参考 737NG-FTD-25-17001，厕所厂家 B/E 也发布了相应修改线路的 SB 和新构型水加热器，以避免出现此种情况。
+但是我看了下，飞机的 SSM 里并没有区别，还是会 R24 继电器还是会受到厕所水加热器电源的影响。

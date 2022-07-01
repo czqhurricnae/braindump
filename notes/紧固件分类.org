@@ -1,0 +1,26 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/紧固件分类/")); -*-
+:PROPERTIES:
+:ID:       68D6D768-A32C-45CA-9936-DF69CA00A468
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-20 Tue 15:57>
+#+TITLE: 紧固件分类
+#+FILETAGS: :SRM_51_40_01:
+
+SRM 51-40-01 介绍波音公司核准使用的紧固件的通用数据和紧固件松动检查程序的数据。
+
+紧固件分永久性紧固件和可拆卸紧固件两种。
+
+* 永久性紧固件
+使用在平时维护不需要拆卸的装配。
+永久紧固件一般不能再利用，一些六角驱动螺栓拆除后还可以使用，
+但需要检查确认没有损伤。
+属于永久性紧固件的有 Solid rivets，Lockbolts，Hex-drive bolts，Radius lead-in bolts，Blind rivets，Blind bolts，Honeycomb sandwich panel inserts。
+
+[[file:./static/紧固件分类/2021-04-20_15-58-38_1613306464-b8878cabd7ff35c5b3c4ef83c9192588.jpg]]
+
+* 可拆卸紧固件
+一般使用在平时维护需要拆卸或可拆卸的装配。
+属于可拆卸紧固件的有 Bolts，Screws，Set-screws，Nuts，Nutplates，Threaded inserts，Washers，Pins。
+
+[[file:./static/紧固件分类/2021-04-20_15-58-54_1613306464-e781d5153ca6b80497c8e8c256e05d8a.jpg]]

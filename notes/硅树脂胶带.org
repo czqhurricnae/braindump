@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/硅树脂胶带/")); -*-
+:PROPERTIES:
+:ID:       02DB0730-454B-4291-B2E6-49B5D77D53ED
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:52>
+#+TITLE: 硅树脂胶带
+
+ASTMD 5486
+SGK 5-05

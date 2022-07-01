@@ -1,0 +1,80 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 面向切面编程")); -*-
+:PROPERTIES:
+:ID:       9CFF70F2-DA5B-4FF1-95E2-7A4085603283
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-17 Sat 19:06>
+#+TITLE: Python 面向切面编程
+
+* AOP
+ 在运行时，动态地将代码切入到指定类的方法，指定位置的编程成为面向切面编程。
+
+* 切面和切入点
+ 如果要为不同的类实现相同的功能，将相同的代码提取出来，放到一个切片中，这些相同的代码称为切面。
+ 切入到哪些类，类的哪些方法的点称为切入点。
+
+ 为每个类方法记录日志。
+** 使用装饰器
+
+  #+BEGIN_SRC python :results raw drawer values list :exports no-eval
+   def trace(func):
+       def callfunc(self, *args, **kwargs):
+           debug_log = open('debug_log.txt', 'a')
+           debug_log.write('Calling %s: %s, %s\n' % (func.__name__, args, kwargs))
+           result = func(self, *args, **kwargs)
+           debug_log.write('%s returned %s\n' %(func.__name__, result))
+           debug_log.close()
+           return result
+       return callfunc
+
+   def logcls(cls):
+       for k, v in cls.items():
+           if k.startswith('__'):
+               continue
+           if not callable(v):
+               continue
+           setattr(cls, k, trace(v))
+        return cls
+
+   @logcls
+   class Foo(object):
+       num = 0
+
+       def spam(self):
+           Foo.num += 1
+           return Foo.num
+   #+END_SRC
+
+** 使用元类
+  使用元类检查收集或更改类定义的内容，包括类属性，类方法，描述符等。
+
+  #+BEGIN_SRC python :results raw drawer values list :exports no-eval
+   def trace(func):
+       def callfunc(self, *args, **kwargs):
+           debug_log = open('debug_log.txt', 'a')
+           debug_log.write('Calling %s: %s, %s\n' % (func.__name__, args, kwargs))
+           result = func(self, *args, **kwargs)
+           debug_log.write('%s returned %s\n' % (func.__name__, result))
+           debug_log.close()
+           return result
+
+       return callfunc
+
+   class LogMeta(type):
+       def __new__(cls, name, bases, dct):
+           for k, v in dct.items():
+               if k.startswith('__'):
+                   continue
+               if not callable(v):
+                   continue
+               setattr(dct, k, trace(v))
+           return type(cls, name, bases, dct)
+
+   class Foo(object):
+       __metaclass__ = LogMeta
+
+       def spam(self):
+           Foo.num += 1
+           return Foo.num
+   #+END_SRC

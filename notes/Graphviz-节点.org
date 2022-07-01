@@ -1,0 +1,202 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Graphviz-节点")); -*-
+:PROPERTIES:
+:ID:       7D3A7185-EE16-454E-8B5C-417D8E78FE17
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-15 Thu 23:04>
+#+TITLE: Graphviz-节点
+
+节点的定义：
+
+#+BEGIN_QUOTE
+节点标识符[节点属性]
+#+END_QUOTE
+
+当想让节点的形状完全由类 HTML 的标签设置时，一般设置属性 ~width=0，height=0，margin=0~ 。
+
+* shape 属性
+ 三种类钉的形状：
+ - 多边形 polygon
+ - 记录形状 record
+ - 用户定义 user-defined
+
+ 基于记录 record 的形状在很大程度上已经被类似 HTML 的标签所取代，即可以考虑使用 ~shape=none, margin=0~ 和类 HTML 标签，而不是使用 ~shape=record~ 。
+
+** 多边形
+  所有的多边形的属性值与形状如下，其中 rect/rectangle 与 box 是同义词，none 与 plaintext 是同义词。
+
+  [[file:./static/Graphviz-节点/2020-10-15_23-14-41_screenshot.jpg]]
+
+  当想让节点的形状完全由类 HTML 的标签设置时，一般设置属性 ~width=0, height=0, margin=0~ 。
+
+*** record-based 的形状
+   基于 record 的形状，是指节点的属性为 record 或者 Mrecord 的节点，其节点的表现形式由 label 属性决定。
+   record 与 Mrecord 的区别在于 Mrecord 的外围是圆角。
+   label 属性的语法结构如下：
+   - 不同的字段使用|隔开。
+   - 字段的 portname 使用 <...> 尖括号括起来。
+   - 在{...}中的内容，在水平和垂直布局之间翻转，取决于 graph 的 rankdir 属性：
+     - 1）若 graph[rankdir=TB]，则整体图片垂直布局，{...}中的内容垂直布局。
+     - 2）若 graph[rankdir=LR]，则整体图片水平布局，{...}中的内容水平布局。
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/record.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph structs {
+     node[shape=record];
+     graph[rankdir=TB];
+
+     struct1[label="<f0> left|<f1> mid&#92; dle|<f2> right"];
+     struct2[label="<f0> one|<f1> two"];
+     struct3[label="hello&#92;nworld|{b|{c|<here> d|e}|f}|g|h"];
+     struct1:f1 -> struct2:f0;
+     struct1:f2 -> struct3:here;
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/record.png]]
+
+   修改 graph 属性为 LR，则整体水平布局。
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/record-LR.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph structs {
+     node[shape=record];
+     graph[rankdir=LR];
+
+     struct1[label="<f0> left|<f1> mid&#92; dle|<f2> right"];
+     struct2[label="<f0> one|<f1> two"];
+     struct3[label="hello&#92;nworld|{b|{c|<here> d|e}|f}|g|h"];
+     struct1:f1 -> struct2:f0;
+     struct1:f2 -> struct3:here;
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/record-LR.png]]
+
+*** 用户定制
+   用户定制图形有几种方式：
+   - 通过[[https://graphviz.gitlab.io/doc/info/shapes.html#html][类HTML]]的 label 使用 IMG 属性加载用户定制的图像
+
+   #+BEGIN_SRC dot :exports no-eval
+   digraph structs {
+     node [shape=plaintext];
+
+     struct1 [label=<<TABLE>
+              <TR><TD><IMG SRC="eqn.png"/></TD></TR>
+              <TR><TD>caption</TD></TR>
+              </TABLE>>];
+   }
+   #+END_SRC
+
+   - 如果使用的是 SVG（-Tsvg），或者 postScript（-Tps， -Tps2）或者光栅格式（-Tgif, -Tpng, 或者-Tjpg）,可以通过指定图像文件名加载图片，例如：
+
+   #+BEGIN_SRC dot :exports no-eval
+   graph pic_test {
+     your_pic[shape=none, label="", imagepath="D:\\cloud_sync\\vnote_book\\效率工具", image="test.png"];
+   }
+   #+END_SRC
+
+   关于 image 的路径，参考[[https://graphviz.org/doc/info/command.html#d:GV_FILE_PATH][环境变量的设置]]。
+
+* label 属性
+ 设置节点的文本显示，若节点没有设置 label 属性，则文本显示节点的标识符。
+
+ #+BEGIN_SRC dot :file ./static/Graphviz-节点/label.png :cmdline -Kdot -Tpng :exports no-eval
+ graph lebel_demo {
+   node1;
+   node2[label="文本显示"];
+ }
+ #+END_SRC
+
+ #+RESULTS:
+ [[file:./static/Graphviz-节点/label.png]]
+
+* style 属性
+ style 属性用于修改节点的外观，当前，支持 8 种类型的 style：filled, invisible, diagonals, rounded. dashed, dotted, solid, bold。
+
+ - filled：此值指示应填充节点的内部。使用的颜色是 fillcolor 定义的，若 fillcolor 属性未定义，则使用 color 属性的颜色。对于未填充的节点，节点内部对当前图形或簇背景色的任何颜色都是透明的。请注意，点形状始终是填充的。
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/filled.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph G {
+     rankdir=LR;
+     node[shape=box, color=blue];
+     node1[style=filled];
+     node2[style=filled, fillcolor=red];
+
+     node0 -> node1 -> node2;
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/filled.png]]
+
+ - invisible : 不可见，设置此样式会导致节点根本不显示。请注意，节点仍用于布局图形。
+ - diagonals: 斜线 ，“斜线”样式会导致在节点多边形的顶点附近绘制小斜线。
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/diagonals.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph G {
+     rankdir=LR;
+     node[shape=box, color=blue];
+
+     node0[style=diagonals];
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/diagonals.png]]
+
+ - rounded ：圆形的，使节点的边变得圆滑，可以作用在 record 形状上。
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/rounded.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph R {
+     rankdir=LR;
+     node[style=rounded];
+     node1[shape=box];
+     node2[fillcolor=yellow, style="rounded, filled", shape=diamond];
+     node3[shape=record, label="{a|b|c}"];
+
+     node1 -> node2 -> node3;
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/rounded.png]]
+
+ - dashed ：使节点的边变为虚线。
+ - dotted ：使节点的边变为点线。
+ - solid ：使节点的边变为直线，默认属性。
+ - bold : 使节点的边线加粗。
+
+* port 属性
+ 节点的 port 属性是指节点连接另一个节点的线条端点位置，端口的位置有 8 种，分别为节点的东、南、西、北、东南、东北、西南、西北，属性的值分别为 e, s, w, n, se, ne, sw, nw。
+ 有两种类型的 port 属性:
+ - 一种使指定源节点的端点位置，使用 tailport 属性，如下脚本指定 a 节点的端点位置为东：
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/tailport.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph G {
+     a -> b[tailport=e];
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/tailport.png]]
+
+ - 一种指定目的节点的端点位置，使用:pos 语法，如下脚本指定 b 节点的端点位置为西：
+
+   #+BEGIN_SRC dot :file ./static/Graphviz-节点/tailport.png :cmdline -Kdot -Tpng :exports no-eval
+   digraph G {
+     a -> b:w;
+   }
+   #+END_SRC
+
+   #+RESULTS:
+   [[file:./static/Graphviz-节点/tailport.png]]
+
+ 也可以通过上述语法指定 record 形状的域字段（如 f1）的端点位置：
+
+ #+BEGIN_SRC dot :exports no-eval
+ digraph G {
+   a -> b:f1:w;
+ }
+ #+END_SRC

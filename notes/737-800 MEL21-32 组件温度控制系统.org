@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737-800 MEL21-32 组件温度控制系统/")); -*-
+:PROPERTIES:
+:ID:       10AF1E26-3DD2-4E73-BE97-BDA9B1707CB7
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-30 Tue 22:30>
+#+TITLE: 737-800 MEL21-32 组件温度控制系统
+
+如果一个制冷组件的主用和备用控制核心（本侧和另一侧的 P/ZTC）都发生了故障（失效），那么这一侧的 PACK 灯、MASTER CAUTION 和 AIR COND 系统指示灯将自动燃亮并不可复位，此时的组件将在无控制源的情况下继续工作直至超温保护触发关闭上游的流量控制和关断活门。
+放行的标准是每一侧制冷组件的控制源中（主用或备用）至少要保证一个是工作正常的，即 2 个制冷组件都能受控于任一个控制源：或者一个 P/ZTC 内的主用或者备用控制，或者一个 P/ZTC 内的主用和另一个 P/ZTC 内的备用控制，因此，放行的所需数量是 2。

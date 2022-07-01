@@ -1,0 +1,73 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Flask-restful/")); -*-
+:PROPERTIES:
+:ID:       5DA07DA2-1059-4608-B696-5F407D4FE064
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 14:02>
+#+TITLE: Flask-restful
+
+#+BEGIN_SRC python :results values list :exports both
+parser.add_argument('project_id', type=int, help='Project ID.')
+#+END_SRC
+
+则可以通过 ~args.get~ 取得数据.
+
+#+BEGIN_SRC python :results values list :exports both
+args = parser.parse_args()
+project_id = args.get('project_id')
+#+END_SRC
+
+#+RESULTS:
+:
+
+** 前端使用后端不支持的请求方法
+前端可以使用 ~GET~ 或 ~POST~ 方法进行访问, 具体要看请求的后端 ~API~ 是否有与请求方法相对应的响应函数.
+例如 ~segmentations~ 接口没有响应 ~GET~ 请求的函数, 则出现如下提示:
+
+#+BEGIN_SRC python :results values list :exports both
+class SegmentationsAPI(Resource):
+    def post(self):
+        args = parser.parse_args()
+        model = args.get('model', '')
+        if not (model):
+            return []
+        else:
+            seg_list = jieba.cut(sentence=model)
+            return [seg for seg in seg_list]
+#+END_SRC
+
+#+RESULTS:
+:
+
+#+DOWNLOADED: screenshot @ 2019-11-29 12:18:56
+[[file:./static/Flask-restful/前端使用后端不支持的请求方法.jpg]]
+
+** 前端请求时使用的数据不合法
+若是请求数据不符合 ~type~ 的格式的话, 就会返回 ~help~ 写明的字段.
+
+#+DOWNLOADED: screenshot @ 2019-11-26 21:35:22
+[[file:./static/Flask-restful/前端请求时使用的数据不合法.jpg]]
+
+** 若是写明 ~required=True~ 那么前端请求数据时所有字段都必须满足
+这时就算写明 ~default~ 字段也没有效果.
+
+#+BEGIN_SRC python :results values list :exports both
+parser.add_argument(u'approved',
+                    dest=u'approved',
+                    default=u'否',
+                    help=u'The user\'s type')
+#+END_SRC
+
+~default~ 和 ~require=True~ 不能共用:
+
+#+BEGIN_SRC python :results values list :exports both
+parser.add_argument(u'approved',
+                    dest=u'approved',
+                    required=True,
+                    default=u'否',
+                    help=u'The user\'s type')
+#+END_SRC
+
+#+DOWNLOADED: screenshot @ 2019-12-03 12:58:57
+[[file:./static/Flask-restful/require 关键字声明请求数据时所有字段都必须满足.jpg]]
+

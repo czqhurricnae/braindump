@@ -1,0 +1,124 @@
+:PROPERTIES:
+:ID:       77BF231F-A4E0-4502-9C56-70FBCC65F495
+:END:
+
+#+DATE: <2021-02-08 Mon 23:13>
+#+TITLE: Difference_between_diode_Zener_Diode_and_Schottky_Diode
+
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-cd4d658c5752215c62c43f4c4559f7fe.png]]
+
+A diode is a passive device which allows the flow of current in one direction only.
+But since there are so many types of a diode,
+how to differentiate between them and most importantly which one to use according to its requirement in our circuit.
+
+So in this post, we are going to see the basic difference between three most widely used diodes: rectifier（整流二极管）, Schottky（肖特基二极管）, and Zener（齐纳二极管） diode and when to use one.
+
+Watch this video for quick reference:
+
+[[video:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/Difference_between_diode_Zener_Diode_and_Schottky_Diode.mp4]]
+
+Before jumping to its type or “Difference between diode, Zener diode, and Schottky Diode”, let's see some basic specifications of a diode first:
+1. (Vf): indicates fwd voltage drop when current flows from p to n terminal.
+2. (If): is the maximum fwd current a diode can handle
+3. (Vr): is the reverse break down voltage when current flows from n to p terminal
+4. (Ir): The amount of current that flows when a diode is reverse biased
+5. (Reverse recovery time):
+When a diode is switched off suddenly, the fwd current flowing through the diode takes a small amount of time to die down and this time is called Reverse Recovery Time.
+
+#+CAPTION: Specifications of a diode
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-bf2cb775aff5bbd6227398a00ff995db.png]]
+
+* Difference between diode, Zener diode, and Schottky Diode:
+Now let's study diode's type one by one:
+
+** Rectifier Diode:
+- A rectifier diode is the simplest p-n junction diode, used mostly for rectification purposes in a half bridge and full bridge rectifier.
+  And that's because of its high break down voltage, typically of the order of 200 to 1000 volts which is obvious.
+
+- The forward break down voltage (Vf) of a rectifier diode is between .7 to .9 volt.
+
+#+CAPTION: Rectifier Diode
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-09fb208046388f403a16626ddff0738a.png]]
+
+- As an example, let's say you want to design a bridge rectifier for your ac to dc converter project.
+  For this bridge rectifier, diode of 1N4 rectifier series is an optimum choice.
+
+#+CAPTION: Bridge Rectifier Circuit
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-3ec3ae51d4d4e44041ba23c7309b85bb.png]]
+
+*** Schottky（肖特基二极管） Diode
+- Unlike a rectifier diode, junction of Schottky diode is between n-type semiconductor to a metal plate.
+
+- Schottky diode, also known as barrier diode is mainly used in low voltage circuits because fwd voltage drop of Schottky diode(Vf)
+is less than a rectifier diode typically in the range of .25 to .5 v.
+
+#+CAPTION: Schottky diode
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-79f0ec0a72dcf4ca1c6121e1d65fe0ac.png]]
+
+- Also e- are the majority charge carriers on both sides of the junction, thus it is a unipolar device.
+
+- It is mostly used in high-frequency applications like in an SMPS. And that's because of less temperature rise and high switching speed pertaining to its small recovery time.
+
+#+CAPTION: Schottky diode in an SMPS
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-5a9f84cb2a8f4d983e86f2f3977ec39a.png]]
+
+RECOVERY TIME:
+When a diode is switched off suddenly, the fwd current flowing through
+the diode takes a small amount of time to die down and this time is
+called Reverse Recovery Time. compare to a normal diode reverse recovery
+time of Schottky diode is much smaller, making it suitable to be used in
+fast switching circuits.
+
+- One disadvantage of Schottky diode is its low breakdown voltage ( 20v
+  to 40v ) making it unsuitable for a rectifier circuit.
+
+#+CAPTION: Disadvantage of Schottky diode
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-06fa33ceaae335064b2d2f3823a47a89.png]]
+
+- As an example, let's say we are designing a buck converter like we did
+  in one of the project videos:
+  “[[https://www.youtube.com/watch?v=L5oeY53pE0E][Buck converter using Arduino]]“. Since Mosfet in this circuit is switching with a very high
+  frequency, diode you need in this circuit should have high switching
+  speed. Thus Schottky diode is an optimum choice.
+
+*** Zener Diode:
+- Zener diode is made up of p-n junction but heavily doped compared to a
+  normal diode. As a result, it can undergo break down without being
+  damaged.
+- And Due to this property only, zener is used as a voltage regulator in
+  electronic circuits.
+- In fact, zener diodes are never used for rectification purposes.
+
+#+CAPTION: Heavily doped Zener Diod
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-bb184323cc19e108c159602cc7579a17.png]]
+
+#+CAPTION: What is a Voltage Regulator
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-bc3bafd326340c08fcdb884cb9016393.png]]
+
+- Here's a circuit in which zener diode is used to prevent the MOSFET
+  gate from destruction by clipping off voltage. Breakdown voltage of
+  this zener is 5.1 v. Now if accidentally voltage at the gate of MOSFET
+  exceeds 5v, diode breakdown and all current flows through the diode to
+  ground. Thus preventing the MOSFET from any kind of destruction.
+
+#+CAPTION: voltage regulator circuit 1
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-77fdfdc1712a900cdf70052c73cba825.png]]
+
+- Here's another circuit in which two diodes are connected facing each
+  other's p terminal. If an A.C signal is given at input, one diode
+  clips of voltage in positive half whereas other in negative half and
+  thus we get voltage under the specified limit in both half cycle of
+  a.c.
+
+#+CAPTION: voltage regulator circuit 2
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-3e21b926e9d3517a91c78b3adf8df4a2.png]]
+
+- As an example, I used 5V zener in the project “[[https://www.etechnophiles.com/make-digital-voltmeter-arduino/][Digital voltmeter using Arduino]]” in which it is connected across the
+  capacitor to prevent Arduino in case voltage at its analog pin exceeds 5v.
+
+#+CAPTION: Digital Voltmeter using Arduino
+[[file:./static/Difference_between_diode_Zener_Diode_and_Schottky_Diode/1612797104-3e939604a18ecfc369b70c009593304b.png]]
+
+And with that being said, now you know all the basic difference between
+diode, Zener diode, and Schottky Diode and when to use a rectifier,
+schottky or zener diode according to application.

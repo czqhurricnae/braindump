@@ -1,0 +1,17 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/暗亮入口灯/")); -*-
+:PROPERTIES:
+:ID:       474E8F6A-6796-4ABD-B07A-59E3C63E4B8C
+:END:
+#+LATEX_CLASS: my-article
+#+FILETAGS: :DIM_ENTRY_LIGHT:
+#+DATE: <2021-01-10 Sun 15:09>
+#+TITLE: 暗亮入口灯
+
+- 只要 GRD PWR 插头连接到飞机上 ，DIM Entry light 就点亮。
+- 暗亮入口灯位于前后厨房区域。
+- 属于 LED 照明灯。
+只要地面勤务电源插头插上，销钉 E 导通，热电瓶汇流条就会给该灯提供 28V DC 电源。
+注意：如果地面电源插头未拔出，GND PWR 和电瓶电门都在 OFF 位。
+暗亮入口灯依旧能从热电瓶汇流条获取电源，这样会消耗飞机主电瓶电量。
+
+因此，如果飞机断电，外接电源连接者，应该注意把外接电源脱开，防止出现电瓶电压低的情况出现。

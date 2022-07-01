@@ -1,0 +1,12 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/调幅和调频/")); -*-
+:PROPERTIES:
+:ID:       FEFD11C5-0177-4F30-A1F3-1DCFD724671B
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-19 Tue 08:32>
+#+TITLE: 调幅和调频
+
+[[file:./static/调幅和调频/2021-01-19_08-37-16_IMG_3620.JPG]]
+
+[[file:./static/调幅和调频/2021-01-19_08-37-21_IMG_3621.JPG]]

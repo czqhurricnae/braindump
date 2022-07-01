@@ -1,0 +1,91 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-datetime.timedelta/")); -*-
+:PROPERTIES:
+:ID:       DB4F7B59-22BF-4E06-8F95-B99BB53AE714
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-07-08 Wed 20:06>
+#+TITLE: Python-datetime.timedelta
+
+* datetime 模块中 datetime 类的 timedelta 方法使用时接受的参数
+
+  #+BEGIN_SRC python :results values :exports no-eval :session d
+  from datetime import timedelta
+
+
+  d = timedelta(microseconds=-1)
+  d.hours
+  #+END_SRC
+
+  #+RESULTS:
+  : Traceback (most recent call last):
+  : File "<stdin>", line 9, in <module>
+  : File "<stdin>", line 7, in main
+  : AttributeError: 'datetime.timedelta' object has no attribute 'hours'
+
+  #+BEGIN_SRC python :results values :exports no-eval :session d
+  d.days
+  #+END_SRC
+
+  #+RESULTS:
+  : -1
+
+  #+BEGIN_SRC python :results values :exports no-eval :session d
+  d.seconds
+  #+END_SRC
+
+  #+RESULTS:
+  : 86399
+
+  #+BEGIN_SRC python :results values :exports no-eval :session d
+  d.minutes
+  #+END_SRC
+
+  #+RESULTS:
+  : Traceback (most recent call last):
+  : File "<stdin>", line 1, in <module>
+  : AttributeError: 'datetime.timedelta' object has no attribute 'minutes'
+
+  #+BEGIN_SRC python :results values :exports no-eval :session d
+  print d.milliseconds
+  #+END_SRC
+
+  #+RESULTS:
+  Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  AttributeError: 'datetime.timedelta' object has no attribute 'milliseconds'
+
+  #+BEGIN_SRC python :results values :exports no-eval :session d
+  d.microseconds
+  #+END_SRC
+
+  #+RESULTS:
+  : 999999
+
+#+BEGIN_QUOTE
+Only days, seconds and microseconds are stored internally.
+Arguments are converted to those units:
+- A millisecond is converted to 1000 microseconds.
+- A minute is converted to 60 seconds.
+- An hour is converted to 3600 seconds.
+- A week is converted to 7 days.
+and days, seconds and microseconds are then normalized so that the representation is unique, with
+- 0 <= microseconds < 1000000
+- 0 <= seconds < 3600*24 (the number of seconds in one day)
+- -999999999 <= days <= 999999999
+#+END_QUOTE
+
+* 计算今天与某一天为起始点之间的天数
+
+  #+BEGIN_SRC python :results output :exports no-eval
+  from datetime import date
+
+
+  today = date.today()
+  ordinal_17 = date(year=2017, month=1, day=1)
+  date_delta = today - ordinal_17
+  print date_delta.days
+  #+END_SRC
+
+  #+RESULTS:
+  : 1369

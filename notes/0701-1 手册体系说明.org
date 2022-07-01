@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/0701-1 手册体系说明/")); -*-
+:PROPERTIES:
+:ID:       8460A66C-1800-4D40-8018-8E622A51BDE2
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-17 Thu 22:12>
+#+TITLE: 0701-1 手册体系说明
+
+#+ROAM_KEY:
+
+
+[[x-devonthink-item:28D43456-5AC6-4DAE-B3A3-5FE792E99E77][MF/0701-1-手册体系说明]]

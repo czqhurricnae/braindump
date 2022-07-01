@@ -1,0 +1,49 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 飞机面板/")); -*-
+:PROPERTIES:
+:ID:       5E9ECA37-55DB-45E3-B317-DED313254C42
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-09-17 Thu 20:06>
+#+TITLE: 737NG 飞机面板
+
+[[file:./static/737NG 飞机面板/2020-09-17_20-06-37_screenshot.jpg]]
+
+* P2 中央仪表板和 P9 前电子面板
+[[file:./static/737NG 飞机面板/2021-01-14_16-17-19_screenshot.jpg]]
+** RMI
+[[file:./static/737NG 飞机面板/2021-01-19_16-05-15_screenshot.jpg]]
+
+* P1/P3 主仪表板
+[[file:./static/737NG 飞机面板/2021-01-17_21-06-05_screenshot.jpg]]
+
+* P5 前顶板
+[[file:./static/737NG 飞机面板/2021-01-17_20-43-46_screenshot.jpg]]
+
+* P5 后顶板
+[[file:./static/737NG 飞机面板/2021-01-17_20-55-53_screenshot.jpg]]
+
+* P7 板
+[[file:./static/737NG 飞机面板/2021-01-14_16-12-48_screenshot.jpg]]
+
+* P8 后电子面板
+[[file:./static/737NG 飞机面板/2021-01-15_15-52-35_screenshot.jpg]]
+** RCP 控制面板
+
+[[file:./static/737NG 飞机面板/2021-03-24_22-54-34_screenshot.jpg]]
+OFF-SIDE TUNING LIGHT：选择非本边无线电系统时，两个 OFF-SIDE 灯点亮：本边 RCP OFF-SIDE 灯和被选一边 RCP 的 OFF-SIDE 灯点亮。
+VHF COMM TEST SWITCH：测试电门用于对 VHF 收发机执行置信度检测，按压时会使得收发机内部的噪声控制电路中断工作，此时可以听到静噪。
+
+[[file:./static/737NG 飞机面板/2021-03-24_23-02-46_screenshot.jpg]]
+
+** 气象雷达控制面板
+[[file:./static/737NG 飞机面板/2021-01-19_09-40-41_screenshot.jpg]]
+
+** ADF 控制面板
+[[file:./static/737NG 飞机面板/2021-01-24_08-46-31_screenshot.jpg]]
+
+* P10 中央操纵台
+[[file:./static/737NG 飞机面板/2021-01-15_13-46-11_screenshot.jpg]]
+
+* E6 架
+[[file:./static/737NG 飞机面板/2021-01-15_11-52-13_screenshot.jpg]]

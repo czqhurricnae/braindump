@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/紧固件的力矩/")); -*-
+:PROPERTIES:
+:ID:       90C86989-F63D-4833-8435-EA155D096800
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-20 Tue 16:03>
+#+TITLE: 紧固件的力矩
+#+FILETAGS: :SRM_51_40_05:AMM_20_50_11:
+
+SRM 51-40-05
+AMM 20-50-11

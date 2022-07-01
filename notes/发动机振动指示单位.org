@@ -1,0 +1,17 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/发动机振动指示单位/")); -*-
+:PROPERTIES:
+:ID:       0D7C9371-BE24-4180-BEC8-64B41E19287C
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-23 Fri 20:29>
+#+TITLE: 发动机振动指示单位
+
+飞机上的振动指示使用的是 UNIT。
+
+而实际振动测量的单位是 IPS 和 Mils。
+IPS：inch per second。
+Mils：千分之一英寸。
+
+它们之间的换算关系如下：
+
+[[file:./static/发动机振动指示单位/2021-07-23_20-30-25_screenshot.jpg]]

@@ -1,0 +1,14 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/DDPG/")); -*-
+:PROPERTIES:
+:ID:       D00702C1-F08B-440B-AB40-FAEAB3ABD1DF
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-31 Sun 09:44>
+#+TITLE: DDPG
+
+放行偏差指南（Dispatch Deviations Guide，DDG）也叫做放行偏差程序指南（Dispatch Deviations Procedures Guide，DDPG），是航空器制造厂商提供的技术文件，其主要内容包括：
+- 主最低设备清单（Main Minimum Equipment List，MMEL）
+- 外形缺损清单（Configuration Deviation List，CDL）
+
+DDPG（放行偏差指南）是航空器生产厂家依据 MMEL 制定的参考性文件，针对 MMEL 的要求对维 修程序、操作程序及注意事项等进行了细化。

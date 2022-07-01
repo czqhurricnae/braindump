@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/厕所马桶不能冲刷/")); -*-
+:PROPERTIES:
+:ID:       C0BE68D2-1E40-441D-BCFC-0C5DF7E7A76A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 17:53>
+#+TITLE: 厕所马桶不能冲刷
+
+MEL2-38-02B
+

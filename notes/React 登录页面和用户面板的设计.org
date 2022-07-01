@@ -1,0 +1,21 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/React 登录页面和用户面板的设计/")); -*-
+:PROPERTIES:
+:ID:       B2B21A49-A095-46F1-BD52-E84F8B174B9D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:52>
+#+TITLE: React 登录页面和用户面板的设计
+
+在 index.jsx 入口文件:
+
+#+BEGIN_SRC javascript :results values list :exports both
+ReactDom.render(
+  <BrowserRouter>
+    <Switch>
+      <Route path='/login' component={Login} />
+      <Route path='/dashboard' component={Dashboard} />
+      <Redirect to='/dashboard' />
+    </Switch>
+  </BrowserRouter>
+)
+#+END_SRC

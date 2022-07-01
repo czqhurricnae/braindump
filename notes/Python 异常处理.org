@@ -1,0 +1,335 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 异常处理/")); -*-
+:PROPERTIES:
+:ID:       96E04300-DFEB-426D-90E3-B9E79B8A7173
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-30 Tue 02:20>
+#+TITLE: Python 异常处理
+
+异常处理在任何一门编程语言里都是值得关注的一个话题，良好的异常处理可以让你的程序更加健壮，清晰的错误信息更能帮助你快速修复问题。
+在 Python 中，和部分高级语言一样，使用了 =try/except/finally= 语句块来处理异常，果你有其他编程语言的经验，实践起来并不难。
+
+* 什么是异常？
+** 错误
+从软件方面来说，错误是语法或是逻辑上的。错误是语法或是逻辑上的。
+语法错误指示软件的结构上有错误，导致不能被解释器解释或编译器无法编译。这些些错误必须在程序执行前纠正。
+当程序的语法正确后，剩下的就是逻辑错误了。逻辑错误可能是由于不完整或是不合法的输入所致，
+在其它情况下，还可能是逻辑无法生成，计算，或是输出结果需要的过程无法执行。这些错误通常分别被称为域错误和范围错误。
+当 python 检测到一个错误时，python 解释器就会指出当前流已经无法继续执行下去。这时候就出现了异常。
+
+** 异常
+对异常的最好描述是：它是因为程序出现了错误而在正常控制流以外采取的行为。
+这个行为又分为两个阶段：首先是引起异常发生的错误，然后是检测（和采取可能的措施）阶段。
+第一阶段是在发生了一个异常条件（有时候也叫做例外的条件）后发生的。
+只要检测到错误并且意识到异常条件，解释器就会发生一个异常。引发也可以叫做触发，抛出或者生成。解释器通过它通知当前控制流有错误发生。
+python 也允许程序员自己引发异常。无论是 python 解释器还是程序员引发的，异常就是错误发生的信号。
+当前流将被打断，用来处理这个错误并采取相应的操作。这就是第二阶段。
+对于异常的处理发生在第二阶段，异常引发后，可以调用很多不同的操作。
+可以是忽略错误（记录错误但不采取任何措施，采取补救措施后终止程序。）或是减轻问题的影响后设法继续执行程序。
+所有的这些操作都代表一种继续，或是控制的分支。关键是程序员在错误发生时可以指示程序如何执行。
+python 用异常对象（exception object）来表示异常。遇到错误后，会引发异常。
+如果异常对象并未被处理或捕捉，程序就会用所谓的回溯（traceback）终止执行。
+
+** 异常处理
+捕捉异常可以使用 ~try/except~ 语句.
+~try/except~ 语句用来检测 try 语句块中的错误, 从而让 except 语句捕获异常信息并处理.
+如果你不想在异常发生时结束你的程序, 只需在 try 里捕获它.
+
+*** 语法:
+以下为简单的 ~try....except...else~ 的语法:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+try:
+    <语句>        # 运行别的代码
+except <名字>:
+    <语句>        # 如果在try 部份引发了'name'异常
+except <名字>,<数据>:
+    <语句>        # 如果引发了'name'异常, 获得附加的数据
+else:
+    <语句>        # 如果没有异常发生
+#+END_SRC
+
+Try 的工作原理是, 当开始一个 try 语句后, python 就在当前程序的上下文中作标记, 这样当异常出现时就可以回到这里, try 子句先执行, 接下来会发生什么依赖于执行时是否出现异常.
+
+1 如果当 try 后的语句执行时发生异常, python 就跳回到 try 并执行第一个匹配该异常的 except 子句, 异常处理完毕, 控制流就通过整个 try 语句 (除非在处理异常时又引发新的异常).
+2 如果在 try 后的语句里发生了异常, 却没有匹配的 except 子句, 异常将被递交到上层的 try, 或者到程序的最上层 (这样将结束程序, 并打印缺省的出错信息).
+3 如果在 try 子句执行时没有发生异常, python 将执行 else 语句后的语句 (如果有 else 的话), 然后控制流通过整个 try 语句.
+
+*** 使用 except 而不带任何异常类型
+你可以不带任何异常类型使用 except, 如下实例:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+try:
+    正常的操作
+    ......................
+except:
+     发生异常则执行此处代码
+     ......................
+else:
+    没有异常则执行此处代码
+#+END_SRC
+
+以上方式 ~try-except~ 语句捕获所有发生的异常. 但这不是一个很好的方式, 我们不能通过该程序识别出具体的异常信息. 因为它捕获所有的异常.
+使用 except 而带多种异常类型
+你也可以使用相同的 except 语句来处理多个异常信息, 如下所示:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+try:
+    正常的操作
+    ......................
+except(Exception1[, Exception2[,...ExceptionN]]]):
+     发生以上多个异常中的一个, 执行这块代码
+     ......................
+else:
+     如果没有异常执行这块代码
+#+END_SRC
+
+*** try-finally 语句
+~try-finally~ 语句无论是否发生异常都将执行最后的代码.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+try:
+    <语句>
+finally:
+    <语句>    # 退出try 时总会执行
+raise
+#+END_SRC
+
+当在 try 块中抛出一个异常, 立即执行 finally 块代码.
+finally 块中的所有语句执行后, 异常被再次触发, 并执行 except 块代码.
+参数的内容不同于异常.
+
+下面来看一个实例:
+
+#+BEGIN_SRC python
+def div(a, b):
+    try:
+        print(a / b)
+    except ZeroDivisionError:
+        print("Error: b should not be 0 !!!")
+    except Exception as e:
+        print("Unexpected Error: {}".format(e))
+    else:
+        print('Run into else only when everything goes well.')
+    finally:
+        print('Always run into finally block.')
+
+# tests
+div(2, 0)
+div(2, 'bad type')
+div(1, 2)
+#+END_SRC
+
+#+RESULTS:
+: - Error: b should not be 0 !!!
+: - Always run into finally block.
+: - Unexpected Error: unsupported operand type(s) for /: 'int' and 'str'
+: - Always run into finally block.
+: - 0
+: - Run into else only when everything goes well.
+: - Always run into finally block.
+
+#+BEGIN_SRC python :results output list :exports no-eval
+# Mutiple  exception in one line
+def div(a, b):
+    try:
+        print(a / b)
+    except (ZeroDivisionError, TypeError) as e:
+        print(e)
+
+# tests
+div(2, 0)
+div(2, 'bad type')
+#+END_SRC
+
+#+RESULTS:
+: - integer division or modulo by zero
+: - unsupported operand type(s) for /: 'int' and 'str'
+
+#+BEGIN_SRC python :results values list :exports no-eval
+# Except block is optional when there is finally
+try:
+    open(database)
+finally:
+    close(database)
+#+END_SRC
+
+#+BEGIN_SRC python :results values list :exports no-eval
+# catch all errors and log it
+try:
+    do_work()
+except:
+    # get detail from logging module
+    logging.exception('Exception caught!')
+#+END_SRC
+
+#+BEGIN_SRC python :results values list :exports no-eval
+# get detail from sys.exc_info() method
+error_type, error_value, trace_back = sys.exc_info()
+print(error_value)
+raise
+#+END_SRC
+
+总结如下:
+- except 语句不是必须的, finally 语句也不是必须的, 但是二者必须要有一个, 否则就没有 try 的意义了.
+- except 语句可以有多个, Python 会按 except 语句的顺序依次匹配你指定的异常, 如果异常已经处理就不会再进入后面的 except 语句.
+- except 语句可以以元组形式同时指定多个异常, 参见实例代码.
+- except 语句后面如果不指定异常类型, 则默认捕获所有异常, 你可以通过 logging 或者 sys 模块获取当前异常.
+- 如果要捕获异常后要重复抛出, 请使用 raise, 后面不要带任何参数或信息.
+- 不建议捕获并抛出同一个异常, 请考虑重构你的代码.
+- 不建议在不清楚逻辑的情况下捕获所有异常, 有可能你隐藏了很严重的问题.
+- 尽量使用内置的异常处理语句来 替换 ~try/except~ 语句, 比如 ~with~ 语句, ~getattr()~ 方法.
+
+* 经验案例
+** 传递异常 re-raise Exception
+捕捉到了异常, 但是又想重新引发它(传递异常), 使用不带参数的 raise 语句即可:
+
+#+BEGIN_SRC python
+def f1():
+    print(1 / 0)
+
+
+def f2():
+    try:
+        f1()
+    except Exception as e:
+        raise  # don't raise e !!!
+
+
+f2()
+#+END_SRC
+
+#+RESULTS:
+: - Traceback (most recent call last):
+: -   File "<stdin>", line 12, in <module>
+: -   File "<stdin>", line 7, in f2
+: -   File "<stdin>", line 2, in f1
+: - ZeroDivisionError: integer division or modulo by zero
+
+在 Python 2 中, 为了保持异常的完整信息, 那么你捕获后再次抛出时千万不能在 raise 后面加上异常对象, 否则你的 trace 信息就会从此处截断. 以上是最简单的重新抛出异常的做法.
+还有一些技巧可以考虑, 比如抛出异常前对异常的信息进行更新.
+
+#+BEGIN_SRC python
+def f1():
+    print(1 / 0)
+
+
+def f2():
+    try:
+        f1()
+    except Exception as e:
+        e.args += ('more info', )
+    raise
+
+f2()
+#+END_SRC
+
+#+RESULTS:
+: - Traceback (most recent call last):
+: -   File "<stdin>", line 12, in <module>
+: -   File "<stdin>", line 7, in f2
+: -   File "<stdin>", line 2, in f1
+: - ZeroDivisionError: ('integer division or modulo by zero', 'more info')
+
+Python 3 对重复传递异常有所改进, 你可以自己尝试一下, 不过建议还是同上.
+
+** Exception 和 BaseException
+当我们要捕获一个通用异常时, 应该用 ~Exception~ 还是 ~BaseException~ ？ 我建议你还是看一下官方文档说明, 这两个异常到底有啥区别呢? 请看它们之间的继承关系.
+
+#+BEGIN_QUOTE
+BaseException
++-- SystemExit
++-- KeyboardInterrupt
++-- GeneratorExit
++-- Exception
++-- StopIteration...
++-- StandardError...
++-- Warning...
+#+END_QUOTE
+
+从 Exception 的层级结构来看, BaseException 是最基础的异常类, Exception 继承了它.
+BaseException 除了包含所有的 Exception 外还包含了 ~SystemExit~, ~KeyboardInterrupt~ 和 ~GeneratorExit~ 三个异常.
+
+有此看来你的程序在捕获所有异常时更应该使用 Exception 而不是 BaseException, 因为另外三个异常属于更高级别的异常, 合理的做法应该是交给 Python 的解释器处理.
+
+** except Exception as e 和  except Exception, e
+代码示例如下:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+try:
+    do_something()
+except NameError as e:  # should
+    pass
+except KeyError, e:  # should not
+    pass
+
+#+END_SRC
+
+在 Python 2 的时代，你可以使用以上两种写法中的任意一种。
+在 Python 3 中你只能使用第一种写法，第二种写法被废弃掉了。
+第一个种写法可读性更好， 而且为了程序的兼容性和后期移植的成本， 请你也抛弃第二种写法。
+
+** raise "Exception string"
+把字符串当成异常抛出看上去是一个非常简洁的办法, 但其实是一个非常不好的习惯.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+if is_work_done():
+    pass
+else:
+    raise "Work is not done!" # not cool
+#+END_SRC
+
+上面的语句如果抛出异常, 那么会是这样的:
+
+#+BEGIN_SRC python
+Traceback (most recent call last):
+File "/demo/ exception_hanlding.py", line 48, in <module>
+raise "Work is not done!"
+TypeError:  exceptions must be old-style classes or derived from BaseException, not str
+#+END_SRC
+
+这在 Python 2.4 以前是可以接受的做法, 但是没有指定异常类型有可能会让下游没办法正确捕获并处理这个异常, 从而导致你的程序挂掉.
+简单说, 这种写法是是封建时代的陋习, 应该扔了.
+
+** 使用内置的语法范式代替 try/ except
+Python 本身提供了很多的语法范式简化了异常的处理, 比如 for 语句就处理的 StopIteration 异常, 让你很流畅地写出一个循环.
+with 语句在打开文件后会自动调用 finally 中的关闭文件操作. 我们在写 Python 代码时应该尽量避免在遇到这种情况时还使用 try/except/finally 的思维来处理.
+
+#+BEGIN_SRC python :results values list :exports no-eval
+# should not
+try:
+    f = open(a_file)
+    do_something(f)
+finally:
+    f.close()
+
+# should
+with open(a_file) as f:
+    do_something(f)
+#+END_SRC
+
+再比如, 当我们需要访问一个不确定的属性时, 有可能你会写出这样的代码:
+
+#+BEGIN_SRC python :results values list :exports no-eval
+try:
+    test = Test()
+    name = test.name  # not sure if we can get its name
+except AttributeError:
+    name = 'default'
+#+END_SRC
+
+其实你可以使用更简单的 ~getattr()~ 来达到你的目的.
+
+* 最佳实践
+最佳实践不限于编程语言, 只是一些规则和填坑后的收获.
+- 只处理你知道的异常捕获所异常然后吞掉它们.
+- 抛出的异常应该说明原因, 有时候你知道异常类型也猜不出所以然的.
+- 避免在 catch 语句块中干一些没意义的事情.
+- 不要使用异常来控制流程, 那样你的程序会无比难懂和难维护.
+- 如果有需要, 切记使用 finally 来释放资源.
+- 如果有需要, 请不要忘记在处理异常后做清理工作或者回滚操作.
+
+* 速查表
+
+#+DOWNLOADED: https://pic1.zhimg.com/80/v2-d9b5032278df290c670294665e10d540_hd.jpg @ 2019-11-20 12:10:32
+[[file:./static/Python 异常处理/2019-11-20_12-10-31_v2-d9b5032278df290c670294665e10d540_hd.jpg]]

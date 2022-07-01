@@ -1,0 +1,80 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 起动活门打开灯 START VALVE OPEN 亮/")); -*-
+:PROPERTIES:
+:ID:       6210AE6D-B34B-4C64-A0CC-97765259B904
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-17 Wed 20:50>
+#+TITLE: 737NG 起动活门打开灯 START VALVE OPEN 亮
+
+* 背景
+737NG 飞机航前机组反映右发起动时，56%N2 后右发起动活门灯(下文称起动活门信息)闪烁几秒后保持常亮，启起动活门不能自动关断，机组人工关断后起动活门灯熄灭。
+根据 FIM80-TASK809，为隔离故障更换右发启起动活门，起动右发测试 N2 在 56% 后起动活门脱开，灯灭，测试正常。航后按工程师方案更换了右发起动电门。
+
+* 发动机起动控制原理
+如下图，起动大发时，
+- 人工将起动电门打到地面位。
+- DEU 继电器接通(接地)，线圈得电使起动电门保持在地面位。
+- 起动活门线圈接通，起动活门在引气压力作动下打开，起动活门打开信息亮。
+- 引气作动起动机转动。
+- 当 N2>55.3%时，DEU 继电器断开，起动电门在弹力下自动弹回关位，起动活门线圈断电，活门关闭。
+
+起动活门将位置信号反馈 DEU，DEU 显示起动活门状态。
+图中稳压二极管保持线圈有稳定的电压，普通二极管用于释放线圈电感电流。
+
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-5756f5bd2308e884d6588702718bc6c7.jpg]]
+
+根据手册描述，起动活门打开 START VALVE OPEN 信息有两种模式：
+- 电门放地面位，活门打开，起动活门打开信息常亮。
+- 起动活门非指令打开，起动活门打开信息闪亮十秒后保持常亮。我们可以理解为：起动活门打开信息常亮表示起动活门打开，而闪亮则提醒活门打开是不正常现象，即故障。
+
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-4694c6dde7d077c0685555fa5051a64a.jpg]]
+
+值得注意的是，当起动活门打开 START VALVE OPEN 信息闪亮时，DEU 三个机组警示信息，即起动活门打开 START VALVE OPEN，滑油滤旁通 OIL FILTER BYPASS 和低滑油压力 LOW OIL PRESSURE 信息，都同时闪亮十秒，最后只有起动活门打开信息保持常亮。
+我的理解是三个信息同时闪亮更能引起机组的注意，以便能及时采取措施。在手册其他章节对其他两个警示信息也有同样的描述。
+
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-1ebbf77e3c83c32f62d8b0b54f253d27.jpg]]
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-17ab2b7bd3926e543bd6f4c6abe61df2.jpg]]
+
+* 故障分析
+当机组反映起动活门打开信息闪亮时，我们还需要了解起动电门的状态，才能准确判断故障件。
+如果起动活门打开 START VALVE OPEN 信息闪亮时，起动电门没有脱开，应按起动电门无法脱开排故，对应隔离手册为 FIM80-07/808，起动电门故障可能性最大。
+
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-74f437f92f5c8fdfdadc3245cbdecc1a.jpg]]
+
+如果起动活门打开 START VALVE OPEN 信息闪亮时，起动电门已经脱开，应该按起动活门故障排故，对应故障隔离手册为 FIM80-07/809，起动活门故障可能性最大。
+
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-cf5f9379c5ecbca9b48cedd0509d58d7.jpg]]
+
+同样都是起动活门打开信息闪亮后常亮，起动电门状态不同，排故方向完全不同。
+
+然而，手册描述起动电门不在地面位 GROUND，起动活门打开，起动活门打开 START VALVE OPEN 信息才会闪亮。如果起动电门失效在地面位导致起动活门无法关闭，起动活门打开信息是否会闪亮呢？
+咨询波音后得知，导致起动活门打开信息闪亮除了 SDS 描述的情况外，还有另外两种情况
+- 起动活门转换时，即打开或者关闭过程，由于这个过程持续时间短，一般很少注意到。
+- DEU 接收到起动机脱开信号(55.3% N2)，起动活门还在开位，DEU 接收起动活门在打开位的接地信号。起动电门无法脱开导致的起动活门没有及时关闭，就属于这种情况。
+
+可见，无论是起动活门本身故障还是起动电门故障导致起动活门无法关闭，只要 N2 达到 55.3%，起动活门打开信息都会闪亮 10s 后保持常亮。
+起动电门在 55.3 %N2 时如果未自动脱开，需要人工脱开。在快速检查单和 FCOM 都提到。
+
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-1abd0047a234b031ad2e937736d4bcac.jpg]]
+[[file:./static/737NG 起动活门打开灯 START VALVE OPEN 亮/1613297620-2a4f202e74570cf23515c4c90fbae5d5.jpg]]
+
+如果起动电门没能及时脱开，起动机可能超转并损伤。机组发现起动电门在 56% N2 没脱开时应尽快人工脱开并将信息告知机务。
+我们遇到过左发 N2 到达 63%，机组才发现起动活门打开信息闪亮直接关车的。当时地面观察左发起动机隔栅区域有大量雾状气体散出来，打开左发外侧包皮，发现包皮内侧对应起动机区域有很多滑油痕迹，起动机，IDG 及附件齿轮箱前部有很多滑油痕迹。最后更换了左发启动电门和左发起动机。
+
+* 后附一份 SR
+#+BEGIN_QUOTE
+SUBJECT: Indication for "START VALVE OPEN"
+DESCRIPTION:
+In the ref A message, GUN reported the following:"R engine start switch didn't automatically go back to OFF position and START VLV OPEN light flashed when N2>55% RPM, then pilot turn the switch from GROUND to OFF position manual."
+在 A 信息，南航报告 N2 大于 56%时，右发起动电门没有自动弹回关位，起动活门打开灯闪亮，飞行将电门人工从地面位旋转关位。
+GUN noted that the AMM states the START VALVE OPEN message flashes for 10 seconds then shows steady when the start valve is open and the start switch is not in the ground position.GUN states the start valve was open and the START VALVE OPEN message was flashing while the start switch was in the ground position.GUN asked if the AMM description is an error.
+南航注意到手册描述的是起动活门打开而起动电门不在地面位时，起动活门打开信息闪亮 10 秒购保持常亮。南航看到的是起动电门在地面位，起动活门打开，起动活门打开信息闪亮。南航想问手册是不是描述有误。
+RESPONSE:
+回复
+The AMM description is correct when the start system is operating normally.However, if the start switch is mechanically stuck in the GRD position after starter cutout, the START VALVE OPEN message will flash for 10 seconds then show steady.
+起动系统正常工作时，AMM 手册描述是正确的。然而，如果起动机脱开后起动电门机械卡在地面位，起动活门打开信息将闪 10 秒后常亮。
+During an engine start, the Display Electronics Unit (DEU) supplies a ground to the start switch solenoid which holds it the GRD position.When the start valve opens, the valve indication switch sends a ground signal to the DEU to show the START VALVE OPEN message.At starter cutout (55.3% N2), the EEC sends a starter cutout discrete to the DEU to release the ground that holds the start switch in the GRD position.During normal operation, this will cause the start switch to move to the AUTO (or OFF) position.
+发动机起动期间，DEU 给起动电门线圈提供接地使起动电门保持在地面位。当起动活门打开，活门指示电门给 DEU 接地信号指示活门打开信息。在起动机脱开(56%N2)时，EEC 给 DEU 提供起动机脱开信号，释放用于保持起动电门保持在地面位的地信号。正常的工作时，这将使起动电门移动到自动位或者关位。
+When the DEU receives the starter cutout discrete, it also causes the START VALVE OPEN message to flash if the valve is in the open position.During normal operation, the START VALVE OPEN message flashes momentarily while the valve is in transit and then goes off.QAR data shows the start valve usually closes within about two seconds and the flight crew will generally see the START VALVE OPEN indication flash one or two times after starter cutout before going off.
+DEU 接收到起动机脱开信号时，如果活门还在开位，它也使起动活门打开信息闪亮。正常工作起动活门转换时，起动活门信息瞬时闪亮然后熄灭。QAR 数据显示起动活门通常在大约 2 秒钟关闭，在起动机脱开后，飞行机组一般能看到起动活门打开指示闪一或两次，然后熄灭。
+#+END_QUOTE

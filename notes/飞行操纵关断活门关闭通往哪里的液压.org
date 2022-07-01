@@ -1,0 +1,7 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/飞行操纵关断活门关闭通往哪里的液压/")); -*-
+:PROPERTIES:
+:ID:       2BBA11C5-63FC-435A-9763-2BCC427C5BD2
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-17 Thu 19:05>
+#+TITLE: 飞行操纵关断活门关闭通往哪里的液压

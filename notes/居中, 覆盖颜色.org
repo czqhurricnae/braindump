@@ -1,0 +1,20 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/居中, 覆盖颜色/")); -*-
+:PROPERTIES:
+:ID:       0B2F239D-FD64-463F-AB68-058CD83587B3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 13:39>
+#+TITLE: 居中, 覆盖颜色
+#+ROAM_KEY:
+
+#+BEGIN_SRC CSS
+.recentChangesTable{
+    background-color: FloralWhite;
+    font-size: 19px;
+    margin: 0px auto
+}
+
+.tableHeadings{
+    background-color: aliceblue !important;
+}
+#+END_SRC

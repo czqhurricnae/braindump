@@ -1,0 +1,372 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/CSS-position/")); -*-
+:PROPERTIES:
+:ID:       F0056AD9-2155-414D-BA7A-ECA5C85D0F1B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-03-20 Fri 16:45>
+#+TITLE: CSS-position
+
+* absolute
+In ~position: relative~, the element is positioned relative to itself.
+However, an absolutely positioned element is relative to its ~parent~.
+
+An element with ~position: absolute~ is removed from the normal document flow.
+It is positioned automatically to the starting point (top-left corner) of its parent element.
+If it doesn’t have any parent, then the initial ~document <html>~ will be its parent.
+
+Since ~position: absolute~ removes the element from the document flow, other are affected and behave as the element is removed completely from the webpage.
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  margin: 0;
+  padding: 0;
+  background: grey;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  position: absolute;
+  background: orange;
+  width: 100px;
+  height: 100px;
+}
+#+END_SRC
+
+效果如下：
+
+[[file:./static/CSS-position/like disappeared.jpg]]
+
+Now it looks like the blue box has disappeared, but it hasn’t. The blue box behaves like the orange box is removed, so it shifts up to the orange box’s place.
+Let’s move the orange box 5 pixels:
+
+#+BEGIN_SRC css :results values list :exports no-eval
+ .container {
+   margin: 0;
+   padding: 0;
+   background: grey;
+ }
+
+ .box-blue {
+   background: lightskyblue;
+   height: 100px;
+   width: 100px;
+ }
+
+ .box-orange {
+   position: absolute;
+   background: orange;
+   width: 100px;
+   height: 100px;
+   left: 5px;
+   top: 5px;
+ }
+#+END_SRC
+
+效果如下：
+
+[[file:./static/CSS-position/top-5px.jpg]]
+
+为什么橘色图片的上边高于浅蓝色图片的上边呢？
+
+将橘色图片的上边距继续增大：
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  margin: 0;
+  padding: 0;
+  background: grey;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  position: absolute;
+  background: orange;
+  width: 100px;
+  height: 100px;
+  left: 5px;
+  top: 15px;
+}
+#+END_SRC
+
+效果如下：
+
+[[file:./static/CSS-position/top-15px.jpg]]
+
+此时橘色图片的左边小于蓝色的左边。为什么？
+
+因为文档中 ~body~ 标签本身有 ~margin~ ，如图所示：
+
+[[file:./static/CSS-position/body 标签.jpg]]
+
+~box-blue~ 在标签 ~body~ 中，左边 =margin= 为 8。
+而 ~box-orange~ 的左边 =margin= 为设定的 5。
+可以看出此时 ~box-orange~ 的 ~parent elements~ 是 ~<document> html~ 。
+
+** 如何让 ~.container~ 成为 ~absolute~ 的 ~parent element~ 呢？
+
+#+BEGIN_SRC css :results values list :exports no-eval
+   .container {
+     margin: 0;
+     padding: 0;
+     background: grey;
+     position: relative;
+   }
+
+   .box-blue {
+     background: lightskyblue;
+     height: 100px;
+     width: 100px;
+   }
+
+   .box-orange {
+     position: absolute;
+     background: orange;
+     width: 100px;
+     height: 100px;
+     top: 15px;
+     left: 5px;
+   }
+#+END_SRC
+
+[[file:./static/CSS-position/make container element to parent.jpg]]
+
+The coordinates of an ~absolute~ positioned element are ~relative to its parent~ if the parent alse has a ~non-static position~.
+Otherwise, helper properties position element relative to the ~initial <html>~.
+** absolute 的应用
+*** 将文字在背景图片上居中显示
+
+[[file:./static/CSS-position/position absolte but relative to parent.png]]
+
+* static
+~position: static~ is the default value. Whether we declare it or not,
+element are positioned in a normal order on the webpage.
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  margin: 0;
+  padding: 0;
+  background: grey;
+  position: relative;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  background: orange;
+  width: 100px;
+  height: 100px;
+  position: static;
+}
+#+END_SRC
+
+效果如下：
+
+#+DOWNLOADED: screenshot @ 2020-03-22 07:43:30
+[[file:./static/CSS-position/static.jpg]]
+
+As we can see in the picture, defining ~position: static~ or not doesn't make any difference.
+The boxes are positioned according to the normal document flow.
+
+* relative
+~position: relative~: An element's new position relative to its normal position.
+
+Starting with ~position: relative~ and for all non-static position values, we are able to change an element’s default position by using the helper properties that I've mentioned above.
+Let’s move the orange box next to the blue one.
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  margin: 0;
+  padding: 0;
+  background: grey;
+  position: relative;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  background: orange;
+  width: 100px;
+  height: 100px;
+  position: relative;
+  top: 100px;
+  left: 100px;
+}
+#+END_SRC
+
+效果如下：
+
+[[file:./static/CSS-position/relative.jpg]]
+
+* fixed
+Like ~position: absolute~. fixed positioned element are also removed from the normal document flow.
+The difference are:
+- They are only relative to the <html> document, not any other parents.
+- They are not affected by scrolling.
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  margin: 0;
+  padding: 0;
+  background: grey;
+  position: relative;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  background: orange;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  right: 50px;
+}
+#+END_SRC
+
+效果如下：
+
+#+DOWNLOADED: screenshot @ 2020-03-22 08:22:54
+[[file:./static/CSS-position/fixed.jpg]]
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  background: lightgrey;
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  height: 1000px;
+}
+
+.container p {
+  text-align: center;
+  font-size: 20px;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  background: orange;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  right: 50px;
+}
+#+END_SRC
+
+#+BEGIN_SRC html :results values list :exports no-eval
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="./static/CSS-position/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="box-orange"></div>
+      <div class="box-blue"></div>
+      <p>Scroll down the page</p>
+    </div>
+  </body>
+</html>
+#+END_SRC
+
+效果如下:
+#+DOWNLOADED: screenshot @ 2020-03-22 08:32:39
+[[file:./static/CSS-position/fixed scrolling.jpg]]
+
+#+DOWNLOADED: screenshot @ 2020-10-20 05:06:39
+[[file:./static/CSS-position/2020-10-20_05-06-39_screenshot.jpg]]
+
+* sticky
+~position: sticky~ can be explained as a mix of ~position: relative~ and ~position: fixed~.
+
+It behaves until a declared point like ~position: relative~, after that it changes its behavior to ~position: fixed~ .
+
+The best way to explain position: sticky is by an example:
+
+#+BEGIN_SRC css :results values list :exports no-eval
+.container {
+  background: lightgrey;
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  height: 2000px;
+}
+
+.container p {
+  text-align: center;
+  font-size: 20px;
+}
+
+.box-blue {
+  background: lightskyblue;
+  height: 100px;
+  width: 100px;
+}
+
+.box-orange {
+  background: orange;
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  right: 50px;
+}
+
+.sticky {
+  position: sticky;
+  background: red;
+  top: 0;
+  padding: 10px;
+  color: white;
+}
+#+END_SRC
+
+#+BEGIN_SRC html :results values list :exports no-eval
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="./static/CSS-position/styles/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="box-orange"></div>
+      <div class="box-blue"></div>
+      <p>Scroll down the page</p>
+      <p class="sticky">I am sticky</p>
+    </div>
+  </body>
+</html>
+#+END_SRC
+
+效果如下：
+
+#+DOWNLOADED: screenshot @ 2020-03-22 08:46:51
+[[file:./static/CSS-position/sticky.gif]]

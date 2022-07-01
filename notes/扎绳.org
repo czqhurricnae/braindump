@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/扎绳/")); -*-
+:PROPERTIES:
+:ID:       8C4B1A90-7834-4FDD-B94D-32AE364B2D25
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-20 Tue 00:08>
+#+TITLE: 扎绳
+#+FILETAGS: :wire_harness_tie:
+
+可用于非增压区和增压区。

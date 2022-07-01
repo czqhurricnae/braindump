@@ -1,0 +1,59 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737-800 PACK 非指令关闭/")); -*-
+:PROPERTIES:
+:ID:       163BAD1F-BC8C-48E4-B5F5-E9D9E2326689
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-12 Wed 11:11>
+#+TITLE: 737-800 PACK 非指令关闭
+
+#+ROAM_KEY:
+
+
+B57XX 飞机 AHM 监控 =ECS Pack Configuration：Pack1 Off and Pack2 Highin Cruise= ， 
+空中左 PACK 关闭、右 PACK 进入高流量模式。
+
+询问机长飞机状态正常空中没有 PACK 灯亮，增压、空调也正常，也没有人工关闭过 PACK。
+联系派驻机务完成 PZTC 自检正常，无故障代码，证实左空调有进出气。
+提示机长后续航班关注空调，并告知签派将飞行计划按 250FL 做，后续三段航班空调都正常。
+飞机放行，回基地站后预防性更换左 COV。首先说明该飞机不是 EFLOW 构型。
+* AHM 分析
+:PROPERTIES:
+:ID:       11EBDC24-F747-4DFF-B61D-26FD6502032A
+:END:
+空中巡航阶段隔离活门关闭，左 PACK 关闭，右 PACK 进入高流量模式，但是驾驶舱没有对应的左 PACK 跳开灯亮，那就证明不是超温跳开，是有个指令让左 PACK 关闭或者是有指令让左 PACK 打开但是左 PACK 没有真实打开。
+
+[[file:./static/737-800 PACK 非指令关闭/2022-01-12_11-52-05_screenshot.jpg]]
+
+* Airfase Alert 分析
+:PROPERTIES:
+:ID:       DCA18217-8045-4C16-834B-84CE1E6556D6
+:END:
+由于 T471 左空调组件温度温度超过 32 度且持续 60 秒，所以触发了报警。
+同时参数也显示隔离活门关闭，左 PACK 关闭，右 PACK 进入高流量模式。
+
+[[file:./static/737-800 PACK 非指令关闭/2022-01-12_13-51-21_screenshot.jpg]]
+
+完成改装后飞机可以通过 AIRFASE 软件触发温度超限报警，并通过邮件发送至各维修单位邮箱，以提示空调温度异常，
+报警逻辑为： 
+- T471 T474（左右空调组件温度）门槛值设为：温度超过 32 度且持续 60 秒。
+- T481 T482（左右冲压进气温度，生产线号 4515 以及之后的飞机为 SRADA 构型，无该参数）门槛值设为：超过 128 度且持续 60 秒。
+- T472 T475（混合总管温度）门槛值设为超过 35 度且持续 60 秒。
+- 设置了假报警的过滤条件、以上 3 个逻辑任意条件满足则触发报警。
+
+[[file:./static/737-800 PACK 非指令关闭/2022-01-12_13-54-09_screenshot.jpg]]
+
+通过系统原理图，可以看出左边的 T481 沖压进气温度（实际 34 度，正常应该 100 度以上）实际很低这个证明没有热气过来，
+也就是上游 FCSOV 没有打开或者管路漏气。
+T471 空调组件温度与 T481 冲压进气温度很接近，证明 ACM 没有转动、没有做功，可能原因是 ACM 本身卡阻或管路漏气。
+
+* 译码分析
+:PROPERTIES:
+:ID:       801CE335-5CCE-4D6E-8151-7710E2B4F4CA
+:END:
+左 PACK 全程没开过。
+
+[[file:./static/737-800 PACK 非指令关闭/2022-01-12_13-56-05_screenshot.jpg]]
+
+[[file:./static/737-800 PACK 非指令关闭/2022-01-12_13-56-15_screenshot.jpg]]
+
+隔离活门 AUTO 位：关闭逻辑是左右 PACK 都在 AUTO/HIGH，左右发动机引气电门在 ON。自动打开逻辑是以上 4 个电门中任一一个到 OFF 位。

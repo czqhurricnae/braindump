@@ -1,0 +1,11 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/stringer/")); -*-
+:PROPERTIES:
+:ID:       9A660A0A-48E4-4A9A-824F-237459DF3666
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-02-14 Sun 18:47>
+#+TITLE: stringer
+
+[[file:./static/stringer/2021-02-14_18-47-57_screenshot.jpg]]
+
+[[file:./static/stringer/2021-02-14_18-49-34_screenshot.jpg]]

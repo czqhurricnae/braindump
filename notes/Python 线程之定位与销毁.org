@@ -1,0 +1,375 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Python 线程之定位与销毁/")); -*-
+:PROPERTIES:
+:ID:       2CB240C7-9C2A-4A14-A79D-8EF088B338C4
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-27 Tue 15:53>
+#+TITLE: Python 线程之定位与销毁
+
+* 背景
+开工前我就觉得有什么不太对劲，感觉要背锅。这可不，上班第三天就捅锅了。
+我们有个了不起的后台程序，可以动态加载模块，并以线程方式运行，通过这种形式实现插件的功能。而模块更新时候，后台程序自身不会退出，只会将模块对应的线程关闭、更新代码再启动，6 得不行。
+于是乎我就写了个模块准备大展身手，结果忘记写退出函数了，导致每次更新模块都新创建一个线程，除非重启那个程序，否则那些线程就一直苟活着。
+这可不行啊，得想个办法清理呀，要不然怕是要炸了。
+那么怎么清理呢？我能想到的就是两步走：
+找出需要清理的线程号 tid；
+销毁它们。
+
+* 找出线程 ID
+和平时的故障排查相似，先通过 ps 命令看看目标进程的线程情况，因为已经是 setName 设置过线程名，所以正常来说应该是看到对应的线程的。 直接用下面代码来模拟这个线程：
+
+Python 版本的多线程
+
+#+BEGIN_SRC python
+#coding: utf8
+import threading
+import os
+import time
+
+def tt():
+    info = threading.currentThread()
+    while True:
+        print 'pid: ', os.getpid()
+        print info.name, info.ident
+        time.sleep(3)
+
+t1 = threading.Thread(target=tt)
+t1.setName('OOOOOPPPPP')
+t1.setDaemon(True)
+t1.start()
+
+t2 = threading.Thread(target=tt)
+t2.setName('EEEEEEEEE')
+t2.setDaemon(True)
+t2.start()
+
+
+t1.join()
+t2.join()
+#+END_SRC
+
+输出:
+
+#+BEGIN_SRC python
+root@10-46-33-56:~# python t.py
+pid:  5613
+OOOOOPPPPP 139693508122368
+pid:  5613
+EEEEEEEEE 139693497632512
+...
+#+END_SRC
+
+可以看到在 Python 里面输出的线程名就是我们设置的那样，然而 Ps 的结果却是令我怀疑人生：
+
+#+BEGIN_SRC awk
+root@10-46-33-56:~# ps -Tp 5613
+  PID  SPID TTY          TIME CMD
+ 5613  5613 pts/2    00:00:00 python
+ 5613  5614 pts/2    00:00:00 python
+ 5613  5615 pts/2    00:00:00 python
+#+END_SRC
+
+正常来说不该是这样呀，我有点迷了，难道我一直都是记错了？用别的语言版本的多线程来测试下：
+
+C 版本的多线程
+
+#+BEGIN_SRC c
+#include<stdio.h>
+#include<sys/syscall.h>
+#include<sys/prctl.h>
+#include<pthread.h>
+
+void *test(void *name)
+{
+    pid_t pid, tid;
+    pid = getpid();
+    tid = syscall(__NR_gettid);
+    char *tname = (char *)name;
+
+    // 设置线程名字
+    prctl(PR_SET_NAME, tname);
+
+    while(1)
+    {
+        printf("pid: %d, thread_id: %u, t_name: %s\n", pid, tid, tname);
+        sleep(3);
+    }
+}
+
+int main()
+{
+    pthread_t t1, t2;
+    void *ret;
+    pthread_create(&t1, NULL, test,  (void *)"Love_test_1");
+    pthread_create(&t2, NULL, test,  (void *)"Love_test_2");
+    pthread_join(t1, &ret);
+    pthread_join(t2, &ret);
+}
+#+END_SRC
+
+输出：
+
+#+BEGIN_SRC c
+root@10-46-33-56:~# gcc t.c -lpthread && file:a.out
+pid: 5575, thread_id: 5577, t_name: Love_test_2
+pid: 5575, thread_id: 5576, t_name: Love_test_1
+pid: 5575, thread_id: 5577, t_name: Love_test_2
+pid: 5575, thread_id: 5576, t_name: Love_test_1
+...
+#+END_SRC
+
+用 PS 命令再次验证：
+
+#+BEGIN_SRC awk
+root@10-46-33-56:~# ps -Tp 5575
+  PID  SPID TTY          TIME CMD
+ 5575  5575 pts/2    00:00:00 a.out
+ 5575  5576 pts/2    00:00:00 Love_test_1
+ 5575  5577 pts/2    00:00:00 Love_test_2
+#+END_SRC
+
+这个才是正确嘛，线程名确实是可以通过 Ps 看出来的嘛！
+
+不过为啥 Python 那个看不到呢？既然是通过 setName 设置线程名的，那就看看定义咯：
+
+#+BEGIN_SRC python
+[threading.py]
+class Thread(_Verbose):
+    ...
+    @property
+    def name(self):
+        """A string used for identification purposes only.
+
+        It has no semantics. Multiple threads may be given the same name. The
+        initial name is set by the constructor.
+
+        """
+        assert self.__initialized, "Thread.__init__() not called"
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        assert self.__initialized, "Thread.__init__() not called"
+        self.__name = str(name)
+
+    def setName(self, name):
+        self.name = name
+    ...
+#+END_SRC
+
+看到这里其实只是在 Thread 对象的属性设置了而已，并没有动到根本，那肯定就是看不到咯。
+
+这样看起来，我们已经没办法通过 ps 或者 /proc/ 这类手段在外部搜索 python 线程名了，所以我们只能在 Python 内部来解决。
+
+于是问题就变成了，怎样在 Python 内部拿到所有正在运行的线程呢？
+
+threading.enumerate 可以完美解决这个问题！Why?
+
+Because 在下面这个函数的 doc 里面说得很清楚了，返回所有活跃的线程对象，不包括终止和未启动的。
+
+#+BEGIN_SRC python
+[threading.py]
+
+def enumerate():
+    """Return a list of all Thread objects currently alive.
+
+    The list includes daemonic threads, dummy thread objects created by
+    current_thread(), and the main thread. It excludes terminated threads and
+    threads that have not yet been started.
+
+    """
+    with _active_limbo_lock:
+        return _active.values() + _limbo.values()
+#+END_SRC
+
+因为拿到的是 Thread 的对象，所以我们通过这个能到该线程相关的信息！
+
+请看完整代码示例：
+
+#+BEGIN_SRC python
+#coding: utf8
+
+import threading
+import os
+import time
+
+
+def get_thread():
+    pid = os.getpid()
+    while True:
+        ts = threading.enumerate()
+        print '------- Running threads On Pid: %d -------' % pid
+        for t in ts:
+            print t.name, t.ident
+        print
+        time.sleep(1)
+
+def tt():
+    info = threading.currentThread()
+    pid = os.getpid()
+    while True:
+        print 'pid: {}, tid: {}, tname: {}'.format(pid, info.name, info.ident)
+        time.sleep(3)
+        return
+
+t1 = threading.Thread(target=tt)
+t1.setName('Thread-test1')
+t1.setDaemon(True)
+t1.start()
+
+t2 = threading.Thread(target=tt)
+t2.setName('Thread-test2')
+t2.setDaemon(True)
+t2.start()
+
+t3 = threading.Thread(target=get_thread)
+t3.setName('Checker')
+t3.setDaemon(True)
+t3.start()
+
+t1.join()
+t2.join()
+t3.join()
+#+END_SRC
+
+输出：
+
+#+BEGIN_SRC python
+root@10-46-33-56:~# python t_show.py
+pid: 6258, tid: Thread-test1, tname: 139907597162240
+pid: 6258, tid: Thread-test2, tname: 139907586672384
+
+------- Running threads On Pid: 6258 -------
+MainThread 139907616806656
+Thread-test1 139907597162240
+Checker 139907576182528
+Thread-test2 139907586672384
+
+------- Running threads On Pid: 6258 -------
+MainThread 139907616806656
+Thread-test1 139907597162240
+Checker 139907576182528
+Thread-test2 139907586672384
+
+------- Running threads On Pid: 6258 -------
+MainThread 139907616806656
+Thread-test1 139907597162240
+Checker 139907576182528
+Thread-test2 139907586672384
+
+------- Running threads On Pid: 6258 -------
+MainThread 139907616806656
+Checker 139907576182528
+...
+#+END_SRC
+
+代码看起来有点长，但是逻辑相当简单，Thread-test1 和 Thread-test2 都是打印出当前的 pid、线程 id 和 线程名字，然后 3s 后退出，这个是想模拟线程正常退出。
+
+而 Checker 线程则是每秒通过 threading.enumerate 输出当前进程内所有活跃的线程。
+
+可以明显看到一开始是可以看到 Thread-test1 和 Thread-test2 的信息，当它俩退出之后就只剩下 MainThread 和 Checker 自身而已了。
+
+* 销毁指定线程
+
+既然能拿到名字和线程 id，那我们也就能干掉指定的线程了！
+
+假设现在 Thread-test2 已经黑化，发疯了，我们需要制止它，那我们就可以通过这种方式解决了：
+
+在上面的代码基础上，增加和补上下列代码：
+
+#+BEGIN_SRC python
+def _async_raise(tid, exctype):
+    """raises the exception, performs cleanup if needed"""
+    tid = ctypes.c_long(tid)
+    if not inspect.isclass(exctype):
+        exctype = type(exctype)
+    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))
+    if res == 0:
+        raise ValueError("invalid thread id")
+    elif res != 1:
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
+
+def stop_thread(thread):
+    _async_raise(thread.ident, SystemExit)
+
+def get_thread():
+    pid = os.getpid()
+    while True:
+        ts = threading.enumerate()
+        print '------- Running threads On Pid: %d -------' % pid
+        for t in ts:
+            print t.name, t.ident, t.is_alive()
+            if t.name == 'Thread-test2':
+                print 'I am go dying! Please take care of yourself and drink more hot water!'
+                stop_thread(t)
+        print
+        time.sleep(1)
+#+END_SRC
+
+输出
+
+#+BEGIN_SRC python
+root@10-46-33-56:~# python t_show.py
+pid: 6362, tid: 139901682108160, tname: Thread-test1
+pid: 6362, tid: 139901671618304, tname: Thread-test2
+------- Running threads On Pid: 6362 -------
+MainThread 139901706389248 True
+Thread-test1 139901682108160 True
+Checker 139901661128448 True
+Thread-test2 139901671618304 True
+Thread-test2: I am go dying. Please take care of yourself and drink more hot water!
+
+------- Running threads On Pid: 6362 -------
+MainThread 139901706389248 True
+Thread-test1 139901682108160 True
+Checker 139901661128448 True
+Thread-test2 139901671618304 True
+Thread-test2: I am go dying. Please take care of yourself and drink more hot water!
+
+pid: 6362, tid: 139901682108160, tname: Thread-test1
+------- Running threads On Pid: 6362 -------
+MainThread 139901706389248 True
+Thread-test1 139901682108160 True
+Checker 139901661128448 True
+// Thread-test2 已经不在了
+#+END_SRC
+
+一顿操作下来，虽然我们这样对待 Thread-test2，但它还是关心着我们：多喝热水，
+
+PS: 热水虽好，八杯足矣，请勿贪杯哦。
+
+书回正传，上述的方法是极为粗暴的，为什么这么说呢？
+
+因为它的原理是：利用 Python 内置的 API，触发指定线程的异常，让其可以自动退出；
+
+[[file:./static/Python 线程之定位与销毁/1627204062-f2235c04df2e4d9b62efc5ea7c9035a7.png]]
+
+* 为什么停止线程这么难
+
+多线程本身设计就是在进程下的协作并发，是调度的最小单元，线程间分食着进程的资源，所以会有许多锁机制和状态控制。
+
+如果使用强制手段干掉线程，那么很大几率出现意想不到的 bug。 而且最重要的锁资源释放可能也会出现意想不到问题。
+
+我们甚至也无法通过信号杀死进程那样直接杀线程，因为 kill 只有对付进程才能达到我们的预期，而对付线程明显不可以，不管杀哪个线程，整个进程都会退出！
+
+而因为有 GIL，使得很多童鞋都觉得 Python 的线程是 Python 自行实现出来的，并非实际存在，Python 应该可以直接销毁吧？
+
+然而事实上 Python 的线程都是货真价实的线程！
+
+什么意思呢？Python 的线程是操作系统通过 pthread 创建的原生线程。Python 只是通过 GIL 来约束这些线程，来决定什么时候开始调度，比方说运行了多少个指令就交出 GIL，至于谁夺得花魁，得听操作系统的。
+
+如果是单纯的线程，其实系统是有办法终止的，比如: pthread_exit,pthread_kill 或 pthread_cancel， 详情可看：
+[[https://www.cnblogs.com/Creator/archive/2012/03/21/2408413.html]]
+
+很可惜的是： Python 层面并没有这些方法的封装！我的天，好气！可能人家觉得，线程就该温柔对待吧。
+
+* 如何温柔退出线程
+
+想要温柔退出线程，其实差不多就是一句废话了~
+
+要么运行完退出，要么设置标志位，时常检查标记位，该退出的就退出咯。
+
+* 扩展
+- 《如何正确的终止正在运行的子线程》：[[https://www.cnblogs.com/Creator/archive/2012/03/21/2408413.html]]
+- 《不要粗暴的销毁 python 线程》：[[https://xiaorui.cc/2017/02/22/%25E4%25B8%258D%25E8%25A6%2581%25E7%25B2%2597%25E6%259A%25B4%25E7%259A%2584%25E9%2594%2580%25E6%25AF%2581python%25E7%25BA%25BF%25E7%25A8%258B/]]

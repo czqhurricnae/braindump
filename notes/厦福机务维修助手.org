@@ -1,0 +1,26 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/厦福机务维修助手/")); -*-
+:PROPERTIES:
+:ID:       8AA9E6A5-7035-4FFC-8D44-665ADCA20505
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-09 Wed 13:31>
+#+TITLE: 厦福机务维修助手
+
+#+ROAM_KEY:
+
+
+* 小程序服务器信息
+https://www.divipersonstudy.cn
+
+* 宝塔控制面板帐号
+http://120.55.68.181:62682/personstudy
+mffzhx
+mffzhx2021
+
+* 小程序服务器数据库帐号密码
+IP：120.55.68.181
+端口：3306
+用户名：mffz
+密码：mffz2021
+
+

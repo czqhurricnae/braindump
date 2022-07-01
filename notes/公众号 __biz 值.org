@@ -1,0 +1,122 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/公众号 __biz 值/")); -*-
+:PROPERTIES:
+:ID:       84480BC6-FEEC-40C6-89EE-6A95DB9D5F6D
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-01-06 Wed 13:52>
+#+TITLE: 公众号 __biz 值
+- Boeing 737NG 故障分析
+Mzg3NjExMzkwMQ==
+
+- 百川复西归
+MzU1MjkxNTUxMA==
+
+- 飞机师 DK
+MzAxOTU3MjY5Mg==
+
+- 飞机维修 IT 信息砖家
+MzU5Njc0OTUxOA==
+
+- 飞机维修砖家
+MjM5NDE3NDUyNw==
+
+- 航空发动机维护知识
+MzU5NzU3OTk1OQ==
+
+- Hi 飞行
+MzU3NDM2MTA5Ng==
+
+- 宏门弟子 TODO
+MzIwMzYxNjIxNA==
+
+- 虹桥 Boeing 济公
+MzA5NTU4NzIwNw==
+
+- 机务小书桌
+MzA5MTg4MjA3OQ==
+
+- 九品机务
+MzI4Njg5MzY4NQ==
+
+- 空港航站楼
+MzIxODI5NjEyMw==
+
+- 民航机务论坛
+MzAxOTU2MDIwMA==
+
+- 民航机务笔记
+
+- 能吃五碗饭
+MzAwMTU0NTcwMA==
+
+- 拼命奔跑的兔子
+MzIwNDQ1OTgzMA==
+
+- 染子默的机务生活
+MzIyNjY1MzYwNQ==
+
+- 阮工频道
+MzAwNzkyMTg1Mg==
+
+- 厦航培训
+MzIxMjA2ODg4Nw==
+
+- 帅哥讲坛
+MzIxMzkzMzcwMA==
+
+- 四大队的图书馆
+MzI3NjUzMjEzMQ==
+
+- 私人学习帐号
+Mzg5MzA1MjkxNg==
+
+- 维修技术支援
+MzA5NTA5MTY4Nw==
+
+- 维修经验交流分享
+MzUxODYwNjM5Mw==
+
+- 闻花香
+MzA3NTQ4MTcwOA==
+
+- 我爱修飞机
+MzI4Mzc4MjQ3OQ==
+
+- 向工说
+Mzg5ODA5NjMzNA==
+
+- 学刚说
+MzUyMTc4OTcxMw==
+
+- 雅君航培
+MzU5ODc4MTAzMQ==
+
+- 硬核航空
+MzI5NjM1NDI4OA==
+
+- 张大其力化鱼为龙
+MzUxMDI5MjMzMw==
+
+- 专业的飞机维修小助手
+MzA3MTY2MDYwNQ==
+
+- 失业的资深飞机维修师
+MzU2NjY4Mzk3Mg==
+
+- 金孔雀飞机维修
+MzI0NDg4OTQ3OQ==
+
+- 飞机维修者
+MzI4MTkyODM2Mw==
+
+- 飞机维修那些事儿
+MzAxMTg3Nzg2Nw==
+
+- 飞机维修
+MzI0NzI4NjMwMw==
+
+- 飞机电子设备维修
+MzU4NjYyNzE3MQ==
+
+- 解读波音 737

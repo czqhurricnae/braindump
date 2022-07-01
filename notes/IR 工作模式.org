@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/IR 工作模式/")); -*-
+:PROPERTIES:
+:ID:       9C417DDF-4014-4409-81C2-DBE037F1665E
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-03-29 Mon 22:00>
+#+TITLE: IR 工作模式
+
+[[file:./static/IR 工作模式/2021-03-29_22-02-59_screenshot.jpg]]

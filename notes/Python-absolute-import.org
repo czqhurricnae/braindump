@@ -1,0 +1,19 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-absolute-import/")); -*-
+:PROPERTIES:
+:ID:       91B0F184-FB7B-4804-A94E-D19A090A411D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-22 Thu 17:04>
+#+TITLE: Python-absolute-import
+
+In Python 2.4 and earlier, if you're reading a module located inside a package, it is not clear whether
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+import foo
+#+END_SRC
+
+refers to a top-level module or to another module inside the package.
+As Python's library expands, more and more existing package internal modules suddenly shadow standard library modules by accident.
+It's a particularly difficult problem inside packages because there's no way to specify which module is meant.
+To resolve the ambiguity, it is proposed that =foo will always be a module or package reachable from sys.path=.
+This is called an =absolute import=.

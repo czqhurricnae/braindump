@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG PZTC/")); -*-
+:PROPERTIES:
+:ID:       FA5E1415-42F0-4CA7-9EC4-DCD3CD449909
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-22 Mon 23:17>
+#+TITLE: 737NG PZTC
+
+[[file:./static/737NG PZTC/2021-03-22_23-18-02_screenshot.jpg]]
+
+[[file:./static/737NG PZTC/2021-03-22_23-18-15_screenshot.jpg]]
+
+PZTC 上 SELECTOR 列 的 =BKUP ZONE= 灯代表的含义？
+
+[[file:./static/737NG PZTC/2021-03-22_23-19-39_screenshot.jpg]]
+
+1# PZTC 进行 L AUTO PACK CONTROL，参考[[id:22606AEE-3612-46A0-9585-316C60C1536B][737-800 空调温度控制]]，1# PZTC 要计算理想组件温度，需要获得
+驾驶舱，前客舱，后客舱三个温度选择旋钮的信号。

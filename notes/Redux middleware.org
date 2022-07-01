@@ -1,0 +1,301 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Redux middleware/")); -*-
+:PROPERTIES:
+:ID:       C6AE278F-1275-4BD8-AACB-F6C81907C4D9
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-02 Fri 17:28>
+#+TITLE: Redux middleware
+
+* 什么是 middleware
+middleware 翻译过来叫中间件，这是一个很抽象的名词，按我的理解的话：“中间”是个形容词，“件”应该是一个名词。那么我们重点关注 *中间* 这个词，中间，是在上面中间呢？
+其实就是 *在你执行正常业务的代码中间插入一部分其它代码* ，具体 *可以是在正常代码的执行前，也可以在正常代码执行后* 。
+其实学过 Spring 的童鞋应该很好理解，这个东西跟 Spring 的切面编程很类似。
+
+** 有啥用
+前面说了，这个技术可以让我们在正常的业务代码前后执行一部分其它代码，这个其它代码可以包括：日志、鉴权啊等到一些公共处理代码。简单来说，只有你想不到，没有做不到。
+
+** 怎么用
+话不多说，先上代码：
+
+#+BEGIN_EXAMPLE
+    const logger1 = store => next => action => {
+      console.log('dispatching  logger', action)
+      next(action)
+      console.log('next state  logger', action)
+    }
+
+    const logger2 = store => next => action => {
+      console.log('dispatching  logger', action)
+      next(action)
+      console.log('next state  logger', action)
+    }
+
+    const store = createStore(
+      reducer,
+      applyMiddleware([logger1,logger2])
+    )
+#+END_EXAMPLE
+
+我们看到上面的代码中，首先声明 logger1、logger2 两个 middleware，然后在创建 store 的时候通过 applyMiddleware 来绑定到 dispatch 上去，这样每次我们分发（dispatch）一个 action 的时候，
+两个 middleware 里的代码都会执行。
+
+* 源码解析
+下面先上 applyMiddleware 的源码：
+
+#+BEGIN_EXAMPLE
+    export default function applyMiddleware(...middlewares) {
+      return createStore => (...args) => {
+        const store = createStore(...args)
+        let dispatch = () => {
+          throw new Error(
+            `Dispatching while constructing your middleware is not allowed. ` +
+              `Other middleware would not be applied to this dispatch.`
+          )
+        }
+
+        const middlewareAPI = {
+          getState: store.getState,
+          dispatch: (...args) => dispatch(...args)
+        }
+        const chain = middlewares.map(middleware => middleware(middlewareAPI))
+        dispatch = compose(...chain)(store.dispatch)
+
+        return {
+          ...store,
+          dispatch
+        }
+      }
+    }
+#+END_EXAMPLE
+
+这个函数是 redux 在 createStore 函数中调用的，所以它返回一个匿名函数，我们只需要关心内部匿名函数的实现就好了。
+
+** 变量声明
+我们先看 applyMiddleware 内部匿名函数的前几行代码：
+
+#+BEGIN_EXAMPLE
+        const store = createStore(...args)
+        let dispatch = () => {
+          throw new Error(
+            `Dispatching while constructing your middleware is not allowed. ` +
+              `Other middleware would not be applied to this dispatch.`
+          )
+        }
+
+        const middlewareAPI = {
+          getState: store.getState,
+          dispatch: (...args) => dispatch(...args)
+        }
+#+END_EXAMPLE
+
+第一行代码调用 createStore 函数创建一个 store 对象。
+第二行声明一个 dispatch 变量，指向一个箭头函数，函数直接报错，用来告诉用户我这会儿正初始化呢，你敢 dispatch 我就报错给你看！
+第三行代码声明一个 middlewareAPI 的对象，里面包含两个属性：getState 和 dispatch。
+
+getState 没什么好说的，重点是这个 dispatch 属性，这个属性指向一个箭头函数，函数直接执行 dispatch 函数，
+这个 dispatch 函数可不是 store 原生的 dispatch，而是我们在第二行声明的 dispatch 变量指向的箭头函数。
+
+这块相对来说比较简单，但是为了后面我们好理解，这里来对前面的变量声明做如下优化：
+
+#+BEGIN_EXAMPLE
+        const store = createStore(...args) // 不变
+        let temDispatch = () => {  // 为了跟store.dispatch 区分，我们把变量名称修改为temDispatch
+          throw new Error(
+            `Dispatching while constructing your middleware is not allowed. ` +
+              `Other middleware would not be applied to this dispatch.`
+          )
+        }
+
+        const middlewareAPI = {
+          getState: store.getState,
+          APIDispatch: (...args) => temDispatch(...args) // 同样的，为了区分，我们这里用APIDispatch来表示属性变量
+        }
+#+END_EXAMPLE
+
+如上代码所示，为了同 store.dispatch 方法区分，我们分别用 temDispatch 和 APIDispatch 这两个名称来替代原来的 dispatch。
+
+** 分拆 Middleware 函数
+接下来我们看下一行代码：
+
+#+BEGIN_EXAMPLE
+    const chain = middlewares.map(middleware => middleware(middlewareAPI))
+#+END_EXAMPLE
+
+middlewares 我们知道是一个包含中间件的数组，通过数组的 map 处理后，我们将会"执行一次"中间件函数，然后将返回值放到 chain 的数组中。
+
+上面我们说"执行一次“中间件函数，其实说法有点不太好理解，接下来我们慢慢分析中间件：
+
+#+BEGIN_EXAMPLE
+    const logger1 = store => next => action => {
+      console.log('dispatching  logger', action)
+      next(action)
+      console.log('next state  logger', action)
+    }
+#+END_EXAMPLE
+
+上面是一个最简单的中间件形式，但是还是有点复杂，我们可以先把这个中间件拆分成以下的样子：
+
+#+BEGIN_EXAMPLE
+    const inner = action => {
+      console.log('dispatching 333 logger', action)
+      next(action)
+      console.log('next state 4444 logger', action)
+    };
+
+    const middle = next => action => {
+      console.log('dispatching 333 logger', action)
+      next(action)
+      console.log('next state 4444 logger', action)
+    };
+
+    const logger1 = store => next => action => {
+      console.log('dispatching  logger', action)
+      next(action)
+      console.log('next state  logger', action)
+    }
+#+END_EXAMPLE
+
+如上所示，我们的 middleware 其实是一个箭头函数，不严谨的说，这个函数可以被 =logger1()()()= 这样被调用，因为第一次和第二次被调用都返回一个新的箭头函数，这里为了好理解，
+我们把他们拆分为 middle 和 inner 函数（一般是不能这么写的，因为内部的箭头函数还要通过闭包获取外部的变量值）。
+
+说了这么多，其实最终可以归结为一句话，那就是我们的 *chain 数组里放的都是 middle 函数，也就是 chain 是一个 middle 函数的集合* ，这点很重要，我们后面还会说到这个。
+
+** 链式调用
+我们继续看下一行代码：
+
+#+BEGIN_EXAMPLE
+    dispatch = compose(...chain)(store.dispatch)
+    等价于
+    temDispatch = compose(...chain)(store.dispatch)
+#+END_EXAMPLE
+
+这行代码看着很简短，其实很难理解，我们一步步来看。
+
+** 转换链式函数
+我们首先来看 compose(...chain)这行代码。以下是 compose 代码的实现：
+
+#+BEGIN_EXAMPLE
+    function compose(...funcs) {
+      if (funcs.length === 0) {
+        return arg => arg
+      }
+
+      if (funcs.length === 1) {
+        return funcs[0]
+      }
+
+      return funcs.reduce((a, b) => (...args) => a(b(...args)))
+    }
+#+END_EXAMPLE
+
+关键代码 =funcs.reduce((a, b) => (...args) => a(b(...args)))=,
+代入 compose(...chain)，chain 我们上面说到，是一个 middle 函数的数组，然后经过 reduce 处理，这里比较麻烦，我们一点点来解释：
+
+#+BEGIN_EXAMPLE
+    (a, b) => (...args) => a(b(...args))
+#+END_EXAMPLE
+
+上面就是 reduce 函数的回调，
+
+=(...args) => a(b(...args)=
+
+这是回调的返回值，也是一个箭头函数，我们把它命名为 reduceMiddleFunc;
+
+a 变量为上次回调的返回值（不出意外的话，就是一个箭头函数，要么是 chain 数组的第一个值，也就是一个 middle 函数，要么就是上次回调的返回值，就是一个 reduceMiddleFunc 函数），
+
+b 变量为当前循环的值，也就是一个 middle 函数。
+
+这样可能不太好理解，举个例子吧，假如说原来的 chain 数组的值为[middle1，middle2，middle3，middle4]。那么 compose(...chain)之后，我们得到
+=(...args) => middle1(middle2(middle3(middle4(...args))))= 这样一个箭头函数。我们把它命名为 chainFunc。
+
+*** 执行链式函数
+原来的代码是：
+
+#+BEGIN_EXAMPLE
+    dispatch = compose(...chain)(store.dispatch)
+    等价于
+    temDispatch = compose(...chain)(store.dispatch)
+#+END_EXAMPLE
+
+经过我们上面的分析后，我们得到以下代码：
+
+#+BEGIN_EXAMPLE
+    const chainFunc = (...args) => middle1(middle2(middle3(middle4(...args))));
+    temDispatch = chainFunc(store.dispatch)
+#+END_EXAMPLE
+
+接下来我们来看 chainFunc(store.dispatch)，也就是我们要执行这个链式函数了，如下：
+
+#+BEGIN_EXAMPLE
+    const chainFunc = (...args) => middle1(middle2(middle3(middle4(...args))));
+    temDispatch = chainFunc(store.dispatch)
+    // 相当于下面一行
+    temDispatch = middle1(middle2(middle3(middle4(store.dispatch))))
+#+END_EXAMPLE
+
+【注意】：此处的 store.dispatch 是调用 createStore 创建的元素 store 的 dispatch 方法，后面我们会覆盖原生的 dispatch，所以这里需要注意下。
+
+** 返回 store 对象
+我们来看 applyMiddleware 的最后一行代码，
+
+#+BEGIN_EXAMPLE
+    return {
+          ...store,
+          dispatch// 也就是temDispatch
+        }
+#+END_EXAMPLE
+
+这个其实是 createStore 函数的返回值，也就是说我们上面定义的 temDispatch 会覆盖掉初始的 store 中 dispatch。
+
+也就是说，当你调用调用 store.dispatch(action)的时候，就相当于是调用 middle1(middle2(middle3(middle4(store.dispatch))))(action)，只要最内部的 store.dispatch 才是调用真正的 dispatch 方法。
+
+我们来简化一下这个代码：
+
+#+BEGIN_EXAMPLE
+    const param = middle2(middle3(middle4(store.dispatch)));
+    store.dispatch(action)
+    等价于
+    middle1(param)(action)
+#+END_EXAMPLE
+
+还记得 middle 函数吗？
+
+#+BEGIN_EXAMPLE
+    const middle = next => action => {
+      console.log('dispatching 333 logger', action)
+      next(action)
+      console.log('next state 4444 logger', action)
+    };
+#+END_EXAMPLE
+
+当我们执行 middle1 的时候，就会把 param 当做 next 参数来执行，然后返回一个 inner 函数：
+
+这是 inner 函数：
+
+#+BEGIN_EXAMPLE
+    const inner = action => {
+      console.log('dispatching 333 logger', action)
+      next(action)
+      console.log('next state 4444 logger', action)
+    };
+#+END_EXAMPLE
+
+那么上面的代码就可以修改为如下：
+
+#+BEGIN_EXAMPLE
+    const param = middle2(middle3(middle4(store.dispatch)));
+    store.dispatch(action)
+    等价于
+    middle1(param)(action)
+    等价于
+    inner(action)
+#+END_EXAMPLE
+
+那么在 inner 函数内执行 next 函数，其实就是执行 middle2(middle3(middle4(store.dispatch)))这一套，依次类推，就好比是洋葱一样，一直执行到最内部真正的 store.dispatch 方法为止。
+
+* one more thing
+上面我说到，在最后我们用 temDispatch 这个函数覆盖了原始的 store.dispatch 函数，那如果我们是 inner 中通过 store.dispatch 去调用会发什么情况呢？
+
+我们已经说过，applyMiddleware 最终会覆盖原始 store 上的 dispatch 方法，改成我们的链式调用函数，如果在 inner 里调用 store.dispatch，其实就相当于重新从链式函数的最外层的开始调用，这就进死循环了。
+
+[[file:./static/Redux middleware/2021-07-02_17-47-56_screenshot.jpg]]

@@ -1,0 +1,12 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG SRM Structural Classification/")); -*-
+:PROPERTIES:
+:ID:       ADB1E7C0-B854-48AB-9B65-16C7713F6115
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-20 Wed 20:46>
+#+TITLE: 737NG SRM Structural Classification
+#+FILETAGS: :PSE:FCBS:
+
+* 51-00-04-0G-0 GENERAL - Structural Classification                      :fc:
+- This section gives the *主要结构元件 Principal Structural Elements* (PSEs) and Secondary Structure of the airplane. This can be used to find the classification of major and minor repairs.
+- This section gives a *疲劳敏感结构 Fatigue Critical Baseline Structure* (FCBS) List.

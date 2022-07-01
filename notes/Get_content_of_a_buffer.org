@@ -1,0 +1,48 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/get_content_of_a_buffer/")); -*-
+:PROPERTIES:
+:ID:       2700CC44-F3BE-4071-88EC-1FD065ECBF5B
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-01 Sat 12:11>
+#+TITLE: Get_content_of_a_buffer
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+So =buffer-string= gets the content of the current buffer. But it doesn't allow specifying other buffers.
+
+How can I get around that? Do I need something like =save-window-excursion= to make it work?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+A lot of things in Emacs operate on the current buffer. You need to change the current buffer and restore it when you're done.
+Use [[file:./static/Current-Buffer.html#index-with_002dcurrent_002dbuffer-2122][=with-current-buffer=]] for simple cases where you just need to do something in another buffer,
+and [[file:./static/Current-Buffer.html#index-save_002dcurrent_002dbuffer-2123][=save-current-buffer=]] for more complex cases where you need to navigate between several buffers.
+
+#+BEGIN_SRC emacs-lisp
+    (defun buffer-string* (buffer)
+      (with-current-buffer buffer
+        (buffer-string buffer)))
+#+END_SRC
+
+If you want the text content of the buffer without properties, call [[file:./static/Buffer-Contents.html#index-buffer_002dsubstring_002dno_002dproperties-2825][=buffer-substring-no-properties=]].
+
+=buffer-string= returns only the [[file:./static/Narrowing.html#Narrowing][narrowed]] part of the buffer. If you need the whole content, widen it after saving the narrowing.
+
+#+BEGIN_SRC emacs-lisp
+    (defun buffer-whole-string (buffer)
+      (with-current-buffer buffer
+        (save-restriction
+          (widen)
+          (buffer-substring-no-properties buffer (point-min) (point-max)))))
+#+END_SRC
+
+If you also need to save the point, call [[file:./static/Excursions.html#index-save_002dexcursion-2759][=save-excursion=]] as well.
+Note that =save-excursion= restores the point only in the current buffer,
+so if you need to switch to another buffer and move around there, call =save-excursion= inside =save-current-buffer= or =with-current-buffer=.

@@ -1,0 +1,13 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/天线补漆/")); -*-
+:PROPERTIES:
+:ID:       92866737-677D-4984-86C7-5B00592C77CD
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-03-30 Mar 09:59>
+#+TITLE: 天线补漆
+[[file:./static/天线补漆/366.jpeg]]
+
+[[file:./static/天线补漆/669.jpeg]]
+
+MT-B4-23-2002 关于明确天线补漆的相关要求。

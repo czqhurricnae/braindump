@@ -1,0 +1,14 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/R648 SMOKE CONTROL RELAY/")); -*-
+:PROPERTIES:
+:ID:       B7819448-4AAB-40CA-AD19-F063E159B916
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-24 Sat 20:01>
+#+TITLE: R648 SMOKE CONTROL RELAY
+#+FILETAGS: :除烟控制继电器:R648:
+
+* R648 激励的条件
+[[file:./static/R648 SMOKE CONTROL RELAY/2021-07-24_20-01-45_2021-07-24_19-20-00_SSM 21-43-21.jpeg]]
+
+当飞机处于飞行中（R592 处于 AIR 位），出现烟雾或异味时，机组会依据检查单将空调组件的电门放置于除烟模式构型（右再循环风扇置于 OFF 位，左或右组件置于 HIGH 位）。
+此时，除烟控制继电器 R648 得电吸合。

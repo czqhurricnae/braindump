@@ -1,0 +1,26 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/安全管理系统评估工具/")); -*-
+:PROPERTIES:
+:ID:       E8861303-D32D-4D5E-8CDC-6B6A50DA9921
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-01-22 Sat 02:13>
+#+TITLE: 安全管理系统评估工具
+
+#+ROAM_KEY:
+
+
+根据安全管理国际合作小组（SM ICG）所发布的指导文件所发展。
+
+是提供民航局检查员使用，就民航局许可的航空组织所实施的安全管理系统进行系统化评估，判断其是否符合国际民航组织 Annex 19 及民航法规 07-02A/06-02A 之
+安全管理系统实施架构的 4 个关键要件及 12 个关键要素。
+
+专注于管理系统的效果与效率并判定其效能的评估。
+
+为评估组织安全管理系统之成熟度及有效性，此工具使用以下不同层次来显示组织安全管理的效能：
+- Present（存在）
+- Suitable（适合）
+- Operating（运作）
+- Effective（有效）
+
+* TODO [[x-devonthink-item:E430CE73-95B5-4BCA-86BA-F33E40EC448A][Safety Management System Evaluation Tool]]  
+

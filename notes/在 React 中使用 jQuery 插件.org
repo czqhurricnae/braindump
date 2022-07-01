@@ -1,0 +1,79 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/在 React 中使用 jQuery 插件/")); -*-
+:PROPERTIES:
+:ID:       7E1CB94E-831C-455B-83A9-0D3957017AC5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-06-02 二 01:12>
+#+TITLE: 在 React 中使用 jQuery 插件
+
+* 背景:
+虽然现在 react，vue 等框架开启了前端开发的新篇章，但对于一些比较复杂的页面，比如想在项目里面生成组织架构图，人员汇报关系等还是需要用到之前的 jquery 插件。
+
+* 首先要在 react 里面安装 jquery
+#+BEGIN_SRC js
+npm install jquery --save
+#+END_SRC
+
+将 ~$~ 变量挂载到 window 下面，可以在项目中直接使用 ~$~ ， 不用再引用。
+
+#+BEGIN_SRC js
+//修改webpack 配置文件：
+plugins:[
+    new webpack.ProvidePlugin({
+        $:"jquery",
+        jQuery:"jquery",
+        "window.jQuery":"jquery"
+    })
+]
+#+END_SRC
+
+* 使用 jquery 插件的姿势
+首先用 ~require(/your/path/jquery.plugin)~ 引用 jquery 插件：
+
+webpack 支持 ES6 的 import，requirejs，commonjs 语法，可以用 CMD，AMD 的方式引用。
+
+AMD 写法：
+
+#+BEGIN_SRC js
+define(["jquery"],function($){
+    ...
+        var initialChart = function(data){
+            //插件逻辑
+        }
+    ...
+        $(function(){
+            //页面逻辑
+        })
+    ...
+
+    return{
+        initialChart:initialChart //导出函数
+    }
+})
+#+END_SRC
+
+CMD 写法：
+
+#+BEGIN_SRC js
+function orgOrgChart(data){
+    //插件逻辑
+}
+$(function(){
+    //页面逻辑
+})
+module.exports.orgOrgChart = orgOrgChart //导出函数
+#+END_SRC
+
+最后在 react 里面引用导出的函数并在生命周期函数里面调用：
+
+#+BEGIN_SRC js
+import {initialChart} from '../../es5Components/emp-orgChart.js'
+import {orgOrgChart} from '../../es5Components/emp-orgChart.js'
+
+...
+    componentDidMount(){
+        initialChart(this.state.data);
+        orgOrgChart(this.state.data)
+    }
+....
+#+END_SRC

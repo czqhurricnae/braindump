@@ -1,0 +1,264 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/JavaScript 的 this 的值到底是什么/")); -*-
+:PROPERTIES:
+:ID:       05500BB5-443C-4EFC-A14A-17E616F00825
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-07-26 Mon 13:52>
+#+TITLE: JavaScript 的 this 的值到底是什么
+
+你可能遇到过这样的 JS 面试题：
+
+#+BEGIN_SRC javascript
+var obj = {
+  foo: function() {
+    console.log(this)
+  }
+}
+
+var bar = obj.foo
+obj.foo() // 打印出的 this 是 obj
+bar() // 打印出的 this 是 window
+#+END_SRC
+
+请解释最后两行函数的值为什么不一样。
+
+** 函数调用
+首先需要从函数的调用开始讲起。
+
+JavaSript（ES5）里面有三种函数调用形式：
+
+#+BEGIN_SRC go
+func(p1, p2)
+obj.child.method(p1, p2)
+func.call(context, p1, p2) // 先不讲 apply
+#+END_SRC
+
+一般，初学者都知道前两种形式，而且认为前两种形式「优于」第三种形式。
+
+从看到这篇文章起，你一定要记住，第三种调用形式，才是正常调用形式：
+
+#+BEGIN_SRC go
+func.call(context, p1, p2)
+#+END_SRC
+
+其他两种都是语法糖，可以等价地变为 call 形式：
+
+#+BEGIN_SRC go
+func(p1, p2) 等价于
+func.call(undefined, p1, p2)
+
+obj.child.method(p1, p2) 等价于
+obj.child.method.call(obj.child, p1, p2)
+#+END_SRC
+
+请记下来。（我们称此代码为「转换代码」，方便下文引用）
+
+至此我们的函数调用只有一种形式：
+
+#+BEGIN_SRC go
+func.call(context, p1, p2)
+#+END_SRC
+
+** 这样，this 就好解释了
+this，就是上面代码中的 context。就这么简单。
+
+this 是你 call 一个函数时传的 context，由于你从来不用 call 形式的函数调用，所以你一直不知道。
+
+先看 func(p1, p2) 中的 this 如何确定：
+
+当你写下面代码时：
+
+#+BEGIN_SRC go
+function func() {
+  console.log(this)
+}
+
+func()
+#+END_SRC
+
+用「转换代码」把它转化一下，得到
+
+#+BEGIN_SRC go
+function func() {
+  console.log(this)
+}
+
+func.call(undefined) // 可以简写为 func.call()
+#+END_SRC
+
+按理说打印出来的 this 应该就是 undefined 了吧，但是浏览器里有一条规则：
+
+#+BEGIN_QUOTE
+如果你传的 context 是 null 或 undefined，那么 window 对象就是默认的 context。（严格模式下默认 context 是 undefined）
+#+END_QUOTE
+
+因此上面的打印结果是 window。
+
+如果你希望这里的 this 不是 window，很简单：
+
+#+BEGIN_SRC go
+func.call(obj) // 那么里面的 this 就是 obj 对象了
+#+END_SRC
+
+再看 obj.child.method(p1, p2) 的 this 如何确定：
+
+#+BEGIN_SRC javascript
+var obj = {
+  foo: function() {
+    console.log(this)
+  }
+}
+
+obj.foo()
+#+END_SRC
+
+按照「转换代码」，我们将 obj.foo() 转换为：
+
+#+BEGIN_SRC fortran
+obj.foo.call(obj)
+#+END_SRC
+
+好了，this 就是 obj。搞定。
+
+回到题目：
+
+#+BEGIN_SRC javascript
+var obj = {
+  foo: function() {
+    console.log(this)
+  }
+}
+
+var bar = obj.foo
+obj.foo() // 转换为 obj.foo.call(obj)，this 就是 obj
+bar()
+// 转换为 bar.call()
+// 由于没有传 context
+// 所以 this 就是 undefined
+// 最后浏览器给你一个默认的 this —— window 对象
+#+END_SRC
+
+** [ ] 语法
+
+#+BEGIN_SRC javascript
+function fn () {
+  console.log(this)
+}
+
+var arr = [fn, fn2]
+arr[0]() // 这里面的 this 又是什么呢？
+#+END_SRC
+
+我们可以把 arr[0]( ) 想象为 arr.0( )，虽然后者的语法错了，但是形式与转换代码里的 ~obj.child.method(p1, p2)~ 对应上了，于是就可以愉快的转换了：
+
+#+BEGIN_SRC fortran
+        arr[0]()
+假想为    arr.0()
+然后转换为 arr.0.call(arr)
+那么里面的 this 就是 arr 了 :)
+#+END_SRC
+
+** 箭头函数
+我不明白为什么需要讨论箭头函数，实际上箭头函数里并没有 this，如果你在箭头函数里看到 this，你直接把它当作箭头函数外面的 this 即可。
+外面的 this 是什么，箭头函数里面的 this 就还是什么，因为箭头函数本身不支持 this。
+
+有人说「箭头函数里面的 this 指向箭头函数外面的 this」，这很傻，因为箭头函数内外 this 就是同一个东西，并不存在什么指向不指向。
+
+** 总结
+- this 就是你 call 一个函数时，传入的第一个参数。（请务必背下来「this 就是 call 的第一个参数」）
+- 如果你的函数调用形式不是 call 形式，请按照「转换代码」将其转换为 call 形式。
+
+** Event Handler 中的 this
+
+#+BEGIN_SRC javascript
+btn.addEventListener('click' ,function handler() {
+  console.log(this) // 请问这里的 this 是什么
+})
+#+END_SRC
+
+handler 中的 this 是什么呀，看了你的文章我还是不懂啊？
+
+那是因为你没有看懂，我们说过 this 都是由 call 或 apply 指定的，那么你只需要找到 handler 被调用时的代码就行了。
+
+可是我哪知道 addEventListener 的源代码呀
+
+是呀，addEventListener 是浏览器内置的方法，我们看不见源代码。
+
+所以，你只能看文档了，[[https://link.zhihu.com/?target=https%3A//developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener%23The_value_of_this_within_the_handler][MDN 这样说]]：
+
+#+BEGIN_QUOTE
+ 通常来说 this 的值是触发事件的元素的引用，这种特性在多个相似的元素使用同一个通用事件监听器时非常让人满意。
+
+ 当使用 ~addEventListener(~) 为一个元素注册事件的时候，句柄里的 this 值是该元素的引用。其与传递给句柄的 =event= 参数的 =currentTarget= 属性的值一样。
+#+END_QUOTE
+
+由于浏览器知道你不方便看源码里是怎么 call handler 的，所以直接在文档里告诉你了，你可以假想浏览器的源码是这样写的：
+
+#+BEGIN_SRC javascript
+// 当事件被触发时
+handler.call(event.currentTarget, event)
+// 那么 this 是什么不言而喻
+#+END_SRC
+
+** jQuery Event Handler 中的 this
+那么下面代码中的 this 是什么呢：
+
+#+BEGIN_SRC javascript
+$ul.on('click', 'li' , function() {
+  console.log(this)
+})
+#+END_SRC
+
+同样，不要瞎猜，你要么看 jQuery 源码是怎么 call 这个函数的，要么看[[https://link.zhihu.com/?target=http%3A//www.jquery123.com/on/][jQuery 文档]]。
+
+jQuery 文档是这样写的：
+
+#+BEGIN_QUOTE
+当 jQuery 的调用处理程序时，this 关键字指向的是当前正在执行事件的元素。
+对于直接事件而言，this 代表绑定事件的元素。
+对于代理事件而言，this 则代表了与 selector 相匹配的元素。(注意，如果事件是从后代元素冒泡上来的话，那么 this 就有可能不等于 event.target。)
+若要使用 jQuery 的相关方法，可以根据当前元素创建一个 jQuery 对象，即使用 $(this)。
+#+END_QUOTE
+
+** 总结一下如何确定 this 是值
+- 看源码中对应的函数是怎么被 call 的。（这是最靠谱的办法）
+- 看文档。
+- console.log(this)。
+
+** 如何强制指定 this 的值？
+自己写 =call/apply= 即可：
+
+#+BEGIN_SRC javascript
+function handlerWrapper(event) {
+  function handler(){
+    console.log(this) // 请问这里的 this 是什么
+  }
+
+  handler.call({name: '饥人谷'}, event)
+}
+btn.addEventListener('click', handlerWrapper)
+#+END_SRC
+
+你也可以直接使用 =bind= ，与上面的代码效果差不多：
+
+#+BEGIN_SRC javascript
+function handler(){
+  console.log(this) // 请问这里的 this 是什么
+}
+var handlerWrapper = handler.bind({name: '饥人谷'})
+btn.addEventListener('click', handlerWrapper)
+#+END_SRC
+
+上面三句代码可以挤成一句：
+
+#+BEGIN_SRC javascript
+btn.addEventListener('click', function() {
+  console.log(this) // 请问这里的 this 是什么
+}.bind({name: '饥人谷'}))
+#+END_SRC
+
+这是前端里一个常见的套路。
+
+this 不难，就看你有没有按照 =call/apply= 来理解函数了。
+
+完。

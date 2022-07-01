@@ -1,0 +1,85 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python-协程/")); -*-
+:PROPERTIES:
+:ID:       241C1FAD-06D8-4559-8CA6-47EE38DA1FE9
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-08-20 Thu 22:35>
+#+TITLE: Python-协程
+
+* Generators
+ [[id:DB3ACA2F-74A3-44B8-8F3D-631E0B4E7F64][See：Python-yield]]
+
+A generator is a function that produces a sequence of results instead of a single value.
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session countdown
+def countdown(n):
+    while n > 0:
+        yield n
+        n -= 1
+
+
+for i in countdown(5):
+    print i
+#+END_SRC
+
+#+RESULTS:
+: 5
+: 4
+: 3
+: 2
+: 1
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session countdown
+x = countdown(5)
+x
+#+END_SRC
+
+#+RESULTS:
+: <generator object countdown at 0x1004bfc30>
+
+** Remembering to call ~.next()~ is easy to forget
+Solved by wrapping coroutines with a [[id:7C4719F3-692B-493C-8EEF-1FA797C9E6E4][decorator]].
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+def coroutine(func):
+    def start(*args, **kwargs):
+        cr = func(*args, **kwargs)
+        cr.next()
+        return cr
+    return start
+
+
+@coroutine
+def grep(pattern):
+    ...
+#+END_SRC
+
+#+RESULTS:
+
+** Closing a Coroutine
+- A coroutine might run indefinitely
+- Use ~.close()~ to shut is download
+- Garbage collection also calls ~close()~
+
+** Catching ~close()~
+- ~close()~ can be caught (GeneratorExit)
+- You can not ignore this exception
+- Only legal action is to clean up and return
+
+#+BEGIN_SRC python :preamble # -*- coding: utf-8 -*- :results values :exports no-eval :session
+@coroutine
+def grep(pattern):
+    print "Looking for %s" % pattern
+    try:
+        while True:
+            line = (yield)
+            if pattern in line:
+                print line
+    except GeneratorExit:
+        print "Going away, Goodbye."
+#+END_SRC
+
+** 区别
+ - Generators produce data from iteration
+ - Coroutines are consumers of data
+ - Coroutines are not related to iteration

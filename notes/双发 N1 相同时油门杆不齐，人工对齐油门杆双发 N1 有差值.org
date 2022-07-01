@@ -1,0 +1,246 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/")); -*-
+:PROPERTIES:
+:ID:       B819C454-C171-43DB-96E3-77518C255E22
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-10-26 Oct 01:37>
+#+TITLE: 双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值
+
+关于 737NG 油门杆差球问题，之前也进行总结过：
+
+* 事件背景
+2020 年 1 月 7 日，某 737-800 飞机，机组短停反映：油门杆位置左右不一致，当位置一致时，N1 差值 4.9，1 号油门杆 N1 高。
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/7924.jpeg]]
+
+参考 FIM 76-05 TASK 801 Thrust Levers Not Aligned (Staggered) for Same N1 on Both Engines - Fault Isolation，检查正常，飞机正常放行。
+
+2020 年 1 月 8 日，将飞机调整为石家庄航后，向下微调左侧慢车油门杆角度，后续机组未再反映。
+
+左发慢车 TRA：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/42784.jpeg]]
+
+下调
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/9868.jpeg]]
+
+右发慢车 TRA 不调
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/10467.jpeg]]
+
+
+* 原因分析与检查程序
+参见 2012 年在机务在线论坛上的回复：
+
+https://bbs.airacm.com/read/94125/
+
+737NG 油门杆差球问题
+
+昨天机组反映，推油门时，当两个油门杆位置一致时，双发的 N1 相差 1 到 5 个点，若是要是双发 N1 一致，则需要是两个油门杆形成差球才可以。
+我们航后做自动油门测试时，当前状态和历史状态木有任何故障代码显示，EEC 也木有故障代码。
+
+做 A/T 伺服马达测试和力矩测试时，油门杆全程作动的过程中，可以明显的看到，在自动油门系统的控制下，两个油门杆有一个明显的差球，但是也测试不出任何代码。
+做量程检查（RANGE CHECK）时，当把两个油门杆同时放在慢车位时，两个油门杆的角度有零点几度的差别。
+
+向高手求助，这个是怎么回事？当时领导要求调节，我只能说这个不会弄，一个因为木有任何故障代码，二个因为是在木有做过这种调节。希望有高人能分享一下经验。
+
+首先我回答下怎么回事，油门杆的位置最终是要通过拉杆传到油门杆角度解算器给出油门杆角度。
+如果两边油门杆在同一位置，但传到油门杆角度解算器的输出不一样，角度解算器得出的角度就不一样，从而给 FMC 的油门杆角度也不一样，造成双发 N1 不一致。
+当使用自动油门时，所需的油门杆角度是 FMC 得出，此时双方油门杆角度是一样的，跟前面一样，因为油门杆齐的时候角度不一样，所以角度一样的时候就会不齐。
+
+处理方法很简单的，调节一下角度解算器上拉杆长度就行了，具体程序请参考 AMM TASK 76-11-05-820-801-F00 Thrust Lever Angle Resolver Adjustment。
+
+图参见https://bbs.airacm.com/read/93786/
+
+注：这里所谓的球，指的是油门杆把手的宽度。
+
+通常，会出现如下三种现象，其实就是同一个问题的三种表现：
+
+- 使用自动油门时，双发油门杆有错位
+- N1 相同时，双发油门杆有错位
+- 双发油门杆对齐时，N1 有差值
+
+原因其实很简单，就是油门杆位置解算的误差造成。只要误差在手册允许范围内，就是可接受的。下面简单介绍一下手册要求的检查程序：FIM 76-05 TASK 801 Thrust Levers Not Aligned (Staggered) for Same N1 on Both Engines - Fault Isolation。
+
+主要分成三部分检查：
+- 与引气负载有关的电门位置信号检查
+- 自动油门 BITE
+- 油门杆与解算器的检查和调节
+
+* 与引气负载有关的电门位置信号检查
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/24366.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/24680.jpeg]]
+
+NOTE: The Control Display Unit (CDU) Screen is updated once per second.The status of the discretes can take as long as 2 seconds to be updated.
+
+注意：[2]Supply Bleed Air from the Auxiliary Power Unit (APU) or a Ground Cart for these steps only.
+
+也就是 *在检查 L/R PACK 位置离散信号时，需要接通引气，并且需要打开隔离活门。*
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/27305.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/27602.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/27900.jpeg]]
+
+这一步做起来很简单。但是当前的手册有点小问题：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/28856.jpeg]]
+
+737NG 飞机上的 PACK 电门只有 OFF，AUTO 和 HIGH 三个位置，但是这里列出了 4 个位置：OFF，AUTO/HIGH，AUTO，HIGH/OFF。
+这里是手册错了，波音预计会在 June 15, 2020 revision 的 FIM 中对此处进行修改。
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/30266.jpeg]]
+
+* 自动油门自检
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/31877.jpeg]]
+
+这一步也很简单。看着 CDU 上的提示做就行。INFLIGHT FAULTS、CURRENT STATUS、INTERACTIVE：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/32879.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/33231.jpeg]]
+
+A/T BITE 里的油门测试：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/34237.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/34538.jpeg]]
+
+* 油门杆与解算器的检查和调节
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/36885.jpeg]]
+
+主要是检查油门杆在慢车位和起飞功率位（TRA 78°）的误差是否在范围内。
+
+TASK 76-11-05-820-801-F00 Thrust Lever Angle Resolver Adjustment
+
+① 注意拨出气象雷达跳开关：
+
+P6-1 D13 WEATHER RADAR RT
+
+② CDU 进入发动机自检 INPUT MONITORING 页面，查看 TRA 数值，下面的数据以我们这架飞机为例：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/41106.jpeg]]
+
+先选择一台发动机为基准（随便哪台都行），慢车位 A/B 通道的 TRA 值在 36.0±0.8，并且 A/B 通道的差值要小于 0.8：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/42062.jpeg]]
+
+点击 TRA 对应的行选键
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/42784.jpeg]]
+
+左发是满足要求的。
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/44445.jpeg]]
+
+接着缓慢前推左发油门杆到 78°，注意整个检查和调节过程中 TRA 都不要超过 80°，否则 TRA 值会不精确，整个需要从头开始：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/45860.jpeg]]
+
+这里我推到了 78.03，A 通道 78.02，B 通道 78.04。保持左发油门杆在位置不动。
+
+然后是另一发，首先同样是检查慢车时的 TRA，A/B 通道的 TRA 值在 36.0±0.8，并且 A/B 通道的差值要小于 0.8：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/46957.jpeg]]
+
+明显 2 发慢车位置也是满足要求的。
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/47680.jpeg]]
+
+缓慢前推 2 发油门杆，到与之前的 1 发油门杆齐平，查看此时 2 发的 TRA 读数：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/48324.jpeg]]
+
+右发是 77.67，A 通道 77.69，B 通道 77.65。
+
+手册要求：Record the value that shows in the POSITION CH A line to the nearest tenth of a degree.
+
+所以记录双发 A 通道数据为：左发 78.0°，右发 77.7°，差值 0.3°。手册标准为此时双发 A 通道 TRA 差值不超过 1°，是完全满足手册要求的。
+
+③ 检查油门杆连杆，以及油门杆与自动油门刹车组件之间的连接，确认没有松动。
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/50164.jpeg]]
+
+很简单，从前附件舱目视检查一下就行。
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/50781.jpeg]]
+
+* 操作与维护提示
+当前手册里并未给出允许的双发油门杆错位范围，一旦机组短停反映故障的话，虽然相关检查测试并不麻烦，但时间上也是很紧张。
+
+有没有快速放行的标准呢？
+
+就此我也咨询了波音：
+
+#+BEGIN_QUOTE
+Q1.Is there any quick dispatch standard for thrust levers do not aligned for same N1? For example, it is acceptable that the alignment does not exceed a certain knob width.
+
+A1.There is no documented allowable difference for N1. However, Boeing rigs the thrust-levers to have no more than 1/4 knob (0.3125 inch) throttle stagger in the forward thrust range (refer to Boeing Drawing 254A1001).
+In practice, the actual stagger is limited to a maximum of approximately 0.11 inch (1/12 knob) by the idle accuracy requirements of 36.0 (+/-0.25) degrees TRA.
+Adjusting each lever to as close to 36.0 degrees as possible at the idle stop should assure little to no observable thrust lever stagger.
+#+END_QUOTE
+
+波音图纸 Drawing 254A1001：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/61680.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/61976.jpeg]]
+
+#+BEGIN_QUOTE
+*Q2.I found this word in FCOM 4.20.10:"The thrust levers should normally be aligned to no more than one full knob width difference
+during all ranges of normal operation with symmetrical thrust." Can this be used as a dispatch standard?
+
+*A2.There is no documented value at which fault isolation procedures would need to be initiated.
+Engine performance is evaluated independently and not relative to the sister engine.
+Boeing recommends that *each operator establish an acceptable thrust lever stagger limit,* which can be routinely achieved by their normal maintenance practices.
+*Such an "acceptable" limit can become the basis on which to judge thrust lever stagger as appropriate.*
+
+*厂家让航空公司自己制定油门杆错位的放行标准。OK，"球"还是回到了自己手里。*
+#+END_QUOTE
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/62955.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/63362.jpeg]]
+
+SDS Pageset 22-31-00-014 - A/T SYSTEM - FUNCTIONAL DESCRIPTION - ENGAGE LOGIC
+
+综上，个人建议如下：
+- 如果机组反映自动油门时油门杆错位，如果错位在 1 个手柄宽度以内，EEC BITE 没有代码且双发推力等级一致，自动油门工作正常且目视没有发现松动的话，可以正常放行，航后再处理。其实机组自己也知道，这也并不是什么大问题。时间充足，也可以按 FIM 76-05 TASK 801 完成检查。
+- 后续即使按手册检查都在标准范围内，也建议大家将油门杆解算器连杆进行微调，将慢车时的 TRA 值调节到更接近 36°。
+注意：调节前首先要判断调节是否有效。先检查慢车 TRA，然后以一台发动机的 TRA 78°为参考，检查另一发此时的 TRA 值：
+
+- 如果 TRA 比参考发动机的 TRA 大，慢车的 TRA 也必须要比参考发动机大
+
+- 如果 TRA 比参考发动机的 TRA 小，慢车的 TRA 也必须要比参考发动机小
+
+如果慢车和起飞 TRA 双发相比的结果不一样，就不是调节连杆能解决的了。此时，只要按 FIM 76-05 TASK 801 检查在范围内，误差在允许范围内的。
+
+还是那句话， *维护标准应该比放行标准高！* 能将误差给调小一点，为什么就不能给调一下呢？
+
+调节起来也很简单：
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/2021-01-31_19-40-53_screenshot.jpg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/69309.jpeg]]
+
+[[file:./static/双发 N1 相同时油门杆不齐，人工对齐油门杆双发 N1 有差值/2021-02-14_10-23-30_Image16.png]]
+
+拆掉固定螺栓【2】【4】后，松开调节螺母【6】，转动杆端就行，往长了调（下）是将 TRA 增加，往短了调（上）是将 TRA 减小。
+
+调的时候半圈一调，通常情况下调半圈就够了。
+
+调节螺母的拧紧力矩 95-160 磅寸，固定螺母开口销 BACP18BC02A03P。调完以后再重复前面的慢车和 78° TRA 对比检查，确认调整结果正确。测试完恢复拨出的跳开关。
+
+最后，关于自动油门伺服马达测试：
+
+注意：这个测试过程中油门杆是否能对齐，不作为排故的参考。因为这里有可能是马达运动的速度差异。
+
+* 推荐阅读
+[[http://mp.weixin.qq.com/s?__biz=MzAwNzkyMTg1Mg==&mid=2247490209&idx=1&sn=02d14c2fb335333ad88177e97f8dbed0&chksm=9b779372ac001a649af0a9a5eba5c61863026de0177cf16311d3aa7c47f1cf4f7d6a6c4437ff&scene=21#wechat_redirect][737NG自动油门电门包M1766/M1767更换调节测试]]

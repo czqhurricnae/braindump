@@ -1,0 +1,24 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG ACP/")); -*-
+:PROPERTIES:
+:ID:       C6B8C4FC-E5D0-4D92-9503-260EB1E55293
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-22 Fri 10:14>
+#+TITLE: 737NG ACP
+
+* 旧构型 ACP 面板上有 BOOM/MASK 电门
+[[file:./static/737NG ACP/2021-01-22_10-14-25_screenshot.jpg]]
+ACP 面板上有 BOOM/MASK 电门，需要通过 ACP 的 BOOM/MASK 电门来选择使用 BOOM 麦克还是氧气面罩麦克。
+
+* 新构型 ACP 面板上没有 BOOM/MASK 电门
+[[file:./static/737NG ACP/2021-01-22_10-17-05_screenshot.jpg]]
+ACP 面板上没有 BOOM/MASK 电门，氧气面罩收藏盒内部有个压力电门，当氧气面罩的压力值超越一定范围，发送信号给 ACP，接通氧气面罩麦克风。
+
+#+BEGIN_QUOTE
+The oxygen mask stowage panel sends a door discrete, MASK MIC ON/OFF signal, to the audio control panel. An open discrete, mask mic off, is door closed and a ground discrete, mask mic on, is door open.
+#+END_QUOTE
+
+* MIC 选择灯
+PLA 给一个地信号来点亮 MIC 选择灯。
+
+[[file:./static/737NG ACP/2021-01-22_16-18-45_screenshot.jpg]]

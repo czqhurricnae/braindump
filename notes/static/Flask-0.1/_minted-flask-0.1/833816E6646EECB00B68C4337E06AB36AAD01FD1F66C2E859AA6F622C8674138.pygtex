@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{BaseWSGIServer}\PYG{p}{(}\PYG{n}{HTTPServer}\PYG{p}{,} \PYG{n+nb}{object}\PYG{p}{)}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} 注1}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Simple single\PYGZhy{}threaded, single\PYGZhy{}process WSGI server.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{multithread} \PYG{o}{=} \PYG{n+nb+bp}{False}
+    \PYG{n}{multiprocess} \PYG{o}{=} \PYG{n+nb+bp}{False}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{,} \PYG{n}{app}\PYG{p}{,} \PYG{n}{handler}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+                 \PYG{n}{passthrough\PYGZus{}errors}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{ssl\PYGZus{}context}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n}{handler} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{handler} \PYG{o}{=} \PYG{n}{WSGIRequestHandler}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{address\PYGZus{}family} \PYG{o}{=} \PYG{n}{select\PYGZus{}ip\PYGZus{}version}\PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n}{port}\PYG{p}{)}
+            \PYG{n}{HTTPServer}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{p}{(}\PYG{n}{host}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{port}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,} \PYG{n}{handler}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{app} \PYG{o}{=} \PYG{n}{app}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{passthrough\PYGZus{}errors} \PYG{o}{=} \PYG{n}{passthrough\PYGZus{}errors}
+
+        \PYG{k}{if} \PYG{n}{ssl\PYGZus{}context} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{k}{try}\PYG{p}{:}
+                \PYG{k+kn}{from} \PYG{n+nn}{OpenSSL} \PYG{k+kn}{import} \PYG{n}{tsafe}
+            \PYG{k}{except} \PYG{n+ne}{ImportError}\PYG{p}{:}
+                \PYG{k}{raise} \PYG{n+ne}{TypeError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{SSL is not available if the OpenSSL }\PYG{l+s+s1}{\PYGZsq{}}
+                                \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{library is not installed.}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{ssl\PYGZus{}context} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{adhoc}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{:}
+                \PYG{n}{ssl\PYGZus{}context} \PYG{o}{=} \PYG{n}{generate\PYGZus{}adhoc\PYGZus{}ssl\PYGZus{}context}\PYG{p}{(}\PYG{p}{)}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket} \PYG{o}{=} \PYG{n}{tsafe}\PYG{o}{.}\PYG{n}{Connection}\PYG{p}{(}\PYG{n}{ssl\PYGZus{}context}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{p}{)}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ssl\PYGZus{}context} \PYG{o}{=} \PYG{n}{ssl\PYGZus{}context}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ssl\PYGZus{}context} \PYG{o}{=} \PYG{n+nb+bp}{None}
+
+    \PYG{k}{def} \PYG{n+nf}{log}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb}{type}\PYG{p}{,} \PYG{n}{message}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{\PYGZus{}log}\PYG{p}{(}\PYG{n+nb}{type}\PYG{p}{,} \PYG{n}{message}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{serve\PYGZus{}forever}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{try}\PYG{p}{:}
+            \PYG{n}{HTTPServer}\PYG{o}{.}\PYG{n}{serve\PYGZus{}forever}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}
+        \PYG{k}{except} \PYG{n+ne}{KeyboardInterrupt}\PYG{p}{:}
+            \PYG{k}{pass}
+
+    \PYG{k}{def} \PYG{n+nf}{handle\PYGZus{}error}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{request}\PYG{p}{,} \PYG{n}{client\PYGZus{}address}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{passthrough\PYGZus{}errors}\PYG{p}{:}
+            \PYG{k}{raise}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n}{HTTPServer}\PYG{o}{.}\PYG{n}{handle\PYGZus{}error}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{request}\PYG{p}{,} \PYG{n}{client\PYGZus{}address}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{get\PYGZus{}request}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{con}\PYG{p}{,} \PYG{n}{info} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{accept}\PYG{p}{(}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ssl\PYGZus{}context} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{con} \PYG{o}{=} \PYG{n}{\PYGZus{}SSLConnectionFix}\PYG{p}{(}\PYG{n}{con}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{con}\PYG{p}{,} \PYG{n}{info}
+\end{Verbatim}

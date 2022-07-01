@@ -1,0 +1,68 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AHP/")); -*-
+:PROPERTIES:
+:ID:       7EDFDB4C-C861-4164-8B6F-3E48A2760BAC
+:ROAM_ALIASES: 层次分析法
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-12 Sat 22:18>
+#+TITLE: AHP
+
+#+ROAM_KEY:
+
+
+* [[id:E77F1E60-173C-4DD0-B9A1-4744FA9082E7][特征值、特征向量]]计算
+对矩阵 A 乘上各准则权重组成的向量 $w = \left(w_{1}, w_{2}, \ldots, w_{n}\right)^{T}$ ，可得：
+
+$$
+Aw  = \left[\begin{array}{cccc}
+1 & w_{1} / w_{2} & \cdots & w_{1} / w_{n} \\
+w_{2} / w_{1} & 1 & \cdots & w_{2} / w_{n} \\
+\vdots & \vdots & 1 & \vdots \\
+w_{n} / w_{1} & w_{n} / w_{2} & \cdots & 1
+\end{array}\right]\left[\begin{array}{c}
+w_{1} \\
+w_{2} \\
+\vdots \\
+w_{n}
+\end{array}\right] = nw
+$$
+
+$$
+Aw = 
+\left[\begin{array}{cccc}
+\frac{W_{1}}{W_{1}} & \frac{W_{1}}{W_{2}} & \cdots & \frac{W_{1}}{W_{n}} \\
+\frac{W_{2}}{W_{1}} & \frac{W_{2}}{W_{2}} & \cdots & \frac{W_{2}}{W_{n}} \\
+\vdots & \vdots & \ddots & \vdots \\
+\frac{W_{n}}{W_{1}} & \frac{W_{n}}{W_{2}} & \cdots & \frac{W_{n}}{W_{n}}
+\end{array}\right]\left[\begin{array}{c}
+W_{1} \\
+W_{2} \\
+\vdots \\
+W_{n}
+\end{array}\right]=\left[\begin{array}{c}
+n W_{1} \\
+n W_{2} \\
+\vdots \\
+n W_{n}
+\end{array}\right]=n\left[\begin{array}{c}
+W_{1} \\
+W_{2} \\
+\vdots \\
+W_{n}
+\end{array}\right]
+= nw
+$$
+
+因为 $\alpha_{i}{_{j}}$ 是决策者进行评估准则重要性之成对比较时主观判断所给予的评比，
+其与真实的 $\frac{w_{i}}{w_{j}}$ 值将存在某种程度上的差异，此时 $Aw = nw$ 便不成立。
+
+因此 Saaty 建议以相对矩阵 A 之最大的特征值 $\lambda_{max}$ 来取代 n，即 $Aw = \lambda_{max}w$ 。
+
+由于利用 $Aw = \lambda_{max}w$ 求解评估准则之权重甚为复杂，为计算简易之考量，本文采用 Saaty 所提出之列平均标准化法（normalization of row average，NRA）
+近似求取表征 n 个评估准则重要性的特征向量 $w = \left(w_{1}, w_{2}, \ldots, w_{n}\right)^{T}$ 。
+
+根据 NRA 法，吾人只要将成对比较矩阵之各列元素（按列）加总，而后再予以标准化，即可求得各评估准则的权重，以数学式表示为：
+
+$$
+w_{i} = \frac{\sum_{j=1}^{n} a_{i j}}{\sum_{i=1}^{n} \sum_{j=1}^{n} a_{i j}}, \quad i=1,2, \ldots, n
+$$

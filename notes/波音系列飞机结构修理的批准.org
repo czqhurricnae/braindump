@@ -1,0 +1,262 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/波音系列飞机结构修理的批准/")); -*-
+:PROPERTIES:
+:ID:       34E8B9A9-57B7-4CC6-9C45-04F51D34D8ED
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-04-19 Mon 20:26>
+#+TITLE: 波音系列飞机结构修理的批准
+
+随着适航观念的日益深入，不仅适航部门包括各个航空公司对飞机结构修理批准越来越重视，所有存在于飞机上的修理，无论重要修理还是一般修理，如果超出持续适航文件的范围，
+需要得到适航部门的批准或认可，这一观念越来越得到更多认识的认可。历史清楚、资料完整的修理有关资料是飞机退租、出售时必须的资料之一，也是飞机保持其适航性必不可少的材料。
+本文将以波音系列飞机为例，阐述对于不同类型的超手册结构修理，如何快速的得到飞机制造国和注册国适航部门的批准。
+
+按照中国民航 AC-121-55 R1 的定义：
+
+修理是指对航空器及其部件的任何损伤或者缺陷进行处理，使其偏差达到在规定的限制范围内以便继续使用的工作统称。修理是维修工作的一种。
+
+修理应该按照按照经批准或认可的持续适航文件进行，并由合格 的 CCAR-145 部的维修单位进行。
+
+这里提到的持续适航文件，一般包括：
+
+- 适航指令；
+- 各类手册、规范及其引用的国家或者行业标准；
+- 服务通告、服务信函；
+- 法规文件中引用的国家和行业标准；
+- 其他批准的修理和改装技术文件。
+
+若按照上述持续适航文件进行的修理，则是手册内的修理，否则是超出持续适航文件的修理，即超手册修理
+
+修理又可分为重要修理（Major Repair）和一般修理（Minor Repair）。
+
+重要修理是指如果不正确的实施，将可能导致对重量、平衡、结构强度、性能、动力特性、飞行特性和其他适航性因素有明显影响的修理。
+重要修理不是按照已经被接受的方法或者通过基本的作业就能够完成的工作 。
+
+* 超出持续适航文件的重要修理
+:PROPERTIES:
+:ID:       103F8B03-DC22-4523-9965-5E14483124A9
+:END:
+<<zhongyaoxiuli>>对于国内注册的航空器，超出持续适航文件的重要修理需要得到中国民航地区管理局的批准，由 CCAR-121 运营人向地区管理局（如华东、华北、中南、西南地区管理局等）的适航部门提起申请，
+适航部门一般需要确认修理方案由飞机的制造厂家提供，并且由合格的维修单位予以实施， *通过发布适航管理文件的形式予以批准* ，中国民航要求，只有在得到适航管理部门的批准以后，才可以进行修理。
+一般情况下，适航部门也要求修理方案得到飞机型号合格证持有人国家适航部门的批准。
+对于波音系列飞机来说，需要得到美国 FAA 的批准，但是，一般情况下，只有在修理完成并声明按照波音的修理方案完成以后，才能申请 FAA 对修理的的批准。
+为了解决这个矛盾，在 CAAC 的批准函件中，都声明要求在得到型号合格证持有人国家适航部门的批准后，将批准证书发给地区适航部门留存。
+
+* 一般修理
+:PROPERTIES:
+:ID:       A9D5538F-ABD5-40AD-9164-337027DE8EC6
+:END:
+一般修理是指除重要修理以外的修理。
+
+当适航部门认为航空运营人具备制定改装方案的工程人员（包括航空运营人维修单位的人员），并且具有丰富的改装方案制定经验时，
+可以 *通过批准航空运营人改装方案制定和批准程序的方式进行批准* 。
+该程序 *可包含在维修工程管理手册一同获得批准或者以单独控制并获得批准* 。
+此种情况下，仅需将修理/改装方案报民航地区管理局或其在航空的委任代表处备案。
+
+综上所述，对于超出持续适航文件修理，得到中国民航适航部门批准的前提是由飞机制造厂家提供/批准修理方案以及后期得到型号合格证持有人所在国适航部门的批准，
+更好的了解厂家和型号合格证持有人所在国适航部门提供/批准修理方案的流程，有助于我们顺利地进行修理并得到中国民航适航部门的批准。
+
+2004 年 12 月以前，波音系列飞机的修理由 FAA（Federal Aviation Authority）委任工程代表（Designated Engineering Representative，DER）进行批准，
+即由委任的个人代表 FAA 行使权力，表明相关修理符合美国联邦法规第 14 篇（Title 14 Code of Federal Regulations ，14 CFRs）的规定。
+自 2004 年 12 月起，波音民机公司的 FAA 委任代表系统由波音授权的组织 BDCO（Boeing Commercial Airplanes Delegated Compliance Organization）替代，
+BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，以前这一角色是由 FAA 委任工程代表扮演的。
+相应的，由于批准的组织发生了转变，以前由 FAA 委任工程代表签发的 FAA 8110-3 表，也被由 BDCO 授权代表签发的 FAA8100-9 表替代。
+需要指出的是，无论获得了 FAA8110-3 表，还是 FAA8100-9 表，都表示得到了 FAA 批准。
+
+注意：BDCO 的授权代表不能批准针对进行了非波音[[id:C6AF3FDB-F18B-4E44-A87E-EBDF4AC4130A][补充型号合格证]]下的结构改装的修理，同样，也不能批准用户自己设计的导致构型改变的改装，即使这种改装发生在在波音飞机上。
+#+transclude: [[id:C6AF3FDB-F18B-4E44-A87E-EBDF4AC4130A][补充型号合格证]] 
+
+对于重要修理，14 CFRs 规定，必须按照 FAA 当局批准的持续适航文件进行。
+如果修理超出了持续适航文件规定的范围，则需由 BDCO 的授权代表进行审核批准，表示由用户或合格的维修单位实施的修理满足 14 CFRs 的要求。
+
+对于重要修理（Major Repair）和一般修理（Minor Reapir）的分类，由于个人理解的差异，一直以来很不统一。
+对于此现象的关注，可以追溯到早期的航空安全规章：
+一位来自美国安全与教育部的主管在 1941 年 3 月 7 日的美国民用航空通告（Civil Aeronautics Board ，CAB）的备忘录写道“没有其他的关于航空的规章，像此规定一样，导致如此多的不便利、延误和混乱”。
+1953 年，为了规范重要修理的定义，FAA 发布了重要修理的部件和类别的一个列表，这个表格发布在 FAA 咨询通告 120-77 中，但由于这个表格没有随飞机设计建造技术的发展而进行更新，
+现在用起来会造成将原本一般的修理分类成重要修理。
+
+同时，在 FAA 体系下，要求每个独立的用户会同当地的适航当局建立起自己的重要修理/一般修理的判断程序，这就导致每个美国的用户都有自己个性化的重要/一般修理。
+在 EASA 体系下，只有 EASA 或者 EASA *设计组织批准书持有人* 能够进行修理的判别。
+这样导致许多欧洲的用户对自己的修理不能进行判别。
+即使不考虑监管监督当局要求的影响，由于飞机拥有人和用户的不断变更造成判别标准的变更，造成判别结果的不一致，越来越要求建立起一个统一的标准。
+为了帮助不同的用户进行修理级别的判别，波音按照对 FAA 和 EASA 规章定义和指导材料的理解，建立起一个判别的逻辑图。
+注意：是否重要修理的判别受修理是否正确实施的影响，确保修理正确实施是用户的责任。
+
+#+caption: 重要/一般修理逻辑判断图
+[[file:./static/波音系列飞机结构修理的批准/2021-04-19_20-39-32_screenshot.jpg]]
+
+注释（与逻辑菱形框图中的数字对应）:
+
+- 1.如果损伤或修理影响到 AD 的符合性，无论多么小，都需要以 [[id:706BBB9F-44ED-4141-994B-1CC193BB9F16][AMOC]] 的形式 得到 FAA 的批准。
+- 2.按 SRM 修理或者用工程图制定的部件/经批准的等效件更换掉损伤的部件。
+- 3.与 SRM 修理差异很小的修理不需要 FAA 的进一步批准，差异大小的判断可以依据 FAA AC 120-77 第 12 部分，已可以就此寻求波音的帮助。
+- 4.FAA 批准的修理资料可以包括：
+  - Approved Service Bulletin Repair，已经批准的服务通告（SB）修理
+  - DER/AR (8110-3/8100-9) approved repairinstructions applicable to subject airplane 委任代表/授权代表 (8110-3/8100-9）对该机批准的修理方案
+  - SFAR 36 –(Special Federal Aviation Regulation) Repair previously approved，先前经批准的修理 36 部特殊航空规章
+- 5.波音飞机每个机型的 SRM 51 章都有[[id:ADB1E7C0-B854-48AB-9B65-16C7713F6115][主要结构元件]]（Principal Structural Elements PSE）和[[id:ADB1E7C0-B854-48AB-9B65-16C7713F6115][疲劳敏感结构]]（Fatigue Critical Baseline Structure FCBS）的列表。
+- 6.可以接受的修理资料包括 Acceptable repair data may include：
+  - AOL - All Operator Letter，所有用户信函
+  - AML - Airplane Modification Letter，飞机改装信函
+  - SL - Service Letter，服务信函
+  - AMM - Aircraft Maintenance Manual，飞机维护手册
+  - CMM - Component Maintenance Manual，部件维护手册
+  - OHMM - Overhaul Maintenance Manual 翻修维护手册
+  - SOPM - Standard Overhaul Practices Manual 标准翻修施工手册
+  - 与 OEM 的通信联络（须有结构可接受/满意的声明或者 RDR)
+  - FAA 授权的美国维修组织确认的关于一般修理的资料
+- 7.指对以下有显著的影响的修理:
+  - 系统性能 – 对系统部件或邻近系统的部件的修理需对其对系统预定功能可能的影响进行评估
+  - 结构性能 – 对结构部件的修理需对其对机体结构性能的影响进行评估，包括静强度、疲劳、损伤容限、颤振特性、刚度特性等
+  - 重量与平衡 – 对飞机中心和载荷分布的影响，一些操控舵面对可能影响刚度、质量分布、表面轮廓的改变很敏感
+  -飞机性能 – 可能影响失速特性、操纵特性、升阻比的修理
+- 8.简单修理/整形：打磨、加大尺寸、更换、复合材料修理部分深度的搭接。
+
+* 波音公司为此建立起了对于结构修理方案的五种典型回复方式
+:PROPERTIES:
+:ID:       98242750-53B8-4D85-8F04-2D67343B27AD
+:END:
+** 一般结构修理
+:PROPERTIES:
+:ID:       916104B0-7C73-4D36-B8A8-0A07E8F9131E
+:END:
+ 用户发给波音的修理方案如果用户已经认作一般修理，经过波音的审核，如果结构可接受（依原样或者经波音局部的修改），波音做如下回复： 　
+
+ #+BEGIN_QUOTE
+ The repair plan as described in reference ( ) message has been reviewed and found to be structurally acceptable.
+
+ 如（ ）信息描述的修理方案已经波音审核并查明结构可接受。
+ #+END_QUOTE
+
+ 或者
+ #+BEGIN_QUOTE
+ The repair plan as described in reference ( ) message has been reviewed and found to be structurally acceptable, provided that the following changes are made to the repair plan:
+
+ 参考资料（ ）消息中所述的维修计划已经过审查，认为结构上是可以接受的，但必须对维修计划进行以下修改。
+
+ 例如：将修理加强板的厚度从 0.05 英寸增大到 0.063 英寸。
+
+ Install 5/32 inch diameter Hi-Loks in…
+
+ 安装直径为 5/32 英寸的 Hi-Lok。
+ #+END_QUOTE
+
+ BDCO 对于接到用户要求审核一般修理方案不单独提供 FAA 批准，对于一般修理，类似“the repair has been reviewed and found to be structurally acceptable” 的声明会包含在波音的回复文件中。
+ 类似的声明被视作是已被 FAA/EASA 接受的材料。
+
+ 波音已被授权按 FAA 批准的程序、规范提供可接受的材料，为了更好地表明修理已被认作可接受，
+ 波音提供 RDR(Repair and Deviation Record ，修理和偏差记录）表格，这个表格被用作一般修理/一般偏差有关材料的封面，
+ 起初，RDR 是 Repair Design Record（修理设计记录的缩写），
+ 只用作对一般修理的批准，自 2011.3 起，扩展为对一般系统问题的批准，转为 =Repair and Deviation= ， 缩写保持不变。
+
+ 有些用户请求“不反对 No Objection”或者“技术不反对（No Technical Objection）声明。
+ “不反对 No Objection”或者“技术不反对（No Technical Objection）被限于资料不全，不容易进行审查和 FAA 授权批准，在一些情况下，波音在回复材料中会要求提供进一步信息。
+
+** 重要结构修理
+:PROPERTIES:
+:ID:       A37400EF-7B2F-4C56-90C3-05F2C44BD6BB
+:END:
+ 用户发给波音的修理方案如果用户已经认作重要修理， *请求 FAA [[zhongyaoxiuli][重要修理]]* ，经过波音的审核，如果结构可接受（原样或者经波音局部的修改），波音用 BDCO 授权和 FAA8100-9 表格进行批准，作如下回复：
+
+ #+BEGIN_QUOTE
+ The repair plan as described in reference ( ) message has been reviewed and found to be structurally acceptable. An FAA Form 8100-9 approving the engineering for this repair has been signed.
+
+ 如（ ）信息描述的修理方案已经波音审核并查明结构可接受，对此修理方案工程批准的 FAA8100-9 表已经签署
+
+ The repair plan as described in reference ( ) message has been reviewed and found to be structurally acceptable provided that the following changes are made to the repair plan:
+
+ 如（ ）信息描述的修理方案已经波音审核，此修理方案作如下更改后结构可接受。
+
+ Increase the thickness of the repair doubler from .050 inch to . 063 inch.
+
+ 将修理加强板的厚度从 0.05 英寸增大到 0.063 英寸。
+
+ Install 5/32 inch diameter Hi-Loks in…
+
+ 安装直径为 5/32 英寸的 Hi-Loks。
+
+ A FAA Form 8100-9 approving the engineering for this modified repair plan has been signed.
+
+ 对此改进过的修理方案工程批准的 FAA8100-9 表已经签署。
+ #+END_QUOTE
+
+ 注意：FAA 明确指出对于非美国注册的飞机，在 8100-9 表中会加入如下的注释：此处的 FAA 批准是提供给外国注册的飞机的，注册国的民航局自行决定是否接受。修理实施者须确定与飞机构型一致。
+
+** 未指定级别的结构修理
+:PROPERTIES:
+:ID:       ECD3B677-53B2-49DC-9C03-226A245484FB
+:END:
+ 对于用户未明确是否重要修理的修理方案，如果经波音的审核结构上可接受并且按波音的理解是一般修理，波音会按照和用户指定为一般修理的回复一致的回复并提供 RDR。
+ 如果用户接下来申请 8100-9 批准，则需要提供必要的理由来表明为什么判断为重要修理，因为 FAA8100-9 表格只提供给重要修理。
+ 如果有足够的理由，BDCO 授权代表会对修理审核，如果符合相关规章，则会提供 8100-9 表格。
+
+** 位于受适航指令（AD）影响区域的修理合规替代方法（AMOC):
+   :PROPERTIES:
+   :CUSTOM_ID: AMOC
+   :ID:       F5B91FA7-1E45-4BA3-BBAB-0CAEABEC7CF2
+   :END:
+ - FAA 授权 BDCO 委任代表对与结构 AD 有关的特定事项提供合规替代方法（AMOC）的批准。
+
+ 典型的 AMOC 批准包括：紧固件边距偏差、加大紧固件、紧固件替代、修剪、由于安装或校准需要而进行的机械加工、润滑、表面处理等，也包括老龄飞机强制 AD 改装过程中的偏差。
+ 由于 SB 改装过程中可能遇到的一些问题，包括建造、飞机间的差异、损伤、邻近的修理或者更改打磨或整形的范围正确实施的需要，为了正确的实施改装，而产生上述典型偏差。
+
+ 如果修理以上这些类别中，则需要按重要修理处理。
+
+ 如果用户对位于 AD 影响区域的修理申请 8100-9 批准，而且更改或者改装超出了 BDCO 授权代表的准许批准范围，授权代表经审核发现可接受，则会建议 FAA 准予批准。波音会做以下回复：
+
+ #+BEGIN_QUOTE
+ The repair plan as described in reference ( ) message (or alternative method of compliance) has been reviewed and found to be structurally acceptable.
+ A signed FAA Form 8100-9 recommending approval of this repair plan is being submitted to the FAA.
+ Boeing will notify the operator when FAA approval of the AMOC is received.
+
+ 参考资料（ ）消息（或其他符合规定的方法）中所述的修理计划已被审查，并认为在结构上可以接受。
+ 正在向 FAA 提交已签署的 FAA 表格 8100-9，建议批准该维修计划。
+ 当收到 FAA 对 AMOC 的批准后，波音公司将通知运营商。
+ #+END_QUOTE
+
+ 如果 BDCO 授权代表建议批准，FAA 一般会同意此建议，随后会准许此 AD 的合规替代方法（AMOC）, 为了帮助非美国注册飞机的用户获得所在国适航当局的 AMOC, BDCO 会提供一份签署的 8100-9 表格。
+
+ - 如外国用户希望完全由 FAA 批准，可以申请波音作为自己权益的代表，波音会将 8100-9 表格和一份信函发给 FAA 请求批准。
+ FAA 会向波音进行反馈。一旦批准了 8100-9 表格，波音会告诉用户 FAA 得到了替代修理 FAA 的完全批准并提供一份 FAA 表格，不直接向用户反馈。
+
+ 如果用户只请求对非美国注册飞机上受 AD 影响的修理进行审核，而没有申请 8100-9 批准，波音会回复修理可接受或者提供更改的意见。用户应知晓此修理影响 AD 的合规性须得到当地适航当局的批准。
+
+** 疲劳关键结构（Fatigue Critical Baseline Structure, FCBS）的修理:
+:PROPERTIES:
+:ID:       E08FB909-1EFA-4204-97BB-5B8C11C1E30F
+:END:
+ 发给波音审核的修理方案，如果影响到 FCBS 结构，波音将按照 14 CFR 121.1109 或 129.109 “老龄飞机安全规则”对其进行结构整体性和损伤容限的评估，
+ 必须遵照 14 CFR 121.1109 和 129.109 规则进行的修理包括两类 *加强型修理* 和 *非加强型修理* 。
+
+*** 加强型修理
+ 对于加强型修理，如果结构上可接受（无论依原样或者经波音局部的修改）会通过[[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][三个阶段]]，经 BDCO 授权代表以 8100-9 表格的方式予以批准，
+ 这种三个阶段的方法在每个机型的符合性文件（Compliance Document，CD）或者修理评估指南（Repair Evaluation Guidel ines ，REG）中有详述。
+ #+transclude: [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][三个阶段]] 
+
+ - 阶段 1 – 为使飞机返回使用基于静强度的批准， 随后会有阶段 2 的批准。
+ - [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][阶段 2]]– 确认补充检查必须进行的循环/小时门槛。
+ - [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][阶段 3]]– 损伤容限评估，补充检查的方法和间隔重要提示：许多阶段 3 的损伤容限检查对于用户并不需要，因为 门槛可能大于飞机的服役寿命。
+
+ 波音会在原始的 SR(service request) 中提供阶段 1 和阶段 2 的批准，当提供了阶段 2 的批准后，SR 会被关闭。
+ 同时会提示用户在达到阶段 2 要求的门槛之前，需进行损伤容限评估并得到批准。
+ 并需要提前 24 个月向波音发出一份新的 SR。
+ 有时 BDCO 会提供同时阶段 2 和阶段 3 的批准。
+
+*** 非加强型修理
+ FCBS 结构的非加强型修理，包括打磨、加大衬套、修整、冷冻塞、填充铆钉等。
+ 非加强型修理，如果超出了公开出版的允许损伤范围，则需要进行评估，判断是否满足 14 CFR 26 第 E 部分符合性要求，如果用户发出的是评估的请求，则不要包含批准的请求（如，8100-9 表），
+ 波音会对此非加强修理进行评估，确认是否在飞机合格证基础上可接受，如可接受，则提供 RDR，否则会提示用户提出批准要求，接着会按要求提供 8100-9 表。
+
+* 总结
+:PROPERTIES:
+:ID:       46E692C3-3628-402C-A73C-5042F508824A
+:END:
+由此可见，当就结构修理请求波音帮助时，用户负责以下内容：
+
+ - 提供完整而且准确的对损伤的描述和修理建议方案。
+ - 确认是重要修理还是一般修理，如合适，提出正式的请求。
+ - 明确是否需要完成的 8100-9 表格。
+ - 确认修理是否位于 AD 覆盖的区域，是否受此修理影响 AD。
+ - 明确是否需要 AMOC 为了加快评估的进度，波音鼓励用户提供完整的、准确的修理建议方案。并且用户的修理方案最好基于用户所拥有或者能够尽快得到的材料（如紧固件），以便在波音评为可接受后能较快完成修理。
+
+ 通过对波音公司对修理批准的程序的了解，能够更好的按照其程序提供合适的材料，从而减少不必要的多次反复联络环节，更快的得到厂家的批准，进而得到注册国适航部门的批准。
+

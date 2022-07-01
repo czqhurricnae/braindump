@@ -1,0 +1,31 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       5BF2E5BF-9D96-4350-8FA2-7B7D7D6A551D
+:END:
+
+#+DATE: <2020-07-26 Sun 21:18>
+#+TITLE: Nuclear_weapon_multi-editing_via_Ivy_and_Ag
+
+Sometimes when I am working on a project, I use project-wide variable or function definition. So I name them.
+
+I usually suck at naming.
+
+So when I think of a better name, I need a way to change it globally, ie in all the files of the current project that uses it.
+
+In Spacemacs, I have heard of what Fabien Dubosson, one of the main Spacemacs dev, called the [[https://gitter.im/syl20bnr/spacemacs?at=573d831c0cb634927f80545e][“nuclear weapon of multi-editing”]].
+When I switched from Helm to Ivy, I looked for a way to do the same thing.
+
+It turned out that Ivy-occur has nice integration with Wgrep since Ivy version [[http://oremacs.com/2016/04/26/ivy-0.8.0/][0.8]].
+
+Nuclear-weapon multi-editing :
+
+I call =counsel-ag=, to search for the string I want to modify in the current directory. By default, ag (and counsel-ag) will ignore files ignored by git.
+
+I press =C-c C-o (ivy-occur)= in the search result. It opens an ivy-occur buffer.
+
+I switch to this buffer and press =C-x C-q (ivy-wgrep-change-to-wgrep-mode)= to edit it.
+I can now change each variable name globally using normal search and replace techniques. I use Evil-ex commands =:%s/pattern/replace/g= but you may use others as well (I have heard good things of Iedit too…).
+
+I then press =C-c C-c (wgrep-finish-edit)=. Now every occurence of the word edit in all files has been replaced with potatoes.
+
+Ivy is great.

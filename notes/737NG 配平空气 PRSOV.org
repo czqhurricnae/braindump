@@ -1,0 +1,15 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 配平空气 PRSOV/")); -*-
+:PROPERTIES:
+:ID:       FF40E6C1-F40B-4993-A3F7-1D74DF7F4719
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-03-30 Tue 21:59>
+#+TITLE: 737NG 配平空气 PRSOV
+
+[[file:./static/737NG 配平空气 PRSOV/2021-03-30_21-59-32_screenshot.jpg]]
+
+[[file:./static/737NG 配平空气 PRSOV/2021-03-30_22-03-28_screenshot.jpg]]
+
+[[file:./static/737NG 配平空气 PRSOV/2021-03-30_22-01-11_screenshot.jpg]]
+注意：活门由弹簧力保持在关闭位。进行人工超控之前，活门实际位置可能已经在关闭位。
+旋转人工超控机构-随动凸轮跟随旋转-偏心凸轮推动杆-杆端小球堵住活门控制腔上游来气。

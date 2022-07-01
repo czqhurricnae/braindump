@@ -1,0 +1,143 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/使用 new 实现托管类/")); -*-
+:PROPERTIES:
+:ID:       4269B957-651B-45C9-B1E3-C7A5D0D62E30
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-01 Fri 12:22>
+#+TITLE: 使用 new 实现托管类
+
+#+ROAM_KEY:
+
+
+需要进行验证。
+委托(delegate) 是许多设计模式(如 Decorator, Proxy) 的基础, 实现委托的一般方法是在委托类为每个需要委托的方法定义一个方法, 它的仅有的实现就是对被委托对象调用同样的方法. 例如, 要实现 ImmutableList, 可以这样做:
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports both :session
+class ImmutableList(object):
+    def __init__(self, delegate):
+        self.delegate = delegate
+
+    def __getitem__(self, i):
+        return self.delegate.__getitem__(i)
+
+    def __getslice__(self, i, j):
+        return self.delegate.__getslice__(i, j)
+
+    def __len__(self):
+        return self.delegate.__len(self)
+
+    def index(self, v):
+        return self.delegate.index(v)
+
+    # ... more ...
+#+END_SRC
+
+显然写这样的方法很是枯燥乏味, 幸而在 python 中可以不需这样做, 因为在 python 中类的方法可以动态添加, 说白其实就是给类添加属性, 只是它的属性恰好是个函数罢了. 给实例添加属性可以用__new__方法, 而给类添加属性就要依赖 metaclass 了. 好了, 我们来看怎样用 metaclass 来实现委托.
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports both :session
+    class DelegateMetaClass(type):
+        def __new__(cls, name, bases, attrs):
+            methods = attrs.pop('delegated_methods', ())
+            for m in methods:
+                def make_func(m):
+                    def func(self, *args, **kwargs):
+                        return getattr(self.delegate, m)(*args, **kwargs)
+                    return func
+
+                attrs[m] = make_func(m)
+            return super(DelegateMetaClass, cls).__new__(cls, name, bases, attrs)
+
+    class Delegate(object):
+        __metaclass__ = DelegateMetaClass
+
+        def __init__(self, delegate):
+            self.delegate = delegate
+
+    class ImmutableList(Delegate):
+        delegated_methods = ( '__contains__', '__eq__', '__getitem__', '__getslice__',
+                             '__str__', '__len__', 'index', 'count')
+
+    l = ImmutableList((1, 2, 3, 4, 5))
+    print(len(l))
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- 5
+:END:
+
+实现 ImmutableDict
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports both :session
+class ImmutableDict(Delegate):
+    delegated_methods = ('__contains__', '__getitem__', '__eq__', '__len__', '__str__',
+            'get', 'has_key', 'items', 'iteritems', 'iterkeys', 'itervalues', 'keys', 'values')
+#+END_SRC
+
+#+BEGIN_SRC python
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+
+def func(x, y):
+    time.sleep(5)
+    return x + y
+
+pool = ThreadPoolExecutor(8)
+pool.submit(func, 2, 3)
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+- <Future at 0x10d7de080 state=running>
+:END:
+
+#+BEGIN_SRC python
+_.result()
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+5
+:END:
+
+使用回调函数
+
+#+BEGIN_SRC python
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+
+def func(x, y):
+    time.sleep(5)
+    return x + y
+
+pool = ThreadPoolExecutor(8)
+
+def handle_result(result):
+    print("Got:", result.result())
+
+future = pool.submit(func, 3, 4)
+future.add_done_callback(handle_result)
+future
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+Got:7
+:END:
+
+带有异常处理的回调函数
+
+#+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results raw drawer output list :exports both :session
+def run():
+    future = pool.submit(func, 2, 3)
+    future.add_done_callback(result_handler)
+
+def result_handler(future):
+    try:
+        result = future.result()
+        print("Got:", result)
+    except Exception as e:
+        print("Failed: %s: %s" % (TypeError))
+#+END_SRC

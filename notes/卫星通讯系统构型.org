@@ -1,0 +1,129 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/卫星通讯系统构型/")); -*-
+:PROPERTIES:
+:ID:       E13A985D-04A4-45E2-9D3B-11F9FEF78A3D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-01-18 Mon 21:16>
+#+TITLE: 卫星通讯系统构型
+
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: 卫星通讯系统构型-subgraph-table
+| *cluster(必填)* | *label* | *style(默认"none")* | *color(默认"black")* | *nodestyle(默认"none")* | *nodecolor(默认"black")* | *nodeflow(必填, 以";"分隔)* | *kwargs(以";"结尾)* |
+|-----------------+---------+---------------------+----------------------+-------------------------+--------------------------+-----------------------+---------------------|
+#+LATEX: }
+
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: 卫星通讯系统构型-node-table
+| *node(必填)* | *label*        | *shape(默认"box")* | *style(可选"filled")* | *fillcolor(默认"none")* | *fontcolor(默认"black")* | *fontsize(默认"18",数字必须是字符串格式)* | *kwargs(以","结尾)* |
+|--------------+----------------+--------------------+-----------------------+-------------------------+--------------------------+-------------------------------------------+---------------------|
+| a            | 非天空内饰     |                    |                       |                         |                          |                                           |                     |
+| b            | 客舱娱乐系统   |                    |                       |                         |                          |                                           |                     |
+| c            | 海事卫星       |                    |                       |                         |                          |                                           |                     |
+| d            | 无选呼控制面板 |                    |                       |                         |                          |                                           |                     |
+| e            | P5 无 CALL 灯  |                    |                       |                         |                          |                                           |                     |
+| 1            | 天空内饰       |                    |                       |                         |                          |                                           |                     |
+| 2            | 音视频娱乐系统 |                    |                       |                         |                          |                                           |                     |
+| 3            | 铱星           |                    |                       |                         |                          |                                           |                     |
+| 4            | 选呼控制面板   |                    |                       |                         |                          |                                           |                     |
+| 5            | P5 有 CALL 灯  |                    |                       |                         |                          |                                           |                     |
+#+LATEX: }
+
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: 卫星通讯系统构型-graph-table
+| *from* | *to* | *label* | *style(默认"bold",可选"dotted") | *color(默认"black")* | *fontcolor* | *tailport(可选"n","ne","e","se","sw","w","nw")* | *lhead(为子图的名称即 cluster 列的值)* | *ltail(为子图的名称即 cluster 列的值)* | *kwargs(以" "结尾)* |
+|--------+------+---------+---------------------------------+----------------------+-------------+-------------------------------------------------+----------------------------------------+----------------------------------------+---------------------|
+| a      | b    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| b      | c    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| c      | d    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| d      | e    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| b      | 3    | 改装    |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 3      | 4    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 4      | 5    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 1      | 2    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| 2      | 3    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+#+LATEX: }
+
+#+name: create-卫星通讯系统构型-from-tables
+#+HEADER: :var subgraph=卫星通讯系统构型-subgraph-table nodes=卫星通讯系统构型-node-table graph=卫星通讯系统构型-graph-table
+#+BEGIN_SRC emacs-lisp :results output :exports none
+(concat
+    (princ "rankdir=LR;\n") ;; remove comment characters '//' for horizontal layout; add for vertical layout
+    (princ "compound=true;\n")
+    (mapconcat
+      (lambda (x)
+        (princ (replace-regexp-in-string "\\\\vert" "|" (format "subgraph %s {label=\"%s\"; style=%s; color=%s; node [style=%s, color=%s]; %s %s}
+"
+                          (car x)
+                          (nth 1 x)
+                          (if (string= "" (nth 2 x)) "none" (nth 2 x))
+                          (if (string= "" (nth 3 x)) "black" (nth 3 x))
+                          (if (string= "" (nth 4 x)) "none" (nth 4 x))
+                          (if (string= "" (nth 5 x)) "black" (nth 5 x))
+                          (nth 6 x)
+                          (nth 7 x)
+                          )))) subgraph "
+")
+    "\n"
+    (mapconcat
+      (lambda (x)
+        (princ (replace-regexp-in-string "\\\\vert" "|" (format "%s[label=\"%s\", shape=%s, style=\"%s\", fillcolor=\"%s\", fontcolor=\"%s\", fontsize=\"%s\", %s];\n"
+                          (car x)
+                          (nth 1 x)
+                          (if (string= "" (nth 2 x)) "box" (nth 2 x))
+                          (if (string= "" (nth 3 x)) "none" (nth 3 x))
+                          (if (string= "" (nth 4 x)) "none" (nth 4 x))
+                          (if (string= "" (nth 5 x)) "black" (nth 5 x))
+                          (if (string= "" (nth 6 x)) "18" (nth 6 x))
+                          (nth 7 x)
+                          )))) nodes "
+")
+    "\n"
+    (mapconcat
+    (lambda (x)
+      (princ (replace-regexp-in-string "\\\\vert" "|" (format "%s -> %s [label=\"%s\" style=%s color=%s fontcolor=\"%s\" tailport=%s lhead=%s ltail=%s %s];\n"
+              (car x)
+              (nth 1 x)
+              (nth 2 x)
+              (if (string= "" (nth 3 x)) "bold" (nth 3 x))
+              (if (string= "" (nth 4 x)) "black" (nth 4 x))
+              (if (string= "" (nth 5 x)) "black" (nth 5 x))
+              (if (string= "" (nth 6 x)) "none" (nth 5 x))
+              (if (string= "" (nth 7 x)) "none" (nth 6 x))
+              (if (string= "" (nth 8 x)) "none" (nth 7 x))
+              (nth 9 x)
+              )))) graph "\n"))
+#+END_SRC
+
+#+RESULTS: create-卫星通讯系统构型-from-tables
+#+begin_example
+rankdir=LR;
+compound=true;
+a[label="非天空内饰", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+b[label="客舱娱乐系统", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+c[label="海事卫星", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+d[label="无选呼控制面板", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+e[label="P5 无 CALL 灯", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+1[label="天空内饰", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+2[label="音视频娱乐系统", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+3[label="铱星", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+4[label="选呼控制面板", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+5[label="P5 有 CALL 灯", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+a -> b [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+b -> c [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+c -> d [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+d -> e [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+b -> 3 [label="改装" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+3 -> 4 [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+4 -> 5 [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+1 -> 2 [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+2 -> 3 [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+#+end_example
+
+#+BEGIN_SRC dot :file ./static/卫星通讯系统构型/dotImg/卫星通讯系统构型.png :var input=create-卫星通讯系统构型-from-tables :exports results
+digraph {
+  $input
+}
+#+END_SRC
+
+#+RESULTS:
+[[file:./static/卫星通讯系统构型/dotImg/卫星通讯系统构型.png]]

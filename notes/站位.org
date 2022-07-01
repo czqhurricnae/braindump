@@ -1,0 +1,119 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/站位/")); -*-
+:PROPERTIES:
+:ID:       7B2C6B75-3CA1-4312-914F-C33D4401EB8B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-03 Mon 17:36>
+#+TITLE: 站位
+#+FILETAGS: :WL:STA:BL:
+
+* 参考文件
+:PROPERTIES:
+:ID:       65803EA2-30E2-4213-8E59-03AAC7ECE9B8
+:END:
+- AMM PART II 06 章：Section 06-21 fuselage station diagram
+- SRM 52-57 章：Subject 53-00-00 fuselage - general
+
+[[file:./static/站位/2021-05-03_17-36-51_screenshot.jpg]]
+
+* STA：station 机身站位
+:PROPERTIES:
+:ID:       48BB4D8D-7776-41D0-B883-CD3A0FD2AC53
+:END:
+
+[[file:./static/站位/2021-07-06_09-19-14_screenshot.jpg]]
+
+始于零站位线，从飞机前方某一垂直基准面测量机身站位线。
+
+以分段处的站位为参考点，每个框相隔 20 inch。
+
+** 41-43 分段处站位：STA 360。
+:PROPERTIES:
+:ID:       B7E61BA3-F0E7-49C8-A57E-274966476B57
+:END:
+[[file:./static/站位/640.png]]
+
+[[file:./static/站位/2022-05-23_21-49-53_640.png]]
+
+** 43-44 分段处站位：STA 540。
+:PROPERTIES:
+:ID:       E354C5D2-B92C-4013-A6A4-90A7F3FAF7C0
+:END:
+** 44-46 分段处站位：STA 727。
+:PROPERTIES:
+:ID:       EB1EDF87-2D11-42C0-AA63-99E4368F822E
+:END:
+** 46-47 分段处站位：STA 887。
+:PROPERTIES:
+:ID:       50909079-97AD-470E-845C-412E34575500
+:END:
+** 47-48 分段处站位：STA 1016。
+:PROPERTIES:
+:ID:       F2BB0113-1C2E-47B4-8DC1-8FE61E1B64B4
+:END:
+
+* 桁条站位
+:PROPERTIES:
+:ID:       717C12D7-7FA7-4B90-B03A-6BD06363AD06
+:END:
+以机身蒙皮搭接处桁条及地板为参考值：
+
+** 机身顶部蒙皮桁条
+:PROPERTIES:
+:ID:       5231E47F-7D29-4B40-9DEC-365ECC6E7364
+:END:
+S-4L，S-4R。
+
+** 窗户上下桁条
+:PROPERTIES:
+:ID:       2242E1D0-444E-4A6D-9E35-B7C2CC569DC0
+:END:
+左侧 S-10L，S-14L。
+右侧 S-10R，S-14R。
+
+可以看出 zone 1 是以窗户上桁条为分界线。
+
+[[file:./static/站位/2022-05-23_21-24-46_2724.jpeg]]
+
+** 地板桁条
+:PROPERTIES:
+:ID:       2F211D6F-66EB-4D45-9008-16208CFEF4D4
+:END:
+左侧：S-17L。
+右侧：S-17R。
+
+** 机身下部蒙皮桁条
+:PROPERTIES:
+:ID:       D80C653B-7D88-497B-B6BB-07A5874A008B
+:END:
+- 43 段：S-24L，S-24R。
+- 46 段：S-23L，S-23R。
+
+43，46 机身段下部蒙皮损伤使用 SRM 53-00-01-1A-5 - ALLOWABLE DAMAGE 5 - FUSELAGE SKIN - LOWER SKIN。
+
+[[file:./static/站位/2021-07-06_09-26-41_screenshot.jpg]]
+
+[[file:./static/站位/640-1.png]]
+
+[[file:./static/站位/640-2.png]]
+
+** 机身底部蒙皮桁条：
+:PROPERTIES:
+:ID:       CC08F0A3-0FC4-4923-BD1A-7D99356CE8BB
+:END:
+43 段：S-27L，S-27R。
+46 段：S-28L，S-28R。
+
+[[file:./static/站位/2021-07-06_09-29-27_screenshot.jpg]]
+
+* BL：buttock line 机身纵剖线
+:PROPERTIES:
+:ID:       9AFB2D11-7250-4C0B-A26A-B3C2AE539C05
+:END:
+用于测量与机身中线左右偏离。
+
+* WL：water line 水线
+:PROPERTIES:
+:ID:       542BBE2D-6283-4DA9-A76F-F27D8327C063
+:END:
+从一个飞机下方的水平基准面测量水线。

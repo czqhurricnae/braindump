@@ -1,0 +1,1403 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/what_does_double_star_asterisk_and_star_asterisk_do_for_parameters/")); -*-
+:PROPERTIES:
+:ID:       2E81BE1F-11AD-466A-A56E-62697A7D0552
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-05-23 May 10:05>
+#+TITLE: what_does_double_star_asterisk_and_star_asterisk_do_for_parameters
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+In the following method definitions, what does the =*= and =**= do for =param2=?
+
+#+BEGIN_EXAMPLE
+    def foo(param1, *param2):
+    def bar(param1, **param2):
+#+END_EXAMPLE
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+The =*args= and =**kwargs= is a common idiom to allow arbitrary number of arguments to functions as described in the section [[http://docs.python.org/dev/tutorial/controlflow.html#more-on-defining-functions][more on defining functions]] in the Python documentation.
+
+The =*args= will give you all function parameters [[https://docs.python.org/dev/tutorial/controlflow.html#arbitrary-argument-lists][as a tuple]]:
+
+#+BEGIN_EXAMPLE
+    def foo(*args):
+        for a in args:
+            print(a)
+
+    foo(1)
+    # 1
+
+    foo(1,2,3)
+    # 1
+    # 2
+    # 3
+#+END_EXAMPLE
+
+The =**kwargs= will give you all *keyword arguments* except for those corresponding to a formal parameter as a dictionary.
+
+#+BEGIN_EXAMPLE
+    def bar(**kwargs):
+        for a in kwargs:
+            print(a, kwargs[a])
+
+    bar(name='one', age=27)
+    # name one
+    # age 27
+#+END_EXAMPLE
+
+Both idioms can be mixed with normal arguments to allow a set of fixed and some variable arguments:
+
+#+BEGIN_EXAMPLE
+    def foo(kind, *args, **kwargs):
+       pass
+#+END_EXAMPLE
+
+It is also possible to use this the other way around:
+
+#+BEGIN_EXAMPLE
+    def foo(a, b, c):
+        print(a, b, c)
+
+    obj = {'b':10, 'c':'lee'}
+
+    foo(100,**obj)
+    # 100 10 lee
+#+END_EXAMPLE
+
+Another usage of the =*l= idiom is to *unpack argument lists* when calling a function.
+
+#+BEGIN_EXAMPLE
+    def foo(bar, lee):
+        print(bar, lee)
+
+    l = [1,2]
+
+    foo(*l)
+    # 1 2
+#+END_EXAMPLE
+
+In Python 3 it is possible to use =*l= on the left side of an assignment ([[http://www.python.org/dev/peps/pep-3132/][Extended Iterable Unpacking]]), though it gives a list instead of a tuple in this context:
+
+#+BEGIN_EXAMPLE
+    first, *rest = [1,2,3,4]
+    first, *l, last = [1,2,3,4]
+#+END_EXAMPLE
+
+Also Python 3 adds new semantic (refer [[https://www.python.org/dev/peps/pep-3102/][PEP 3102]]):
+
+#+BEGIN_EXAMPLE
+    def func(arg1, arg2, arg3, *, kwarg1, kwarg2):
+        pass
+#+END_EXAMPLE
+
+Such function accepts only 3 positional arguments, and everything after =*= can only be passed as keyword arguments.
+
+Note:
+
+- A Python =dict=, semantically used for keyword argument passing, are arbitrarily ordered. However, in Python 3.6, keyword arguments are guaranteed to remember insertion order.
+- "The order of elements in =**kwargs= now corresponds to the order in which keyword arguments were passed to the function." - [[https://docs.python.org/3/whatsnew/3.6.html][What's New In Python  3.6]]
+- In fact, all dicts in CPython 3.6 will remember insertion order as an implementation detail, this becomes standard in Python 3.7.
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+It's also worth noting that you can use =*= and =**= when calling functions as well.
+This is a shortcut that allows you to pass multiple arguments to a function directly using either a list/tuple or a dictionary. For example, if you have the following function:
+
+#+BEGIN_EXAMPLE
+    def foo(x,y,z):
+        print("x=" + str(x))
+        print("y=" + str(y))
+        print("z=" + str(z))
+#+END_EXAMPLE
+
+You can do things like:
+
+#+BEGIN_EXAMPLE
+    >>> mylist = [1,2,3]
+    >>> foo(*mylist)
+    x=1
+    y=2
+    z=3
+
+    >>> mydict = {'x':1,'y':2,'z':3}
+    >>> foo(**mydict)
+    x=1
+    y=2
+    z=3
+
+    >>> mytuple = (1, 2, 3)
+    >>> foo(*mytuple)
+    x=1
+    y=2
+    z=3
+#+END_EXAMPLE
+
+Note: The keys in =mydict= have to be named exactly like the parameters of function =foo=. Otherwise it will throw a =TypeError=:
+
+#+BEGIN_EXAMPLE
+    >>> mydict = {'x':1,'y':2,'z':3,'badnews':9}
+    >>> foo(**mydict)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: foo() got an unexpected keyword argument 'badnews'
+#+END_EXAMPLE
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+The single * means that there can be any number of extra positional
+arguments. =foo()= can be invoked like =foo(1,2,3,4,5)=. In the body of
+foo() param2 is a sequence containing 2-5.
+
+The double ** means there can be any number of extra named parameters.
+=bar()= can be invoked like =bar(1, a=2, b=3)=. In the body of bar()
+param2 is a dictionary containing {'a':2, 'b':3 }
+
+With the following code:
+
+#+BEGIN_EXAMPLE
+    def foo(param1, *param2):
+        print(param1)
+        print(param2)
+
+    def bar(param1, **param2):
+        print(param1)
+        print(param2)
+
+    foo(1,2,3,4,5)
+    bar(1,a=2,b=3)
+#+END_EXAMPLE
+
+the output is
+
+#+BEGIN_EXAMPLE
+    1
+    (2, 3, 4, 5)
+    1
+    {'a': 2, 'b': 3}
+#+END_EXAMPLE
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4
+  :END:
+
+#+BEGIN_QUOTE
+  What does =**= (double star) and =*= (star) do for parameters?
+#+END_QUOTE
+
+They allow for *functions to be defined to accept* and for *users to
+pass* any number of arguments, positional (=*=) and keyword (=**=).
+
+Defining Functions
+=*args= allows for any number of optional positional arguments
+(parameters), which will be assigned to a tuple named =args=.
+
+=**kwargs= allows for any number of optional keyword arguments
+(parameters), which will be in a dict named =kwargs=.
+
+You can (and should) choose any appropriate name, but if the intention
+is for the arguments to be of non-specific semantics, =args= and
+=kwargs= are standard names.
+
+Expansion, Passing any number of arguments
+You can also use =*args= and =**kwargs= to pass in parameters from lists
+(or any iterable) and dicts (or any mapping), respectively.
+
+The function recieving the parameters does not have to know that they
+are being expanded.
+
+For example, Python 2's xrange does not explicitly expect =*args=, but
+since it takes 3 integers as arguments:
+
+#+BEGIN_EXAMPLE
+    >>> x = xrange(3) # create our *args - an iterable of 3 integers
+    >>> xrange(*x)    # expand here
+    xrange(0, 2, 2)
+#+END_EXAMPLE
+
+As another example, we can use dict expansion in =str.format=:
+
+#+BEGIN_EXAMPLE
+    >>> foo = 'FOO'
+    >>> bar = 'BAR'
+    >>> 'this is foo, {foo} and bar, {bar}'.format(**locals())
+    'this is foo, FOO and bar, BAR'
+#+END_EXAMPLE
+
+New in Python 3: Defining functions with keyword only arguments
+You can have [[https://www.python.org/dev/peps/pep-3102/][keyword only
+arguments]] after the =*args= - for example, here, =kwarg2= must be
+given as a keyword argument - not positionally:
+
+#+BEGIN_EXAMPLE
+    def foo(arg, kwarg=None, *args, kwarg2=None, **kwargs):
+        return arg, kwarg, args, kwarg2, kwargs
+#+END_EXAMPLE
+
+Usage:
+
+#+BEGIN_EXAMPLE
+    >>> foo(1,2,3,4,5,kwarg2='kwarg2', bar='bar', baz='baz')
+    (1, 2, (3, 4, 5), 'kwarg2', {'bar': 'bar', 'baz': 'baz'})
+#+END_EXAMPLE
+
+Also, =*= can be used by itself to indicate that keyword only arguments
+follow, without allowing for unlimited positional arguments.
+
+#+BEGIN_EXAMPLE
+    def foo(arg, kwarg=None, *, kwarg2=None, **kwargs):
+        return arg, kwarg, kwarg2, kwargs
+#+END_EXAMPLE
+
+Here, =kwarg2= again must be an explicitly named, keyword argument:
+
+#+BEGIN_EXAMPLE
+    >>> foo(1,2,kwarg2='kwarg2', foo='foo', bar='bar')
+    (1, 2, 'kwarg2', {'foo': 'foo', 'bar': 'bar'})
+#+END_EXAMPLE
+
+And we can no longer accept unlimited positional arguments because we
+don't have =*args*=:
+
+#+BEGIN_EXAMPLE
+    >>> foo(1,2,3,4,5, kwarg2='kwarg2', foo='foo', bar='bar')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: foo() takes from 1 to 2 positional arguments
+        but 5 positional arguments (and 1 keyword-only argument) were given
+#+END_EXAMPLE
+
+Again, more simply, here we require =kwarg= to be given by name, not
+positionally:
+
+#+BEGIN_EXAMPLE
+    def bar(*, kwarg=None):
+        return kwarg
+#+END_EXAMPLE
+
+In this example, we see that if we try to pass =kwarg= positionally, we
+get an error:
+
+#+BEGIN_EXAMPLE
+    >>> bar('kwarg')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: bar() takes 0 positional arguments but 1 was given
+#+END_EXAMPLE
+
+We must explicitly pass the =kwarg= parameter as a keyword argument.
+
+#+BEGIN_EXAMPLE
+    >>> bar(kwarg='kwarg')
+    'kwarg'
+#+END_EXAMPLE
+
+Python 2 compatible demos
+=*args= (typically said "star-args") and =**kwargs= (stars can be
+implied by saying "kwargs", but be explicit with "double-star kwargs")
+are common idioms of Python for using the =*= and =**= notation. These
+specific variable names aren't required (e.g. you could use =*foos= and
+=**bars=), but a departure from convention is likely to enrage your
+fellow Python coders.
+
+We typically use these when we don't know what our function is going to
+receive or how many arguments we may be passing, and sometimes even when
+naming every variable separately would get very messy and redundant (but
+this is a case where usually explicit is better than implicit).
+
+*Example 1*
+
+The following function describes how they can be used, and demonstrates
+behavior. Note the named =b= argument will be consumed by the second
+positional argument before :
+
+#+BEGIN_EXAMPLE
+    def foo(a, b=10, *args, **kwargs):
+        '''
+        this function takes required argument a, not required keyword argument b
+        and any number of unknown positional arguments and keyword arguments after
+        '''
+        print('a is a required argument, and its value is {0}'.format(a))
+        print('b not required, its default value is 10, actual value: {0}'.format(b))
+        # we can inspect the unknown arguments we were passed:
+        #  - args:
+        print('args is of type {0} and length {1}'.format(type(args), len(args)))
+        for arg in args:
+            print('unknown arg: {0}'.format(arg))
+        #  - kwargs:
+        print('kwargs is of type {0} and length {1}'.format(type(kwargs),
+                                                            len(kwargs)))
+        for kw, arg in kwargs.items():
+            print('unknown kwarg - kw: {0}, arg: {1}'.format(kw, arg))
+        # But we don't have to know anything about them
+        # to pass them to other functions.
+        print('Args or kwargs can be passed without knowing what they are.')
+        # max can take two or more positional args: max(a, b, c...)
+        print('e.g. max(a, b, *args) \n{0}'.format(
+          max(a, b, *args)))
+        kweg = 'dict({0})'.format( # named args same as unknown kwargs
+          ', '.join('{k}={v}'.format(k=k, v=v)
+                                 for k, v in sorted(kwargs.items())))
+        print('e.g. dict(**kwargs) (same as {kweg}) returns: \n{0}'.format(
+          dict(**kwargs), kweg=kweg))
+#+END_EXAMPLE
+
+We can check the online help for the function's signature, with
+=help(foo)=, which tells us
+
+#+BEGIN_EXAMPLE
+    foo(a, b=10, *args, **kwargs)
+#+END_EXAMPLE
+
+Let's call this function with =foo(1, 2, 3, 4, e=5, f=6, g=7)=
+
+which prints:
+
+#+BEGIN_EXAMPLE
+    a is a required argument, and its value is 1
+    b not required, its default value is 10, actual value: 2
+    args is of type <type 'tuple'> and length 2
+    unknown arg: 3
+    unknown arg: 4
+    kwargs is of type <type 'dict'> and length 3
+    unknown kwarg - kw: e, arg: 5
+    unknown kwarg - kw: g, arg: 7
+    unknown kwarg - kw: f, arg: 6
+    Args or kwargs can be passed without knowing what they are.
+    e.g. max(a, b, *args)
+    4
+    e.g. dict(**kwargs) (same as dict(e=5, f=6, g=7)) returns:
+    {'e': 5, 'g': 7, 'f': 6}
+#+END_EXAMPLE
+
+*Example 2*
+
+We can also call it using another function, into which we just provide
+=a=:
+
+#+BEGIN_EXAMPLE
+    def bar(a):
+        b, c, d, e, f = 2, 3, 4, 5, 6
+        # dumping every local variable into foo as a keyword argument
+        # by expanding the locals dict:
+        foo(**locals())
+#+END_EXAMPLE
+
+=bar(100)= prints:
+
+#+BEGIN_EXAMPLE
+    a is a required argument, and its value is 100
+    b not required, its default value is 10, actual value: 2
+    args is of type <type 'tuple'> and length 0
+    kwargs is of type <type 'dict'> and length 4
+    unknown kwarg - kw: c, arg: 3
+    unknown kwarg - kw: e, arg: 5
+    unknown kwarg - kw: d, arg: 4
+    unknown kwarg - kw: f, arg: 6
+    Args or kwargs can be passed without knowing what they are.
+    e.g. max(a, b, *args)
+    100
+    e.g. dict(**kwargs) (same as dict(c=3, d=4, e=5, f=6)) returns:
+    {'c': 3, 'e': 5, 'd': 4, 'f': 6}
+#+END_EXAMPLE
+
+*Example 3: practical usage in decorators*
+
+OK, so maybe we're not seeing the utility yet. So imagine you have
+several functions with redundant code before and/or after the
+differentiating code. The following named functions are just pseudo-code
+for illustrative purposes.
+
+#+BEGIN_EXAMPLE
+    def foo(a, b, c, d=0, e=100):
+        # imagine this is much more code than a simple function call
+        preprocess()
+        differentiating_process_foo(a,b,c,d,e)
+        # imagine this is much more code than a simple function call
+        postprocess()
+
+    def bar(a, b, c=None, d=0, e=100, f=None):
+        preprocess()
+        differentiating_process_bar(a,b,c,d,e,f)
+        postprocess()
+
+    def baz(a, b, c, d, e, f):
+        ... and so on
+#+END_EXAMPLE
+
+We might be able to handle this differently, but we can certainly
+extract the redundancy with a decorator, and so our below example
+demonstrates how =*args= and =**kwargs= can be very useful:
+
+#+BEGIN_EXAMPLE
+    def decorator(function):
+        '''function to wrap other functions with a pre- and postprocess'''
+        @functools.wraps(function) # applies module, name, and docstring to wrapper
+        def wrapper(*args, **kwargs):
+            # again, imagine this is complicated, but we only write it once!
+            preprocess()
+            function(*args, **kwargs)
+            postprocess()
+        return wrapper
+#+END_EXAMPLE
+
+And now every wrapped function can be written much more succinctly, as
+we've factored out the redundancy:
+
+#+BEGIN_EXAMPLE
+    @decorator
+    def foo(a, b, c, d=0, e=100):
+        differentiating_process_foo(a,b,c,d,e)
+
+    @decorator
+    def bar(a, b, c=None, d=0, e=100, f=None):
+        differentiating_process_bar(a,b,c,d,e,f)
+
+    @decorator
+    def baz(a, b, c=None, d=0, e=100, f=None, g=None):
+        differentiating_process_baz(a,b,c,d,e,f, g)
+
+    @decorator
+    def quux(a, b, c=None, d=0, e=100, f=None, g=None, h=None):
+        differentiating_process_quux(a,b,c,d,e,f,g,h)
+#+END_EXAMPLE
+
+And by factoring out our code, which =*args= and =**kwargs= allows us to
+do, we reduce lines of code, improve readability and maintainability,
+and have sole canonical locations for the logic in our program. If we
+need to change any part of this structure, we have one place in which to
+make each change.
+
+* Answer5
+  :PROPERTIES:
+  :CUSTOM_ID: answer5
+  :END:
+
+Let us first understand what are positional arguments and keyword
+arguments. Below is an example of function definition with *Positional
+arguments.*
+
+#+BEGIN_EXAMPLE
+    def test(a,b,c):
+         print(a)
+         print(b)
+         print(c)
+
+    test(1,2,3)
+    #output:
+    1
+    2
+    3
+#+END_EXAMPLE
+
+So this is a function definition with positional arguments. You can call
+it with keyword/named arguments as well:
+
+#+BEGIN_EXAMPLE
+    def test(a,b,c):
+         print(a)
+         print(b)
+         print(c)
+
+    test(a=1,b=2,c=3)
+    #output:
+    1
+    2
+    3
+#+END_EXAMPLE
+
+Now let us study an example of function definition with *keyword
+arguments*:
+
+#+BEGIN_EXAMPLE
+    def test(a=0,b=0,c=0):
+         print(a)
+         print(b)
+         print(c)
+         print('-------------------------')
+
+    test(a=1,b=2,c=3)
+    #output :
+    1
+    2
+    3
+    -------------------------
+#+END_EXAMPLE
+
+You can call this function with positional arguments as well:
+
+#+BEGIN_EXAMPLE
+    def test(a=0,b=0,c=0):
+        print(a)
+        print(b)
+        print(c)
+        print('-------------------------')
+
+    test(1,2,3)
+    # output :
+    1
+    2
+    3
+    ---------------------------------
+#+END_EXAMPLE
+
+So we now know function definitions with positional as well as keyword
+arguments.
+
+Now let us study the '*' operator and '**' operator.
+
+Please note these operators can be used in 2 areas:
+
+a) *function call*
+
+b) *function definition*
+
+The use of '*' operator and '**' operator in *function call.*
+
+Let us get straight to an example and then discuss it.
+
+#+BEGIN_EXAMPLE
+    def sum(a,b):  #receive args from function calls as sum(1,2) or sum(a=1,b=2)
+        print(a+b)
+
+    my_tuple = (1,2)
+    my_list = [1,2]
+    my_dict = {'a':1,'b':2}
+
+    # Let us unpack data structure of list or tuple or dict into arguments with help of '*' operator
+    sum(*my_tuple)   # becomes same as sum(1,2) after unpacking my_tuple with '*'
+    sum(*my_list)    # becomes same as sum(1,2) after unpacking my_list with  '*'
+    sum(**my_dict)   # becomes same as sum(a=1,b=2) after unpacking by '**'
+
+    # output is 3 in all three calls to sum function.
+#+END_EXAMPLE
+
+So remember
+
+when the '*' or '**' operator is used in a *function call* -
+
+'*' operator unpacks data structure such as a list or tuple into
+arguments needed by function definition.
+
+'**' operator unpacks a dictionary into arguments needed by function
+definition.
+
+Now let us study the '*' operator use in *function definition*. Example:
+
+#+BEGIN_EXAMPLE
+    def sum(*args): #pack the received positional args into data structure of tuple. after applying '*' - def sum((1,2,3,4))
+        sum = 0
+        for a in args:
+            sum+=a
+        print(sum)
+
+    sum(1,2,3,4)  #positional args sent to function sum
+    #output:
+    10
+#+END_EXAMPLE
+
+In function *definition* the '*' operator packs the received arguments
+into a tuple.
+
+Now let us see an example of '**' used in function definition:
+
+#+BEGIN_EXAMPLE
+    def sum(**args): #pack keyword args into datastructure of dict after applying '**' - def sum({a:1,b:2,c:3,d:4})
+        sum=0
+        for k,v in args.items():
+            sum+=v
+        print(sum)
+
+    sum(a=1,b=2,c=3,d=4) #positional args sent to function sum
+#+END_EXAMPLE
+
+In function *definition* The '**' operator packs the received arguments
+into a dictionary.
+
+So remember:
+
+In a *function call* the '*' *unpacks* data structure of tuple or list
+into positional or keyword arguments to be received by function
+definition.
+
+In a *function call* the '**' *unpacks* data structure of dictionary
+into positional or keyword arguments to be received by function
+definition.
+
+In a *function definition* the '*' *packs* positional arguments into a
+tuple.
+
+In a *function definition* the '**' *packs* keyword arguments into a
+dictionary.
+
+* Answer6
+  :PROPERTIES:
+  :CUSTOM_ID: answer6
+  :END:
+
+This table is handy for using =*= and =**= in function /construction/
+and function /call/:
+
+#+BEGIN_EXAMPLE
+                In function construction         In function call
+    =======================================================================
+              |  def f(*args):                 |  def f(a, b):
+    *args     |      for arg in args:          |      return a + b
+              |          print(arg)            |  args = (1, 2)
+              |  f(1, 2)                       |  f(*args)
+    ----------|--------------------------------|---------------------------
+              |  def f(a, b):                  |  def f(a, b):
+    **kwargs  |      return a + b              |      return a + b
+              |  def g(**kwargs):              |  kwargs = dict(a=1, b=2)
+              |      return f(**kwargs)        |  f(**kwargs)
+              |  g(a=1, b=2)                   |
+    -----------------------------------------------------------------------
+#+END_EXAMPLE
+
+This really just serves to summarize Lorin Hochstein's
+[[https://stackoverflow.com/a/36926/7954504][answer]] but I find it
+helpful.
+
+Relatedly: uses for the star/splat operators have been
+[[https://docs.python.org/3/whatsnew/3.5.html#pep-448-additional-unpacking-generalizations][expanded]]
+in Python 3
+
+* Answer7
+  :PROPERTIES:
+  :CUSTOM_ID: answer7
+  :END:
+
+=*= and =**= have special usage in the function argument list. =*=
+implies that the argument is a list and =**= implies that the argument
+is a dictionary. This allows functions to take arbitrary number of
+arguments
+
+* Answer8
+  :PROPERTIES:
+  :CUSTOM_ID: answer8
+  :END:
+
+For those of you who learn by examples!
+
+1. The purpose of =*= is to give you the ability to define a function
+   that can take an arbitrary number of arguments provided as a list
+   (e.g. =f(*myList)= ).
+2. The purpose of =**= is to give you the ability to feed a function's
+   arguments by providing a dictionary (e.g. =f(**{'x' : 1, 'y' : 2})=
+   ).
+
+Let us show this by defining a function that takes two normal variables
+=x=, =y=, and can accept more arguments as =myArgs=, and can accept even
+more arguments as =myKW=. Later, we will show how to feed =y= using
+=myArgDict=.
+
+#+BEGIN_EXAMPLE
+    def f(x, y, *myArgs, **myKW):
+        print("# x      = {}".format(x))
+        print("# y      = {}".format(y))
+        print("# myArgs = {}".format(myArgs))
+        print("# myKW   = {}".format(myKW))
+        print("# ----------------------------------------------------------------------")
+
+    # Define a list for demonstration purposes
+    myList    = ["Left", "Right", "Up", "Down"]
+    # Define a dictionary for demonstration purposes
+    myDict    = {"Wubba": "lubba", "Dub": "dub"}
+    # Define a dictionary to feed y
+    myArgDict = {'y': "Why?", 'y0': "Why not?", "q": "Here is a cue!"}
+
+    # The 1st elem of myList feeds y
+    f("myEx", *myList, **myDict)
+    # x      = myEx
+    # y      = Left
+    # myArgs = ('Right', 'Up', 'Down')
+    # myKW   = {'Wubba': 'lubba', 'Dub': 'dub'}
+    # ----------------------------------------------------------------------
+
+    # y is matched and fed first
+    # The rest of myArgDict becomes additional arguments feeding myKW
+    f("myEx", **myArgDict)
+    # x      = myEx
+    # y      = Why?
+    # myArgs = ()
+    # myKW   = {'y0': 'Why not?', 'q': 'Here is a cue!'}
+    # ----------------------------------------------------------------------
+
+    # The rest of myArgDict becomes additional arguments feeding myArgs
+    f("myEx", *myArgDict)
+    # x      = myEx
+    # y      = y
+    # myArgs = ('y0', 'q')
+    # myKW   = {}
+    # ----------------------------------------------------------------------
+
+    # Feed extra arguments manually and append even more from my list
+    f("myEx", 4, 42, 420, *myList, *myDict, **myDict)
+    # x      = myEx
+    # y      = 4
+    # myArgs = (42, 420, 'Left', 'Right', 'Up', 'Down', 'Wubba', 'Dub')
+    # myKW   = {'Wubba': 'lubba', 'Dub': 'dub'}
+    # ----------------------------------------------------------------------
+
+    # Without the stars, the entire provided list and dict become x, and y:
+    f(myList, myDict)
+    # x      = ['Left', 'Right', 'Up', 'Down']
+    # y      = {'Wubba': 'lubba', 'Dub': 'dub'}
+    # myArgs = ()
+    # myKW   = {}
+    # ----------------------------------------------------------------------
+#+END_EXAMPLE
+
+Caveats
+
+1. =**= is exclusively reserved for dictionaries.
+2. Non-optional argument assignment happens first.
+3. You cannot use a non-optional argument twice.
+4. If applicable, =**= must come after =*=, always.
+
+* Answer9
+  :PROPERTIES:
+  :CUSTOM_ID: answer9
+  :END:
+
+From the Python documentation:
+
+#+BEGIN_QUOTE
+  If there are more positional arguments than there are formal parameter
+  slots, a TypeError exception is raised, unless a formal parameter
+  using the syntax "*identifier" is present; in this case, that formal
+  parameter receives a tuple containing the excess positional arguments
+  (or an empty tuple if there were no excess positional arguments).
+
+  If any keyword argument does not correspond to a formal parameter
+  name, a TypeError exception is raised, unless a formal parameter using
+  the syntax "**identifier" is present; in this case, that formal
+  parameter receives a dictionary containing the excess keyword
+  arguments (using the keywords as keys and the argument values as
+  corresponding values), or a (new) empty dictionary if there were no
+  excess keyword arguments.
+#+END_QUOTE
+
+* Answer10
+  :PROPERTIES:
+  :CUSTOM_ID: answer10
+  :END:
+
+*TL;DR*
+
+Below are 6 different use cases for =*= and =**= in python programming:
+
+1. *To accept any number of positional arguments using =*args=:*
+   =def foo(*args): pass=, here =foo= accepts any number of positional
+   arguments, i. e., the following calls are valid =foo(1)=,
+   =foo(1, 'bar')=
+2. *To accept any number of keyword arguments using =**kwargs=:*
+   =def foo(**kwargs): pass=, here 'foo' accepts any number of keyword
+   arguments, i. e., the following calls are valid =foo(name='Tom')=,
+   =foo(name='Tom', age=33)=
+3. *To accept any number of positional and keyword arguments using
+   =*args, **kwargs=:* =def foo(*args, **kwargs): pass=, here =foo=
+   accepts any number of positional and keyword arguments, i. e., the
+   following calls are valid =foo(1,name='Tom')=,
+   =foo(1, 'bar', name='Tom', age=33)=
+4. *To enforce keyword only arguments using =*=:*
+   =def foo(pos1, pos2, *, kwarg1): pass=, here =*= means that foo only
+   accept keyword arguments after pos2, hence =foo(1, 2, 3)= raises
+   TypeError but =foo(1, 2, kwarg1=3)= is ok.
+5. *To express no further interest in more positional arguments using
+   =*_= (Note: this is a convention only):*
+   =def foo(bar, baz, *_): pass= means (by convention) =foo= only uses
+   =bar= and =baz= arguments in its working and will ignore others.
+6. *To express no further interest in more keyword arguments using
+   =\**_= (Note: this is a convention only):*
+   =def foo(bar, baz, **_): pass= means (by convention) =foo= only uses
+   =bar= and =baz= arguments in its working and will ignore others.
+
+*BONUS:* From python 3.8 onward, one can use =/= in function definition
+to enforce positional only parameters. In the following example,
+parameters a and b are *positional-only*, while c or d can be positional
+or keyword, and e or f are required to be keywords:
+
+#+BEGIN_EXAMPLE
+    def f(a, b, /, c, d, *, e, f):
+        pass
+#+END_EXAMPLE
+
+* Answer11
+  :PROPERTIES:
+  :CUSTOM_ID: answer11
+  :END:
+
+=*= means receive variable arguments as tuple
+
+=**= means receive variable arguments as dictionary
+
+Used like the following:
+
+*1) single **
+
+#+BEGIN_EXAMPLE
+    def foo(*args):
+        for arg in args:
+            print(arg)
+
+    foo("two", 3)
+#+END_EXAMPLE
+
+*Output:*
+
+#+BEGIN_EXAMPLE
+    two
+    3
+#+END_EXAMPLE
+
+*2) Now =**=*
+
+#+BEGIN_EXAMPLE
+    def bar(**kwargs):
+        for key in kwargs:
+            print(key, kwargs[key])
+
+    bar(dic1="two", dic2=3)
+#+END_EXAMPLE
+
+*Output:*
+
+#+BEGIN_EXAMPLE
+    dic1 two
+    dic2 3
+#+END_EXAMPLE
+
+* Answer12
+  :PROPERTIES:
+  :CUSTOM_ID: answer12
+  :END:
+
+In Python 3.5, you can also use this syntax in =list=, =dict=, =tuple=,
+and =set= displays (also sometimes called literals). See
+[[http://legacy.python.org/dev/peps/pep-0448/][PEP 488: Additional
+Unpacking Generalizations]].
+
+#+BEGIN_EXAMPLE
+    >>> (0, *range(1, 4), 5, *range(6, 8))
+    (0, 1, 2, 3, 5, 6, 7)
+    >>> [0, *range(1, 4), 5, *range(6, 8)]
+    [0, 1, 2, 3, 5, 6, 7]
+    >>> {0, *range(1, 4), 5, *range(6, 8)}
+    {0, 1, 2, 3, 5, 6, 7}
+    >>> d = {'one': 1, 'two': 2, 'three': 3}
+    >>> e = {'six': 6, 'seven': 7}
+    >>> {'zero': 0, **d, 'five': 5, **e}
+    {'five': 5, 'seven': 7, 'two': 2, 'one': 1, 'three': 3, 'six': 6, 'zero': 0}
+#+END_EXAMPLE
+
+It also allows multiple iterables to be unpacked in a single function
+call.
+
+#+BEGIN_EXAMPLE
+    >>> range(*[1, 10], *[2])
+    range(1, 10, 2)
+#+END_EXAMPLE
+
+(Thanks to mgilson for the PEP link.)
+
+* Answer13
+  :PROPERTIES:
+  :CUSTOM_ID: answer13
+  :END:
+
+I want to give an example which others haven't mentioned
+
+* can also unpack a *generator*
+
+An example from Python 3 Document
+
+#+BEGIN_EXAMPLE
+    x = [1, 2, 3]
+    y = [4, 5, 6]
+
+    unzip_x, unzip_y = zip(*zip(x, y))
+#+END_EXAMPLE
+
+unzip_x will be [1, 2, 3], unzip_y will be [4, 5, 6]
+
+The zip() receives multiple iretable args, and return a generator.
+
+#+BEGIN_EXAMPLE
+    zip(*zip(x,y)) -> zip((1, 4), (2, 5), (3, 6))
+#+END_EXAMPLE
+
+* Answer14
+  :PROPERTIES:
+  :CUSTOM_ID: answer14
+  :END:
+
+Building on nickd's
+[[https://stackoverflow.com/a/36911/8588359][answer]]...
+
+#+BEGIN_EXAMPLE
+    def foo(param1, *param2):
+        print(param1)
+        print(param2)
+
+
+    def bar(param1, **param2):
+        print(param1)
+        print(param2)
+
+
+    def three_params(param1, *param2, **param3):
+        print(param1)
+        print(param2)
+        print(param3)
+
+
+    foo(1, 2, 3, 4, 5)
+    print("\n")
+    bar(1, a=2, b=3)
+    print("\n")
+    three_params(1, 2, 3, 4, s=5)
+#+END_EXAMPLE
+
+Output:
+
+#+BEGIN_EXAMPLE
+    1
+    (2, 3, 4, 5)
+
+    1
+    {'a': 2, 'b': 3}
+
+    1
+    (2, 3, 4)
+    {'s': 5}
+#+END_EXAMPLE
+
+Basically, any number of *positional arguments* can use *args and any
+*named arguments* (or kwargs aka keyword arguments) can use **kwargs.
+
+* Answer15
+  :PROPERTIES:
+  :CUSTOM_ID: answer15
+  :END:
+
+In addition to function calls, *args and **kwargs are useful in class
+hierarchies and also avoid having to write =__init__= method in Python.
+Similar usage can seen in frameworks like Django code.
+
+For example,
+
+#+BEGIN_EXAMPLE
+    def __init__(self, *args, **kwargs):
+        for attribute_name, value in zip(self._expected_attributes, args):
+            setattr(self, attribute_name, value)
+            if kwargs.has_key(attribute_name):
+                kwargs.pop(attribute_name)
+
+        for attribute_name in kwargs.viewkeys():
+            setattr(self, attribute_name, kwargs[attribute_name])
+#+END_EXAMPLE
+
+A subclass can then be
+
+#+BEGIN_EXAMPLE
+    class RetailItem(Item):
+        _expected_attributes = Item._expected_attributes + ['name', 'price', 'category', 'country_of_origin']
+
+    class FoodItem(RetailItem):
+        _expected_attributes = RetailItem._expected_attributes +  ['expiry_date']
+#+END_EXAMPLE
+
+The subclass then be instantiated as
+
+#+BEGIN_EXAMPLE
+    food_item = FoodItem(name = 'Jam',
+                         price = 12.0,
+                         category = 'Foods',
+                         country_of_origin = 'US',
+                         expiry_date = datetime.datetime.now())
+#+END_EXAMPLE
+
+Also, a subclass with a new attribute which makes sense only to that
+subclass instance can call the Base class =__init__= to offload the
+attributes setting. This is done through *args and **kwargs. kwargs
+mainly used so that code is readable using named arguments. For example,
+
+#+BEGIN_EXAMPLE
+    class ElectronicAccessories(RetailItem):
+        _expected_attributes = RetailItem._expected_attributes +  ['specifications']
+        # Depend on args and kwargs to populate the data as needed.
+        def __init__(self, specifications = None, *args, **kwargs):
+            self.specifications = specifications  # Rest of attributes will make sense to parent class.
+            super(ElectronicAccessories, self).__init__(*args, **kwargs)
+#+END_EXAMPLE
+
+which can be instatiated as
+
+#+BEGIN_EXAMPLE
+    usb_key = ElectronicAccessories(name = 'Sandisk',
+                                    price = '$6.00',
+                                    category = 'Electronics',
+                                    country_of_origin = 'CN',
+                                    specifications = '4GB USB 2.0/USB 3.0')
+#+END_EXAMPLE
+
+The complete code is
+[[http://harisankar-krishnaswamy.blogspot.sg/2015/08/using-args-and-kwargs-python-code-post.html][here]]
+
+* Answer16
+  :PROPERTIES:
+  :CUSTOM_ID: answer16
+  :END:
+
+TL;DR
+It packs arguments passed to the function into =list= and =dict=
+respectively inside the function body. When you define a function
+signature like this:
+
+#+BEGIN_EXAMPLE
+    def func(*args, **kwds):
+        # do stuff
+#+END_EXAMPLE
+
+it can be called with any number of arguments and keyword arguments. The
+non-keyword arguments get packed into a list called =args= inside the
+function body and the keyword arguments get packed into a dict called
+=kwds= inside the function body.
+
+#+BEGIN_EXAMPLE
+    func("this", "is a list of", "non-keyowrd", "arguments", keyword="ligma", options=[1,2,3])
+#+END_EXAMPLE
+
+now inside the function body, when the function is called, there are two
+local variables, =args= which is a list having value
+=["this", "is a list of", "non-keyword", "arguments"]= and =kwds= which
+is a =dict= having value ={"keyword" : "ligma", "options" : [1,2,3]}=
+
+--------------
+
+This also works in reverse, i.e. from the caller side. for example if
+you have a function defined as:
+
+#+BEGIN_EXAMPLE
+    def f(a, b, c, d=1, e=10):
+        # do stuff
+#+END_EXAMPLE
+
+you can call it with by unpacking iterables or mappings you have in the
+calling scope:
+
+#+BEGIN_EXAMPLE
+    iterable = [1, 20, 500]
+    mapping = {"d" : 100, "e": 3}
+    f(*iterable, **mapping)
+    # That call is equivalent to
+    f(1, 20, 500, d=100, e=3)
+#+END_EXAMPLE
+
+* Answer17
+  :PROPERTIES:
+  :CUSTOM_ID: answer17
+  :END:
+
+=*args= and =**kwargs=: allow you to pass a variable number of arguments
+to a function.
+
+=*args=: is used to send a non-keyworded variable length argument list
+to the function:
+
+#+BEGIN_EXAMPLE
+    def args(normal_arg, *argv):
+        print("normal argument:", normal_arg)
+
+        for arg in argv:
+            print("Argument in list of arguments from *argv:", arg)
+
+    args('animals', 'fish', 'duck', 'bird')
+#+END_EXAMPLE
+
+Will produce:
+
+#+BEGIN_EXAMPLE
+    normal argument: animals
+    Argument in list of arguments from *argv: fish
+    Argument in list of arguments from *argv: duck
+    Argument in list of arguments from *argv: bird
+#+END_EXAMPLE
+
+=**kwargs*=
+
+=**kwargs= allows you to pass keyworded variable length of arguments to
+a function. You should use =**kwargs= if you want to handle named
+arguments in a function.
+
+#+BEGIN_EXAMPLE
+    def who(**kwargs):
+        if kwargs is not None:
+            for key, value in kwargs.items():
+                print("Your %s is %s." % (key, value))
+
+    who(name="Nikola", last_name="Tesla", birthday="7.10.1856", birthplace="Croatia")
+#+END_EXAMPLE
+
+Will produce:
+
+#+BEGIN_EXAMPLE
+    Your name is Nikola.
+    Your last_name is Tesla.
+    Your birthday is 7.10.1856.
+    Your birthplace is Croatia.
+#+END_EXAMPLE
+
+* Answer18
+  :PROPERTIES:
+  :CUSTOM_ID: answer18
+  :END:
+
+Given a function that has 3 items as argument
+
+#+BEGIN_EXAMPLE
+    sum = lambda x, y, z: x + y + z
+    sum(1,2,3) # sum 3 items
+
+    sum([1,2,3]) # error, needs 3 items, not 1 list
+
+    x = [1,2,3][0]
+    y = [1,2,3][1]
+    z = [1,2,3][2]
+    sum(x,y,z) # ok
+
+    sum(*[1,2,3]) # ok, 1 list becomes 3 items
+#+END_EXAMPLE
+
+Imagine this toy with a bag of a triangle, a circle and a rectangle
+item. That bag does not directly fit. You need to unpack the bag to take
+those 3 items and now they fit. The Python * operator does this unpack
+process.
+
+[[file:./static/what_does_double_star_asterisk_and_star_asterisk_do_for_parameters/37034.jpeg]]
+
+* Answer19
+  :PROPERTIES:
+  :CUSTOM_ID: answer19
+  :END:
+
+A good example of using both in a function is:
+
+#+BEGIN_EXAMPLE
+    >>> def foo(*arg,**kwargs):
+    ...     print arg
+    ...     print kwargs
+    >>>
+    >>> a = (1, 2, 3)
+    >>> b = {'aa': 11, 'bb': 22}
+    >>>
+    >>>
+    >>> foo(*a,**b)
+    (1, 2, 3)
+    {'aa': 11, 'bb': 22}
+    >>>
+    >>>
+    >>> foo(a,**b)
+    ((1, 2, 3),)
+    {'aa': 11, 'bb': 22}
+    >>>
+    >>>
+    >>> foo(a,b)
+    ((1, 2, 3), {'aa': 11, 'bb': 22})
+    {}
+    >>>
+    >>>
+    >>> foo(a,*b)
+    ((1, 2, 3), 'aa', 'bb')
+    {}
+#+END_EXAMPLE
+
+* Answer20
+  :PROPERTIES:
+  :CUSTOM_ID: answer20
+  :END:
+
+This example would help you remember =*args=, =**kwargs= and even
+=super= and inheritance in Python at once.
+
+#+BEGIN_EXAMPLE
+    class base(object):
+        def __init__(self, base_param):
+            self.base_param = base_param
+
+
+    class child1(base): # inherited from base class
+        def __init__(self, child_param, *args) # *args for non-keyword args
+            self.child_param = child_param
+            super(child1, self).__init__(*args) # call __init__ of the base class and initialize it with a NON-KEYWORD arg
+
+    class child2(base):
+        def __init__(self, child_param, **kwargs):
+            self.child_param = child_param
+            super(child2, self).__init__(**kwargs) # call __init__ of the base class and initialize it with a KEYWORD arg
+
+    c1 = child1(1,0)
+    c2 = child2(1,base_param=0)
+    print c1.base_param # 0
+    print c1.child_param # 1
+    print c2.base_param # 0
+    print c2.child_param # 1
+#+END_EXAMPLE
+
+* Answer21
+  :PROPERTIES:
+  :CUSTOM_ID: answer21
+  :END:
+
+Context
+
+- python 3.x
+- unpacking with =**=
+- use with string formatting
+
+Use with string formatting
+In addition to the answers in this thread, here is another detail that
+was not mentioned elsewhere. This expands on the
+[[https://stackoverflow.com/a/47580283/42223][answer by Brad Solomon]]
+
+Unpacking with =**= is also useful when using python =str.format=.
+
+This is somewhat similar to what you can do with python =f-strings=
+[[https://stackoverflow.com/questions/tagged/f-string][f-string]] but
+with the added overhead of declaring a dict to hold the variables
+(f-string does not require a dict).
+
+Quick Example
+#+BEGIN_EXAMPLE
+      ## init vars
+      ddvars = dict()
+      ddcalc = dict()
+      pass
+      ddvars['fname']     = 'Huomer'
+      ddvars['lname']     = 'Huimpson'
+      ddvars['motto']     = 'I love donuts!'
+      ddvars['age']       = 33
+      pass
+      ddcalc['ydiff']     = 5
+      ddcalc['ycalc']     = ddvars['age'] + ddcalc['ydiff']
+      pass
+      vdemo = []
+
+      ## ********************
+      ## single unpack supported in py 2.7
+      vdemo.append('''
+      Hello {fname} {lname}!
+
+      Today you are {age} years old!
+
+      We love your motto "{motto}" and we agree with you!
+      '''.format(**ddvars))
+      pass
+
+      ## ********************
+      ## multiple unpack supported in py 3.x
+      vdemo.append('''
+      Hello {fname} {lname}!
+
+      In {ydiff} years you will be {ycalc} years old!
+      '''.format(**ddvars,**ddcalc))
+      pass
+
+      ## ********************
+      print(vdemo[-1])
+#+END_EXAMPLE
+
+* Answer22
+  :PROPERTIES:
+  :CUSTOM_ID: answer22
+  :END:
+
+*args ( or *any ) means every parameters
+
+#+BEGIN_EXAMPLE
+    def any_param(*param):
+        pass
+
+    any_param(1)
+    any_param(1,1)
+    any_param(1,1,1)
+    any_param(1,...)
+#+END_EXAMPLE
+
+/NOTICE/ : you can don't pass parameters to *args
+
+#+BEGIN_EXAMPLE
+    def any_param(*param):
+        pass
+
+    any_param() # will work correct
+#+END_EXAMPLE
+
+The *args is in type tuple
+
+#+BEGIN_EXAMPLE
+    def any_param(*param):
+        return type(param)
+
+    any_param(1) #tuple
+    any_param() # tuple
+#+END_EXAMPLE
+
+for access to elements don't use of *
+
+#+BEGIN_EXAMPLE
+    def any(*param):
+        param[0] # correct
+
+    def any(*param):
+        *param[0] # incorrect
+#+END_EXAMPLE
+
+The **kwd
+
+**kwd or **any This is a dict type
+
+#+BEGIN_EXAMPLE
+    def func(**any):
+        return type(any) # dict
+
+    def func(**any):
+        return any
+
+    func(width="10",height="20") # {width="10",height="20")
+
+#+END_EXAMPLE
+
+* Answer23
+  :PROPERTIES:
+  :CUSTOM_ID: answer23
+  :END:
+
+- =def foo(param1, *param2):= is a method can accept arbitrary number of
+  values for =*param2=,
+- =def bar(param1, **param2):= is a method can accept arbitrary number
+  of values with keys for =*param2=
+- =param1= is a simple parameter.
+
+For example, the syntax for implementing *varargs* in Java as follows:
+
+#+BEGIN_EXAMPLE
+    accessModifier methodName(datatype… arg) {
+        // method body
+    }
+#+END_EXAMPLE

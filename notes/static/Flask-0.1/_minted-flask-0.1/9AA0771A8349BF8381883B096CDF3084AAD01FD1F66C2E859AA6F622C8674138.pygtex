@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{HTTPServer}\PYG{p}{(}\PYG{n}{SocketServer}\PYG{o}{.}\PYG{n}{TCPServer}\PYG{p}{)}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} 注2}
+
+    \PYG{n}{allow\PYGZus{}reuse\PYGZus{}address} \PYG{o}{=} \PYG{l+m+mi}{1}    \PYG{c+c1}{\PYGZsh{} Seems to make sense in testing environment}
+
+    \PYG{k}{def} \PYG{n+nf}{server\PYGZus{}bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Override server\PYGZus{}bind to store the server name.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{SocketServer}\PYG{o}{.}\PYG{n}{TCPServer}\PYG{o}{.}\PYG{n}{server\PYGZus{}bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}
+        \PYG{n}{host}\PYG{p}{,} \PYG{n}{port} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{socket}\PYG{o}{.}\PYG{n}{getsockname}\PYG{p}{(}\PYG{p}{)}\PYG{p}{[}\PYG{p}{:}\PYG{l+m+mi}{2}\PYG{p}{]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}name} \PYG{o}{=} \PYG{n}{socket}\PYG{o}{.}\PYG{n}{getfqdn}\PYG{p}{(}\PYG{n}{host}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{server\PYGZus{}port} \PYG{o}{=} \PYG{n}{port}
+\end{Verbatim}

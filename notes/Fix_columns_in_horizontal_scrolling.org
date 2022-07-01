@@ -1,0 +1,737 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/fix_columns_in_horizontal_scrolling/")); -*-
+:PROPERTIES:
+:ID:       2752D66E-8B73-4889-AC9A-79FC23C16821
+:END:
+
+#+DATE: <2020-10-20 Tue 04:33>
+#+TITLE: Fix_columns_in_horizontal_scrolling
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+
+I am currently trying to fix my first column in a table when the user scrolls in the X-axis. I am using this structure:
+
+#+BEGIN_SRC html
+    <div class="table-wrapper">
+        <table id="consumption-data" class="data">
+            <thead class="header">
+                <tr>
+                    <th>Month</th>
+                    <th>Item 1</th>
+                </tr>
+            </thead>
+            <tbody class="results">
+                <tr>
+                    <th>Jan</th>
+                    <td>3163</td>
+                </tr>
+                <tr>
+                    <th>Feb</th>
+                    <td>3163.7</td>
+                </tr>
+                <tr>
+                    <th>Mar</th>
+                    <td>3163.7</td>
+                </tr>
+                <tr>
+                    <th>Apr</th>
+                    <td>3163.7</td>
+                </tr>
+                <tr>
+                    <th>May</th>
+                    <td>3163.7</td>
+                </tr>
+                <tr>
+                    <th>Jun</th>
+                    <td>3163.7</td>
+                </tr>
+
+                <tr>
+                    <th>...</th>
+                    <td>...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+#+END_SRC
+
+The number of items will be picked by the user, i.e. it could be 90 items in the table.
+This will require scrolling in the X-axis. The question I have got though is:
+
+How do I fix the position of the =th= tags inside the =tbody= (and the =th:first-child= in the =thead=)?
+
+I have been looking at some other threads, however they do not really explain how I achieve the fixed columns which makes it hard for me to
+understand what the codes does and what I am supposed to do.
+
+I have also checked on solutions where people split up the header-column in another table.
+This wont be possible for me because I will export the data to other systems later on.
+
+My css:
+
+#+BEGIN_SRC css
+    .table-wrapper {
+        overflow-x:scroll;
+        overflow-y:visible;
+    }
+#+END_SRC
+
+This fixes the scroll, now comes the work with:
+
+#+BEGIN_SRC css
+    tbody th,
+    thead th:first-child {}
+#+END_SRC
+
+Anyone got any ideas?
+
+EDIT: Here is a jsFiddle: [[http://jsfiddle.net/DJqPf/5/]]
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+[[file:CSS-position.org::* fixed][See：CSS-position-fixed]]
+
+[[file:CSS3 常用选择器一览表.org::* 结构伪类选择器][See：CSS3 常用选择器一览表-结构伪类选择器]]
+
+*SOLVED*
+
+[[http://jsfiddle.net/DJqPf/7/]]
+
+#+BEGIN_SRC css
+    .table-wrapper {
+        overflow-x:scroll;
+        overflow-y:visible;
+        width:250px;
+        margin-left: 120px;
+    }
+    td, th {
+        padding: 5px 20px;
+        width: 100px;
+    }
+    th:first-child {
+        position: fixed;
+        left: 5px
+    }
+#+END_SRC
+
+--------------
+
+*UPDATE*
+
+#+BEGIN_SRC js
+    $(function () {
+      $('.table-wrapper tr').each(function () {
+        var tr = $(this),
+            h = 0;
+        tr.children().each(function () {
+          var td = $(this),
+              tdh = td.height();
+          if (tdh > h) h = tdh;
+        });
+        tr.css({height: h + 'px'});
+      });
+    });
+#+END_SRC
+
+#+BEGIN_SRC css
+    body {
+        position: relative;
+    }
+    .table-wrapper {
+        overflow-x:scroll;
+        overflow-y:visible;
+        width:200px;
+        margin-left: 120px;
+    }
+
+
+    td, th {
+        padding: 5px 20px;
+        width: 100px;
+    }
+    tbody tr {
+
+    }
+    th:first-child {
+        position: absolute;
+        left: 5px
+    }
+#+END_SRC
+
+#+BEGIN_SRC html
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+      <meta charset="utf-8">
+      <title>JS Bin</title>
+    </head>
+    <body>
+    <div>
+        <h1>SOME RANDOM TEXT</h1>
+    </div>
+    <div class="table-wrapper">
+        <table id="consumption-data" class="data">
+            <thead class="header">
+                <tr>
+                    <th>Month</th>
+                    <th>Item 1</th>
+                    <th>Item 2</th>
+                    <th>Item 3</th>
+                    <th>Item 4</th>
+                </tr>
+            </thead>
+            <tbody class="results">
+                <tr>
+                    <th>Jan is an awesome month</th>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                </tr>
+                <tr>
+                    <th>Feb</th>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                </tr>
+                <tr>
+                    <th>Mar</th>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                </tr>
+                <tr>
+                    <th>Apr</th>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                </tr>
+                <tr>
+                    <th>May</th>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                </tr>
+                <tr>
+                    <th>Jun</th>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                    <td>3163</td>
+                </tr>
+
+                <tr>
+                    <th>...</th>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+    </div>
+    </body>
+    </html>
+#+END_SRC
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+Solved using JavaScript + jQuery! I just need similar solution to my project but current solution with HTML and CSS is not ok for me
+because there is issue with column height + I need more then one column to be fixed. So I create simple javascript solution using jQuery.
+
+You can try it here [[https://jsfiddle.net/kindrosker/ffwqvntj/]]
+
+All you need is setup home many columsn will be fixed in ~data-count-fixed-columns~ parameter.
+
+#+BEGIN_SRC html
+<div id="table-listing">
+<div class="table-scrollable">
+    <table class="table" data-count-fixed-columns="2" cellpadding="0" cellspacing="0">
+        <thead class="header">
+            <tr>
+                <th>Month</th>
+                <th>Item 1</th>
+                <th>Item 2</th>
+                <th>Item 3</th>
+                <th>Item 4</th>
+                <th>Item 5</th>
+                <th>Item 6</th>
+                <th>Item 7</th>
+                <th>Item 8</th>
+            </tr>
+        </thead>
+        <tbody class="results">
+            <tr>
+                <td>Jan</td>
+                <td>3163asdasd</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+            <tr>
+                <td>Feb</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+            <tr>
+                <td>Mar</td>
+                <td>3163 some long text</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+            <tr>
+                <td>Apr</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+            <tr>
+                <td>May</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+            <tr>
+                <td>Jun</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+
+            <tr>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+                <td>3163</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+#+END_SRC
+
+and run js function.
+
+#+BEGIN_SRC js
+function app_handle_listing_horisontal_scroll(listing_obj)
+{
+  //get table object
+  table_obj = $('.table',listing_obj);
+
+  //get count fixed collumns params
+  count_fixed_collumns = table_obj.attr('data-count-fixed-columns')
+
+  if(count_fixed_collumns>0)
+  {
+    //get wrapper object
+    wrapper_obj = $('.table-scrollable',listing_obj);
+
+    wrapper_left_margin = 0;
+
+    table_collumns_width = new Array();
+    table_collumns_margin = new Array();
+
+    //calculate wrapper margin and fixed column width
+    $('th',table_obj).each(function(index){
+       if(index<count_fixed_collumns)
+       {
+         wrapper_left_margin += $(this).outerWidth();
+         table_collumns_width[index] = $(this).outerWidth();
+       }
+    })
+
+    //calcualte margin for each column
+    $.each( table_collumns_width, function( key, value ) {
+      if(key==0)
+      {
+        table_collumns_margin[key] = wrapper_left_margin;
+      }
+      else
+      {
+        next_margin = 0;
+        $.each( table_collumns_width, function( key_next, value_next ) {
+          if(key_next<key)
+          {
+            next_margin += value_next;
+          }
+        });
+
+        table_collumns_margin[key] = wrapper_left_margin-next_margin;
+      }
+    });
+
+    //set wrapper margin
+    if(wrapper_left_margin>0)
+    {
+      wrapper_obj.css('cssText','margin-left:'+wrapper_left_margin+'px !important; width: auto')
+    }
+
+    //set position for fixed columns
+    $('tr',table_obj).each(function(){
+
+      //get current row height
+      current_row_height = $(this).outerHeight();
+
+      $('th,td',$(this)).each(function(index){
+
+         //set row height for all cells
+         $(this).css('height',current_row_height)
+
+         //set position
+         if(index<count_fixed_collumns)
+         {
+           $(this).css('position','absolute')
+                  .css('margin-left','-'+table_collumns_margin[index]+'px')
+                  .css('width',table_collumns_width[index])
+
+           $(this).addClass('table-fixed-cell')
+         }
+      })
+    })
+  }
+}
+
+$(function(){
+	app_handle_listing_horisontal_scroll($('#table-listing'))
+})
+#+END_SRC
+
+#+BEGIN_SRC css :results raw drawer values list :exports no-eval
+#table-listing{
+  width: 300px;
+}
+.table-scrollable {
+  width: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid #dddddd;
+  margin: 10px 0 ;
+}
+
+.table th{
+  white-space:nowrap;
+}
+.table td{
+  vertical-align:top;
+  border-bottom: 1px solid #ddd;
+  padding: 2px 5px;
+}
+#+END_SRC
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+Demo:
+[[http://www.jqueryscript.net/demo/jQuery-Plugin-For-Fixed-Table-Header-Footer-Columns-TableHeadFixer/]]
+
+HTML:
+
+#+BEGIN_SRC html
+    <h2>TableHeadFixer Fix Left Column</h2>
+
+    <div id="parent">
+        <table id="fixTable" class="table">
+            <thead>
+                <tr>
+                    <th>Ano</th>
+                    <th>Jan</th>
+                    <th>Fev</th>
+                    <th>Mar</th>
+                    <th>Abr</th>
+                    <th>Maio</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2012</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>550.00</td>
+                </tr>
+                <tr>
+                    <td>2012</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>550.00</td>
+                </tr>
+                <tr>
+                    <td>2012</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>550.00</td>
+                </tr>
+                <tr>
+                    <td>2012</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>550.00</td>
+                </tr>
+                <tr>
+                    <td>2012</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>110.00</td>
+                    <td>550.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+#+END_SRC
+
+JS:
+
+#+BEGIN_SRC js :results values list :exports no-eval
+(function ($) {
+  $.fn.tableHeadFixer = function (param) {
+    var defaults = {
+      head: true,
+      foot: false,
+      left: 0,
+      right: 0
+    }
+
+    var settings = $.extend({}, defaults, param)
+
+    return this.each(function () {
+      settings.table = this
+      settings.parent = $('<div></div>')
+      setParent()
+
+      if (settings.head == true) { fixHead() }
+
+      if (settings.foot == true) { fixFoot() }
+
+      if (settings.left > 0) { fixLeft() }
+
+      if (settings.right > 0) { fixRight() }
+
+      // self.setCorner();
+
+      $(settings.parent).trigger('scroll')
+
+      $(window).resize(function () {
+        $(settings.parent).trigger('scroll')
+      })
+    })
+
+    function setTable (table) {
+
+    }
+
+    function setParent () {
+      var container = $(settings.table).parent()
+      var parent = $(settings.parent)
+      var table = $(settings.table)
+
+      table.before(parent)
+      parent.append(table)
+      parent
+        .css({
+          'width': '100%',
+          'height': container.css('height'),
+          'overflow': 'scroll',
+          'max-height': container.css('max-height'),
+          'min-height': container.css('min-height'),
+          'max-width': container.css('max-width'),
+          'min-width': container.css('min-width')
+        })
+
+      parent.scroll(function () {
+        var scrollWidth = parent[0].scrollWidth
+        var clientWidth = parent[0].clientWidth
+        var scrollHeight = parent[0].scrollHeight
+        var clientHeight = parent[0].clientHeight
+        var top = parent.scrollTop()
+        var left = parent.scrollLeft()
+
+        if (settings.head) { this.find('thead tr > *').css('top', top) }
+
+        if (settings.foot) { this.find('tfoot tr > *').css('bottom', scrollHeight - clientHeight - top) }
+
+        if (settings.left > 0) { settings.leftColumns.css('left', left) }
+
+        if (settings.right > 0) { settings.rightColumns.css('right', scrollWidth - clientWidth - left) }
+      }.bind(table))
+    }
+
+    function fixHead () {
+      var thead = $(settings.table).find('thead')
+      var tr = thead.find('tr')
+      var cells = thead.find('tr > *')
+
+      setBackground(cells)
+      cells.css({
+        'position': 'relative'
+      })
+    }
+
+    function fixFoot () {
+      var tfoot = $(settings.table).find('tfoot')
+      var tr = tfoot.find('tr')
+      var cells = tfoot.find('tr > *')
+
+      setBackground(cells)
+      cells.css({
+        'position': 'relative'
+      })
+    }
+
+    function fixLeft () {
+      var table = $(settings.table)
+
+      var fixColumn = settings.left
+
+      settings.leftColumns = $()
+
+      for (var i = 1; i <= fixColumn; i++) {
+        settings.leftColumns = settings.leftColumns
+          .add(table.find('tr > *:nth-child(' + i + ')'))
+      }
+
+      var column = settings.leftColumns
+
+      column.each(function (k, cell) {
+        var cell = $(cell)
+
+        setBackground(cell)
+        cell.css({
+          'position': 'relative'
+        })
+      })
+    }
+
+    function fixRight () {
+      var table = $(settings.table)
+
+      var fixColumn = settings.right
+
+      settings.rightColumns = $()
+
+      for (var i = 1; i <= fixColumn; i++) {
+        settings.rightColumns = settings.rightColumns
+          .add(table.find('tr > *:nth-last-child(' + i + ')'))
+      }
+
+      var column = settings.rightColumns
+
+      column.each(function (k, cell) {
+        var cell = $(cell)
+
+        setBackground(cell)
+        cell.css({
+          'position': 'relative'
+        })
+      })
+    }
+
+    function setBackground (elements) {
+      elements.each(function (k, element) {
+        var element = $(element)
+        var parent = $(element).parent()
+
+        var elementBackground = element.css('background-color')
+        elementBackground = (elementBackground == 'transparent' || elementBackground == 'rgba(0, 0, 0, 0)') ? null : elementBackground
+
+        var parentBackground = parent.css('background-color')
+        parentBackground = (parentBackground == 'transparent' || parentBackground == 'rgba(0, 0, 0, 0)') ? null : parentBackground
+
+        var background = parentBackground || 'white'
+        background = elementBackground || background
+
+        element.css('background-color', background)
+      })
+    }
+  }
+})(jQuery)
+
+$(document).ready(function () {
+  $('#fixTable').tableHeadFixer({ 'head': false, 'right': 1 })
+})
+#+END_SRC
+
+#+BEGIN_SRC js
+        $(document).ready(function() {
+            $("#fixTable").tableHeadFixer({"head" : false, "right" : 1});
+        });
+#+END_SRC
+
+CSS:
+
+#+BEGIN_SRC css
+        #parent {
+            height: 300px;
+        }
+
+        #fixTable {
+            width: 1800px !important;
+        }
+#+END_SRC
+
+[[https://jsfiddle.net/5gfuqqc4/]]

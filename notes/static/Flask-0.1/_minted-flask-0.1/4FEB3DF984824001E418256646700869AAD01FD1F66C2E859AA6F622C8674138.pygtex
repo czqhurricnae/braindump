@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{class} \PYG{n+nc}{Map}\PYG{p}{(}\PYG{p}{)}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+    \PYG{k}{def} \PYG{n+nf}{add}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rulefactory}\PYG{p}{)}\PYG{p}{:}
+        \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Add a new rule or factory to the map and bind it.  Requires that the}
+\PYG{l+s+sd}{        rule is not bound to another map.}
+
+\PYG{l+s+sd}{        :param rulefactory: a :class:`Rule` or :class:`RuleFactory`}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{for} \PYG{n}{rule} \PYG{o+ow}{in} \PYG{n}{rulefactory}\PYG{o}{.}\PYG{n}{get\PYGZus{}rules}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{p}{:}
+            \PYG{n}{rule}\PYG{o}{.}\PYG{n}{bind}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}rules}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{rule}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}rules\PYGZus{}by\PYGZus{}endpoint}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}\PYG{n}{rule}\PYG{o}{.}\PYG{n}{endpoint}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{)}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{rule}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}remap} \PYG{o}{=} \PYG{n+nb+bp}{True}
+    \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
+\end{Verbatim}

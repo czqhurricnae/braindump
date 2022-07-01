@@ -1,0 +1,40 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/紧固件图库/")); -*-
+:PROPERTIES:
+:ID:       3E91721D-7013-49A2-895E-55D7D09A5B69
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2021-11-13 Sat 09:35>
+#+TITLE: 紧固件图库
+* Anchor
+[[file:./static/紧固件图库/2021-11-13_09-35-51_screenshot.jpg]]
+
+* Barrel
+barrel bearing 圆筒轴承
+
+* Captive washer 固定式垫片，衬垫
+
+* Clinch 钳子
+clinch nuts 齿花螺帽
+
+* Corner
+corner plate 角板，角垫板
+corner join 弯管接头，角接接头
+
+* Countersunk
+countersunk rivet 埋头铆钉
+countersunk bolt 埋头螺栓
+countersunk head screw 埋头螺钉
+
+* Deep counterbored 深挖孔
+
+* Hex 六角
+
+* Miniature
+miniature bearing 微型轴承
+
+* Shank
+shank diameter 杆直径，柄直径
+
+* Self-wrenching 自带扳机
+
+* nutplate 托板螺母

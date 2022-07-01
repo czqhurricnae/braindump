@@ -1,0 +1,10 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 起落架转换活门/")); -*-
+:PROPERTIES:
+:ID:       DA94766A-3057-427A-9D57-9AAB13E3C1C4
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2021-03-30 Tue 16:56>
+#+TITLE: 737NG 起落架转换活门
+
+[[file:./static/737NG 起落架转换活门/2021-03-30_16-57-18_640.gif]]

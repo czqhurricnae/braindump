@@ -1,0 +1,124 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/II 类 第一阶段/")); -*-
+:PROPERTIES:
+:ID:       7F422513-9316-44E8-8A8D-F204EC47544E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-12-13 Sun 20:07>
+#+TITLE: II 类 第一阶段
+
+* K1 AUTO STANDBY SYS RELAY 激励的条件，它激励备用电动泵就一定工作吗
+:PROPERTIES:
+:ANKI_DECK: II 类 第一阶段
+:ANKI_NOTE_TYPE: 基础
+:ANKI_NOTE_ID: 1639167883073
+:END:
+
+** front
+K1 AUTO STANDBY SYS RELAY
+** back
+- 满足备用电动泵工作条件
+
+或者如下图所示：
+#+DOWNLOADED: screenshot @ 2020-12-17 22:44:40
+[[file:./static/II 类 第一阶段/2020-12-17_22-44-40_screenshot.jpg]]
+
+不一定，需要经过备用襟翼电门。
+[[file:./static/II 类 第一阶段/2020-12-16_20-35-41_screenshot.jpg]]
+
+* 前缘的作动器的个数
+:PROPERTIES:
+:ANKI_DECK: II 类 第一阶段
+:ANKI_NOTE_TYPE: 基础
+:ANKI_NOTE_ID: 1639167883262
+:END:
+
+** front
+前缘的作动器的个数
+** back
+12
+
+* 备用电动泵工作条件
+  :PROPERTIES:
+  :ANKI_DECK: II 类 第一阶段
+  :ANKI_NOTE_TYPE: 基础
+  :ANKI_NOTE_ID: 1639167883497
+  :END:
+
+** front
+备用电动泵工作条件
+** back
+
+[[file:./static/II 类 第一阶段/2020-12-16_20-35-41_screenshot.jpg]]
+
+- 低压信号来自 S00141、S00142，在飞行控制组件上。
+
+* PTU 活门关闭条件
+  :PROPERTIES:
+  :ANKI_DECK: II 类 第一阶段
+  :ANKI_NOTE_TYPE: 基础
+  :ANKI_NOTE_ID: 1639167884828
+  :END:
+
+** front
+PTU 活门关闭条件
+** back
+#+DOWNLOADED: screenshot @ 2020-12-16 19:19:22
+[[file:./static/II 类 第一阶段/2020-12-16_19-19-22_screenshot.jpg]]
+
+- 地面
+- 空中，后缘襟翼收上、超过 10 单位。
+
+#+DOWNLOADED: screenshot @ 2020-12-16 19:20:41
+[[file:./static/II 类 第一阶段/2020-12-16_19-20-41_screenshot.jpg]]
+
+- 备用襟翼预位电门在 ARM 位，备用襟翼控制电门在 DOWN 位，使备用关断活门指示继电器 R625 激励。
+- B 系统 EDP 压力大于 2350 PSI （会自动关闭吗？）。
+
+* 飞行机组使用驾驶盘来控制横滚时飞行扰流板正常控制和备用控制
+  :PROPERTIES:
+  :ANKI_DECK: II 类 第一阶段
+  :ANKI_NOTE_TYPE: 基础
+  :ANKI_NOTE_ID: 1639167885122
+  :END:
+
+** front
+飞行扰流板正常控制和备用控制。
+** back
+- 正常：副翼弹簧筒 -> 比例变换器 -> 混频器。
+- 备用：副驾驶超控转换机构 -> 比例变换器 -> 混频器。
+- 和使用减速板手柄控制飞行扰流板不同，减速板手柄钢索直接连接到混频器。
+[[file:./static/II 类 第一阶段/2020-12-17_18-35-20_screenshot.jpg]]
+
+* STBY RUD ON 灯何时点亮
+  :PROPERTIES:
+  :ANKI_DECK: II 类 第一阶段
+  :ANKI_NOTE_TYPE: 基础
+  :ANKI_NOTE_ID: 1639167886575
+  :END:
+** front
+STBY RUD ON 灯何时点亮？
+** back
+
+- 将任一飞行操纵电门打到 STBY RUD 位，此时备用襟翼预位电门必须在 OFF 位，效果：关闭通往副翼、副翼自动驾驶作动器、方向舵主 PCU、升降舵、升降舵自动驾驶作动器、升降舵感觉计算机的液压，备用泵工作，备用方向舵关断活门打开，STBY RUD ON 灯亮。
+[[file:./static/II 类 第一阶段/2020-12-16_18-41-10_screenshot.jpg]]
+
+- 备用襟翼预位电门预位
+[[file:./static/II 类 第一阶段/2020-12-16_18-45-41_screenshot.jpg]]
+
+此时只有备用泵工作，STBY RUD 灯不亮，备用方向舵关断活门不会打开。
+
+- 备用前缘襟翼预位电门预位，控制电门 DOWN
+
+[[file:./static/II 类 第一阶段/2020-12-16_18-58-48_screenshot.jpg]]
+
+效果：前缘备用驱动关断活门继电器激励，使前缘襟翼缝翼关断活门打开，使自保持电路激励。将电信号送到备用关断活门指示继电器 R625。
+
+- 自动工作
+[[file:./static/II 类 第一阶段/2020-12-16_19-10-55_screenshot.jpg]]
+
+效果：备用泵工作，备用方向舵关断活门打开，STBY RUD ON 灯亮，为灯提供冗余的接地信号。
+
+- FFM
+[[file:./static/II 类 第一阶段/2020-12-17_22-44-40_screenshot.jpg]]
+
+效果：备用泵工作，备用方向舵关断活门打开，STBY RUD ON 灯亮。

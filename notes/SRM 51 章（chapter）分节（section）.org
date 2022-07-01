@@ -1,0 +1,18 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/SRM 51 章（chapter）分节（section）/")); -*-
+:PROPERTIES:
+:ID:       321702B1-C648-4FBD-B19B-5AD6FF400DE4
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-15 Tue 21:46>
+#+TITLE: SRM 51 章（chapter）分节（section）
+
+- 51-00 General
+- 51-10 Inspection an Removal of Damage and Aerodynamic Smoothness Requirements 清洁与气动光洁度
+- 51-20 Processed and Procedures for Metallic and Composite Materials 处理工艺
+- 51-30 Materials 材料
+- 51-40 Fasteners 紧固件
+- 51-50 Support of Airplane for Repair and Aligment Check Procedures 飞机支撑与校平
+- 51-60 Control Surface Balancing 操纵面平衡
+- 51-70 Repairs 修理
+- 51-80 Electrical Bonding 接地

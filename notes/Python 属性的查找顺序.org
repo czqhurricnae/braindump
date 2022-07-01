@@ -1,0 +1,12 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/Python 属性的查找顺序/")); -*-
+:PROPERTIES:
+:ID:       CBACC63C-317D-4BBB-8B55-1B3A4A5F8518
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-10-10 Sat 14:32>
+#+TITLE: Python 属性的查找顺序
+
+#+DOWNLOADED: screenshot @ 2020-10-10 14:38:23
+[[file:./static/Python 属性的查找顺序/2020-10-10_14-38-23_screenshot.jpg]]
+
+[[id:D1AA4AE4-F3BD-4C94-BA62-264AE6D68827][See：Python 类的 __get__() 调用]]

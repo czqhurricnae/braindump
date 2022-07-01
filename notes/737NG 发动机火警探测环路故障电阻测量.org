@@ -1,0 +1,78 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/737NG 发动机火警探测环路故障电阻测量/")); -*-
+:PROPERTIES:
+:ID:       899EE854-4A69-4B1B-B9C2-089A19C1354B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2020-11-04 Wed 15:27>
+#+TITLE: 737NG 发动机火警探测环路故障电阻测量
+
+依据 FIM 26-10 TASK 805。
+以 ENGINE 1 LOOP A 为例。
+
+#+BEGIN_QUOTE
+A Wire Harness or Fire Detector fault could be intermittent because of the Engine Temperature.
+Do the Resistence check below in 20 minutes or less after the engines stop.
+Do the test again 30 minutes and again 40 minutes after the engines stop.
+If the Resistence is out of limits during the test, continue the Fault Isolation.
+#+END_QUOTE
+
+* 测量 D1002 PIN25 - PIN2 电阻，测量 PIN25 - PIN24 电阻
+  - D1002 PIN25 - PIN2 要求小于 862±40 欧。
+  - D1002 PIN25 - PIN24 要求小于 3 欧。
+  - 需要拆掉控制组件 M279。
+  - PIN 2 是接地点。
+  - PIN 24 连接的线是备用线，在火警控制盒内部是空置，没有使用。
+
+* 测量 DP1522 PIN1 - 地
+  测量的是四个环路的总电阻，如果与步骤 1 中测量 D1002 PIN25 - PIN2 电阻差不多，说明故障在发动机上，与飞机端的线路无关。
+
+  [[file:./static/737NG 发动机火警探测环路故障电阻测量/2020-11-04_21-16-52_1.jpg]]
+
+* 测量 A 环路上每个探测元件的阻值
+  - Disconnect the terminal lugs at one end of the Detector Loops.
+  - Do a Resistence check between each Fire Detector Terminal and Ground.
+
+  | ENG FAN UPR LOOP A    | M1757 | 5921±297Ω |
+  | ENG FAN LOW LOOP A    | M1758 | 3931±297Ω |
+  | ENG CORE LEFT LOOP A  | M1759 | 3011±297Ω |
+  | ENG CORE RIGHT LOOP A | M1760 | 2471±297Ω |
+
+* 通过测量，分出核心机部分还是风扇部分故障
+  - 脱开发动机右侧支柱转接座上的核心机导线与风扇导线间的[[id:08EF2E4F-FA8A-4ED5-B171-DE11130A190B][连接]]。
+  - 脱开发动机吊架上，A 环路：DP1552 - D30252（左发），B 环路：DP1620 - D30220（左发）。
+  - 脱开发动机吊架上，A 环路：DP1552 - D30452（右发），B 环路：DP1620 - D30420（右发）。
+  - 分别测量其上插针的对地阻值。
+
+  | 环路   | 测量插针位置     | 正常对第阻值 | 测量的部件                          |
+  |--------+------------------+--------------+-------------------------------------|
+  | A 环路 | DJ2501 PIN2 - 地 | 1289-1425Ω   | 线束 MW0325 及两个核心机火警探测元件|
+  | A 环路 | DP1552 PIN1 - 地 | 2244-2481Ω   | 线束 MW0315 及两个风扇火警探测元件  |
+  | B 环路 | DJ2601 PIN1 - 地 | 1289-1425Ω   | 线束 MW0326 及两个核心机火警探测元件|
+  | B 环路 | DP1620 PIN3 - 地 | 2244-2481Ω   | 线束 MW0316 及两个风扇火警探测元件  |
+
+  可以看出左发和右发在发动机吊架上的插头号不管是 A，B 环路是一样的。
+
+  #+DOWNLOADED: file:///Users/c/Pictures/WDM%2026-11-11%20.jpeg @ 2020-11-15 16:52:28
+  [[file:./static/737NG 发动机火警探测环路故障电阻测量/2020-11-15_16-52-28_WDM 26-11-11 .jpeg]]
+
+  #+DOWNLOADED: file:///Users/c/Pictures/WDM%2026-11-21%20.jpeg @ 2020-11-15 16:53:34
+  [[file:./static/737NG 发动机火警探测环路故障电阻测量/2020-11-15_16-53-34_WDM 26-11-21 .jpeg]]
+
+  #+DOWNLOADED: file:///Users/c/Pictures/WDM%2026-11-21%20%202.jpeg @ 2020-11-15 16:53:52
+  [[file:./static/737NG 发动机火警探测环路故障电阻测量/2020-11-15_16-53-52_WDM 26-11-21  2.jpeg]]
+
+  如果测量出来的阻值没有在上表的范围内，并且在步骤 3 中测量出来的各个探测元件的阻值是正常的，
+  那么基本可以确认是导线的问题。
+
+* 示例
+  测量 M1757 阻值为 5870Ω，M1758 阻值为 3890Ω，
+  测量 MW0315 的 DP1501 PIN2 对地阻值为 2345Ω，
+  测量 MW0325 的 DJ2501 PIN2 对地阻值为 921Ω，
+  测量 DP1002 PIN25 - PIN2 阻值为 659Ω，
+  测量 DP1522 PIN1 对地阻值为 652Ω。
+
+  进行简单的计算验证：
+  R 总 = 1/(1/5870+1/3890+1/921) = 660.8Ω。
+  与 652 相差不多。
+
+  [[file:./static/737NG 发动机火警探测环路故障电阻测量/2020-11-15_18-24-01_23505.jpeg]]

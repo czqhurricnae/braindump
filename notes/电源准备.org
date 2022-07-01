@@ -1,0 +1,116 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/电源准备/")); -*-
+:PROPERTIES:
+:ID:       141BF4CE-952C-4A1C-93E8-B45AE2BEE122
+:END:
+
+#+DATE: <2020-09-30 Wed 00:19>
+#+TITLE: 电源准备
+
+#+LATEX: \resizebox{\textwidth}{!}{
+
+#+name: 电源准备-subgraph-table
+| *cluster(必填)* | *label* | *style(默认"none")* | *color(默认"black")* | *nodestyle(默认"none")* | *nodecolor(默认"black")* | *nodeflow(必填, 以";" 分隔)* | *kwargs(以";" 结尾)* |
+|-----------------+---------+---------------------+----------------------+-------------------------+--------------------------+-----------------------------+---------------------|
+| cluster_cd      | SPU     |                     |                      | box                     |                          | c;d;                        |                     |
+| cluster_e       | SCU     |                     |                      |                         |                          | e;                          |                     |
+|                 |         |                     |                      |                         |                          |                             |                     |
+#+LATEX: }
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: 电源准备-node-table
+| *node(必填)* | *label* | *shape(默认"box")* | *style(可选"filled")* | *fillcolor(默认"none")* | *fontcolor(默认"black")* | *fontsize(默认"18", 数字必须是字符串格式)* | *kwargs(以"," 结尾)* |
+|--------------+---------+--------------------+-----------------------+-------------------------+--------------------------+--------------------------------------------+----------------------|
+| a            | 电瓶    |                    |                       |                         |                          |                                            |                      |
+| b            | 115V AC |                    |                       |                         |                          |                                            |                      |
+| c            | DC/DC   |                    |                       |                         |                          |                                            |                      |
+| d            | AC/DC   |                    |                       |                         |                          |                                            |                      |
+| e            | DC/AC   |                    |                       |                         |                          |                                            |                      |
+| f            | SG      |                    |                       |                         |                          |                                            |                      |
+#+LATEX: }
+#+LATEX: \resizebox{\textwidth}{!}{
+#+name: 电源准备-graph-table
+| *from* | *to* | *label* | *style(默认"bold", 可选"dotted") | *color(默认"black")* | *fontcolor* | *tailport(可选"n","ne","e","se","sw","w","nw")* | *lhead(为子图的名称即 cluster 列的值)* | *ltail(为子图的名称即 cluster 列的值)* | *kwargs(以" " 结尾)* |
+|--------+------+---------+---------------------------------+----------------------+-------------+-------------------------------------------------+----------------------------------------+----------------------------------------+---------------------|
+| a      | c    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| b      | d    |         |                                 |                      |             |                                                 |                                        |                                        |                     |
+| c      | e    | 270V DC |                                 |                      |             |                                                 |                                        |                                        |                     |
+| d      | e    | 270V DC |                                 |                      |             |                                                 |                                        |                                        |                     |
+| e      | f    | AC      |                                 |                      |             |                                                 |                                        |                                        |                     |
+#+LATEX: }
+#+name: create-电源准备-from-tables
+#+HEADER: :var subgraph=电源准备-subgraph-table nodes=电源准备-node-table graph=电源准备-graph-table
+#+BEGIN_SRC emacs-lisp :results output :exports none
+(concat
+    (princ "rankdir=LR;\n") ;; remove comment characters '//' for horizontal layout; add for vertical layout
+    (princ "compound=true;\n")
+    (mapconcat
+      (lambda (x)
+        (princ (replace-regexp-in-string "\\\\vert" "|" (format "subgraph %s {label=\"%s\"; style=%s; color=%s; node [style=%s, color=%s]; %s %s}
+"
+                          (car x)
+                          (nth 1 x)
+                          (if (string= "" (nth 2 x)) "none" (nth 2 x))
+                          (if (string= "" (nth 3 x)) "black" (nth 3 x))
+                          (if (string= "" (nth 4 x)) "none" (nth 4 x))
+                          (if (string= "" (nth 5 x)) "black" (nth 5 x))
+                          (nth 6 x)
+                          (nth 7 x)
+                          )))) subgraph "
+")
+    "\n"
+    (mapconcat
+      (lambda (x)
+        (princ (replace-regexp-in-string "\\\\vert" "|" (format "%s[label=\"%s\", shape=%s, style=\"%s\", fillcolor=\"%s\", fontcolor=\"%s\", fontsize=\"%s\", %s];\n"
+                          (car x)
+                          (nth 1 x)
+                          (if (string= "" (nth 2 x)) "box" (nth 2 x))
+                          (if (string= "" (nth 3 x)) "none" (nth 3 x))
+                          (if (string= "" (nth 4 x)) "none" (nth 4 x))
+                          (if (string= "" (nth 5 x)) "black" (nth 5 x))
+                          (if (string= "" (nth 6 x)) "18" (nth 6 x))
+                          (nth 7 x)
+                          )))) nodes "
+")
+    "\n"
+    (mapconcat
+    (lambda (x)
+      (princ (replace-regexp-in-string "\\\\vert" "|" (format "%s -> %s [label=\"%s\" style=%s color=%s fontcolor=\"%s\" tailport=%s lhead=%s ltail=%s %s];\n"
+              (car x)
+              (nth 1 x)
+              (nth 2 x)
+              (if (string= "" (nth 3 x)) "bold" (nth 3 x))
+              (if (string= "" (nth 4 x)) "black" (nth 4 x))
+              (if (string= "" (nth 5 x)) "black" (nth 5 x))
+              (if (string= "" (nth 6 x)) "none" (nth 5 x))
+              (if (string= "" (nth 7 x)) "none" (nth 6 x))
+              (if (string= "" (nth 8 x)) "none" (nth 7 x))
+              (nth 9 x)
+              )))) graph "\n"))
+#+END_SRC
+
+#+RESULTS: create-电源准备-from-tables
+#+begin_example
+rankdir=LR;
+compound=true;
+subgraph cluster_cd {label="SPU"; style=none; color=black; node [style=box, color=black]; c;d; }
+subgraph cluster_e {label="SCU"; style=none; color=black; node [style=none, color=black]; e; }
+subgraph  {label=""; style=none; color=black; node [style=none, color=black];  }
+a[label="电瓶", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+b[label="115V AC", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+c[label="DC/DC", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+d[label="AC/DC", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+e[label="DC/AC", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+f[label="SG", shape=box, style="none", fillcolor="none", fontcolor="black", fontsize="18", ];
+a -> c [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+b -> d [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+c -> e [label="270V DC" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+d -> e [label="270V DC" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+e -> f [label="AC" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
+#+end_example
+
+#+BEGIN_SRC dot :file ./static/APU 用电瓶无法起动, 外电源起动成功故障特例/电源准备.png :var input=create-电源准备-from-tables :exports no-eval
+digraph {
+  $input
+}
+#+END_SRC
+
+[[file:./static/APU 用电瓶无法起动，外电源起动成功故障特例/电源准备.png]]

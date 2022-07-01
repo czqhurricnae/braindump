@@ -1,0 +1,51 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       3AD79377-885E-4B0F-8F99-974A57D2DD37
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-08-01 Sat 14:09>
+#+TITLE: JavaScript-self-invoking_function
+
+* what is a self-invoking function
+self-invoking function lets you define and invoke a function at the same time.
+
+- self-invoking function is typically anonymous (because you don't need to reference it by name)
+- sometimes called immediately-invoked function
+
+#+BEGIN_SRC js :results output :exports no-eval
+// Self-invoking anonymous function-define and invoke function
+// at the same time
+(function(something) {
+    console.log("Hello, " + something);
+})("World!");
+#+END_SRC
+
+#+RESULTS:
+: Hello, World!
+
+* To substitute "setInterval(...)"
+
+#+BEGIN_SRC js :results output :exports no-eval
+var counter = 0;
+
+(function doSomething() {
+    console.log(counter++);
+    setTimeout(doSomething, 3000);
+})();
+#+END_SRC
+
+* to avoid global variables conflict
+
+#+BEGIN_SRC js :results values list :exports no-eval
+    <script type="text/javascript" src="jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="prototype.js"></script>
+    <script type="text/javascript">>
+    //Create a plugin-there is no $ namespace conflict with
+//prototype.js since $ is used in private scope here.
+(function($) {
+    $.fn.sayGreeting = function() {
+        this.prepend("Hello, ");
+    };
+})(jQuery);
+#+END_SRC

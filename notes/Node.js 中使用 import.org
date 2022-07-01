@@ -1,0 +1,98 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+:PROPERTIES:
+:ID:       3D309D1F-C60E-44B6-9C3D-6614824E0E2C
+:END:
+#+DATE: <2020-07-26 Sun 20:52>
+#+TITLE: Node.js 中使用 import
+
+因为一些历史原因，虽然 Node.js 已经实现了 99％ 的 ES6 新特性，不过截止 2018.8.10， How To Enable ES6 Imports in Node.JS 仍然是老大难问题
+下面我来介绍两种方法可以让我们在 Node.js 中使用 import/export 。
+* 借助 Babel
+** 下载必须的包
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ npm install babel-register babel-preset-env --D
+ #+END_SRC
+
+** 修改你的 server.js
+
+ 下面是一个 server.js 的例子：
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ const Koa = require('koa')
+ const app = new Koa()
+
+ app.listen(3000, console.log("application is start at port 3000"))
+ #+END_SRC
+
+ 用 import 替换 require：
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ import Koa from 'koa'
+ const app = new Koa()
+
+ app.listen(3000, console.log("application is start at port 3000"))
+ #+END_SRC
+
+ 如果你现在用 node server.js 跑这个文件，你会收到像这样的错误提示：
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ /Users/zyf/myStudy/demo/chatroom/server/app.js:1
+ (function (exports, require, module, __filename, __dirname) { import Koa from 'koa'
+                                                               ^^^
+
+                                                               SyntaxError: Unexpected identifier
+ #+END_SRC
+
+ 下面让我们用 babel 来解决这个问题。
+
+** 新增一个 start.js 文件
+ 这个文件将成为我们的入口文件，里面是一些 babel 的代码：
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ require('babel-register') ({
+     presets: [ 'env' ]
+ })
+
+ module.exports = require('./server.js')
+ #+END_SRC
+
+ 注意，接下来不是 node server.js，而是用 node start.js 来启动这个文件。
+
+* 来自 Node.js 官方的力量
+Node 9 提供了一个尚处于 Experimental 阶段的模块，让我们可以抛弃 babel 等一类工具的束缚，直接在 Node 环境下使用 import/export。
+
+ - Node 版本需在 9.0 及以上
+ - 不加 loader 时候, 使用 import/export 的文件后缀名必须为 =.mjs=
+
+还是用上面的例子，请将代码回退到 Babel 中第一步的样子。
+
+** 改写 server.js
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ import Koa from 'koa'
+ const app = new Koa()
+
+ app.listen(3000, console.log("application is start at port 3000"))
+ #+END_SRC
+
+ 和前面一样，不过将文件名改一下，从 =server.js= 改为 =server.mjs= 。
+
+** 启动文件
+
+ 执行下面代码，来启动文件。
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ node --experimental-modules ./server.mjs
+ #+END_SRC
+
+ 注意这是引用 koa 第三方模块不用做其他变化，如果要 import 自己的文件，那么那个待引入的文件也要改后缀。
+
+ 比如：
+
+ #+BEGIN_SRC javascript :results values list :exports no-eval
+ import example from './example'
+ #+END_SRC
+
+ 那么原来应该是 =example.js= 要改为 =example.mjs= 。
+
+ 目前这个模块还处于实验阶段，还是不要放到生产环境，自己拿出来玩玩还是可以的。

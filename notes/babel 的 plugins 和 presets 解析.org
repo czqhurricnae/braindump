@@ -1,0 +1,63 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/babel 的 plugins 和 presets 解析")); -*-
+:PROPERTIES:
+:ID:       E2221E2C-AF1E-4228-9CAF-F6B3A7D908C5
+:END:
+#+LATEX_CLASS: my-article
+
+#+DATE: <2020-12-13 Sun 15:36>
+#+TITLE: babel 的 plugins 和 presets 解析
+
+babel 可以将当前运行平台(浏览器,node 服务器) 尚不支持的下一代或几代 js 语法编译为当前支持的 js 语法版本, 比如可以把 es6 es7 和 es8 的 js 代码编译为 es5 的代码.
+
+需要明确的几个概念:
+
+- es2015 === es6
+- es2016 === es7
+- es2017 === es8
+
+plugin: babel 的插件, 在 6.x 版本之后 babel 必需要配合插件来进行工作
+
+preset: babel 插件集合的预设, 包含某一部分的插件 plugin
+
+#+BEGIN_SRC javascript :results values list :exports no-eval
+{
+  "plugins": ["transform-es2015-arrow-functions"],
+  "presets": ["es2015"]
+}
+#+END_SRC
+
+- babel-preset-es2015: 可以将 es2015 即 es6 的 js 代码编译为 es5
+- babel-preset-es2016: 可以将 es2016 即 es7 的 js 代码编译为 es6
+- babel-preset-es2017: 可以将 es2017 即 es8 的 js 代码编译为 es7
+- babel-preset-stage-x: 可以将处于某一阶段的 js 语法编译为正式版本的 js 代码
+
+stage-X: 指处于某一阶段的 js 语言提案.
+
+提案共分为五个阶段:
+- stage-0: 稻草人-只是一个大胆的想法
+- stage-1: 提案-初步尝试
+- stage-2: 初稿-完成初步规范
+- stage-3: 候选-完成规范和浏览器初步实现
+- stage-4: 完成-将被添加到下一年发布
+
+
+当前 babel 推荐使用 babel-preset-env 替代 babel-preset-es2015 和 babel-preset-es2016 以及 babel-preset-es2017 ,env 的支持范围更广,
+包含 es2015 es2016 es2017 的所有语法编译, 并且它可以根据项目运行平台的支持情况自行选择编译版本.
+
+使用方法: '.babelrc' 中 'es2015' 改为 'env',
+
+.babelrc
+
+#+BEGIN_SRC javascript :results values list :exports no-eval
+{
+  "presets": ["env", "stage-2"]
+}
+#+END_SRC
+
+插件中每个访问者都有排序问题.
+
+这意味着如果两次转译都访问相同的" 程序" 节点, 则转译将按照 plugin 或 preset 的规则进行排序然后执行.
+
+- Plugin 会运行在 Preset 之前.
+- Plugin 会从第一个开始顺序执行.ordering is first to last.
+- Preset 的顺序则刚好相反(从最后一个逆序执行).
