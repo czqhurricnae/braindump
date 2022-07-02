@@ -35,7 +35,7 @@ jobs:
           extended: true
 
       - name: Build
-        run: hugo --source hugo --minify --buildFuture --buildExpired
+        run: hugo --source . --minify --buildFuture --buildExpired
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
