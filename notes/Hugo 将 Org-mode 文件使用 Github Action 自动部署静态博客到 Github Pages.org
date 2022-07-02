@@ -1,3 +1,137 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Hugo 将 Org-mode 文件使用 Github Action 自动部署静态博客到 Github Pages/")); -*-
+:PROPERTIES:
+:ID:       B31F8B53-85FA-44E0-B8C5-C665AC709BD0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-02 Sat 22:59>
+#+TITLE: Hugo 将 Org-mode 文件使用 Github Action 自动部署静态博客到 Github Pages
+#+ROAM_KEY: https://www.badykov.com/emacs/generating-site-from-org-mode-files/
+
+将博客源码存放在一个 private repo：braindump，发布的静态文件存放在 czqhurricnae/czqhurricnae.github.io 。
+分开存放需要获取 =personal_token= 或者 =deploy_key= ，选择使用 =personal_token= 方式。
+
+首先点击 github 头像在下拉栏里进入 =Setting-Developer Settings-Personal access tokens= 。
+
+选择 =Generate new token= 。
+
+[[file:./static/Hugo 将 Org-mode 文件使用 Github Action 自动部署静态博客到 Github Pages/2022-07-02_23-50-23_1.png]]
+
+在 Note 表单填入名字，勾选 repo 的所有选项。
+
+[[file:static/Hugo 将 Org-mode 文件使用 Github Action 自动部署静态博客到 Github Pages/2022-07-02_23-51-57_2.png]]
+
+还有 admin:repo_hook。
+
+[[file:static/Hugo 将 Org-mode 文件使用 Github Action 自动部署静态博客到 Github Pages/2022-07-02_23-52-30_3.png]]
+
+点击 Generate token 生成 token，并先复制保存该 token。
+
+接下来在源码 repo: braindump 中添加上面的 personal access token。
+
+进入 repo: braindump 的 Settings-Secrets 一栏，选择 New repository secret。
+
+[[file:static/Hugo 将 Org-mode 文件使用 Github Action 自动部署静态博客到 Github Pages/2022-07-02_23-54-04_5.png]]
+
+在下面填入刚才生成的 token，名字注意需要与上面 yml 文件里 ACTION_ACCESS_TOKEN 相同
+
+personal_token: ${{ secrets.ACTION_ACCESS_TOKEN }}。
+
+* GitHub actions Permalink
+The site is built from org-mode files with [[https://github.com/features/actions][github actions]] and [[https://gohugo.io/][hugo]]. It’s CI/CD integrated into GitHub.
+
+Let’s take a look at its steps to get an overview of what’s going on:
+
+** Fetch the project and its theme Permalink
+
+#+BEGIN_SRC awk
+      - uses: actions/checkout@v2
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+#+END_SRC
+
+This step is straightforward. It just fetches the project and its submodule [[https://github.com/ayrat555/cortex-dark][hugo theme]].
+
+** Install sqlite Permalink
+
+#+BEGIN_SRC awk
+   - name: Install org-roam dependencies
+        run: |
+          sudo apt-get install sqlite3
+
+#+END_SRC
+
+[[https://www.badykov.com/common/org-roam/][org-roam]] uses the SQLite database to store metadata about notes and provide search features. That’s why we have to install SQLite
+
+** Install emacs Permalink
+
+#+BEGIN_SRC awk
+      - name: Install emacs
+        uses: purcell/setup-emacs@master
+        with:
+          version: '27.2'
+#+END_SRC
+
+This step installs emacs and [[https://github.com/kaushalmodi/ox-hugo][ox-hugo]] which are used to convert org-mode files into hugo markdown files.
+
+** Convert org-mode files to hugo markdown Permalink
+
+#+BEGIN_SRC awk
+      - name: Convert org files to hugo
+        run: make org2hugo
+#+END_SRC
+
+This step does the actual conversion. We will take a closer look into it a little bit later.
+
+** Build and deploy with Hugo Permalink
+
+#+BEGIN_SRC shell
+- name: Setup Hugo
+  uses: peaceiris/actions-hugo@v2
+  with:
+    hugo-version: '0.92.0'
+    extended: true
+
+- name: Build
+  run: hugo
+
+- name: Deploy
+  uses: peaceiris/actions-gh-pages@v3
+  if: $
+  with:
+    # github_token: ${{ secrets.GITHUB_TOKEN }} 该项适用于发布到源码相同repo的情况，不能用于发布到其他repo
+    external_repository: czqhurricnae/czqhurricnae.github.io
+    personal_token: ${{ secrets.ACTION_ACCESS_TOKEN }} # 发布到其他repo需要提供上面生成的personal access token
+    publish_dir: ./public # 注意这里指的是要发布哪个文件夹的内容，而不是指发布到目的仓库的什么位置，因为hugo默认生成静态网页到public文件夹，所以这里发布public文件夹里的内容
+    publish_branch: main # 发布到哪个branch
+    cname: [[http://braindump.badykov.com/][braindump.badykov.com]]
+#+END_SRC
+
+The steps above are from [[https://github.com/peaceiris/actions-hugo][the provided hugo actions]] which install hugo, convert markdown file into html files and deploy the project
+
+* Makefile Permalink
+The makefile below creates the build directory and call elisp script which installs ox-hugo and converts org-mode files into hugo markdown files.
+
+#+BEGIN_SRC emacs-lisp
+BASE_DIR=${shell pwd}
+NOTES_ORG_FILES=${BASE_DIR}/notes
+EMACS_BUILD_DIR=/tmp/notes-home-build/
+BUILD_DIR=/tmp/notes-home-build/.cache/org-persist/
+HUGO_SECTION=posts
+
+all: org2hugo
+
+.PHONY: org2hugo
+org2hugo:
+	mkdir -p $(BUILD_DIR)
+	cp -r $(BASE_DIR)/github-online-publish.el $(EMACS_BUILD_DIR)
+  # Build temporary minimal EMACS installation separate from the one in the machine.
+	HOME=$(EMACS_BUILD_DIR) NOTES_ORG_SRC=$(NOTES_ORG_FILES) HUGO_SECTION=$(HUGO_SECTION) HUGO_BASE_DIR=$(BASE_DIR) emacs -Q --batch --load $(EMACS_BUILD_DIR)/github-online-publish.el --execute "(hurricane/publish)" --kill
+#+END_SRC
+
+* Emacs lisp script Permalink
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
 ;;; GITHUB-ONLINE-PUBLISH --- Minimal emacs installation to build the website -*- lexical-binding: t -*-
 ;;
 ;; Author: c <c@MacBook-Pro.local>
@@ -265,3 +399,9 @@
 
 (provide 'hurricane/publish)
 ;;; github-online-publish.el ends here
+
+#+END_SRC
+
+* Conclusion Permalink
+
+You can check out the original scripts in [[https://github.com/ayrat555/braindump][my braindump repo]].
