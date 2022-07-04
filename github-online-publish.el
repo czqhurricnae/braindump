@@ -241,7 +241,7 @@
 
 (defun hurricane//org-html-wrap-blocks-in-code (src backend info)
   "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
-  (when (org-export-derived-backend-p backend 'html)
+  (when (org-export-derived-backend-p backend 'md)
     (replace-regexp-in-string
      "\\(</pre>\\)" "</code>\n\\1"
      (replace-regexp-in-string "<pre class=\"src src-\\([^\"]*?\\)\">"
