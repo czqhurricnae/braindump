@@ -1,0 +1,83 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Emacs: Rename File, Space to Hyphen or Lowline/")); -*-
+:PROPERTIES:
+:ID:       6B867694-3ADF-436B-814C-6304211F7EDB
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-06 Wed 07:56>
+#+TITLE: Emacs: Rename File, Space to Hyphen or Lowline
+#+ROAM_KEY: http://xahlee.info/emacs/emacs/elisp_change_space-hyphen_underscore.html
+
+By Xah Lee. Date: 2016-10-04. Last updated: 2021-07-19.
+
+Here's a command that rename files by replacing space to low line _ or hyphen -.
+
+In dired, just press a key, then the file under cursor (or marked files) will be renamed with all space replaced to underscore.
+
+#+BEGIN_SRC emacs-lisp
+(defun xah-dired-rename-space-to-underscore ()
+  "In dired, rename current or marked files by replacing space to lowline _.
+If not in `dired', do nothing.
+
+URL `http://xahlee.info/emacs/emacs/elisp_dired_rename_space_to_underscore.html'
+Version 2016-10-04 2020-03-03"
+  (interactive)
+  (require 'dired-aux)
+  (if (eq major-mode 'dired-mode)
+      (let ((markedFiles (dired-get-marked-files )))
+        (mapc (lambda (x)
+                (when (string-match " " x )
+                  (dired-rename-file x (replace-regexp-in-string " " "_" x) nil)))
+              markedFiles)
+        ;; (dired-next-line 1)
+        (revert-buffer)
+        )
+    (user-error "Not in dired")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun xah-dired-rename-space-to-hyphen ()
+  "In dired, rename current or marked files by replacing space to hyphen -.
+If not in `dired', do nothing.
+URL `http://xahlee.info/emacs/emacs/elisp_dired_rename_space_to_underscore.html'
+Version 2016-10-04 2019-11-24"
+  (interactive)
+  (require 'dired-aux)
+  (if (eq major-mode 'dired-mode)
+      (progn
+        (mapc (lambda (x)
+                (when (string-match " " x )
+                  (dired-rename-file x (replace-regexp-in-string " " "-" x) nil)))
+              (dired-get-marked-files ))
+        (revert-buffer))
+    (user-error "Not in dired")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun xah-dired-rename-hyphen-to-space ()
+  "In dired, rename current or marked files by replacing space to hyphen -.
+If not in `dired', do nothing.
+URL `http://xahlee.info/emacs/emacs/elisp_dired_rename_space_to_underscore.html'
+Version 2016-10-04 2019-11-24"
+  (interactive)
+  (require 'dired-aux)
+  (if (eq major-mode 'dired-mode)
+      (progn
+        (mapc (lambda (x)
+                (when (string-match "-" x )
+                  (dired-rename-file x (replace-regexp-in-string "-" " " x) nil)))
+              (dired-get-marked-files ))
+        (revert-buffer))
+    (user-error "Not in dired")))
+#+END_SRC
+Give it a key. For example:
+
+#+BEGIN_SRC emacs-lisp
+(progn
+  (require 'dired )
+  (define-key dired-mode-map (kbd "_") 'xah-dired-rename-space-to-underscore)
+  (define-key dired-mode-map (kbd "-") 'xah-dired-rename-space-to-hyphen)
+  ;; 
+  )
+#+END_SRC
+
+see also [[http://xahlee.info/emacs/emacs/elisp_change_space-hyphen_underscore.html][Emacs: Cycle Space Hyphen Underscore]]

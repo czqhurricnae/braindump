@@ -1,0 +1,26 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/format 函数/")); -*-
+:PROPERTIES:
+:ID:       210095ED-D0DE-4FB7-964C-6396DBB6D8D3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-07 Thu 15:17>
+#+TITLE: format 函数
+#+ROAM_KEY:
+
+FORMAT 的第一个参数，输出的目的地，可以是 T、NIL、一个流，或一个带有填充指针的字符串。
+
+- T 是流 *STANDARD-OUTPUT*的简称，
+- 而 NIL 会导致 FORMAT 将输出生成到一个字符串中并随后返回。
+- 如果目的地是一个流，那么输出将被写到该流中。
+- 而如果目的地是一个带有填充指针的字符串， 那么格式化的输出将被追加到字符串的结尾并且填充指针也会作为相当调整。 
+
+除了当目的地是 NIL 时 FORMAT 返回一个字符串以外，其他情况下 FORMAT 均返回 NIL。
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(format "~v$" 3 pi)
+#+END_SRC
+
+#+RESULTS:
+:results:
+- ~v$
+:end:

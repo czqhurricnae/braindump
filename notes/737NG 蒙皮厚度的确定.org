@@ -16,12 +16,16 @@
 
 首先，在 SRM 53-00-01-1A-1 中确定损伤区域。
 
-#+CAPTION: allowable damage zones figure
+#+CAPTION: Figure 102 Allowable Damage Zones 
 [[file:./static/737NG 蒙皮厚度的确定/2724.jpeg]]
 
-除表 103 内指定的区域外，[[id:717C12D7-7FA7-4B90-B03A-6BD06363AD06][区域 1]]允许去除损伤的深度为：10%T，区域 2，3 允许去除损伤的深度为：10%T-15%T。
+除 Figure 103/ALLOWABLE DAMAGE 内指定的区域外，[[id:717C12D7-7FA7-4B90-B03A-6BD06363AD06][区域 1]]允许去除损伤的深度为：10%T，区域 2，3 允许去除损伤的深度为：10%T-15%T。
 （T为蒙皮的厚度）。
 由此可见，对于区域 2 蒙皮的雷击损伤，如果损伤深度超过 15%T，则无法通过打磨的方式进行修复。
+
+#+CAPTION: Figure 103
+<<Figure 103>>
+[[file:static/737NG 蒙皮厚度的确定/2022-07-06_09-37-30_1613303443-3f27fe0481a36ffdcbbdf2a83a690fef.jpg]]
 
 [[file:./static/737NG 蒙皮厚度的确定/3449.jpeg]]
 

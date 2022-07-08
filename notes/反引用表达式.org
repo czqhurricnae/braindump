@@ -1,0 +1,40 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/反引用表达式/")); -*-
+:PROPERTIES:
+:ID:       FE144CE9-87D0-4814-B45D-8114A34D4201
+:ROAM_ALIASES: 反引号表达式
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-07 Thu 15:29>
+#+TITLE: 反引用表达式
+#+ROAM_KEY:
+
+一个位于表达式之前的反引号可以像引号阻止表达式被求值。
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+'(1 2 3)
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (1 2 3)
+:end:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+`(1 2 (+ 1 2))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (1 2 (+ 1 2))
+:end:
+
+在反引用表达式中，任何以[[id:D225DBCA-A36C-4876-9718-60AF36FD5718][逗号]]开始的子表达式是被求值的。
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+`(1 2 ,(+ 1 2))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (1 2 3)
+:end:

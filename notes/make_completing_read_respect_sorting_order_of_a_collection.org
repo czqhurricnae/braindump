@@ -1,0 +1,117 @@
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/make_completing_read_respect_sorting_order_of_a_collection/")); -*-
+:PROPERTIES:
+:ID:       988986A6-DC1E-4BED-A273-102BE96B28E1
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-08 Jul 08:28>
+#+TITLE: make_completing_read_respect_sorting_order_of_a_collection
+
+* Question
+  :PROPERTIES:
+  :CUSTOM_ID: question
+  :END:
+Either:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(completing-read "test: " '("a" "b" "c"))
+#+END_SRC
+
+or:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(completing-read "test: " '("c" "b" "a"))
+#+END_SRC
+
+produces the same result in completion buffer when pressing TAB. How do I make it respect the sorting order?
+
+* Answer1
+  :PROPERTIES:
+  :CUSTOM_ID: answer1
+  :END:
+
+The sorting order in the *Completions* list is determined by the =display-sort-function=
+property of your completion table (as returned by =completion-metadata=).
+
+In your case, your completion table has no such property, so it falls back to the default, which is to sort alphabetically.
+
+You can use:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(defun my-presorted-completion-table (completions)
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (display-sort-function . ,#'identity))
+      (complete-with-action action completions string pred))))
+#+END_SRC
+
+and then
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(completing-read "test: " (my-presorted-completion-table '("a" "b" "c")))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+
+#+END_SRC
+
+[ This assumes you're using =lexical-binding=. ]
+
+* Answer2
+  :PROPERTIES:
+  :CUSTOM_ID: answer2
+  :END:
+
+Give =completing-read= a list of lists, and it will respect the order:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(completing-read "test: " '(("a") ("b") ("c")))
+(completing-read "test: " '(("c") ("b") ("a")))
+#+END_SRC
+
+The docstring says:
+
+#+begin_quote
+  =(completing-read PROMPT COLLECTION &optional PREDICATE=
+  =REQUIRE-MATCH INITIAL-INPUT HIST DEF INHERIT-INPUT-METHOD)=
+
+  Read a string in the minibuffer, with completion. PROMPT is a string
+  to prompt with; normally it ends in a colon and a space. COLLECTION
+  can be a list of strings, an alist, an obarray or a hash table. ...
+#+end_quote
+
+It can therefore take an alist as a collection. In effect, you're creating an alist with keys but without values.
+
+* Answer3
+  :PROPERTIES:
+  :CUSTOM_ID: answer3
+  :END:
+
+I'd suggest not using this ancient spell.
+
+The built-in =ido-completing-read= doesn't have this deficiency:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(ido-completing-read "test: " '("a" "b" "c"))
+(ido-completing-read "test: " '("c" "b" "a"))
+#+END_SRC
+
+Neither does =helm=:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(helm :sources
+      `((name . "test: ")
+        (candidates . ("a" "b" "c"))))
+(helm :sources
+      `((name . "test: ")
+        (candidates . ("c" "b" "a"))))
+#+END_SRC
+
+* Answer4
+  :PROPERTIES:
+  :CUSTOM_ID: answer4
+  :END:
+
+If you use [[http://www.emacswiki.org/emacs/Icicles][*Icicles*]] then the order is respected by =completing-read=.
+
+(And you can sort using [[http://www.emacswiki.org/emacs/Icicles_-_Sorting_Candidates][different sort orders]], either interactively or via Lisp. And unlike vanilla Emacs, 
+sorting affects both =*Completions*= display and cycling order.)

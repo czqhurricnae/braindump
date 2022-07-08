@@ -9,3 +9,6 @@
 [[file:./static/stringer/2021-02-14_18-47-57_screenshot.jpg]]
 
 [[file:./static/stringer/2021-02-14_18-49-34_screenshot.jpg]]
+
+[[id:F171CEE3-ED23-42BE-A78F-D8B399DE7F2D][SPAR]]
+#+transclude: [[id:F171CEE3-ED23-42BE-A78F-D8B399DE7F2D][SPAR]] 

@@ -6,9 +6,7 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-12 Sat 22:18>
 #+TITLE: AHP
-
 #+ROAM_KEY:
-
 
 * [[id:E77F1E60-173C-4DD0-B9A1-4744FA9082E7][特征值、特征向量]]计算
 对矩阵 A 乘上各准则权重组成的向量 $w = \left(w_{1}, w_{2}, \ldots, w_{n}\right)^{T}$ ，可得：

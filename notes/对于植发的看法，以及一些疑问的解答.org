@@ -3,7 +3,6 @@
 :ID:       68DBD7A8-B816-4C63-ABCD-A1E28B320B55
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-06-21 Sun 23:16>
 #+TITLE: 对于植发的看法，以及一些疑问的解答
 

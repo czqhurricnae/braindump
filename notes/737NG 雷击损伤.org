@@ -22,7 +22,8 @@ lighting strike damage rating
 #+CAPTION: allowable damage zones figure
 [[file:./static/737NG 雷击损伤/2021-07-03_00-54-03_screenshot.jpg]]
 
-图中“refer to paragraph 4.D for allowable damage due to lighting strike”，说明所有蒙皮雷击损伤标准在 SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D 段落。
+图中“refer to paragraph 4.D for allowable damage due to lighting strike”，
+说明所有蒙皮雷击损伤标准在 SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D 段落。
 [[id:D80C653B-7D88-497B-B6BB-07A5874A008B][43，46机身段下部蒙皮损伤]]。
 
 参考 SRM 53-00-01-1A-1，机身的雷击损伤可以分为两大类： *紧固件损伤* 和 *蒙皮损伤* 。
@@ -146,7 +147,6 @@ SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D - (2)
 | - 搭接关键排，3颗紧固件损伤       |            |                        |
 | - 蒙皮和桁条连接处，8颗紧固件损伤 |            |                        |
 
-
 ** 机身段雷击后 LSDR 及飞行限制
 :PROPERTIES:
 :ID:       2B9E6835-A9AF-4A6D-ADCC-2CBF813856BB
@@ -170,12 +170,14 @@ SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D - (2)
 :PROPERTIES:
 :ID:       9CD4DDB0-C57C-4CA5-AB36-59B00FD571B9
 :END:
+
 [[file:./static/737NG 雷击损伤/2022-05-23_23-31-25_640.png]]
 
 ** 机身蒙皮和桁条紧固件损伤的 LSDR 计算举例
 :PROPERTIES:
 :ID:       30C30B62-FDAC-4DFB-8718-65CD9CFFC461
 :END:
+
 [[file:./static/737NG 雷击损伤/2022-05-23_23-31-30_640.jpeg]]
 * 飞行航班限制
 :PROPERTIES:

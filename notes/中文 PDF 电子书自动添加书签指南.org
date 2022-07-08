@@ -1,0 +1,74 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/中文 PDF 电子书自动添加书签指南/")); -*-
+:PROPERTIES:
+:ID:       C47CE524-12E0-4D97-8894-1D01CC00ABCA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-06 Wed 13:17>
+#+TITLE: 中文 PDF 电子书自动添加书签指南
+#+ROAM_KEY:
+
+* 找到对应书籍的 ss 号
+首先要登录全国图书馆参考咨询联盟（[[https://link.zhihu.com/?target=http%3A//www.ucdrs.superlib.net/][http://www. ucdrs.superlib.net/ ]]），这里是查找书籍 ss 号的地点。
+我们将需要这个 ss 号来获取对应制作好的书签。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-766d4c95f690896fa61ba60ce0bd5aa9.jpg]]
+
+检索自己的书籍。这里有一个要注意的点：很多书籍经过了多次印刷，即使是同一个名字，其内容都有些微的不同。
+为了找到确切唯一的，你手上的 PDF 电子书，请到 PDF 的前几页找到这个 CIP 数据。其中的 ISBN 码，每一本书只有专属的一个。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-4c5a0f66bb500ee326c8a65cd95d7693.jpg]]
+图中第四行就是 ISBN 码
+
+现在检索出来的书就是 PDF 文件对应的那本书了。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-88c4ac62bb650d983d99024d2e7edb62.jpg]]
+检索 ISBN 码就一定能找到唯一对应的书。
+
+在右侧试读，随便点击一个链接，如“版权页”。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-72e11503253cde31c2d415db0dd7cb7b.jpg]]
+
+新弹出的网页链接中，就能看到 ss 号了。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-e5eef9df642e1a32b94e12e7e6c983d2.png]]
+
+这 8 位数字就是 ss 号。
+
+* 获取书签信息
+打开书签获取软件 V0505，输入 ss 号，一键获取。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-e2bda09e2d77b0084ef2cd708893d60a.jpg]]
+
+进入窗体，Ctrl+A、Ctrl+C，全部复制。
+
+* 往 PDF 导入书签信息
+打开 PdgCntEditor，使用该软件打开你要编辑的 PDF 文件，直接在窗体中粘贴书签信息。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-a94b2385d5125eeaeefac0ce85db2c95.jpg]]
+
+保存后，PDF 就获得了对应的书签信息。
+
+在我这个例子中，书籍正文的页码是是从 26 页开始的，但是获取的 PDF 书签信息是从 3 开始的。
+因此我需要讲所有的页码，从 3→26 一样的，增加 23 页。因此需要使用 PdgCntEditor 的如下功能：
+
+#+CAPTION: static/中文 PDF 电子书自动添加书签指南/1642899600-ce8de1f4b50fe0257d769d3204f76bae.jpg
+#+ATTR_ORG: :width 749
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-ce8de1f4b50fe0257d769d3204f76bae.jpg]]
+
+点击该位置进行页码的批量增减。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-f8914eb7dba833fad7b1c4677e01f38b.jpg]]
+
+类似如图进行设置。
+
+* 检查效果
+打开后，经过检查，实现了内容和页码的一一对应，效果较好。如有错位问题，再进入_PdgCntEditor_中进行相应修改。
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-c32d26e90a716c0cf8dc7f23acdab494.jpg]]
+
+使用的工具下载地址见此：
+
+[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-4d540a038bb374b05b05b86f7820b2dc.jpg]]
+
+
+

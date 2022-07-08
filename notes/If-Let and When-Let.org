@@ -1,0 +1,561 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/If-Let and When-Let/")); -*-
+:PROPERTIES:
+:ID:       B3A90636-E49C-441A-A87D-5E5D51DD7FFB
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-06 Wed 07:42>
+#+TITLE: If-Let and When-Let
+#+ROAM_KEY:
+
+* Introduction
+I first heard of the [[https://clojuredocs.org/clojure.core/when-let][when-let]] and [[https://clojuredocs.org/clojure.core/if-let][if-let]] macros when I learned Clojure a few years ago. 
+They're used like let to bind values to variables, but if a value is nil then when-let will return nil without running the body, 
+and if-let will execute its alternative branch.
+
+Let's implement them in Common Lisp. Once we're done writing them we'll use them like this:
+
+#+BEGIN_SRC lisp
+(when-let ((name 'steve))
+  (format t "Hello, ~A" name))
+
+; => Hello, STEVE
+
+(when-let ((name nil))
+  (format t "Hello, ~A" name))
+
+; => Nothing printed, nil returned
+
+(if-let ((name nil))
+  (format t "Hello, ~A" name)
+  (format t "Hello, unnamed person!"))
+
+; => Hello, unnamed person!
+#+END_SRC
+
+* A First Attempt
+A simple first attempt at writing when-let might look something like this:
+
+#+BEGIN_SRC lisp
+(defmacro when-let (binding &body body)
+  "Bind `binding` and execute `body`, short-circuiting on `nil`.
+
+  This macro combines `when` and `let`.  It takes a binding and binds
+  it like `let` before executing `body`, but if the binding's value
+  evaluates to `nil`, then `nil` is returned.
+
+  Examples:
+
+    (when-let ((a 1))
+      (list a))
+    ; =>
+    (1)
+
+    (when-let ((a nil))
+      (list a))
+    ; =>
+    NIL
+
+  "
+  (destructuring-bind ((symbol value)) binding
+    `(let ((,symbol ,value))
+       (when ,symbol
+         ,@body))))
+#+END_SRC
+
+A first attempt at if-let looks similar:
+
+#+BEGIN_SRC lisp
+(defmacro if-let (binding then else)
+  "Bind `binding` and execute `then` if true, or `else` otherwise.
+
+  This macro combines `if` and `let`.  It takes a binding and binds
+  it like `let` before executing `then`, but if the binding's value
+  evaluates to `nil` the `else` branch is executed (with no binding
+  in effect).
+
+  Examples:
+
+    (if-let ((a 1))
+      (list a)
+      'nope)
+    ; =>
+    (1)
+
+    (if-let ((a nil))
+      (list a)
+      'nope)
+    ; =>
+    NOPE
+
+  "
+  (destructuring-bind ((symbol value)) binding
+    `(let ((,symbol ,value))
+       (if ,symbol
+         ,then
+         ,else))))
+#+END_SRC
+
+This is a decent attempt at a first pass, but already there are a couple of things to note.
+
+First: we have documentation, with examples! 
+
+The docstrings are longer than the macros themselves, and /this is fine/! 
+I always prefer to err on the side of being more clear than saving space. 
+
+If you're a little more verbose than necessary some experts might have to flick their scroll wheels, 
+but if you're too terse you can leave someone wallowing in confusion. 
+
+Experts should know how to skim documentation quickly if
+they're really experts, so help out the newer people and be clear!
+
+I didn't make the else branch optional like it is in Common Lisp's if because one-armed ifs are a stylistic abomination.
+
+We could have added some check-type statements to make sure the symbol is /actually/ a symbol, 
+but since it's getting compiled to a let the error will be caught there immediately anyway.
+
+* TODO Multiple Bindings
+- Note taken on [2022-07-05 Tue 21:54] \\
+  ,@ 的作用？
+
+Our first attempt works, but only supports a single binding. 
+
+Clojure's versions of these macros quit here, but we can do better. 
+
+Let's make our macros support multiple bindings. First we'll upgrade when-let:
+
+#+BEGIN_SRC lisp
+(defmacro when-let (bindings &body body)
+  "Bind `bindings` and execute `body`, short-circuiting on `nil`.
+
+  This macro combines `when` and `let`.  It takes a list of bindings
+  and binds them like `let` before executing `body`, but if any
+  binding's value evaluates to `nil`, then `nil` is returned.
+
+  Examples:
+
+    (when-let ((a 1)
+               (b 2))
+      (list a b))
+    ; =>
+    (1 2)
+
+    (when-let ((a nil)
+               (b 2))
+      (list a b))
+    ; =>
+    NIL
+
+  "
+  (let ((symbols (mapcar #'first bindings)))
+    `(let ,bindings
+       (when (and ,@symbols)
+         ,@body))))
+#+END_SRC
+
+And now if-let:
+
+#+BEGIN_SRC lisp
+(defmacro if-let (bindings then else)
+  "Bind `bindings` and execute `then` if all are true, or `else` otherwise.
+
+  This macro combines `if` and `let`.  It takes a list of bindings and
+  binds them like `let` before executing `then`, but if any binding's
+  value evaluates to `nil` the `else` branch is executed (with no
+  bindings in effect).
+
+  Examples:
+
+    (if-let ((a 1)
+             (b 2))
+      (list a b)
+      'nope)
+    ; =>
+    (1 2)
+
+    (if-let ((a nil)
+             (b 2))
+      (list a b)
+      'nope)
+    ; =>
+    NOPE
+
+  "
+  (let ((symbols (mapcar #'first bindings)))
+    `(let ,bindings
+       (if (and ,@symbols)
+         ,then
+         ,else))))
+#+END_SRC
+
+Note how we've updated the docstrings to be clear about the new behavior: if /any/ binding is nil, the alternate case takes over.
+
+We've also updated the parameter names to be bindings (plural). 
+
+One thing I love about Common Lisp is that it's a Lisp 2, 
+so you can almost always use nice names for function parameters instead of mangling them to avoid shadowing functions 
+(e.g. (defun filter (function list) ...) instead of (defun filter (fn lst) ...)). 
+
+Take advantage of this and give your parameters descriptive, pronounceable names. 
+You'll thank yourself every time your editor shows you the arglist.
+
+If you've read other blog posts about implementing these macros, this is where they probably stopped. 
+But let's keep going, there's still much more to dig into!
+
+* Adding Some Stars
+Now that we've got if-let and when-let, the obvious next step is to add =if-let*= and =when-let*=. 
+
+We could do this by changing the let each macro emits to a let*, 
+but before we rush ahead let's think about how people will use these macros to see if that change would make sense.
+
+The point of using a =let*= instead of a let is so that later variables can refer back to earlier ones:
+
+#+BEGIN_SRC lisp
+(let* ((name (read-string))
+       (length (length name)))
+  ; ...
+  )
+#+END_SRC
+
+The point of using our when- and if- variants is to short-circuit and escape on nil. 
+With the way our macros are currently written, /all/ the variables get bound before they /all/ get checked for nil in the end.
+This works for the -let variants but isn't ideal for the new -let* variants.
+If we're using when-let* it would be nice if the later variables could assume the earlier ones are non-nil.
+
+This means we'll want to bail out /immediately/ after the first nil value is detected.
+This is a little bit trickier than what we've currently got.
+There are a number of ways we could do it, but I'll save us from hitting a dead-end rabbit hole later and implement when-let* like this:
+
+#+BEGIN_SRC lisp
+(defmacro when-let* (bindings &body body)
+  "Bind `bindings` serially and execute `body`, short-circuiting on `nil`.
+
+  This macro combines `when` and `let*`.  It takes a list of bindings
+  and binds them like `let*` before executing `body`, but if any
+  binding's value evaluates to `nil` the process stops and `nil` is
+  immediately returned.
+
+  Examples:
+
+    (when-let* ((a (progn (print :a) 1))
+                (b (progn (print :b) (1+ a)))
+      (list a b))
+    ; =>
+    :A
+    :B
+    (1 2)
+
+    (when-let* ((a (progn (print :a) nil))
+                (b (progn (print :b) (1+ a))))
+      (list a b))
+    ; =>
+    :A
+    NIL
+
+  "
+  (alexandria:with-gensyms (block)
+    `(block ,block
+       (let* ,(loop :for (symbol value) :in bindings
+                    :collect `(,symbol (or ,value
+                                           (return-from ,block nil))))
+         ,@body))))
+#+END_SRC
+
+There are a few things we can talk about here before we move on to if-let*.
+
+First: we've documented the macro. The examples are a little more verbose than the previous ones,
+but the added side effects explicitly show the short-circuiting evaluation.
+
+This implementation is much less trivial than the ones we've got so far, so let's look at a macroexpansion to see what's happening:
+
+#+BEGIN_SRC lisp
+(macroexpand-1
+  '(when-let* ((a nil)
+               (b (1+ a)))
+    (list a b)))
+; =>
+(BLOCK #:BLOCK563
+  (LET* ((A (OR NIL    (RETURN-FROM #:BLOCK563 NIL)))
+         (B (OR (1+ A) (RETURN-FROM #:BLOCK563 NIL))))
+    (LIST A B)))
+#+END_SRC
+
+The when-let* expands into a block wrapped around a let*. 
+As we're binding each variable it's checking for nil with or. 
+If it ever sees nil it will return from the block immediately to escape. 
+If it never sees nil it will eventually reach the body and return normally.
+
+We could have used a series of nested lets and ifs here, and it would have been easier to read. 
+But the fact that all the variables are bound in a single let* will be important later, so you're just going to have to trust me for now.
+
+We've named the block with a gensym to avoid clobbering any nil block the user might already have set up. 
+I explicitly specified the nil return value in the return-from, but this isn't required because it's optional.
+
+if-let* is a more difficult, because we need to make sure the appropriate branch gets evaluated:
+
+#+BEGIN_SRC lisp
+(defmacro if-let* (bindings then else)
+  "Bind `bindings` serially and execute `then` if all are true, or `else` otherwise.
+
+  This macro combines `if` and `let*`.  It takes a list of bindings and
+  binds them like `let*` before executing `then`, but if any binding's
+  value evaluates to `nil` the process stops and the `else` branch is
+  immediately executed (with no bindings in effect).
+
+  Examples:
+
+    (if-let* ((a (progn (print :a) 1))
+              (b (progn (print :b) (1+ a)))
+      (list a b)
+      'nope)
+    ; =>
+    :A
+    :B
+    (1 2)
+
+    (if-let* ((a (progn (print :a) nil))
+              (b (progn (print :b) (1+ a))))
+      (list a b)
+      'nope)
+    ; =>
+    :A
+    NOPE
+
+  "
+  (alexandria:with-gensyms (outer inner)
+    `(block ,outer
+       (block ,inner
+         (let* ,(loop :for (symbol value) :in bindings
+                      :collect `(,symbol (or ,value
+                                             (return-from ,inner nil))))
+           (return-from ,outer ,then)))
+       ,else)))
+#+END_SRC
+
+This is a little hairy, so let's break down what's happening. An if-let* will macroexpand into something like:
+
+#+BEGIN_SRC lisp
+(block outer
+  (block inner
+    (let* (...bindings...)
+      (return-from outer then)))
+  else)
+#+END_SRC
+
+We set up a pair of blocks and begin binding the variables. 
+If all the bindings succeed we return the then branch from the outermost block (and yes, before you go check: return-from works fine with multiple values).
+
+If any of the bindings fail we return from the inner block immediately. 
+This skips all the remaining bindings plus the then and continues along to the else, which executes and returns normally.
+
+A full macroexpansion ends up looking like this:
+
+#+BEGIN_SRC lisp
+(macroexpand-1
+  '(if-let* ((a nil)
+             (b (1+ a)))
+     (list a b)
+     'nope))
+; =>
+(BLOCK #:OUTER568
+  (BLOCK #:INNER569
+    (LET* ((A (OR NIL    (RETURN-FROM #:INNER569)))
+           (B (OR (1+ A) (RETURN-FROM #:INNER569))))
+      (RETURN-FROM #:OUTER568 (LIST A B))))
+  'NOPE)
+#+END_SRC
+
+It wouldn't be ideal to implement if-let* as a nested series of lets and ifs, because you'd need to duplicate the else code at each level. 
+The nested pair of blocks might be a little harder to understand at first, 
+but they only include the else in a single place (and will be important for another reason soon).
+
+* Consistency
+Now that we've got when-let* and if-let* short-circuiting on each binding, 
+it probably makes sense to change when-let and if-let to behave the same way, instead of checking after all the variables are bound. 
+Although the later variables don't rely on the earlier ones for these variants, it would be good if the behavior were consistent.
+
+To do this we can take our -let* versions and change the let* inside to a let, update the documentation, and that's it:
+
+#+BEGIN_SRC lisp
+(defmacro when-let (bindings &body body)
+  "Bind `bindings` in parallel and execute `body`, short-circuiting on `nil`.
+
+  This macro combines `when` and `let`.  It takes a list of bindings and
+  binds them like `let` before executing `body`, but if any binding's value
+  evaluates to `nil` the process stops and `nil` is immediately returned.
+
+  Examples:
+
+    (when-let ((a (progn (print :a) 1))
+               (b (progn (print :b) 2))
+      (list a b))
+    ; =>
+    :A
+    :B
+    (1 2)
+
+    (when-let ((a (progn (print :a) nil))
+               (b (progn (print :b) 2)))
+      (list a b))
+    ; =>
+    :A
+    NIL
+
+  "
+  (alexandria:with-gensyms (block)
+    `(block ,block
+       (let ,(loop :for (symbol value) :in bindings
+                   :collect `(,symbol (or ,value
+                                          (return-from ,block nil))))
+         ,@body))))
+
+(defmacro if-let (bindings then else)
+  "Bind `bindings` in parallel and execute `then` if all are true, or `else` otherwise.
+
+  This macro combines `if` and `let`.  It takes a list of bindings and
+  binds them like `let` before executing `then`, but if any binding's value
+  evaluates to `nil` the process stops and the `else` branch is immediately
+  executed (with no bindings in effect).
+
+  Examples:
+
+    (if-let ((a (progn (print :a) 1))
+             (b (progn (print :b) 2))
+      (list a b)
+      'nope)
+    ; =>
+    :A
+    :B
+    (1 2)
+
+    (if-let ((a (progn (print :a) nil))
+             (b (progn (print :b) 2)))
+      (list a b)
+      'nope)
+    ; =>
+    :A
+    NOPE
+
+  "
+  (alexandria:with-gensyms (outer inner)
+    `(block ,outer
+       (block ,inner
+         (let ,(loop :for (symbol value) :in bindings
+                     :collect `(,symbol (or ,value
+                                            (return-from ,inner nil))))
+           (return-from ,outer ,then)))
+       ,else)))
+#+END_SRC
+
+* Declarations
+Before we finish, we should make sure we've done things /right/. 
+Something that's often forgotten when making new control structures with macros is handling declarations properly. When writing a normal let,
+you can put declarations immediately inside the body, like this:
+
+#+BEGIN_SRC lisp
+(let ((foo (some-function))
+      (bar (some-other-function)))
+  (declare (optimize safety)
+           (type integer foo)
+           (type string bar))
+  (do-something foo bar))
+#+END_SRC
+
+If we think about how our when-let (and the -let* version) macroexpands we'll see that we don't need to do anything — it will work fine the way we've written it:
+
+#+BEGIN_SRC lisp
+(macroexpand-1
+  '(when-let ((foo (some-function))
+              (bar (some-other-function)))
+     (declare (optimize safety)
+              (type integer foo)
+              (type string bar))
+     (do-something foo bar)))
+; =>
+(BLOCK #:BLOCK586
+  (LET ((FOO (OR (SOME-FUNCTION) (RETURN-FROM #:BLOCK586 NIL)))
+        (BAR (OR (SOME-OTHER-FUNCTION) (RETURN-FROM #:BLOCK586 NIL))))
+    (DECLARE (OPTIMIZE SAFETY)
+             (TYPE INTEGER FOO)
+             (TYPE STRING BAR))
+    (DO-SOMETHING FOO BAR)))
+#+END_SRC
+
+This is why I insisted on implementing the macros with a single let binding all the variables. 
+If we tried to do this with a series of nested lets and ifs we'd have to try to parse the declarations and put the appropriate ones for each variable under the corresponding let, 
+and this would be an absolute nightmare (plus you wouldn't even be able to exclude nil from the type, because the if wouldn't happen until after the declaration!).
+
+Unfortunately if-let is going to be some more work. Let's think about an example:
+
+#+BEGIN_SRC lisp
+(if-let ((foo (some-function))
+         (bar (some-other-function)))
+  (declare (optimize safety)
+           (type integer foo)
+           (type string bar))
+  (do-something foo bar)
+  (do-something-else))
+#+END_SRC
+
+We're going to want the declarations to /only/ apply to the then branch, 
+because that's the branch that has the variables whose types we might want to declare. 
+
+If the user wants some declarations in the else branch they can wrap that branch in a locally and add them there.
+
+We're going to need a way to grab any declarations the user has given out of the body of the if-let. 
+Luckily Alexandria has a function called parse-body that will do this for us.
+
+#+BEGIN_SRC lisp
+(defmacro if-let (bindings &body body)
+  "Bind `bindings` in parallel and execute `then` if all are true, or `else` otherwise.
+
+  `body` must be of the form `(...optional-declarations... then else)`.
+
+  This macro combines `if` and `let`.  It takes a list of bindings and
+  binds them like `let` before executing the `then` branch of `body`, but
+  if any binding's value evaluates to `nil` the process stops there and the
+  `else` branch is immediately executed (with no bindings in effect).
+
+  If any `optional-declarations` are included they will only be in effect
+  for the `then` branch.
+
+  Examples:
+
+    (if-let ((a (progn (print :a) 1))
+             (b (progn (print :b) 2)))
+      (list a b)
+      'nope)
+    ; =>
+    :A
+    :B
+    (1 2)
+
+    (if-let ((a (progn (print :a) nil))
+             (b (progn (print :b) 2)))
+      (list a b)
+      'nope)
+    ; =>
+    :A
+    NOPE
+
+  "
+  (alexandria:with-gensyms (outer inner)
+    (multiple-value-bind (body declarations) (alexandria:parse-body body)
+      (destructuring-bind (then else) body
+        `(block ,outer
+           (block ,inner
+             (let ,(loop :for (symbol value) :in bindings
+                         :collect `(,symbol (or ,value
+                                                (return-from ,inner nil))))
+               ,@declarations
+               (return-from ,outer ,then)))
+           ,else)))))
+#+END_SRC
+
+Whew! We parse the body with parse-body, destructure what's left of it (to make sure we have our two branches),
+and shove the declarations where they belong.
+
+if-let* is exactly the same, but with a let* in the macro. I'll let you write that one yourself.
+
+* Result
+We've now got when-let, when-let*, if-let, and if-let* working properly. 
+They all support multiple bindings, short-circuit appropriately, handle declarations correctly, and are documented clearly.

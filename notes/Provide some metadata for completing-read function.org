@@ -1,0 +1,22 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Provide some metadata for completing-read function/")); -*-
+:PROPERTIES:
+:ID:       3F4E599E-FC8A-4941-AF9D-3C9CDE1EF1B5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-08 Fri 07:06>
+#+TITLE: Provide some metadata for completing-read function
+#+ROAM_KEY: https://kisaragi-hiu.com/emacs-completion-metadata.html
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(defun mark-category (seq category)
+  "Mark SEQ as being in CATEGORY."
+  (lambda (str pred flag)
+    (pcase flag
+      ('metadata
+       `(metadata (category . ,category)))
+      (_
+       (all-completions str seq pred)))))
+
+(completing-read "Prompt: " (mark-category '("/usr" "/tmp" "/home") 'file))
+#+END_SRC
+

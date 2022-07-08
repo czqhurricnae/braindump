@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/HFEC/")); -*-
+:PROPERTIES:
+:ID:       BAE256EC-5B44-4D91-9E52-0E54605ED2E6
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-06 Wed 09:42>
+#+TITLE: HFEC
+#+ROAM_KEY:
+

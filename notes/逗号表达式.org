@@ -1,0 +1,51 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/逗号表达式/")); -*-
+:PROPERTIES:
+:ID:       D225DBCA-A36C-4876-9718-60AF36FD5718
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-07 Thu 15:34>
+#+TITLE: 逗号表达式
+#+ROAM_KEY:
+
+
+在反引用表达式中，任何以[[id:D225DBCA-A36C-4876-9718-60AF36FD5718][逗号]]开始的子表达式是被求值的。
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+`(1 2 ,(+ 1 2))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (1 2 3)
+:end:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+`(and ,(list 1 2 3))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (and (1 2 3))
+:end:
+
+“,”的变种“,@”将接下来的表达式-必须求值成一个列表-的值嵌入到其外围的列表里。
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+`(and ,@(list 1 2 3))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (and 1 2 3)
+:end:
+
+使用“,@”在一个列表的中间插入东西。
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+`(and ,@(list 1 2 3) 4)
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (and 1 2 3 4)
+:end:

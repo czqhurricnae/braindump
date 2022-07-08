@@ -1,0 +1,19 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/identity 函数/")); -*-
+:PROPERTIES:
+:ID:       F03F5A93-D4F4-44E3-A939-8FFED161F415
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-07 Thu 16:04>
+#+TITLE: identity 函数
+#+ROAM_KEY:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values :exports no-eval
+(mapconcat 'identity '("a" "b" "c") "$")
+#+END_SRC
+
+#+RESULTS:
+:results:
+a$b$c
+:end:
+
+identity 函数直接返回参数。

@@ -1,0 +1,29 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/assoc/")); -*-
+:PROPERTIES:
+:ID:       7B0D8E4F-BAF3-4492-BB7D-735B6FE9DB88
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-07 Thu 16:27>
+#+TITLE: assoc
+#+ROAM_KEY:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(let ((completions '(("foobar1" "~/foobar1/") ("barfoo" "/usr/barfoo/") ("foobaz" "/hello/"))))
+  (assoc (completing-read "Complete a foo: " completions) completions))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- (foobar1 ~/foobar1/)
+:end:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(let ((completions '(("foobar1" "~/foobar1/") ("barfoo" "/usr/barfoo/") ("foobaz" "/hello/"))))
+  (cadr (assoc (completing-read "Complete a foo: " completions) completions)))
+#+END_SRC
+
+#+RESULTS:
+:results:
+- ~/foobar1/
+:end:
+
