@@ -123,18 +123,21 @@ org-notes
 =Gruntfile.js= 文件内容如下：
 
 #+BEGIN_SRC js :results values list :exports no-eval
+var fs = require("fs");
 var matter = require("gray-matter");
 var S = require("string");
 var conzole = require("conzole");
-var lunr = require("./static/vendor/js/lunr.min.js");
+var lunr = require("./static/vendor/js/lunr.js");
 var jsdom = require("jsdom");
+var nodejieba = require("nodejieba");
 const {JSDOM} = jsdom;
 const {document} = (new JSDOM("<!doctype html><html><body></body></html>")).window;
+const {Index} = require("flexsearch");
 global.document = document;
 const window = document.defaultView;
 var $ = require("jquery")(window);
-require("./static/vendor/js/lunr.stemmer.support.js")(lunr);
-require("./static/vendor/js/lunr.zh.js")(lunr);
+require("./static/vendor/js/lunr.stemmer.support")(lunr);
+require("./static/vendor/js/lunr.zh")(lunr);
 
 
 var CONTENT_PATH_PREFIX = ".";
@@ -142,95 +145,95 @@ var CONTENT_PATH_PREFIX = ".";
 
 module.exports = function(grunt) {
 
-    grunt.registerTask("search-index", function() {
+  grunt.registerTask("search-index", function() {
 
-        grunt.log.ok("Building pages index.");
+    grunt.log.ok("Building pages index.");
 
-        var doIndexPages = function() {
-            var pageIndexes = [];
-            grunt.file.recurse(CONTENT_PATH_PREFIX, function(abspath, rootdir, subdir, filename) {
-                grunt.verbose.writeln("Page file: ", abspath);
-                data = processFile(abspath, filename);
-                if (data !== undefined) {
-                    pageIndexes.push(data);
-                }
-            });
+    var doIndexPages = function() {
+      var pageIndexes = [];
+      grunt.file.recurse(CONTENT_PATH_PREFIX, function(abspath, rootdir, subdir, filename) {
+        grunt.verbose.writeln("Page file: ", abspath);
+        data = processFile(abspath, filename);
+        if (data !== undefined) {
+          pageIndexes.push(data);
+        }
+      });
 
-            return pageIndexes;
-        };
+      return pageIndexes;
+    };
 
-        var processFile = function(abspath, filename) {
-            var pageIndex;
+    var processFile = function(abspath, filename) {
+      var pageIndex;
 
-            if (S(filename).endsWith(".html")) {
-                pageIndex = processHTMLFile(abspath, filename);
-            }
-            else if (S(filename).endsWith(".md")) {
-                pageIndex = processMDFile(abspath, filename);
-                return;
-            }
+      if (S(filename).endsWith(".html")) {
+        pageIndex = processHTMLFile(abspath, filename);
+      }
+      else if (S(filename).endsWith(".md")) {
+        pageIndex = processMDFile(abspath, filename);
+        return;
+      }
 
-            return pageIndex;
-        };
+      return pageIndex;
+    };
 
-        var processHTMLFile = function(abspath, filename) {
-            var content = grunt.file.read(abspath, filename);
-            var pageName = S(filename).chompRight(".html").s;
-            var href = S(abspath).chompLeft(CONTENT_PATH_PREFIX).s;
+    var processHTMLFile = function(abspath, filename) {
+      var content = grunt.file.read(abspath, filename);
+      var pageName = S(filename).chompRight(".html").s;
+      var href = S(abspath).chompLeft(CONTENT_PATH_PREFIX).s;
 
-            if (href == "index.html") {
-                return;
-            }
+      if (href == "index.html") {
+        return;
+      }
 
-            if (href.startsWith("node_modules")) {
-                return;
-            }
+      if (href.startsWith("node_modules")) {
+        return;
+      }
 
-            return {
-                title: pageName,
-                href: href,
-                content: S(content).trim().stripTags().stripPunctuation().s
-            };
-        };
+      return {
+        title: pageName,
+        href: href,
+        content: S(content).trim().stripTags().s
+      };
+    };
 
-        var processMDFile = function(abspath, filename) {
-            var content = matter(grunt.file.read(abspath, filename));
-            if (content.data.draft) {
-                conzole.log("Draft; do not index", abspath);
-                return;
-            }
+    var processMDFile = function(abspath, filename) {
+      var content = matter(grunt.file.read(abspath, filename));
+      if (content.data.draft) {
+        conzole.log("Draft; do not index", abspath);
+        return;
+      }
 
-            return {
-                title: content.data.title,
-                categories: content.data.categories,
-                href: content.data.slug,
-                content: S(content.content).trim().stripTags().stripPunctuation().s
-            };
-        };
+      return {
+        title: content.data.title,
+        categories: content.data.categories,
+        href: content.data.slug,
+        content: S(content.content).trim().stripTags().stripPunctuation().s
+      };
+    };
 
-        grunt.file.write("./static/vendor/json/index.json", JSON.stringify(doIndexPages()));
-        grunt.log.ok("Indexes built.");
+    grunt.file.write("./static/vendor/json/index.json", JSON.stringify(doIndexPages()));
+    grunt.log.ok("Indexes built.");
+  });
+
+  grunt.registerTask("pre-segment", function() {
+    grunt.log.ok("Pre-building segmentations.");
+
+    var data = grunt.file.readJSON("./static/vendor/json/index.json");
+
+    var segmentations = lunr(function () {
+      this.use(lunr.zh);
+      this.field("title");
+      this.field("content");
+      this.ref("href");
+
+      for (var i = 0; i < data.length; ++i) {
+        (this.add(data[i]));
+      }
     });
 
-    grunt.registerTask("pre-segment", function() {
-        grunt.log.ok("Pre-building segmentations.");
-
-        var data = grunt.file.readJSON("./static/vendor/json/index.json");
-
-        var segmentations = lunr(function () {
-            this.use(lunr.zh);
-            this.field("title");
-            this.field("content");
-            this.ref("href");
-
-            for (var i = 0; i < data.length; ++i) {
-                this.add(data[i]);
-            }
-        });
-
-        grunt.file.write("./static/vendor/json/jieba.json", JSON.stringify(segmentations));
-        grunt.log.ok("Segmentations built.");
-    });
+    grunt.file.write("./static/vendor/json/jieba.json", JSON.stringify(segmentations));
+    grunt.log.ok("Segmentations built.");
+  });
 };
 #+END_SRC
 
@@ -272,9 +275,12 @@ module.exports = function(grunt) {
         "grunt-contrib-jshint": "^2.1.0",
         "jquery": "^3.5.1",
         "jsdom": "^16.3.0",
-        "nodejieba": "^2.4.1",
-        "string": "^3.3.3",
-        "lunr": "^2.3.9"
+        "nodejieba": "^2.6.0",
+        "string": "^3.3.3"
+    },
+    "dependencies": {
+        "flexsearch": "^0.7.21",
+        "package.json": "^2.0.1"
     }
 }
 #+END_SRC
@@ -309,87 +315,379 @@ $.getJSON("./static/vendor/json/jieba.json", function(data){
 // Case-insensitive alternative to :contains():
 // All credit to Mina Gabriel:
 // http://stackoverflow.com/a/15033857/443373
+let pages = [window.location.pathname];
+let switchDirectionWindowWidth = 900;
+let animationLength = 200;
+let nodeDataset = new vis.DataSet();
+let edgeDataset = new vis.DataSet();
+
+var tempNetwork;
+
+
 $.expr[":"].containsIgnoreCase = function (n, i, m) {
-    return jQuery(n).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+  return jQuery(n).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
 $(document).ready(function() {
-    // Handle live search/filtering:
-    var results      = $("#filter-results"),
-        filterInput      = $("#filter-query"),
-        clearFilterInput = $("#filter-clear-query");
+  // Handle live search/filtering:
+  var results      = $("#filter-results"),
+    filterInput      = $("#filter-query"),
+    clearFilterInput = $("#filter-clear-query");
 
-    var searchIndexLoaded = 0, searchIndexes = null;
+  var searchIndexLoaded = 0, searchIndexes = null;
 
-    // Auto-focus the search field:
-    filterInput.focus();
+  // Auto-focus the search field:
+  filterInput.focus();
 
-    // Cancels a filtering action and puts everything back in its place:
-    function cancelFilterAction()
-    {
-        filterInput.val("").removeClass("active");
-        results.empty();
+  // Cancels a filtering action and puts everything back in its place:
+  function cancelFilterAction()
+  {
+    filterInput.val("").removeClass("active");
+    results.empty();
+  }
+
+  // Clear the filter input when the X to its right is clicked:
+  clearFilterInput.click(cancelFilterAction);
+
+  // Same thing if the user presses ESC and the filter is active:
+  $(document).keyup(function(e) {
+    e.keyCode == 27 && filterInput.hasClass("active") && cancelFilterAction();
+  });
+
+  function doSearch(query)
+  {
+    if (searchIndexes != null) {
+      var searchResults = searchIndexes.search(query);
+      var stringHtml = "";
+
+      for (var i = 0; i < searchResults.length; i++) {
+        var position = searchResults[i].ref.lastIndexOf(".");
+        stringHtml += "<li style=\"list-style-image: url(../static/vendor/img/links-line.png);\" class=\"file\"><a href=\"" + searchResults[i].ref + "\" target=\"_blank\">" +  searchResults[i].ref.substr(0, position) + "</a></li>";
+      }
+      results.html(stringHtml);
+    } else {
+      // Sanitize the search query so it won't so easily break
+      // the :contains operator:
+      query = query
+        .replace(/\(/g, "\\(")
+        .replace(/\)/g, "\\)");
     }
 
-    // Clear the filter input when the X to its right is clicked:
-    clearFilterInput.click(cancelFilterAction);
+    if (searchIndexes != null) {
+      var page = document.querySelector(".page");
+      var level = page.length;
+      var container = page.querySelector("#filter-results");
+      var links = container.querySelectorAll("li>a");
+      links.forEach(async function (element) {
+        var prefetchLink = element.href;
+        element.dataset.level = level;
 
-    // Same thing if the user presses ESC and the filter is active:
-    $(document).keyup(function(e) {
-        e.keyCode == 27 && filterInput.hasClass("active") && cancelFilterAction();
-    });
-
-    function doSearch(query)
-    {
-        if (searchIndexes != null) {
-            var searchResults = searchIndexes.search(query);
-            var stringHtml = "";
-
-            for (var i = 0; i < searchResults.length; i++) {
-                var position = searchResults[i].ref.lastIndexOf(".");
-                console.log(searchResults);
-                console.log(position);
-                stringHtml += "<li class=\"file\"><a href=\"" + searchResults[i].ref + "\" target=\"_blank\">" +  searchResults[i].ref.substr(0, position) + "</a></li>";
-            }
-            results.html(stringHtml);
-        } else {
-            // Sanitize the search query so it won't so easily break
-            // the :contains operator:
-            query = query
-                .replace(/\(/g, "\\(")
-                .replace(/\)/g, "\\)");
-        }
-    }
-
-    // Perform live searches as the user types:
-    // @todo: check support for 'input' event across more browsers?
-    filterInput.bind("input", function() {
-        var value         = filterInput.val(),
-            query         = $.trim(value),
-            isActive      = value != "";
-
-        // Add a visual cue to show that the filter function is active:
-        filterInput.toggleClass("active", isActive);
-
-        // If we have no query, cleanup and bail out:
-        if(!isActive) {
-            cancelFilterAction();
-            return;
-        }
-
-        if (!searchIndexLoaded) {
-            searchIndexLoaded = 1;
-            $.getJSON("./static/vendor/json/jieba.json", function(data){
-                if (data != null) {
-                    searchIndexes = lunr.Index.load(data);
-                }
-                doSearch(query);
+        async function myFetch() {
+          let response = await fetch(prefetchLink);
+          let fragment = document.createElement("template");
+          fragment.innerHTML = await response.text();
+          let ct = await response.headers.get("content-type");
+          if (ct.includes("text/html") && fragment.content.querySelector(".page")) {
+            createPreview(element, fragment.content.querySelector(".page").outerHTML, {
+              placement:
+                        window.innerWidth > switchDirectionWindowWidth
+                          ? "right"
+                          : "top",
             });
-        } else {
-            doSearch(query);
+
+            element.addEventListener("click", function (e) {
+              if (!e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                stackNote(element.href, this.dataset.level);
+                fetchNote(element.href, this.dataset.level, (animate = true));
+              }
+            });
+          }
         }
-    });
+        return myFetch();
+      });
+    }
+  }
+
+  // Perform live searches as the user types:
+  // @todo: check support for 'input' event across more browsers?
+  filterInput.bind("input", function() {
+    var value         = filterInput.val(),
+      query         = $.trim(value),
+      isActive      = value != "";
+
+    // Add a visual cue to show that the filter function is active:
+    filterInput.toggleClass("active", isActive);
+
+    // If we have no query, cleanup and bail out:
+    if(!isActive) {
+      cancelFilterAction();
+      return;
+    }
+
+    if (!searchIndexLoaded) {
+      searchIndexLoaded = 1;
+      $.getJSON("./static/vendor/json/jieba.json", function(data){
+        if (data != null) {
+          searchIndexes = lunr.Index.load(data);
+        }
+        doSearch(query);
+      });
+    } else {
+      doSearch(query);
+    }
+  });
 });
+
+async function loadNetworkNodes() {
+  let response = await fetch("./graph.json");
+  let json = await response.json();
+  var roamData = json;
+  tempNetwork = new vis.Network(document.getElementById("temp-network"),
+    {nodes: new vis.DataSet(roamData.nodes),
+      edges: new vis.DataSet(roamData.edges)},
+    {layout:{improvedLayout: false},
+      physics:{enabled: false}});
+  drawBufferNetwork(roamData);
+}
+
+function collectConnectedNodes(
+  allNodes, baseNode, distance, alreadyConnected) {
+  if (distance < 1) {
+    return new Set([baseNode]); // base case for recursion
+  }
+
+  let connectedNodes = new Set([baseNode]);
+  const neighbours = tempNetwork.getConnectedNodes(baseNode);
+
+  for (let i = 0; i < neighbours.length; i++) {
+    // Skip this node if we've already seen it. Helps with the performance.
+    if (alreadyConnected && alreadyConnected.has(neighbours[i])) continue;
+    var neighbourConnectedNodes = collectConnectedNodes(
+      allNodes, neighbours[i], distance - 1, connectedNodes);
+    for (let node of neighbourConnectedNodes) {
+      connectedNodes.add(node);
+    }
+  }
+  return connectedNodes;
+}
+
+function drawBufferNetwork(roamData) {
+  const nodeDataset = new vis.DataSet(roamData.nodes);
+  const nodes = nodeDataset.get({returnType:"Object"});
+  const connectedNodes = Array.from(
+    collectConnectedNodes(nodes, currentNode, 1));
+  let bufferNodes = [];
+  for (let i = 0; i < connectedNodes.length; i++) {
+    bufferNodes.push(nodes[connectedNodes[i]]);
+  }
+  const bufferContainer = document.getElementById("buffer-network");
+  let options = {              nodes: {shape: "dot"},
+    interaction: {hover: true},
+    layout: {improvedLayout: true}};
+  bufferNetwork = new vis.Network(
+    bufferContainer,
+    {nodes:bufferNodes,
+      edges:roamData.edges},
+    options
+  );
+}
+
+function stackNote(href, level) {
+  level = Number(level) || pages.length;
+  href = URI(href);
+  uri = URI(window.location);
+  stacks = [];
+  if (uri.hasQuery("stackedNotes")) {
+    stacks = uri.query(true).stackedNotes;
+    if (!Array.isArray(stacks)) {
+      stacks = [stacks];
+    }
+    stacks = stacks.slice(0, level - 1);
+  }
+  stacks.push(href.path());
+  uri.setQuery("stackedNotes", stacks);
+
+  old_stacks = stacks.slice(0, level - 1);
+  state = { stacks: old_stacks, level: level };
+  window.history.pushState(state, "", uri.href());
+}
+
+function unstackNotes(level) {
+  let container = document.querySelector(".ds-grid");
+  let children = Array.prototype.slice.call(container.children);
+
+  for (let i = level; i < pages.length; i++) {
+    container.removeChild(children[i]);
+    destroyPreviews(children[i]);
+  }
+  pages = pages.slice(0, level);
+}
+
+function fetchNote(href, level, animate = false) {
+  level = Number(level) || pages.length;
+
+  const request = new Request(href);
+  fetch(request)
+    .then((response) => response.text())
+    .then((text) => {
+      unstackNotes(level);
+      let container = document.querySelector(".ds-grid");
+      let fragment = document.createElement("template");
+      fragment.innerHTML = text;
+      let element = fragment.content.querySelector(".page");
+      container.appendChild(element);
+      pages.push(href);
+
+      setTimeout(
+        function (element, level) {
+          element.dataset.level = level + 1;
+          initializePreviews(element, level + 1);
+          element.scrollIntoView();
+          if (animate) {
+            element.animate([{ opacity: 0 }, { opacity: 1 }], animationLength);
+          }
+
+          if (window.MathJax) {
+            window.MathJax.typeset();
+          }
+        }.bind(null, element, level),
+        10
+      );
+
+      updateLinkStatuses();
+      hljs.highlightAll();
+      zoomImage();
+    });
+}
+
+function updateLinkStatuses() {
+  let links = Array.prototype.slice.call(
+    document.querySelectorAll("a[data-uuid]")
+  );
+
+  links.forEach(function (link) {
+    if (pages.indexOf(link.dataset.uuid) !== -1) {
+      link.classList.add("linked");
+      if (link._tippy) link._tippy.disable();
+    } else {
+      link.classList.remove("linked");
+      if (link._tippy) link._tippy.enable();
+    }
+  });
+}
+
+function destroyPreviews(page) {
+  links = Array.prototype.slice.call(page.querySelectorAll("a[data-uuid]"));
+  links.forEach(function (link) {
+    if (link.hasOwnProperty("_tippy")) {
+      link._tippy.destroy();
+    }
+  });
+}
+
+let tippyOptions = {
+  allowHTML: true,
+  theme: "light",
+  interactive: true,
+  interactiveBorder: 10,
+  delay: 500,
+  touch: ["hold", 500],
+  maxWidth: "none",
+  inlinePositioning: false,
+  placement: "right",
+  followCursor: true,
+};
+
+function createPreview(link, html, overrideOptions) {
+  level = Number(link.dataset.level);
+  iframe = document.createElement("iframe");
+  iframe.width = "360px";
+  iframe.height = "360px";
+  iframe.srcdoc = html;
+  tip = tippy(
+    link,
+    Object.assign(
+      {},
+      tippyOptions,
+      {
+        content: iframe.outerHTML
+        // '<iframe width="400px" height="300px" srcdoc="' +
+        //     escape(html) +
+        // '"></iframe>',
+      },
+      overrideOptions
+    )
+  );
+}
+
+function initializePreviews(page, level) {
+  level = level || pages.length;
+
+  links = Array.prototype.slice.call(page.querySelectorAll("a:not(.rooter)"));
+
+  links.forEach(async function (element) {
+    var rawHref = element.getAttribute("href");
+    element.dataset.level = level;
+
+    if (
+      rawHref &&
+      !(
+        rawHref.indexOf("http://") === 0 ||
+        rawHref.indexOf("https://") === 0 ||
+        rawHref.indexOf("#") === 0 ||
+        rawHref.includes(".pdf") ||
+        rawHref.includes(".svg")
+      )
+    ) {
+      var prefetchLink = element.href;
+      async function myFetch() {
+        let response = await fetch(prefetchLink);
+        let fragment = document.createElement("template");
+        fragment.innerHTML = await response.text();
+        let ct = await response.headers.get("content-type");
+        if (ct.includes("text/html")) {
+          createPreview(element, fragment.content.querySelector(".page").outerHTML, {
+            placement:
+                    window.innerWidth > switchDirectionWindowWidth
+                      ? "right"
+                      : "top",
+          });
+
+          element.addEventListener("click", function (e) {
+            if (!e.ctrlKey && !e.metaKey) {
+              e.preventDefault();
+              stackNote(element.href, this.dataset.level);
+              fetchNote(element.href, this.dataset.level, (animate = true));
+            }
+          });
+        }
+      }
+      return myFetch();
+    }
+  });
+}
+
+window.addEventListener("popstate", function (event) {
+  // TODO: check state and pop pages if possible, rather than reloading.
+  window.location = window.location; // this reloads the page.
+});
+
+window.onload = function () {
+  //loadNetworkNodes();
+  initializePreviews(document.querySelector(".page"));
+
+  uri = URI(window.location);
+  if (uri.hasQuery("stackedNotes")) {
+    stacks = uri.query(true).stackedNotes;
+    if (!Array.isArray(stacks)) {
+      stacks = [stacks];
+    }
+    for (let i = 1; i <= stacks.length; i++) {
+      fetchNote(stacks[i - 1], i);
+    }
+  }
+};
 #+END_SRC
 
 该文件必须在博客的页面中引用具体请看 [[theme-rose.setup][See：theme-rose.setup ]]。
@@ -456,6 +754,7 @@ _[[https://emacs-china.org/][Emacs China]]_ _[[https://orgmode.org/org.html][The
 * 具体操作步骤
 前面介绍了各个文件作用。
 现在介绍具体如何使用。
+
 ** 对博客生成的 =html= 文件进行索引
 只需要在 =public= 文件夹下，运行命令 ~grunt search-index~ ，如下所示：
 
@@ -589,3 +888,4 @@ Done.
 
 * 附件
 [[file:./static/使用 lunr 实现静态博客的前端搜索/org-notes.zip][org-notes.zip]]
+[[file:static/使用 lunr 实现静态博客的前端搜索/][Gruntfile.js]]
