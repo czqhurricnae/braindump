@@ -14,9 +14,9 @@
 5min 后供气风扇自动恢复工作，但供气 OFF 灯仍不熄灭，此时再次复位低流量传感器的供电跳开关，
 则可以熄灭供气 OFF 灯。
 
-#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R645 供气系统控制中断继电器激励的条件][R645 供气系统控制中断继电器激励的条件]] 
-#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R645 供气系统控制中断继电器激励的后果][R645 供气系统控制中断继电器激励的后果]] 
-#+transclude: [[file:737NG 设备冷却.org::*供气 OFF 灯亮][供气 OFF 灯亮]] 
+#+transclude: [[id:B03398BE-5F90-49D2-B027-06A02F62448D][R645 供气系统控制中断继电器激励的条件]]
+#+transclude: [[id:5AC641FB-2E25-41B4-9286-C90AA9F3FD24][R645 供气系统控制中断继电器激励的后果]]
+#+transclude: [[id:402DCCAC-8D20-4065-A8DC-7D3D20617579][供气 OFF 灯亮]]
 
 * 故障原因
 ** 根据[[id:B7819448-4AAB-40CA-AD19-F063E159B916][R648 SMOKE CONTROL RELAY]]激活条件，为什么飞机在地面，而非空中，却能激活除烟模式

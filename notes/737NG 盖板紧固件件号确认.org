@@ -6,8 +6,6 @@
 #+DATE: <2021-04-15 Apr 12:26>
 #+TITLE: 737NG 盖板紧固件件号确认
 #+OPTIONS: toc:t
-#+EXPORT_HUGO_BUNDLE: 737NG 盖板紧固件件号确认 
-#+EXPORT_FILE_NAME: 737NG 盖板紧固件件号确认 
 
 * 背景
 2020 年 8 月 29 日，B-56XX 飞机航后检查发现右大翼约 WS278.5 处盖板，有两颗紧固件丢失。
@@ -24,7 +22,6 @@
 
 * 通过盖板号或临近部件的件号，确认紧固件损坏的盖板组件件号
   :PROPERTIES:
-  :CUSTOM_ID: 盖板图号查找
   :ID:       11D917C1-69B9-45A3-B0F7-1C2B95308CF1
   :END:
 大家兴许都有疑问。因为 737 手册编制的时间比较久远，不是所有的盖板，都可以像 787 或 777 飞机那样，直接通过 AMM06 章或实物所给出的标号，通过 IPC 反查进行件号确认。
@@ -84,6 +81,9 @@
 [[file:./static/737NG 盖板紧固件件号确认/12698.jpeg]]
 
 * 通过波音图纸所给出的信息，确认件号信息
+:PROPERTIES:
+:ID:       3842BD75-2F3F-45FB-88F1-D7C2E29BDDF8
+:END:
 步骤 3 的重点在于，如何使用波音细节设计标准（Boeing Design Detail Standard）BACD2074 去确认紧固件的件号、安装工艺。
 
 1）基于步骤 2，我们已经确认了紧固件损伤的盖板组件的图纸信息。重新在 Engineer Information Delivery 模块“Drawing Searches -> Drawing Number”搜索框中输入图纸号：115A2512 及 ID 号（sheet 号）16 后点击搜索进入；

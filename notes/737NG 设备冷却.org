@@ -7,6 +7,9 @@
 #+TITLE: 737NG 设备冷却
 
 * 供气风扇工作条件
+:PROPERTIES:
+:ID:       CDBC067E-3025-467E-B266-348D86A18450
+:END:
 
 [[file:./static/737NG 设备冷却/2021-07-24_18-06-01_ES  3.jpeg]]
 
@@ -18,6 +21,9 @@
 - 供气系统控制中断继电器 [[id:CC5E3594-6261-48A6-9DD4-A2D1DC34D3F1][R645]] 在 NORMAL 位（未闭合）。
 
 * 供气 OFF 灯亮
+:PROPERTIES:
+:ID:       402DCCAC-8D20-4065-A8DC-7D3D20617579
+:END:
 
 [[file:./static/737NG 设备冷却/2021-07-24_18-07-30_screenshot.jpg]]
 
@@ -35,16 +41,25 @@
   OFF 灯无法熄灭，5 min 后 R645 断开，抑制信号消失，此时去复位低流量传感器的跳开关，传感器上电自检通过，则 OFF 灯熄灭。
 
 * OEV
+:PROPERTIES:
+:ID:       73E34730-44AA-4E6A-A2F5-D0668AC321E5
+:END:
 
 [[file:./static/737NG 设备冷却/2021-07-24_22-55-18_screenshot.jpg]]
 
 * OEV 正常模式
+:PROPERTIES:
+:ID:       3F8B0F7C-3CD7-4E87-80C0-8B9B61B1480D
+:END:
 - 组件电门都在 AUTO/OFF 位。
 - 右再循环风扇在 AUTO 位。
 
 OEV 在 NORMAL 位，活门保持关闭。
 
 * OEV 高流量模式
+:PROPERTIES:
+:ID:       546E955D-66F7-442C-956A-5CC0713EE7BB
+:END:
 - 任一组件电门 high 位。
 - 右再循环风扇 AUTO 位。
 - R592 在空中 AIR 位。
@@ -56,6 +71,9 @@ OEV 在 NORMAL 位，活门保持关闭。
 [[file:./static/737NG 设备冷却/2021-07-24_21-12-08_screenshot.jpg]]
 
 * OEV 除烟模式
-#+transclude: [[file:R648 SMOKE CONTROL RELAY.org::*R648 激励的条件][R648 激励的条件]] :only-contents
-#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R645 供气系统控制中断继电器激励的条件][R645 供气系统控制中断继电器激励的条件]]
-#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R645 供气系统控制中断继电器激励的后果][R645 供气系统控制中断继电器激励的后果]]
+:PROPERTIES:
+:ID:       069E6061-F0F8-4711-B685-A70254560707
+:END:
+#+transclude: [[id:498AE19B-7D09-473C-BF05-1B80936E1896][R648 除烟控制继电器激励的条件]] :only-contents
+#+transclude: [[id:B03398BE-5F90-49D2-B027-06A02F62448D][R645 供气系统控制中断继电器激励的条件]]
+#+transclude: [[id:5AC641FB-2E25-41B4-9286-C90AA9F3FD24][R645 供气系统控制中断继电器激励的后果]]

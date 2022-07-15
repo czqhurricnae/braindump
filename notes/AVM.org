@@ -6,7 +6,7 @@
 #+DATE: <2021-07-23 Fri 21:39>
 #+TITLE: AVM
 
-#+transclude: [[file:737NG 发动机振动值高.org::*计算 FAN，HPC，LPT，HPT 四个区域的振动值，在 CDS 上显示最大值][计算 FAN，HPC，LPT，HPT 四个区域的振动值，在 CDS 上显示最大值]]
+#+transclude: [[id:94B0C57F-0899-418E-8B94-1EA51FF2C377][计算 FAN，HPC，LPT，HPT 四个区域的振动值，在 CDS 上显示最大值]]
 
 * 为什么低压涡轮振动值高，配平的是风扇叶片
 

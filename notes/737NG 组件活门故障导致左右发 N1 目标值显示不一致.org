@@ -29,10 +29,10 @@
 | 译码     | ECS_PACK_ON_L(R)  | 组件活门 | ON  | OFF      |
 |          | ECS_PACK_FLW_L(R) | 组件电门 | LOW | OFF/HIGH |
 
-#+transclude: [[file:737NG 组件活门（文氏管构型）.org::Pack Switch Off][Pack Switch Off]]
-#+transclude: [[file:737NG 组件活门（文氏管构型）.org::Pack Switch High][Pack Switch High]]
-#+transclude: [[file:737NG 组件活门（文氏管构型）.org::自动低流量][自动低流量]]
-#+transclude: [[file:737NG 组件活门（文氏管构型）.org::自动高流量][自动高流量]]
+#+transclude: [[id:C4AADA9E-6761-4B79-BCE2-5A60D30B0EDD][Pack Switch Off]]
+#+transclude: [[id:EA9C786A-0FD2-4AF4-AB44-1FB7CD80C8C8][Pack Switch High]]
+#+transclude: [[id:22071E12-DA0C-4A3E-BF04-17DB37DCF4C0][自动低流量]]
+#+transclude: [[id:887748FB-CCF8-4042-B36A-A7550FB7A6FA][自动高流量]]
 
 * 试车时发现左右发 N1 目标值不一致，CDU 检查右组件电门关时，活门打开
 :PROPERTIES:
