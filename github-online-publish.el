@@ -134,8 +134,11 @@
 (use-package org-transclusion
   :straight
   (:type git
-         :host github
-         :repo "nobiot/org-transclusion"))
+   :host github
+   :repo "nobiot/org-transclusion")
+  :config
+  (setq org-transclusion-include-first-section t)
+  (setq org-transclusion-exclude-elements '(property-drawer org-drawer)))
 
 (setq org-confirm-babel-evaluate nil)
 (setq org-hugo-export-with-toc t)
