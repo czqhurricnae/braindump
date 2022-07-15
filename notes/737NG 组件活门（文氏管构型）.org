@@ -12,7 +12,7 @@
 
 [[file:./static/737NG 组件活门（文氏管构型）/2021-02-10_13-48-10_screenshot.jpg]]
 
-* Pack Switch OFF
+* Pack Switch Off
 :PROPERTIES:
 :ID:       C4AADA9E-6761-4B79-BCE2-5A60D30B0EDD
 :END:
@@ -23,10 +23,10 @@
 此时
 
 [[file:./static/737NG 组件活门（文氏管构型）/2021-03-23_08-21-35_screenshot.jpg]]
-
-|     | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D1002A pin 3 到 D1002A pin 4 | A solenoid | B solenoid | C solenoid |
+#+name: Pack Switch Off
+|     | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D10002A pin 4 到 D10002A pin 3| A solenoid | B solenoid | C solenoid |
 |-----+------------------------+---------------------+---------------------+------------------------------+------------+------------+------------|
-| OFF | NORM                   | NORM                | OFF/HIGH            | 断开                         | 不激励     | 不激励     | close 激励 |
+| OFF | NORM                   | NORM                | OFF/HIGH（不激励）        | 断开                         | 不激励     | 不激励     | close 激励 |
 
 * Pack Switch High
 :PROPERTIES:
@@ -34,7 +34,8 @@
 :END:
 [[file:./static/737NG 组件活门（文氏管构型）/2021-03-23_20-18-49_SSM 21-51-21.jpeg]]
 
-|      | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D1002A pin 3 到 D1002A pin 4 | A solenoid | B solenoid | C solenoid    |
+#+name: Pack Switch High
+|      | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D10002A pin 4 到 D10002A pin 3| A solenoid | B solenoid | C solenoid    |
 |------+------------------------+---------------------+---------------------+------------------------------+------------+------------+---------------|
 | High | NORM                   | NORM                | OFF/HIGH（不激励）  | 断开                         | 不激励     | 不激励     | open 线圈激励 |
 
@@ -48,17 +49,19 @@
 :END:
 [[file:./static/737NG 组件活门（文氏管构型）/2021-03-23_20-55-35_SSM 21-51-21.jpeg]]
 
-|             | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D1002A pin 3 到 D1002A pin 4 | A solenoid | B solenoid | C solenoid    |
+#+name: 自动低流量
+|             | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D10002A pin 4 到 D10002A pin 3| A solenoid | B solenoid | C solenoid    |
 |-------------+------------------------+---------------------+---------------------+------------------------------+------------+------------+---------------|
 | Auto（Low） | NORM                   | NORM                | AUTO（激励）        | 接通                         | 不激励     | 激励       | open 线圈激励 |
 
+如果 D10002A pin 45 没有有效接地，会导致 K14 PACK AUTO RELAY 不激励，D10002A pin 4（接地） 到 D10002A pin 3 不接通，CDU 上显示 ECS PACK H/L：HI。
 ** 自动高流量
 :PROPERTIES:
 :ID:       887748FB-CCF8-4042-B36A-A7550FB7A6FA
 :END:
 [[file:./static/737NG 组件活门（文氏管构型）/2021-03-23_21-01-43_SSM 21-51-21.jpeg]]
-
-|              | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D1002A pin 3 到 D1002A pin 4 | A solenoid | B solenoid | C solenoid    |
+#+name: 自动高流量
+|              | K8 PACK OVERHEAT RELAY | K18 FLOW MODE RELAY | K14 PACK AUTO RELAY | D10002A pin 4 到 D10002A pin 3| A solenoid | B solenoid | C solenoid    |
 |--------------+------------------------+---------------------+---------------------+------------------------------+------------+------------+---------------|
 | Auto（High） | NORM                   | HIGH                | OFF/HIGH（不激励）  | 断开                         | 不激励     | 不激励     | open 线圈激励 |
 
@@ -71,6 +74,7 @@
 :ID:       1CFA64FE-FC95-41D3-9B0A-D2D27EA626F1
 :END:
 [[file:./static/737NG 组件活门（文氏管构型）/2021-03-23_21-22-10_SSM 21-51-21 3.jpeg]]
+
 Solenoid A is energized when the all of these conditions are true：
 - The pack switch is in the HIGH position。
 - The APU bleed switch is in the ON position。
@@ -78,3 +82,7 @@ Solenoid A is energized when the all of these conditions are true：
 - The airplane is on the ground。
 
 [[file:./static/737NG 组件活门（文氏管构型）/2021-02-11_20-47-34_screenshot.jpg]]
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+
+#+END_SRC

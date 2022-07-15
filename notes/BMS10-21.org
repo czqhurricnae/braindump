@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/BMS10-21/")); -*-
+:PROPERTIES:
+:ID:       AA860FE2-6298-4560-B3C9-A81625920D07
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-15 Fri 08:38>
+#+TITLE: BMS10-21
+#+ROAM_KEY:
+#+FILETAGS: :防静电涂层:
+

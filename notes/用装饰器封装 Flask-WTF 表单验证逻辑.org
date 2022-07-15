@@ -30,8 +30,7 @@ def index():
 * 实现表单验证装饰器
 由于不同路由使用的表单类不一样，所以需要为装饰器传入一个表单类参数，并且在路由函数中需要用到表单中的值，所以还需要将验证通过的表单传给路由函数。
 
-#+transclude: t
-See：[[id:59FF8925-B753-4915-AD80-DD515A9F2BC2][带参数的装饰器]]
+#+transclude: [[id:59FF8925-B753-4915-AD80-DD515A9F2BC2][带参数的装饰器]]
 
 #+BEGIN_SRC python
 def validate_form(self, form_cls):

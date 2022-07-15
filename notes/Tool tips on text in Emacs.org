@@ -1,0 +1,43 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Tool tips on text in Emacs/")); -*-
+:PROPERTIES:
+:ID:       9851C197-756D-4D4B-803C-1F2E40E6005E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-14 Thu 10:38>
+#+TITLE: Tool tips on text in Emacs
+#+ROAM_KEY:
+
+Here we look at a way to get tool tips on text in Emacs. This would be helpful for giving hints, or definitions, or reminders about something. Tool tips are created by setting the help-echo text property for the string
+of interest. We will write a function that adds the tool tip to every instance of a string in the current buffer. We will also change the color of the string slightly to give the reader a hint there might be something
+there. 
+
+Here is the code. We use save-excursion so that the cursor stays where it starts. Then we search for the string we want a tool tip on, and set the appropriate properties. 
+
+What is a foobar? 
+
+#+BEGIN_SRC emacs-lisp :exports no-eval
+; add a tooltip to every instance of foobar
+(save-excursion  ;return cursor to current-point
+  (goto-char 1)
+    (while (search-forward "foobar" (point-max) t)
+      (set-text-properties  (match-beginning 0) (match-end 0)
+                            `(help-echo "You know... a bar for foos!"
+                             font-lock-face (:foreground "dark slate gray"))
+)))
+#+END_SRC
+
+After you run the function above, the next sentence should have a grayed word in it, and when you hold your mouse over the grayed word a tool tip should appear. 
+
+There is a foobar in the woods. 
+
+You can see the effect here: 
+
+[[file:./static/Tool-tips-on-text-in-Emacs/1640156480-fd459821ee3dbea2a3323f9adfca8e87.png]]
+
+This could be an interesting way to increase the depth and richness of text. To use it you would have to define a function that runs when a file is opened, or call the function after opening a file. 
+
+Copyright (C) 2013 by John Kitchin. See the [[https://kitchingroup.cheme.cmu.edu/copying.html][License]] for information about copying.
+
+[[https://kitchingroup.cheme.cmu.edu/org/2013/04/12/Tool-tips-on-text-in-Emacs.org][org-mode source]]
+
+

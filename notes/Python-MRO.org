@@ -105,8 +105,7 @@ MRO 的 BFS 顺序如下图：
 
 MRO 的 C3 算法顺序如下图：看起简直是 DFS 和 BFS 的合体有木有。但是仅仅是看起来像而已。
 
-#+transclude: t
-[[file:Python 2-MRO_and_super.org::* C3 算法在棱形继承中的表现][C3 算法在棱形继承中的表现]]
+#+transclude: [[file:Python 2-MRO_and_super.org::* C3 算法在棱形继承中的表现][C3 算法在棱形继承中的表现]] :level 3 
 
 [[file:./static/Python-MRO/2020-06-09_01-52-24_screenshot.jpg]]
 

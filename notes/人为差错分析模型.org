@@ -5,9 +5,7 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-01-02 Sun 23:14>
 #+TITLE: 人为差错分析模型
- 人为差错
 #+ROAM_KEY: 
- 
 #+FILETAGS: :风险: :隐患:
 
 结合人为差错分析模型和维修单位安全质量系统卓越度标准，

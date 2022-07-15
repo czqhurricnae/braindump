@@ -1,0 +1,36 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/FP-200/")); -*-
+:PROPERTIES:
+:ID:       038923FD-9EF6-4C17-9120-7DD5D86890DA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-15 Fri 09:02>
+#+TITLE: FP-200
+#+ROAM_KEY: https://shop.boeing.com/aviation-supply/p/FP200GLKIT=33
+
+* FP-200
+:PROPERTIES:
+:ID:       3CF0D66A-B401-48A3-A754-877787FDD4D6
+:END:
+
+[[file:static/FP-200/2022-07-15_09-04-26_screenshot.jpg]]
+
+CAAPCOAT FP-200 Color Matched Gloss Rain Erosion Resistant Coating is a two component room temperature curing polyurethane elastomer 
+designed to protect aircraft radomes, antennas and leading edges from rain impact at high speed 
+while providing color tailorability for camouflage or aesthetic purposes. 
+
+FP-200 conforms to the Quality Conformance Inspection requirements of AMS-C-83445A (MIL-C-83445A), Class I.
+
+CAAPCOAT FP-200 是弹性的聚氨酯涂层，有良好的抗雨蚀和抗风蚀冲击能力，该涂层为四组份，喷涂前需要彻底混合，混合比例如表 1 所示。
+
+#+CAPTION: 表 1 CAAPCOAT FP-200 BAC707 防风蚀涂层的混合比例
+| 成分             | 基组份    | 固化剂         | 催速剂        | 稀释剂    |
+| (components)     | (vehicle) | (curing agent) | (accelerator) | (thinner) |
+|------------------+-----------+----------------+---------------+-----------|
+| 混合比例（体积） | 64        | 3              | 4             | 按需添加      |
+
+混合完成后将黏度调节至 22~28 秒（2 号蔡恩杯）。喷涂总干膜厚度为 10~14 MIL（0.254~0.356mm），
+需要喷 5~7 层防风蚀漆，每层厚度为 1.5~2MIL（0.038~0.051mm），每层防风蚀漆的喷涂间隔为 5~20 分钟，以便溶剂挥发。
+
+该涂层需要室温固化 36 小时，或者室温固化 24 小时后加温 150℉（66℃）固化 3 小时。
+
+不建议在 FP-200 表面再喷涂装饰面漆，太厚的涂层易造成整体脱落，波音 737NG 线号 3320 以后的飞机不再喷涂装饰面漆。

@@ -1,9 +1,8 @@
-# -*- eval: (setq org-download-image-dir (concat default-directory "./static/")); -*-
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/JavaScript-self-invoking_function/")); -*-
 :PROPERTIES:
 :ID:       3AD79377-885E-4B0F-8F99-974A57D2DD37
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-08-01 Sat 14:09>
 #+TITLE: JavaScript-self-invoking_function
 

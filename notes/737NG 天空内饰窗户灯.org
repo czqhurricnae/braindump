@@ -3,7 +3,6 @@
 :ID:       E222B2CE-BE89-4D40-BD1C-EEB9DA79AC78
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2021-01-10 Sun 13:21>
 #+TITLE: 737NG 天空内饰窗户灯
 
@@ -54,11 +53,8 @@ The window lights change intensity and color to the preset condition.
 When you touch the OFF button, only the window light internal LED lights go off.
 The window light internal power supply stays connected to the 115V AC.
 
-#+transclude: t
-[[id:A3B4F28E-6B38-4742-97C4-50CA3AEFA68E]]
+#+transclude: [[id:A3B4F28E-6B38-4742-97C4-50CA3AEFA68E][SSM 33-22-11_(sh_1)]]
 
-#+transclude: t
-[[id:029B9F30-C8DB-41E6-B73B-5B1D6C257DB4]]
+#+transclude: [[id:029B9F30-C8DB-41E6-B73B-5B1D6C257DB4][SSM 33-21-11]]
 
-#+transclude: t
-[[id:0E02E66F-10D0-4A58-B37A-07DFBAEADB28]]
+#+transclude: [[id:0E02E66F-10D0-4A58-B37A-07DFBAEADB28][SSM 33-21-12]]

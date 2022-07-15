@@ -3,7 +3,6 @@
 :ID:       508ACA7D-3866-4788-80FE-735E271323AF
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-12-10 Thu 15:42>
 #+TITLE: 使用 Python 和 Flask 设计 RESTful API
 

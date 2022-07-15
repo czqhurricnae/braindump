@@ -1,0 +1,17 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/3M 8673/")); -*-
+:PROPERTIES:
+:ID:       59FCF735-9ACF-4EF4-A0BB-6E356339C149
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-15 Fri 09:24>
+#+TITLE: 3M 8673
+#+ROAM_KEY: https://www.3m.com/3M/en_US/p/d/b40069165/
+
+3M™ Polyurethane Protective Tape 8673
+
+* Resists Wearing, Abrasion and Tearing
+3M™ Polyurethane Protective Tape 8673 is a transparent, 14 mil, thermoplastic polyurethane elastomer tape designed to provide premium, leading edge erosion protection. With scratch, tear, erosion, puncture and impact resistance, this tape has a polyurethane backing with high peel strength that can withstand a wide variety of difficult conditions and applications. It is formulated for long-term resistance to ultraviolet light. 3M™ Polyurethane Protective Tape 8673 is qualified for numerous aircraft and helicopter specifications. It is used in many aircraft maintenance and production efficiency, and aviation safety enhancement applications.
+
+* Adhere with Acrylic
+This tape features a pressure sensitive acrylic adhesive that adheres immediately on contact to a variety of substrates. Once bonded, this adhesive will provide high, secure adhesion for extended periods. This acrylic adhesive maintains adhesion in climate and temperature change variations and resists yellowing in long term use. When necessary, this tape removes easily.
+

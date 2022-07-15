@@ -5,10 +5,13 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-01-12 Wed 11:11>
 #+TITLE: 737-800 PACK 非指令关闭
-
 #+ROAM_KEY:
+#+FILETAGS: :组件活门:
 
-
+* 案例一
+:PROPERTIES:
+:ID:       F8E3EA37-0595-4F37-9A58-BAC1DEE98E76
+:END:
 B57XX 飞机 AHM 监控 =ECS Pack Configuration：Pack1 Off and Pack2 Highin Cruise= ， 
 空中左 PACK 关闭、右 PACK 进入高流量模式。
 
@@ -16,15 +19,17 @@ B57XX 飞机 AHM 监控 =ECS Pack Configuration：Pack1 Off and Pack2 Highin Cru
 联系派驻机务完成 PZTC 自检正常，无故障代码，证实左空调有进出气。
 提示机长后续航班关注空调，并告知签派将飞行计划按 250FL 做，后续三段航班空调都正常。
 飞机放行，回基地站后预防性更换左 COV。首先说明该飞机不是 EFLOW 构型。
-* AHM 分析
+
+** AHM 分析
 :PROPERTIES:
 :ID:       11EBDC24-F747-4DFF-B61D-26FD6502032A
 :END:
-空中巡航阶段隔离活门关闭，左 PACK 关闭，右 PACK 进入高流量模式，但是驾驶舱没有对应的左 PACK 跳开灯亮，那就证明不是超温跳开，是有个指令让左 PACK 关闭或者是有指令让左 PACK 打开但是左 PACK 没有真实打开。
+空中巡航阶段隔离活门关闭 ISOV（0），左 PACK 关闭，右 PACK 进入高流量模式，但是驾驶舱没有对应的左 PACK 跳开灯亮，那就证明不是超温跳开，
+是有个指令让左 PACK 关闭或者是有指令让左 PACK 打开但是左 PACK 没有真实打开。
 
 [[file:./static/737-800 PACK 非指令关闭/2022-01-12_11-52-05_screenshot.jpg]]
 
-* Airfase Alert 分析
+** Airfase Alert 分析
 :PROPERTIES:
 :ID:       DCA18217-8045-4C16-834B-84CE1E6556D6
 :END:
@@ -46,14 +51,133 @@ B57XX 飞机 AHM 监控 =ECS Pack Configuration：Pack1 Off and Pack2 Highin Cru
 也就是上游 FCSOV 没有打开或者管路漏气。
 T471 空调组件温度与 T481 冲压进气温度很接近，证明 ACM 没有转动、没有做功，可能原因是 ACM 本身卡阻或管路漏气。
 
-* 译码分析
+** 译码分析
 :PROPERTIES:
 :ID:       801CE335-5CCE-4D6E-8151-7710E2B4F4CA
 :END:
 左 PACK 全程没开过。
+
+[[file:./static/737-800 PACK 非指令关闭/2022-07-13_03-22-42_2022-01-12_13-56-05_screenshot.jpg]]
 
 [[file:./static/737-800 PACK 非指令关闭/2022-01-12_13-56-05_screenshot.jpg]]
 
 [[file:./static/737-800 PACK 非指令关闭/2022-01-12_13-56-15_screenshot.jpg]]
 
 隔离活门 AUTO 位：关闭逻辑是左右 PACK 都在 AUTO/HIGH，左右发动机引气电门在 ON。自动打开逻辑是以上 4 个电门中任一一个到 OFF 位。
+
+
+* 案例二
+:PROPERTIES:
+:ID:       D3377BB2-63DF-4A9E-BA63-A1F2F6FC38C8
+:END:
+2019.4.2 B51XX（737-800）出港时反映左空调组件放 AUTO 位但 FMC 上显示高流量 ECS PACK H/L：HI，左、右起飞推力不一致。
+确认左、右 PACK 工作正常后按 MEL21-02-01 放行。后续排故测量了线路，更换了左 FCSOV，交换空调面板、交换左右 ACAU 无效。
+最终在定检中发现 ACAU 支架背部有个接地点销钉松动，重新修复后测试正常，排故期间走了不少弯路，有必要总结下，为以后发生类似故障做参考。
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-ca2a626e5f7427aaf93677a9adb03b55.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+** 故障现象
+:PROPERTIES:
+:ID:       EA20F8F4-17DC-4884-BDBB-E4EF453F1780
+:END:
+2019.4.2 B51XX（737-800）出港时反映左空调组件放 AUTO 位但 FMC 上显示高流量 ECS PACK H/L：HI，左、右起飞推力不一致。
+
+** 译码分析
+:PROPERTIES:
+:ID:       50A7D422-8E7F-4C0D-8FDF-48C3A2F1ADE7
+:END:
+左 PACK SWITCH 打开后，左 PACK 全程在高流量模式 ECS PACK H/L：HI。但是左、右 N1 和左、右油门角度几乎相同无差异。*                                                                                                                                                                                       
+ 
+[[file:./static/737-800 PACK 非指令关闭/1641978976-e11e6e3c186473787fed35b0ae07171d.jpg]]                                                                                                                                                                                                      
+[[file:./static/737-800 PACK 非指令关闭/1641978976-8ca3dcf5010081f636b0d13b91121b9e.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+** FCSOV 进入高流量模式原理简析                                                                                                                                                                                                                                                            
+:PROPERTIES:
+:ID:       F1432ABA-01E4-4107-ADA6-979749F4CCD1
+:END:
+*** SDS 机械分析：                                                                                                                                                                                                                                                                        
+:PROPERTIES:
+:ID:       8F47E0AE-162A-4224-B7AA-27C49137815D
+:END:
+[[file:./static/737-800 PACK 非指令关闭/1641978976-e3cc1d7ef2364f76072535aa96facd48.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+[[file:./static/737-800 PACK 非指令关闭/1641978976-9096ae7aca583c8cadfcf84bacf20377.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+[[file:./static/737-800 PACK 非指令关闭/1641978976-d883bcc3ed998cd5e4f0b45016a80565.jpg]]                                                                                                                                                                                                      
+
+[[id:BE8BC88E-DF27-4110-8D05-E2AE8F11420B][流量模式转换]]
+
+[[id:1CFA64FE-FC95-41D3-9B0A-D2D27EA626F1][APU 高流量]]
+
+[[id:22071E12-DA0C-4A3E-BF04-17DB37DCF4C0][自动低流量]]
+
+[[id:887748FB-CCF8-4042-B36A-A7550FB7A6FA][自动高流量]]
+
+*** SDS 电气分析：                                                                                                                                                                                                                                                                         
+:PROPERTIES:
+:ID:       066DAAEA-FC16-463B-A192-0719E1B622AA
+:END:
+[[file:./static/737-800 PACK 非指令关闭/1641978976-2a2a224a62fca7f2abb159a773d55f65.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+飞机在地面 PACK 非指令进入高流量的 3 种可能性： 
+- L ACAU 至 FCSOV B 线圈的绿色线路磨损接地，电流到不到 B 线圈，进入高流量。                                                                                                                                                                                                                 
+- L ACAU 到 P5 面板线路异常接地，造成 K18 吸和，绿线到不了 B 线圈，B 线圈无电， 进入高流量。                                                                                                                                                                                              
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-2c1bdd3d5afbd0d500725c1747d74fd0.jpg]]                                                                                                                                                                                                      
+
+- 第 3 种面板出来的地方绿色的圈搭住，给了绿线 28VDC 电，进入 APU 高流量模式。                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                             
+** 排故过程                                                                                                                                                                                                                                                                                
+:PROPERTIES:
+:ID:       91EF8904-09F4-4B22-9438-CE8C95D88013
+:END:
+- 更换左 FCSOV，交换空调面板、交换左右 ACAU 无效。
+- 测量 ACAU 至空调面板线路正常。
+  测量 ACAU--空调面板--FCSOV D962 插头之间线路正常，且有 28C DC 电。证明 FCSOV 实际进入低流量模式。但是 FMC 却显示是高流量模式，怀疑指示故障。                                                                                                             
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-b1b0bf68216909995178a63310463d8f.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+- 该机是老构型的只有单 FMC，怀疑 FMC 内部故障，始终给出一个 L HIGH 信号，但是更换 FMC 后故障依旧。左 PACK 还是始终显示高流量。                                                                                                                                                           
+- 进一步测量发现 FMC 后部 A14 始终有高电位，说明 ACAU 中 K14 PACK AUTO RELAY 没有提供可靠接地信号。                                                                                                                                                                                       
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-b7f48bdfbea6d943a7c43c34ceaebe10.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+- 测量 ACAU 后部 D458A 45 钉无接地，定检拆下 E5-2 架后发现导线 0312-20 插钉在 GD4101 中脱出。恢复插钉都故障排除。                                                                                                                                                                             
+[[file:./static/737-800 PACK 非指令关闭/1641978976-84cb63f9145234ec51409a090ee55e41.jpg]]                                                                                                                                                                                                      
+[[file:./static/737-800 PACK 非指令关闭/1641978976-88b7d30db6e5e0eace21e90ae7e6689b.jpg]]                                                                                                                                                                                                      
+[[file:./static/737-800 PACK 非指令关闭/1641978976-0126f55e95295a97de9253a7eaf5f3ef.jpg]]                                                                                                                                                                                                      
+[[file:./static/737-800 PACK 非指令关闭/1641978976-6877288e9c6e9b062acca150e4e29895.jpg]]                                                                                                                                                                                                      
+[[file:./static/737-800 PACK 非指令关闭/1641978976-372d82276be09124c86388cb6ca7f439.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+** PACK 非指令关闭对飞机性能的影响                                                                                                                                                                                                                                                            
+:PROPERTIES:
+:ID:       005F25AE-0166-478B-B39A-21D585324B95
+:END:
+- L K14 异常不接地，将影响左、右再循环风扇和 FMC 的离散信号。                                                                                                                                                                                                                                 
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-4c34183069b8c31e7b1843f6cc2d31e0.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+- FMC 的离散信号异常可能导致：飞机做计划时会左右发动机推力产生影响，N1，TLA 出现偏差，如偏差过大可能导致 AT 脱开。                                                                                                                                                                        
+- 左再循环风扇：只要左、右 PACK 都在 AUTO 低流量模式，走绿线，左再循环风扇始终工作。
+  K14 L PACK AUTO RELAY 异常不接地后，飞机在地面左再循环风扇工作（右 PACK 低流量模式的前提），飞机在空中左再循环风扇不工作，即空中会增加空调的需求量。                                                                                                       
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-2bf62ec3dbc21379872f7e41aeb325b5.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+- 右再循环风扇：正常走蓝线与 L PACK K14 继电器无关。即 R 再循环风扇可以正常工作， 不会增加对空调的需求量 。
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-388e41eb07a953981232508f67da62ab.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+- L PACK AUTO RELAY K14 异常不接地，不会对隔离活门造成影响。隔离活门 AUTO 位：关闭逻辑是左右 PACK 都在 AUTO/HIGH，左右发动机引气电门在 ON。
+自动打开逻辑是以上 4 个电门中任一一个到 OFF 位。                                                                                                                 
+
+[[file:./static/737-800 PACK 非指令关闭/1641978976-6dc86070adc9cb69185bae01fa80e7f3.jpg]]                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                             
+** 总结                                                                                                                                                                                                                                                                                    
+碰到类似 FCSOV 非指令做动故障，由于 PZTC（或 PFTC）做不出代码且 FIM 无具体排故章节。                                                                                                                                                                                                           
+                                                                                                                                                                                                                                                                                             
+首先可以通过简单的交换面板和 ACAU 来判断排故。                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                                             
+其次如故障依旧测量 D962 上有无 28CDV 电，如正常证明 FCSOV 中的 B 线圈激励可以工作在低流量模式，再次测量 ACAU 上 D458A PIN45 接地情况。最后更换 FCSOV。                                                                                                                                          
+                                                                                                                                                                                                                                                                                             
+通过本次排故也证明了 FMC 是通过 28V DC 电流来采集 FCSOV 的开关信号和流量信号，并非 FCSOV 活门实际的工作情况。D
+FDAU 再采集 FMC 的信号给译码。FCSOV 实际是否工作需要通过在空调舱下面实际感 受。                                                                                                                                                                                                                                                                                        

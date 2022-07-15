@@ -131,6 +131,12 @@
    :host github
    :repo "kaushalmodi/tomelr"))
 
+(use-package org-transclusion
+  :straight
+  (:type git
+         :host github
+         :repo "nobiot/org-transclusion"))
+
 (setq org-confirm-babel-evaluate nil)
 (setq org-hugo-export-with-toc t)
 (setq org-hugo-base-dir
@@ -190,9 +196,10 @@
                                       (--sort (> (cdr it) (cdr other))))))
       (dolist (node-and-end nodes-in-file-sorted)
         (-when-let* (((node . end-position) node-and-end)
-                     (backlinks (--filter (->> (org-roam-backlink-source-node it)
-                                               (org-roam-node-file)
-                                               (s-contains? "private/") (not))
+                     (backlinks (--filter (and (> (org-roam-node-level node) 0)
+                                               (->> (org-roam-backlink-source-node it)
+                                                    (org-roam-node-file)
+                                                    (s-contains? "private/") (not)))
                                           (org-roam-backlinks-get node)))
                      (heading (format "\n\n%s Backlinks\n"
                                       (s-repeat (+ (org-roam-node-level node) 1) "*")))
@@ -238,6 +245,7 @@
           (insert (format "%s\n%s\n%s\n%s" heading details-tag-heading (string-join reference-and-footnote-string-list "\n")  details-tag-ending)))))))
 
 (add-hook 'org-export-before-processing-hook 'hurricane//collect-backlinks-string)
+(add-hook 'org-export-before-processing-hook 'org-transclusion-add-all)
 
 (defun hurricane//org-html-wrap-blocks-in-code (src backend info)
   "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"
@@ -255,7 +263,6 @@
   "Export all org files in directory DIR to markdown."
   (let ((files (directory-files-recursively dir "\\`[^.#].*\\.org\\'")))
     (dolist (file files)
-      (message "process %s" file)
       (with-current-buffer (find-file-noselect file)
         (let ((org-id-extra-files (find-lisp-find-files org-roam-directory "\.org$")))
           (org-hugo-export-wim-to-md t))))))

@@ -5,8 +5,7 @@
 #+DATE: <2020-07-18 Sat 18:04>
 #+TITLE: Graphviz example
 
-#+transclude: t
-[[id:7D3A7185-EE16-454E-8B5C-417D8E78FE17][Graphviz-节点]]
+#+transclude: [[id:7D3A7185-EE16-454E-8B5C-417D8E78FE17][Graphviz-节点]]
 
 * 为子图设置背景颜色
 #+LATEX: \resizebox{\textwidth}{!}{

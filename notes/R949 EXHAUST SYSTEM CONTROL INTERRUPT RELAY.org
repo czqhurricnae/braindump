@@ -4,13 +4,23 @@
 :END:
 #+LATEX_CLASS: my-article
 #+DATE: <2021-07-24 Sat 18:41>
-#+TITLE: R949 EXHAUST SYSTEM CONTROL INTERRUPT RELAY
+#+TITLE: R949 EXHAUST SYSTEM CONTROL INTERRUPT RELAY 排气系统控制中断继电器
 #+FILETAGS: :排气系统控制中断继电器:R949:
 
-#+transclude: [[file:R648 SMOKE CONTROL RELAY.org::*R648 激励的条件][R648 激励的条件]] 
-* R949 激励的条件
-#+transclude: [[file:R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY.org::*R648 激励 + 增压飞行，前货舱火警][R648 激励 + 增压飞行，前货舱火警]] 
-* R949 激励的后果
+#+transclude: [[id:498AE19B-7D09-473C-BF05-1B80936E1896][R648 SMOKE CONTROL RELAY 除烟控制继电器激励的条件]] 
+
+#+transclude: [[id:6CBF5394-84CE-441D-A20A-93ED0A25C6C3][R949 与 R645 的区别]]
+
+* R949 排气系统控制中断继电器激励的条件
+:PROPERTIES:
+:ID:       4241E1F6-297D-440D-9515-3415B5CF715B
+:END:
+#+transclude: [[id:323244E6-C684-40C5-A511-A0F2583A2EA5][R648 除烟控制继电器激励 + 增压飞行，前货舱火警]]
+
+* R949 排气系统控制中断继电器激励的后果
+:PROPERTIES:
+:ID:       C826CAC1-9B15-4D2A-9B35-77F397F02B38
+:END:
 - 切断正常和备用排气风扇供电回路。目的是防止前货舱发生火警时，排气扇将烟雾从货舱底部吹向驾驶舱和客舱。
 - 切断 D11418 插头 PIN11 线路送往 OFF 灯的地信号。
   [[file:./static/R949 EXHAUST SYSTEM CONTROL INTERRUPT RELAY/2021-07-24_20-09-48_S .jpeg]]
@@ -19,5 +29,3 @@
 - R650 overboard exhaust valve command relay 机外排气活门指令继电器激励，运动到 smoke 位，
   使得 OEV 进入 smoke 模式，活门打开向机外排烟。
 
-* R949 与 R646 的区别
-R949 不是延时继电器。因为在火警未消除之前排气风扇无需再工作，所以设计成非延时继电器。

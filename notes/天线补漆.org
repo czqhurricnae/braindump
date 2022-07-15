@@ -3,9 +3,13 @@
 :ID:       92866737-677D-4984-86C7-5B00592C77CD
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2021-03-30 Mar 09:59>
 #+TITLE: 天线补漆
+
+* 天线补漆
+:PROPERTIES:
+:ID:       E227C094-46EC-4064-B958-3C50ECD535B2
+:END:
 [[file:./static/天线补漆/366.jpeg]]
 
 [[file:./static/天线补漆/669.jpeg]]

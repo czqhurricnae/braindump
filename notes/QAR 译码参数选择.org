@@ -3,11 +3,13 @@
 :ID:       4C33ED20-6FBD-4687-9F22-DBFE5A76F417
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2021-01-30 Sat 15:47>
 #+TITLE: QAR 译码参数选择
 
 * 引气超温
+:PROPERTIES:
+:ID:       FBEE44A0-FB6A-4CE7-87C0-C17B2FBDDD4E
+:END:
 +--------------+------------+
 | 参数         | 说明       |
 +--------------+------------+
@@ -66,6 +68,9 @@
 +--------------+------------+
 
 * N1 目标值不一致
+:PROPERTIES:
+:ID:       EE0D49E5-8324-4C7C-A99C-6590D07C6143
+:END:
 
 | 参数           | 说明 |
 |----------------+------|
@@ -78,6 +83,9 @@
 | ECS_PACK_ON_R  |      |
 
 * PACK 非指令关闭
+:PROPERTIES:
+:ID:       29C3EDE5-7A44-45E2-AA8A-8635D6E60F39
+:END:
 [[id:801CE335-5CCE-4D6E-8151-7710E2B4F4CA][译码分析]]
 
-#+transclude: [[id:801CE335-5CCE-4D6E-8151-7710E2B4F4CA][译码分析]] :only-contents 
+[[id:83E621E6-2A20-4839-9179-6D2D851630A5][组件活门和组件电门相关参数]]

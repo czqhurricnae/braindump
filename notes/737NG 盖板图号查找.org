@@ -6,8 +6,6 @@
 #+DATE: <2021-04-19 Mon 09:57>
 #+TITLE: 737NG 盖板图号查找
 
-#+transclude: t
-[[file:737NG 盖板螺钉件号查找.org::#盖板图号查找][737NG 盖板螺钉件号查找]]
+#+transclude: [[file:737NG 盖板螺钉件号查找.org::#盖板图号查找][737NG 盖板螺钉件号查找]]
 
-#+transclude: t
-[[file:737NG 盖板紧固件件号确认.org::#盖板图号查找][737NG 盖板紧固件件号确认]]
+#+transclude: [[file:737NG 盖板紧固件件号确认.org::#盖板图号查找][737NG 盖板紧固件件号确认]]

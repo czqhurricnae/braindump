@@ -4,28 +4,46 @@
 :END:
 #+LATEX_CLASS: my-article
 #+DATE: <2021-01-08 Fri 14:56>
-#+TITLE: R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY
+#+TITLE: R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY 供气系统控制中断继电器
 #+FILETAGS: :供气系统控制中断继电器:R645:
 
-#+transclude: [[file:R648 SMOKE CONTROL RELAY.org::*R648 激励的条件][R648 激励的条件]]
+#+transclude: [[id:498AE19B-7D09-473C-BF05-1B80936E1896][R648 SMOKE CONTROL RELAY 除烟控制继电器激励的条件]]
+
 * R645 供气系统控制中断继电器激励的条件
-** R648 激励 + 增压飞行，前后货舱正常
+:PROPERTIES:
+:ID:       B03398BE-5F90-49D2-B027-06A02F62448D
+:END:
+** R648 除烟控制继电器激励 + 增压飞行，前后货舱正常
+:PROPERTIES:
+:ID:       649D7454-35EE-45C6-81D5-C2A2B7AD060B
+:END:
 
 [[file:./static/R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY/2021-07-24_19-28-42_SSM 21-43-21_withMarginNotes.jpeg]]
 
-** R648 激励 + 增压飞行，前货舱火警
+** R648 除烟控制继电器激励 + 增压飞行，前货舱火警
+:PROPERTIES:
+:ID:       323244E6-C684-40C5-A511-A0F2583A2EA5
+:END:
 [[file:./static/R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY/2021-07-24_19-29-33_SSM 21-43-21.jpeg]]
 
-此时 [[id:D7D835F3-9AB4-498C-90D1-F0814D1BA73B][R949 排气系统控制中断继电器]]也会被激励，正常和备用排气风扇也都不工作。
+此时[[id:D7D835F3-9AB4-498C-90D1-F0814D1BA73B][R949 排气系统控制中断继电器]]也会被激励，正常和备用排气风扇也都不工作。
 
-** R648 激励 + 非增压放行，前后货舱正常
+** R648 除烟控制继电器激励 + 非增压放行，前后货舱正常
+:PROPERTIES:
+:ID:       942A0819-F3E0-4671-BCCE-C6960A0F02F0
+:END:
 
 [[file:./static/R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY/2021-07-24_19-35-30_SSM 21-43-21_withMarginNotes.jpeg]]
 
+[[file:static/R648 SMOKE CONTROL RELAY/图片.png]] 
+
 此时是非增压放行（C1445 air conditioning overboard exhaust valve reconfig cont）跳开关被拔出，
-R644 recirc fan switch bypass relay 继电器在 bypass 位。
+R644 recirc fan switch bypass relay 继电器在 bypass 位。[[id:39F8B8CF-27A4-49FC-9811-63E7B896A2BC][右再循环风扇工作]]。
 
 * R645 供气系统控制中断继电器激励的后果
+:PROPERTIES:
+:ID:       5AC641FB-2E25-41B4-9286-C90AA9F3FD24
+:END:
 - 切断正常和备用供气风扇供电回路。
 - 切断 D11452 插头 PIN7 线路送往 OFF 灯的地信号。
   [[file:./static/R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY/2021-07-24_19-48-33_ES  5.jpeg]]
@@ -33,3 +51,9 @@ R644 recirc fan switch bypass relay 继电器在 bypass 位。
   [[file:./static/R645 SUPPLY SYSTEM CONTROL INTERRUPT RELAY/2021-07-24_19-48-42_ES  6.jpeg]]
 - R650 overboard exhaust valve command relay 机外排气活门指令继电器激励，运动到 smoke 位，
   使得 OEV 进入 smoke 模式，活门打开向机外排烟。
+
+* R949 与 R645 的区别
+:PROPERTIES:
+:ID:       6CBF5394-84CE-441D-A20A-93ED0A25C6C3
+:END:
+R949 不是延时继电器。因为在火警未消除之前排气风扇无需再工作，所以设计成非延时继电器。

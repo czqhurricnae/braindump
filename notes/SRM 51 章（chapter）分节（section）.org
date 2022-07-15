@@ -3,7 +3,6 @@
 :ID:       321702B1-C648-4FBD-B19B-5AD6FF400DE4
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-12-15 Tue 21:46>
 #+TITLE: SRM 51 章（chapter）分节（section）
 

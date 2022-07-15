@@ -7,7 +7,7 @@
 #+TITLE: 737NG 雷击损伤
 #+FILETAGS: :LSDR:
 
-#+BEGIN: org-ql :query "tags: LsDR"
+#+BEGIN: org-ql :query "tags: LSDR"
 | Heading                                  | Todo | P |
 |------------------------------------------+------+---|
 | [[LSDR][LSDR]]                                     |      |   |
@@ -190,6 +190,7 @@ SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D - (2)
 :END:
 
 [[file:./static/737NG 雷击损伤/2022-05-23_23-31-30_640.jpeg]]
+
 * 飞行航班限制
 :PROPERTIES:
 :ID:       DFC3E875-2018-4C88-A81B-A835D30F66B5
