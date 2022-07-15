@@ -269,6 +269,8 @@
     (dolist (file files)
       (with-current-buffer (find-file-noselect file)
         (let ((org-id-extra-files (find-lisp-find-files org-roam-directory "\.org$")))
+          (org-transclusion-mode)
+          (org-transclusion-add-all)
           (org-hugo-export-wim-to-md t))))))
 
 (defun hurricane/publish ()
