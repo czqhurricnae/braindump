@@ -246,6 +246,7 @@
 
 (add-hook 'org-export-before-processing-hook 'hurricane//collect-backlinks-string)
 (add-hook 'org-export-before-processing-hook 'org-transclusion-add-all)
+(add-hook 'org-export-before-processing-hook 'org-transclusion-inhibit-read-only)
 
 (defun hurricane//org-html-wrap-blocks-in-code (src backend info)
   "Wrap a source block in <pre><code class=\"lang\">.</code></pre>"

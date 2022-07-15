@@ -3,7 +3,6 @@
 :ID:       7D3A7185-EE16-454E-8B5C-417D8E78FE17
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-10-15 Thu 23:04>
 #+TITLE: Graphviz-节点
 

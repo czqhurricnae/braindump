@@ -7,6 +7,9 @@
 #+TITLE: Python 2-MRO_and_super
 
 * C3 算法的实现
+:PROPERTIES:
+:ID:       144A7BF3-72BF-4A37-965A-268005CEA914
+:END:
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session C3
 import itertools
@@ -87,6 +90,9 @@ print c3("C", ["B", "A", "object"], ["A", "object"], ["B", "A"])
 : [['C'], ['B', 'A', <type 'object'>], ['A', <type 'object'>], ['B', 'A']]
 
 * C3 算法与现实的冲突
+:PROPERTIES:
+:ID:       DE720E93-B706-48C3-B71D-693C0C74C1B3
+:END:
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
   class A(object):
@@ -148,6 +154,9 @@ print c3("C", ["B", "A", "object"], ["A", "object"], ["B", "A"])
 所以 Python 为了让开发者写出有意义的类也是尽了很大的努力。
 
 * C3 算法的改进
+:PROPERTIES:
+:ID:       EEC6A68E-3C23-4918-B03F-A33DA7B383D9
+:END:
 增加抛出异常功能，防止进入无限循环。
 
 #+BEGIN_SRC python :exports no-eval
@@ -223,6 +232,9 @@ print c3("C", ["B", "A", "object"], ["A", "object"], ["B", "A"])
 : TypeError: Inconsistent MRO
 
 * C3 算法在棱形继承中的表现
+:PROPERTIES:
+:ID:       E5943CA7-DA45-439A-A600-04609DDF0DA9
+:END:
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
 class BaseBase(object):
@@ -253,6 +265,9 @@ print MyClass.__mro__
 : (<class '__main__.MyClass'>, <class '__main__.Base1'>, <class '__main__.Base2'>, <class '__main__.BaseBase'>, <type 'object'>)
 
 * super()
+:PROPERTIES:
+:ID:       8E0B69B6-E3E3-4C39-9D62-ED8FEED533E8
+:END:
 
 #+BEGIN_SRC python :exports no-eval :session
   import logging
@@ -300,6 +315,9 @@ print MyClass.__mro__
 : WARNING:root:Setting to 'hello'
 
 * 理解__mro__和元类
+:PROPERTIES:
+:ID:       642145B3-03A0-4901-A9A5-F8390B13B7BF
+:END:
 以下为 Python 2 的输出结果:
 
 #+BEGIN_SRC python :results output
@@ -400,7 +418,13 @@ print MyClass.__mro__
 : (<class '__main__.C'>, <class '__main__.AAA'>, <class '__main__.AA'>, <class '__main__.A'>, <class '__main__.B'>, <class 'object'>)
 
 * super() 的建议
+:PROPERTIES:
+:ID:       792F4826-1779-4A79-8E62-67BAA4C840F7
+:END:
 ** The caller and callee need to have a matching argument signature
+:PROPERTIES:
+:ID:       687DEE4F-1B99-4BED-8C0E-0A1E5BE4D584
+:END:
 =super= 用法的一个问题是初始化中的参数传递，类在没有相同签名的情况下如何调用其基类的 =__init__= 方法。
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
@@ -503,6 +527,9 @@ print MyClass.__mro__
 每一层都剥下所需的关键字参数，到最后剩下一个空字典用来送给一个不需要任何参数的初始化函数， 比如 =object.__init__= 。
 
 ** Make sure the target method exists
+:PROPERTIES:
+:ID:       5320215A-743B-4317-B349-0DAC3654BB88
+:END:
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session example
   class Root(object):
@@ -644,6 +671,9 @@ TypeError: must be type, not classobj
 2. 在 Python 3 没有上述注意点。
 
 ** Every occurrence of the method needs to user SUPER()
+:PROPERTIES:
+:ID:       65FCE728-B9C4-41EA-96A2-5CAC3AA8F499
+:END:
 这是因为混用 =super= 和传统调用可能导致异常发生。
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
@@ -720,6 +750,9 @@ print([_.__name__ for _ in A.__mro__])
 : (random.Random, _random.Random, object)
 
 * 如何解决第三方类不兼容问题
+:PROPERTIES:
+:ID:       FBF88178-189F-403D-871D-F80B41FBD581
+:END:
 有时会遇到需要使用第三方类来继承，但是第三方类方法或者不支持 =super()= 或者没有继承自类 =Root= （就像前面的例子）。
 这时的解决方法是使用适配器类。
 
@@ -792,6 +825,9 @@ print [_.__name__ for _ in MovableColoredShape.__mro__]
 : ['MovableColoredShape', 'ColoredShape', 'Shape', 'MoveableAdapter', 'Root', 'object']
 
 * Just for fun
+:PROPERTIES:
+:ID:       4D1E1EC0-F306-480A-AEE9-4222438D49CA
+:END:
 
 #+BEGIN_SRC ipython :preamble # -*- coding: utf-8 -*- :results output :exports no-eval :session
   from collections import Counter, OrderedDict
