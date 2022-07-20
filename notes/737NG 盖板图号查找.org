@@ -9,3 +9,11 @@
 #+transclude: [[id:9285ADEC-F265-4C42-A0A4-DA4CB0DDAB09][通过盖板号得到盖板图号，搜索 IPC 得到螺钉号]]
 
 #+transclude: [[id:9E7C2865-7626-471F-807E-84395BF610C9][通过盖板组件件号，搜索对应的波音图纸]]
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(with-current-buffer (find-file-noselect (aref (org-roam-node-from-id "9E7C2865-7626-471F-807E-84395BF610C9") 1))
+  (goto-char (aref (org-roam-node-from-id "9E7C2865-7626-471F-807E-84395BF610C9") 8))
+  (point-marker))
+#+END_SRC
+
+

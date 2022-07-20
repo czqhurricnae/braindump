@@ -45,10 +45,10 @@
 
 上述方法是搜索到的 511BT 与 611BT 两个盖板号为例，假设在 IPC 中搜索 511BT 或 611BT，没有结果。则可以通过下述方法：
 
-先到 AMM06 章中找到 AMM 06-44-00 WINGS ([[id:E6394480-6976-426E-87E4-500CD8B14D52][MAJOR ZONES]] 500 AND 600) ACCESS DOORS AND PANELS，点开后找到 AMM 06-44-00-800-801:Finding an Access Door or Panel on the Wings。<<盖板图号查找>>
+先到 AMM06 章中找到 AMM 06-44-00 WINGS ([[id:E6394480-6976-426E-87E4-500CD8B14D52][MAJOR ZONES]] 500 AND 600) ACCESS DOORS AND PANELS，点开后找到 AMM 06-44-00-800-801:Finding an Access Door or Panel on the Wings。
 [[file:./static/737NG 盖板螺钉件号查找/3814.jpeg]]
 
-在此章节没有给出 511BT 的[[file:737NG 盖板紧固件件号确认.org::盖板图号查找][盖板图号]]，但是给出了 611BT 的盖板图号 116A2811，两个互为对称的关系。
+在此章节没有给出 511BT 的盖板图号，但是给出了 611BT 的盖板图号 116A2811，两个互为对称的关系。
 
 [[file:./static/737NG 盖板螺钉件号查找/4195.jpeg]]
 

@@ -3,7 +3,6 @@
 :ID:       9CFF70F2-DA5B-4FF1-95E2-7A4085603283
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-10-17 Sat 19:06>
 #+TITLE: Python 面向切面编程
 

@@ -5,16 +5,13 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-16 Wed 19:11>
 #+TITLE: 厦航手册体系
-
 #+ROAM_KEY:
 
-
-[[file:./static/厦航手册体系/1.png]] 
+[[file:./static/厦航手册体系/1.png]]
 
 * 负责维修系统各类人员的资质评估和授权管理工作
 [[id:8D77441A-BD5B-4E52-9BBD-549A173029AA][9713-9 人员资格评估课程大纲]]
-#+transclude: [[id:8D77441A-BD5B-4E52-9BBD-549A173029AA][9713-9 人员资格评估课程大纲]] :level 2 
+#+transclude: [[id:8D77441A-BD5B-4E52-9BBD-549A173029AA][9713-9 人员资格评估课程大纲]] :level 2
 
 * 负责确保适航指令的正确实施和对执行情况的监控
 * 负责建立保留故障清单并进行监控
-

@@ -1,0 +1,79 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/飞行扰流板系统/")); -*-
+:PROPERTIES:
+:ID:       BC6817EA-0527-4554-940A-066746A23887
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-16 Sat 18:38>
+#+TITLE: 飞行扰流板系统
+#+ROAM_KEY:
+
+
+[[file:static/飞行扰流板系统/2022-07-16_18-39-30_screenshot.jpg]]
+
+* 扰流板控制扇形盘和轴 Spoiler Control Quadrant
+
+[[file:static/飞行扰流板系统/2022-07-16_19-04-08_screenshot.jpg]]
+
+[[file:static/飞行扰流板系统/2022-07-16_19-04-24_screenshot.jpg]]
+
+[[file:static/飞行扰流板系统/2022-07-16_19-23-56_screenshot.jpg]]
+
+* 减速板输入扇形盘 Speedbrake Input Quadrant
+一个 NO BACK 刹车与减速板输入扇形盘相连。如果减速板手柄纲索断裂，这个刹车将阻止减速
+板输入扇形盘运动。
+[[file:static/飞行扰流板系统/2022-07-16_19-46-51_screenshot.jpg]]
+
+[[file:static/飞行扰流板系统/2022-07-16_19-23-07_screenshot.jpg]]
+[[file:static/飞行扰流板系统/2022-07-16_19-17-04_screenshot.jpg]]
+
+* 比例变换器
+:PROPERTIES:
+:ID:       B5A671BF-5D1A-4380-A4D8-6F091CD72ECF
+:END:
+输入 Aileron Input → 
+
+比例变换器输入杆 Ratio changer Input Rod 连接在扰流板操纵扇形盘 Spoiler Control Quadrant 的传动轴上。
+
+输入杆的运动经过比例变换器内部的传递，转换成副翼凸轮花键轴 Aileron Cam Input Splined Shaft 的转动，
+再传给混频器内部的副翼凸轮 Aileron Cam，混频器最后将指令通过 2 侧
+的扰流板输出花键 Spoiler Output Splined Shaft 轴转动 
+
+→ 输出 L(R) Side Spoiler Output，
+
+带动 2 侧机翼扰流板钢索运动。
+
+- 如果副翼到混频器输入断开，定中凸轮将移动副翼凸轮 Aileron Cam 到中立位，飞行扰流板运动到放下位。
+
+* 扰流板混频器
+:PROPERTIES:
+:ID:       ABD6002C-DCC1-4D2B-883B-665E395889ED
+:END:
+输入：
+- Speedbrake Input：减速板手柄 → Speedbrake Input Quadrant。
+- Aileron Input：驾驶盘（参见比例变换器）。
+输出：
+- L(R) Side Spoiler Output
+- Ground  Spoiler Output 地面扰流板控制活门接收来自扰流板混频器的输入，并向地面扰流板内锁活门传送 A 液压系统的压力。
+
+[[file:static/飞行扰流板系统/2022-07-16_18-42-35_screenshot.jpg]]
+
+[[file:static/飞行扰流板系统/2022-07-16_19-01-50_screenshot.jpg]]
+
+
+[[file:static/飞行扰流板系统/2022-07-16_19-02-33_screenshot.jpg]]
+
+[[file:static/飞行扰流板系统/2022-07-16_18-46-50_screenshot.jpg]]
+
+* 扰流板作动器扇形盘 Spoiler Actuator Quadrant
+
+[[file:static/飞行扰流板系统/2022-07-16_19-59-15_screenshot.jpg]]
+
+* 飞行扰流板作动器
+
+[[file:static/飞行扰流板系统/2022-07-16_20-00-33_screenshot.jpg]]
+
+* 飞行扰流板关断活门
+
+[[file:static/飞行扰流板系统/2022-07-16_20-02-21_screenshot.jpg]]
+
+[[file:static/飞行扰流板系统/2022-07-16_20-02-33_screenshot.jpg]]

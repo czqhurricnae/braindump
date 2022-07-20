@@ -1,14 +1,12 @@
 # -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/航空维修系统危险源识别和风险分析方法/")); -*-
-#+filetags: :模糊综合:
 :PROPERTIES:
 :ID:       51261E3B-2B7D-4C25-9D4A-82ED05B5B81F
 :END:
 #+LATEX_CLASS: my-article
 #+DATE: <2022-01-15 Sat 02:39>
 #+TITLE: 航空维修系统危险源识别和风险分析方法
-
 #+ROAM_KEY:
-
+#+FILETAGS: :模糊综合:
 
 * 引言
 :PROPERTIES:
@@ -117,7 +115,6 @@ FAHP 通过元素两两比较构造模糊一致判断矩阵, 由模糊一致矩�
 鉴于风险评估中以最严重情况作为评判准则，因此，每个危险源取多个风险值中的最大值。即
 
 \begin{equation}
-\label{1} 
 F i=\max _{j \in[1, t]}\left(F_{i j}\right),(\forall i \in[1, n]) 
 \end{equation}
 
@@ -140,7 +137,6 @@ C_{k l}=\cos \theta_{k l}=\frac{F^{(k)} F^{(l)}}{\left\|F^{(k)}\right\| \cdot\le
 $$
 
 \begin{equation}
-\label{2}
 \forall k, l \in[1, X]
 \end{equation}
 
@@ -162,14 +158,12 @@ $$
 因此可以用 $$\alpha_{k}$$ 表示第 k 位专家权重，那么：
 
 \begin{equation}
-\label{3}
 \alpha_{k}=\frac{C_{k}}{\sum_{i=1}^{X} C_{i}} \quad(\forall k \in[1, X])
 \end{equation}
 
 将各专家权重结合每个专家所作出的风险向量, 利用下式可计算出集结各专家评判给出的每个危险源导致潜在不良后果的风险:
 
 \begin{equation}
-\label{4}
 F_{i}=\sum_{k=1}^{X} \alpha_{k} F_{i}^{(k)}
 \end{equation}
 

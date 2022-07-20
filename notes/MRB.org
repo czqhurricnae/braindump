@@ -5,8 +5,6 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-17 Thu 22:15>
 #+TITLE: MRB
-
 #+ROAM_KEY:
 
-
-维修大纲
+MRB（Maintenance Review Board）维修审查委员会。

@@ -5,9 +5,7 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-17 Thu 14:15>
 #+TITLE: 航空安全信息分类
-
 #+ROAM_KEY: [[x-devonthink-item:B6FBAC7E-8AEC-4B4C-89E0-7A16F1E028EE][国航股份工程技术分学院航空安全风险管理工作标准规范]]
-
 
 * 物理分类
 :PROPERTIES:

@@ -1,0 +1,10 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/AO/")); -*-
+:PROPERTIES:
+:ID:       C55BC622-86DB-4CA6-B8AF-ED7581853E42
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-16 Sat 06:45>
+#+TITLE: AO
+#+ROAM_KEY:
+
+审计组织。

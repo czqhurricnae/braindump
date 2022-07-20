@@ -5,8 +5,6 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-17 Thu 22:12>
 #+TITLE: 0701-1 手册体系说明
-
 #+ROAM_KEY:
-
 
 [[x-devonthink-item:28D43456-5AC6-4DAE-B3A3-5FE792E99E77][MF/0701-1-手册体系说明]]

@@ -1,0 +1,9 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/IAR/")); -*-
+:PROPERTIES:
+:ID:       4EFA390C-98BD-46E4-8D59-E48BEEA9DCB3
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-16 Sat 21:01>
+#+TITLE: IAR
+#+ROAM_KEY:
+IOSA 审计报告。

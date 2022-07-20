@@ -39,8 +39,7 @@
 
 [[file:./static/737NG 盖板紧固件件号确认/6148.jpeg]]
 
-2）打开 SRM 手册，找到关于大翼后缘襟翼固定盖板章节 SRM 57-51-01/0101，打开章节 SRM 57-51-01-0I-1 IDENTIFICATION 1 - Wing Fixed Trailing Edge Skin Panel，确认我们要找的盖板为 ITEM 4 的盖板，同时确认该盖板的件号前缀（[[file:737NG 盖板螺钉件号查找.org::盖板图号查找][盖板图号]]）为 115A2523。
-<<盖板图号查找>>
+2）打开 SRM 手册，找到关于大翼后缘襟翼固定盖板章节 SRM 57-51-01/0101，打开章节 SRM 57-51-01-0I-1 IDENTIFICATION 1 - Wing Fixed Trailing Edge Skin Panel，确认我们要找的盖板为 ITEM 4 的盖板，同时确认该盖板的件号前缀（盖板图号）为 115A2523。
 
 [[file:./static/737NG 盖板紧固件件号确认/6915.jpeg]]
 

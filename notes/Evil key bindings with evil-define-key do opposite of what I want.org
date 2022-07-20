@@ -1,0 +1,51 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Evil key bindings with evil-define-key do opposite of what I want/")); -*-
+:PROPERTIES:
+:ID:       DA7BF289-06D8-4AA6-8C2F-1C24AA79F00D
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-16 Sat 06:13>
+#+TITLE: Evil key bindings with evil-define-key do opposite of what I want
+#+ROAM_KEY:
+
+Below is the entirety of my Evil key bindings in init.el:
+
+#+BEGIN_SRC emacslisp
+(evil-define-key 'normal 'global (kbd "SPC") (make-sparse-keymap))
+(evil-define-key 'normal 'global (kbd "SPC TAB") #'ivy-switch-buffer)
+(evil-define-key 'normal 'Info-mode-map (kbd "SPC") (make-sparse-keymap))
+(evil-define-key 'normal 'Info-mode-map (kbd "SPC SPC") #'Info-scroll-up)
+#+END_SRC
+
+The end result of this is as follows:
+
+-  In Emacs-Lisp mode, SPC TAB is bound to ivy-switch-buffer; this is expected.
+-  In Emacs-Lisp mode, SPC SPC is bound to Info-scroll-up; this is unexpected.
+-  In Info mode, SPC TAB is undefined; this is unexpected.
+-  In Info mode, SPC SPC is bound to Info-scroll-up; this is expected.
+
+It seems to me (in one sentence) that the global config is not global and the local config is global. 
+This is the opposite of what I would expect.
+
+The Info-scroll-up binding is defined on Info-mode-map and has effect even when Info mode is not active. Why?
+
+The ivy-switch-buffer binding is defined globally, but does not work when I am in Info mode. 
+Not only does it not work, but it is undefined.
+It's not that SPC TAB has been replaced by another command, SPC TAB is undefined (and SPC is a prefix key). Why?
+
+I can't form any mental model of why Evil / Emacs is behaving this way. Why is it behaving this way?
+
+* Answer 
+This works as expected:
+
+#+BEGIN_SRC emacslisp
+(evil-define-key 'normal 'global (kbd "SPC") (make-sparse-keymap))
+(evil-define-key 'normal 'global (kbd "SPC TAB") #'ivy-switch-buffer)
+(evil-define-key 'normal Info-mode-map (kbd "SPC") (make-sparse-keymap))
+(evil-define-key 'normal Info-mode-map (kbd "SPC SPC") #'Info-scroll-up)
+#+END_SRC
+
+Notice that Info-mode-map is not quoted like it was in the original question.
+
+The evil-define-key docs mention you can pass 'global' or 'local as the second argument. 
+I'm not sure what it does if you give it some other quoted value like I was doing, but now that I'm calling
+evil-define-key correctly it works the way I would expect.

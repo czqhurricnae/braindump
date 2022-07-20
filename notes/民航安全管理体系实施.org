@@ -1,0 +1,24 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/民航安全管理体系实施/")); -*-
+:PROPERTIES:
+:ID:       1F10D1ED-9B01-4BE6-93F7-C9A4EC8A543E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-18 Mon 23:32>
+#+TITLE: 民航安全管理体系实施
+#+ROAM_KEY: /Users/c/Library/Mobile Documents/iCloud~QReader~MarginStudy/Documents/737/民航安全管理体系实施.pdf
+#+filetags: :书籍:
+
+第一章  系统和任务分析	1
+第二章  信息共享的观点	43
+第三章  高层安全管理支持	72
+第四章  美国海岸警卫队的安全文化建设	88
+第五章  SMS 中的安全文化	110
+第六章  SMS 的实施	132
+第七章  SMS 培训：总体概述	219
+第八章  量子安全指标：一种测量安全的实用方法	231
+第九章  针对小型服务提供商或安全新成员的审计项目	240
+第十章  从 32 份到 320 份：非惩罚性报告制度的完善之路	253
+第十一章  风险管理的实际运用	267
+第十二章  将 SMS 整合进入应急计划和突发事件指挥	290
+第十三章  安全促进	319
+第十四章  飞机维修中的 SMS	326

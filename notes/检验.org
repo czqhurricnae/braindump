@@ -1,4 +1,4 @@
-# -*- eval: (setq org-download-image-dir (concat default-directory "./static/检验/")); -*-
+# -*- eval: (setq org-download-image-dir (concat default-directory "./static/检验/"));-*-
 :PROPERTIES:
 :ID:       B83D2690-EC6E-4C29-9FEF-228D5822F61C
 :END:
@@ -30,7 +30,7 @@
 ** 对保留故障的排故过程进行质量监督
 
 ** 在保留故障单上签署、录入系统
-故障项目排除后，在保留故障单上撤销记录栏签署； 质检处授权检验人员及时将撤销记录输入系统。
+故障项目排除后，在保留故障单上撤销记录栏签署；质检处授权检验人员及时将撤销记录输入系统。
 
 ** 保管已撤销的保留故障单
 质检处保管已搬销的保留故障单。

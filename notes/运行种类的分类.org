@@ -1,0 +1,20 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/运行种类的分类/")); -*-
+:PROPERTIES:
+:ID:       0863A94A-B078-439F-9347-232BBCEE71DA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-18 一 16:31>
+#+TITLE: 运行种类的分类
+#+ROAM_KEY:
+
+* CCAR-121
+适航标准：
+- CCAR-23 正常类飞机适航规定
+- CCAR-25 运输类飞机适航标准
+
+* CCAR-135 小型航空器商业运输运营人运行合格审定规则
+适航规定：
+- CCAR-23 正常类飞机适航规定
+- CCAR-25 运输类飞机适航标准
+- 正常类旋翼航空器适航规定
+- 运输类旋翼航空器适航规定

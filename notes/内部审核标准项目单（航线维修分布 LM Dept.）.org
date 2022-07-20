@@ -1,0 +1,18 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/内部审核标准项目单（航线维修分布 LM Dept.）/")); -*-
+:PROPERTIES:
+:ID:       88930480-5F7E-4502-BF28-DEA25E7D8D93
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-17 Sun 12:54>
+#+TITLE: 内部审核标准项目单（航线维修分布 LM Dept.）
+#+ROAM_KEY:
+
+[[file:static/内部审核标准项目单（航线维修分布 LM Dept.）/2022-07-17_12-55-07_wKh2DmHoonaASufqAAEKcPwcIgM696.png]]
+[[file:static/内部审核标准项目单（航线维修分布 LM Dept.）/2022-07-18_21-49-55_2022-07-17_12-55-07_wKh2DmHoonaASufqAAEKcPwcIgM696.gif]]
+
+
+[[file:static/内部审核标准项目单（航线维修分布 LM Dept.）/2022-07-17_13-03-49_view_1_mefDYj@UQYqsYX2nBOqtxVj0fn@cmYTEZsJ7Xyva3rU=.png]]
+
+[[file:static/内部审核标准项目单（航线维修分布 LM Dept.）/2022-07-17_13-03-05_wKh2DmHoonaAK_h3AAD-C_Jo_Nk812.png]]
+
+[[file:static/内部审核标准项目单（航线维修分布 LM Dept.）/2022-07-17_13-04-08_wKh2EGHoonaAGKGJAABQTT4tp6s016.png]]

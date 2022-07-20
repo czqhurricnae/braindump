@@ -8,7 +8,7 @@
 #+ROAM_KEY:
 
 * 找到对应书籍的 ss 号
-首先要登录全国图书馆参考咨询联盟（[[https://link.zhihu.com/?target=http%3A//www.ucdrs.superlib.net/][http://www. ucdrs.superlib.net/ ]]），这里是查找书籍 ss 号的地点。
+首先要登录全国图书馆参考咨询联盟（[[https://link.zhihu.com/?target=http%3A//www.ucdrs.superlib.net/][http://www.ucdrs.superlib.net/ ]]），这里是查找书籍 ss 号的地点。
 我们将需要这个 ss 号来获取对应制作好的书签。
 
 [[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-766d4c95f690896fa61ba60ce0bd5aa9.jpg]]
@@ -67,8 +67,5 @@
 [[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-c32d26e90a716c0cf8dc7f23acdab494.jpg]]
 
 使用的工具下载地址见此：
-
-[[file:./static/中文 PDF 电子书自动添加书签指南/1642899600-4d540a038bb374b05b05b86f7820b2dc.jpg]]
-
 
 

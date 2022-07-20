@@ -1,0 +1,34 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/145 AC/")); -*-
+:PROPERTIES:
+:ID:       2ABD8DEE-E183-44B9-BF91-BDB62E4AD241
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-18 Mon 13:57>
+#+TITLE: 145 AC
+#+ROAM_KEY: http://www.aircraft.work/Regulations/FBS_Detail?ZZ=145
+
+| 文号               | 名称                                         | 办文单位   | 发文日期            | 有效性 | 针对阶段     |
+|--------------------+----------------------------------------------+------------+---------------------+--------+--------------|
+| AC-145-04          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8435.html][维修记录与报告表格填写指南（中英文）]]         | 飞行标准司 | 2003 年 02 月 09 日 | 有效   | 老(成长)     |
+| AC-145-07          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8431.html][航空器部件维修（中英文）]]                     | 飞行标准司 | 2003 年 02 月 09 日 | 有效   | 生(进入行业) |
+| AC-145-08          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8430.html][航空器及航空器部件维修技术文件（中英文）]]     | 飞行标准司 | 2003 年 02 月 09 日 | 有效   | 生(进入行业) |
+| AC-145-10          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8428.html][维修单位的自制工具设备（中英文）]]             | 飞行标准司 | 2003 年 02 月 09 日 | 有效   | 老(成长)     |
+| AC-145-1           | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8382.html][国内维修单位申请指南(中英文)]]                 | 飞行标准司 | 2003 年 02 月 10 日 | 有效   | 生(进入行业) |
+| AC-145-05          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8433.html][维修单位手册编写指南（中英文）]]               | 飞行标准司 | 2003 年 05 月 22 日 | 有效   | 生(进入行业) |
+| AC-145-09          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8429.html][国家标准和行业标准的采用（中英文）]]           | 飞行标准司 | 2003 年 07 月 02 日 | 有效   | 老(成长)     |
+| AC-145-12          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8426.html][航空器机体项目维修类别限制（中英文）]]         | 飞行标准司 | 2003 年 07 月 02 日 | 有效   | 生(进入行业) |
+| AC-145-11R1        | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8272.html][与香港民航处、澳门民航局的联合认可]]           | 飞行标准司 | 2004 年 05 月 17 日 | 有效   | 生(进入行业) |
+| AC-145-3R1         | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8436.html][民用航空器维修单位批准清单]]                   | 飞行标准司 | 2005 年 03 月 15 日 | 有效   | 生(进入行业) |
+| AC-145-2R1         | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8347.html][国外/地区维修单位申请指南（中英文）]]          | 飞行标准司 | 2011 年 07 月 12 日 | 有效   | 生(进入行业) |
+| AC-145-14          | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201511/t20151102_8344.html][维修工时管理]]                                 | 飞行标准司 | 2011 年 11 月 07 日 | 有效   | 老(成长)     |
+| AC-145-FS-2019-017 | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201907/t20190701_197272.html][航空器拆解]]                                   | 飞行标准司 | 2019 年 04 月 22 日 | 有效   | 死(退出)     |
+| AC-145-FS-016R2    | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201907/t20190719_197698.html][多地点维修单位和异地维修]]                     | 飞行标准司 | 2019 年 07 月 05 日 | 有效   | 老(成长)     |
+| AC-145-FS-006R3    | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/201912/t20191219_199895.html][航空器航线维修]]                               | 飞行标准司 | 2019 年 08 月 27 日 | 有效   | 病(纠正缺陷) |
+| AC-120-FS-058R3    | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202003/t20200324_201695.html][合格的航材]]                                   | 飞行标准司 | 2020 年 02 月 25 日 | 有效   | 生(进入行业) |
+| MD-MAT-FS-003      | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202007/t20200703_203407.html][向无证维修单位送修或者使用其维修件的特殊批准]] | 飞行标准司 | 2020 年 04 月 22 日 | 有效   | 病(纠正缺陷) |
+| MD-MAT-FS-002      | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202007/t20200703_203406.html][民航维修工作作风管理规范]]                     | 飞行标准司 | 2020 年 06 月 24 日 | 有效   | 病(纠正缺陷) |
+| MD-MAT-FS-004      | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202007/t20200703_203409.html][无损检测工作管理规范]]                         | 飞行标准司 | 2020 年 06 月 27 日 | 有效   | 老(成长)     |
+| AC-120-FS-060R2    | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202009/t20200918_204565.html][航空器适航与维修相关的信息报告和调查]]         | 飞行标准司 | 2020 年 08 月 06 日 | 有效   | 病(纠正缺陷) |
+| IB-FS-MAT-001R1    | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202009/t20200928_204659.html][民航局认可的航材分销商评估]]                   | 飞行标准司 | 2020 年 09 月 16 日 | 有效   | 生(进入行业) |
+| MD-MAT-FS-001      | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202106/t20210624_208130.html][民航维修行业失信行为管理办法]]                 | 飞行标准司 | 2021 年 06 月 17 日 | 有效   | 病(纠正缺陷) |
+| AC-145-FS-015R1    | [[http://www.caac.gov.cn/XXGK/XXGK/GFXWJ/202206/t20220622_213793.html][维修单位的质量安全管理体系]]                   | 飞行标准司 | 2022 年 06 月 07 日 | 有效   | 生(进入行业) |

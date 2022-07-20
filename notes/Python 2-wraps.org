@@ -585,3 +585,32 @@ partial 函数对函数参数进行部分求值。得到的新对象与一般的
   [[file:./static/Python 2-wraps/2020-10-19_16-37-11_screenshot.jpg]]
   当执行完 ~A(0)~ 返回函数 ~f~ ，而 ~f()~ 是闭包 ~lambda: lambda: 0+4+3+2+1+0~ 。
   所以最终打印出来的结果是 =10= 。
+
+* 实例
+- Note taken on [2022-07-19 Tue 23:49] \\
+  eaf - core - utils.py
+
+#+BEGIN_SRC python :results raw drawer values list :exports no-eval
+def interactive(insert_or_do = False, msg_emacs = None, new_name = None):
+    """
+    Defines an interactive command invoked from Emacs.
+    """
+    def wrap(f, insert_or_do = insert_or_do, msg_emacs = msg_emacs, new_name = new_name):
+        from functools import wraps
+
+        f.interactive = True
+        f.insert_or_do = insert_or_do
+        f.msg_emacs = msg_emacs
+        f.new_name = new_name
+
+        @wraps(f)
+        def wrapped_f(*args, **kwargs):
+            return f(*args, **kwargs)
+        return wrapped_f
+
+    # Support both @interactive and @interactive() as valid syntax.
+    if callable(insert_or_do):
+        return wrap(insert_or_do, insert_or_do = False, msg_emacs = None, new_name = None)
+    else:
+        return wrap
+#+END_SRC
