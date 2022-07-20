@@ -2,10 +2,10 @@
 :PROPERTIES:
 :ID:       4A2548A7-FE7D-4D53-A43C-E6CD1B059F42
 :END:
-#+LATEX_CLASS： my-article
-#+DATE： <2022-02-15 Tue 17：09>
-#+TITLE： IATA 运行安全审计及在我国的实践
-#+ROAM_KEY：
+#+LATEX_CLASS: my-article
+#+DATE: <2022-02-15 Tue 17:09>
+#+TITLE: IATA 运行安全审计及在我国的实践
+#+ROAM_KEY:
 
 IOSA 是在国际上被广泛承认和接受的一个评估系统，它为航空公司的运行管理与控制系统提供了一个标准化的审计项目，其目的在于提高全球性运行安全及减少各类运行审计数量。
 它建立在国际公认的标准之上，并通过严格的质量保证流程来保障其目标的成功实现。
