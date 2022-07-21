@@ -5,7 +5,7 @@
 #+DATE: <2020-07-18 Sat 18:04>
 #+TITLE: Graphviz example
 
-[[id:7D3A7185-EE16-454E-8B5C-417D8E78FE17][Graphviz-节点]] 
+[[id:7D3A7185-EE16-454E-8B5C-417D8E78FE17][Graphviz-节点]]
 
 * 为子图设置背景颜色
 #+LATEX: \resizebox{\textwidth}{!}{
@@ -93,7 +93,7 @@
 : c -> e [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
 : b -> d [label="" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
 
-#+BEGIN_SRC dot ./static/Graphviz example/cluster.png :var input=create-cluster-from-tables :exports results
+#+BEGIN_SRC dot ./static/Graphviz example/cluster.png :var input=create-cluster-from-tables :exports none
 digraph {
   $input
 }
@@ -192,7 +192,7 @@ digraph {
 : j -> t [label="Build" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
 : t -> p [label="Approved" style=bold color=black fontcolor="black" tailport=none lhead=none ltail=none ];
 
-#+BEGIN_SRC dot :file ./static/Graphviz example/pipeline.png :var input=create-pipeline-from-tables :exports results
+#+BEGIN_SRC dot :file ./static/Graphviz example/pipeline.png :var input=create-pipeline-from-tables :exports none
 digraph {
   $input
 }

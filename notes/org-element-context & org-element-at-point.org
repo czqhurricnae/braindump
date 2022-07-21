@@ -7,8 +7,21 @@
 #+TITLE: org-element-context & org-element-at-point
 
 #+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
-(org-element-property :type (org-element-content))
+[[id:62551D88-44EC-46C7-B796-0F43D5B58BC7][8201-8 必检项目管理程序]]
+
+(org-element-property :type (org-element-context))
+
+"id"
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+[[id:62551D88-44EC-46C7-B796-0F43D5B58BC7][8201-8 必检项目管理程序]]
+
+(org-element-property :type (org-element-context))
+
+"62551D88-44EC-46C7-B796-0F43D5B58BC7"
+#+END_SRC
+
 
 #+BEGIN_SRC comment :results raw drawer values list :exports no-eval
 [[id:62551D88-44EC-46C7-B796-0F43D5B58BC7][8201-8 必检项目管理程序]]
@@ -56,4 +69,3 @@ org-element-at-point:
      )
 )
 #+END_SRC
-

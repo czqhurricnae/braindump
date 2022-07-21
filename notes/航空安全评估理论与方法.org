@@ -1,0 +1,56 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/航空安全评估理论与方法/")); -*-
+:PROPERTIES:
+:ID:       B04718A3-3E4D-439F-9F75-68E097DFD21A
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-20 Wed 19:21>
+#+TITLE: 航空安全评估理论与方法
+#+ROAM_KEY:
+#+PDF_KEY: /Users/c/Library/Mobile Documents/iCloud~QReader~MarginStudy/Documents/737/航空安全评估理论与方法.pdf
+#+PAGE_KEY: (1)
+#+FILETAGS: :书籍:
+
+#+transclude: [[/Users/c/.spacemacs.d/convert_pdf2image.py]] :disable-auto :src python :rest ":python python3 :var input_file=(extract-value-from-keyword "PDF_KEY") pages=(extract-value-from-keyword "PAGE_KEY") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
+
+#+RESULTS:
+
+[[file:/Users/c/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/braindump/notes/static/航空安全评估理论与方法/航空安全评估理论与方法_page1.png]]
+
+* 第一章  绪论	1
+** 第一节  航空安全评估的目的与意义	2
+** 第二节  航空安全评估发展历程	5
+** 第三节  航空安全评估的依据和特点	9
+* 第二章  安全评估原理	11
+** 第一节  安全评估原理与原则	11
+** 第二节  安全评估内容与程序	18
+** 第三节  安全评估方法分类与选择	22
+** 第四节  安全评估规范	26
+* 第三章  航空安全统计分析方法	29
+** 第一节  统计图表分析方法	29
+** 第二节  1996—2005 年中国民航事故及事故征候的统计分析	41
+* 第四章  航空安全预测方法	49
+** 第一节  回归预测法	50
+** 第二节  平滑预测法	56
+** 第三节  灰色预测法	61
+** 第四节  马尔柯夫预测法	66
+** 第五节  神经网络预测法	71
+* 第五章  航空安全定性评估方法	76
+** 第一节  安全检查表法	76
+** 第二节  预先危险性分析法	85
+** 第三节  因果分析法	92
+** 第四节  故障模式影响及致命度分析法	96
+** 第五节  管理失效与风险树分析法	108
+** 第六节  原因-后果分析法	112
+* 第六章  航空安全定量评估方法	117
+** 第一节  事故树分析法	117
+** 第二节  层次分析评估法	140
+** 第三节  模糊数学综合评估法	152
+** 第四节  灰色关联评估法	160
+** 第五节  灰色综合评估法	163
+** 第六节  风险矩阵分析法	171
+** 第七节  神经网络评估法	176
+* 第七章  航空安全决策方法	182
+** 第一节  航空安全决策理论	182
+** 第二节  航空安全定性决策方法	187
+** 第三节  航空安全定量决策方法	191
+* 参考文献	203

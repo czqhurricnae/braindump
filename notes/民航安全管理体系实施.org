@@ -5,7 +5,9 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-07-18 Mon 23:32>
 #+TITLE: 民航安全管理体系实施
-#+ROAM_KEY: /Users/c/Library/Mobile Documents/iCloud~QReader~MarginStudy/Documents/737/民航安全管理体系实施.pdf
+#+ROAM_KEY:
+#+PDF_KEY: /Users/c/Library/Mobile Documents/iCloud~QReader~MarginStudy/Documents/737/民航安全管理体系实施.pdf
+#+PAGE_KEY:
 #+filetags: :书籍:
 
 第一章  系统和任务分析	1

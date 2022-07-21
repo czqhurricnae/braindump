@@ -3,7 +3,6 @@
 :ID:       B278F004-E009-4D5D-9A1D-20E336C90749
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-07-27 Mon 21:01>
 #+TITLE: How_to_reference_named_table_or_code_block_in_org_mode
 

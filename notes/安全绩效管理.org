@@ -5,9 +5,7 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-01-03 Mon 01:29>
 #+TITLE: 安全绩效管理
-
 #+ROAM_KEY:
-
 
 * 确定安全绩效指标[fn:3]
 :PROPERTIES:
@@ -94,8 +92,8 @@
 [[id:421D08EE-699C-46F8-8B4C-CCAA2037E5E2][监测外部因素指标 Indicators to monitor external factors]]
 
 #+transclude: [[id:D6D8B110-F52A-4168-A038-67DEF6A4A878][系统问题指标 Indicators for systems issue]] :level 3
-#+transclude: [[id:41C824DC-3C28-49CE-ADF1-6A89CCF315AC][业务问题指标 Indicators for operational issue]] :level 3 
-#+transclude: [[id:421D08EE-699C-46F8-8B4C-CCAA2037E5E2][监测外部因素指标 Indicators to monitor external factors]] :level 3 
+#+transclude: [[id:41C824DC-3C28-49CE-ADF1-6A89CCF315AC][业务问题指标 Indicators for operational issue]] :level 3
+#+transclude: [[id:421D08EE-699C-46F8-8B4C-CCAA2037E5E2][监测外部因素指标 Indicators to monitor external factors]] :level 3
 
 *** Launching an SPI
 :PROPERTIES:
@@ -162,7 +160,7 @@
 第十四条 民航生产经营单位应当根据安全绩效目标制定行动计划，并报所在辖区民航地区管理局备案。
 
 [[id:6C844DF8-A318-415C-868A-17C81667610C][设置预警规则的标准偏差原则]]
-#+transclude: [[id:6C844DF8-A318-415C-868A-17C81667610C][设置预警规则的标准偏差原则]] 
+#+transclude: [[id:6C844DF8-A318-415C-868A-17C81667610C][设置预警规则的标准偏差原则]]
 
 * 实施安全行动计划和绩效监控
 :PROPERTIES:
@@ -220,6 +218,7 @@ DEADLINE: <2022-01-22 Sat>
 :PROPERTIES:
 :ID:       3E08AEB0-62CB-445C-B628-849712E94B05
 :END:
+
 第十六条 民航生产经营单位应当在每年 7 月 15 日前及次年 1 月 15 日前分别将半年和全年安全绩效统计分析报告报所在辖区民航地区管理局备案。
 
 #+CAPTION: 设定安全绩效管理工作考核指标及周期
@@ -361,6 +360,7 @@ $$
 :END:
 
 阅读 [[x-devonthink-item://E42AB6D4-2A3B-42FD-A5C6-AE388D8FB1C8?page=23][顺丰航空安全绩效评价概述]]
+
 查找 厦航《[[x-devonthink-item://84659EEE-C87D-4F76-92E1-E584B5048FB2?page=0][绩效考核细则汇编]]》
 
 ** 公司安全状况评估方法差异性分析
@@ -375,7 +375,6 @@ SRI = ∑当月不同等级事件数量*该事件对应的风险指数/当月飞
 - 60-90 黄区
 ≤ 60 绿区（基准线下调 33%）
 
-
 * Footnotes
 
 [fn:4] Safety performance target: planned or intended objective for safety performance indicator(s) over a given period.
@@ -385,4 +384,4 @@ SRI = ∑当月不同等级事件数量*该事件对应的风险指数/当月飞
 
 [fn:2] 民航维修单位安全管理体系的构建与实施.pdf
 
-[fn:1] CCAR-398 民用航空安全管理规定 
+[fn:1] CCAR-398 民用航空安全管理规定
