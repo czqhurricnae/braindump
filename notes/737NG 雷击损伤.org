@@ -23,7 +23,7 @@
 :ID:       FEB6A99B-BBE0-41E9-A6A0-46C192EAB1EB
 :END:
 lighting strike damage rating
-  
+
 * 损伤检查
 :PROPERTIES:
 :ID:       B910EDC8-3760-48B8-8B7A-8AA00F273F3C
@@ -74,7 +74,7 @@ SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D - (2)
 
 对于机身蒙皮雷击损伤的修理通常是根据雷击点的直径、深度来选择修理方式的（打磨、钻孔拉铆、补片）。
 第一步先是去除结构损伤，不同站位的[[id:0DC7DAAA-632E-4AE1-896F-CFCB4AF32F55][蒙皮厚度]]不同，允许打磨的深度也不同。具体见下表：
-#+transclude: [[id:0DC7DAAA-632E-4AE1-896F-CFCB4AF32F55][蒙皮厚度]] 
+#+transclude: [[id:0DC7DAAA-632E-4AE1-896F-CFCB4AF32F55][蒙皮厚度]]
 
 #+CAPTION: blending limits for figure 104
 [[file:./static/737NG 雷击损伤/2021-07-03_01-17-15_screenshot.jpg]]
@@ -88,7 +88,8 @@ SRM 53-00-01-1A-1 - ALLOWABLE DAMAGE 1 - FUSELAGE SKIN - 4.D - (2)
 
 [[file:./static/737NG 雷击损伤/2021-07-06_11-13-55_screenshot.jpg]]
 
-此外，还需要注意的是：雷击点处产生的高温会改变蒙皮内部的金属结构。使用打磨或钻孔的形式在去除雷击后，还需完成 [[id:4667B48C-DB54-4183-A908-73AF93EAC522][HFEC ]]检查。并且在打磨裸露的金属表面要做必要的防腐防潮处理。
+此外，还需要注意的是：雷击点处产生的高温会改变蒙皮内部的金属结构。使用打磨或钻孔的形式在去除雷击后，
+还需完成 [[id:4667B48C-DB54-4183-A908-73AF93EAC522][HFEC ]]检查。并且在打磨裸露的金属表面要做必要的防腐防潮处理。
 
 由于 ADL 的标准较高，雷击损伤造成的航班延误、甚至停场，一直都是各航空公司头疼的问题。
 波音也在研究新的修理方案并考虑放宽修复期限，后续手册也即将改版。很快，我的这篇总结也不再适用了。

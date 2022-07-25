@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/RDR/")); -*-
+:PROPERTIES:
+:ID:       06FBEC4A-78E6-4E36-87B2-7FD4B9CF3F5B
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-21 Thu 21:15>
+#+TITLE: RDR 修理和偏差记录
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+Repair and Deviation Record

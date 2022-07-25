@@ -106,3 +106,4 @@ B. If a crack is found, do the steps that follow:
 
 #+CAPTION: 涡流检测裂纹
 [[file:./static/737NG 飞机结构的详细检查方法及实例/38913.jpeg]]
+

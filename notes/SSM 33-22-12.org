@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/SSM 33-22-12/")); -*-
+:PROPERTIES:
+:ID:       A5C0097B-BCA8-4B20-AD40-89DDC935F9FF
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 20:04>
+#+TITLE: SSM 33-22-12
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+

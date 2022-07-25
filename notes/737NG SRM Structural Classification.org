@@ -10,3 +10,6 @@
 * 51-00-04-0G-0 GENERAL - Structural Classification                      :fc:
 - This section gives the *主要结构元件 Principal Structural Elements* (PSEs) and Secondary Structure of the airplane. This can be used to find the classification of major and minor repairs.
 - This section gives a *疲劳敏感结构 Fatigue Critical Baseline Structure* (FCBS) List.
+
+* 飞机疲劳结构
+包括疲劳关键基准结构和疲劳关键改装结构。

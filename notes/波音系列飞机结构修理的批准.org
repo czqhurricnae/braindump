@@ -63,7 +63,7 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
 需要指出的是，无论获得了 FAA8110-3 表，还是 FAA8100-9 表，都表示得到了 FAA 批准。
 
 注意：BDCO 的授权代表不能批准针对进行了非波音[[id:C6AF3FDB-F18B-4E44-A87E-EBDF4AC4130A][补充型号合格证]]下的结构改装的修理，同样，也不能批准用户自己设计的导致构型改变的改装，即使这种改装发生在在波音飞机上。
-#+transclude: [[id:C6AF3FDB-F18B-4E44-A87E-EBDF4AC4130A][补充型号合格证]] 
+#+transclude: [[id:C6AF3FDB-F18B-4E44-A87E-EBDF4AC4130A][补充型号合格证]]
 
 对于重要修理，14 CFRs 规定，必须按照 FAA 当局批准的持续适航文件进行。
 如果修理超出了持续适航文件规定的范围，则需由 BDCO 的授权代表进行审核批准，表示由用户或合格的维修单位实施的修理满足 14 CFRs 的要求。
@@ -127,7 +127,7 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
  如（ ）信息描述的修理方案已经波音审核并查明结构可接受。
  #+END_QUOTE
 
- 或者
+ 或者：
  #+BEGIN_QUOTE
  The repair plan as described in reference ( ) message has been reviewed and found to be structurally acceptable, provided that the following changes are made to the repair plan:
 
@@ -140,11 +140,11 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
  安装直径为 5/32 英寸的 Hi-Lok。
  #+END_QUOTE
 
- BDCO 对于接到用户要求审核一般修理方案不单独提供 FAA 批准，对于一般修理，类似“the repair has been reviewed and found to be structurally acceptable” 的声明会包含在波音的回复文件中。
+ BDCO 对于接到用户要求审核一般修理方案不单独提供 FAA 批准，对于一般修理，类似“the repair has been reviewed and found to be structurally acceptable”的声明会包含在波音的回复文件中。
  类似的声明被视作是已被 FAA/EASA 接受的材料。
 
  波音已被授权按 FAA 批准的程序、规范提供可接受的材料，为了更好地表明修理已被认作可接受，
- 波音提供 RDR(Repair and Deviation Record ，修理和偏差记录）表格，这个表格被用作一般修理/一般偏差有关材料的封面，
+ 波音提供 [[id:06FBEC4A-78E6-4E36-87B2-7FD4B9CF3F5B][RDR]](Repair and Deviation Record ，修理和偏差记录）表格，这个表格被用作一般修理/一般偏差有关材料的封面，
  起初，RDR 是 Repair Design Record（修理设计记录的缩写），
  只用作对一般修理的批准，自 2011.3 起，扩展为对一般系统问题的批准，转为 =Repair and Deviation= ， 缩写保持不变。
 
@@ -155,7 +155,9 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
 :PROPERTIES:
 :ID:       A37400EF-7B2F-4C56-90C3-05F2C44BD6BB
 :END:
- 用户发给波音的修理方案如果用户已经认作重要修理， *请求 FAA 重要修理* ，经过波音的审核，如果结构可接受（原样或者经波音局部的修改），波音用 BDCO 授权和 FAA8100-9 表格进行批准，作如下回复：
+
+ 用户发给波音的修理方案如果用户已经认作重要修理， *请求 FAA 重要修理* ，经过波音的审核，如果结构可接受（原样或者经波音局部的修改），
+ 波音用 BDCO 授权和 FAA 8100-9 表格进行批准，作如下回复：
 
  #+BEGIN_QUOTE
  The repair plan as described in reference ( ) message has been reviewed and found to be structurally acceptable. An FAA Form 8100-9 approving the engineering for this repair has been signed.
@@ -186,7 +188,7 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
 :ID:       ECD3B677-53B2-49DC-9C03-226A245484FB
 :END:
  对于用户未明确是否重要修理的修理方案，如果经波音的审核结构上可接受并且按波音的理解是一般修理，波音会按照和用户指定为一般修理的回复一致的回复并提供 RDR。
- 如果用户接下来申请 8100-9 批准，则需要提供必要的理由来表明为什么判断为重要修理，因为 FAA8100-9 表格只提供给重要修理。
+ 如果用户接下来申请 8100-9 批准，则需要提供必要的理由来表明为什么判断为重要修理，因为 FAA 8100-9 表格 *只提供给重要修理* 。
  如果有足够的理由，BDCO 授权代表会对修理审核，如果符合相关规章，则会提供 8100-9 表格。
 
 ** 位于受适航指令（AD）影响区域的修理合规替代方法（AMOC):
@@ -229,8 +231,7 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
 *** 加强型修理
  对于加强型修理，如果结构上可接受（无论依原样或者经波音局部的修改）会通过[[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][三个阶段]]，经 BDCO 授权代表以 8100-9 表格的方式予以批准，
  这种三个阶段的方法在每个机型的符合性文件（Compliance Document，CD）或者修理评估指南（Repair Evaluation Guidel ines ，REG）中有详述。
- #+transclude: [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][三个阶段]] 
-
+ #+transclude: [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][三个阶段]] :level 4
  - 阶段 1 – 为使飞机返回使用基于静强度的批准， 随后会有阶段 2 的批准。
  - [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][阶段 2]]– 确认补充检查必须进行的循环/小时门槛。
  - [[id:CD0F023C-2E59-4866-999B-6B7FCC83A943][阶段 3]]– 损伤容限评估，补充检查的方法和间隔重要提示：许多阶段 3 的损伤容限检查对于用户并不需要，因为 门槛可能大于飞机的服役寿命。
@@ -258,4 +259,3 @@ BDCO 的授权代表负责确认相关修理是否符合相关规章的要求，
  - 明确是否需要 AMOC 为了加快评估的进度，波音鼓励用户提供完整的、准确的修理建议方案。并且用户的修理方案最好基于用户所拥有或者能够尽快得到的材料（如紧固件），以便在波音评为可接受后能较快完成修理。
 
  通过对波音公司对修理批准的程序的了解，能够更好的按照其程序提供合适的材料，从而减少不必要的多次反复联络环节，更快的得到厂家的批准，进而得到注册国适航部门的批准。
-

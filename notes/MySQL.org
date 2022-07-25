@@ -1,0 +1,425 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/MySQL/")); -*-
+:PROPERTIES:
+:ID:       0D700CD6-14BB-45D8-9B8A-2E99CF7C72BF
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-21 Thu 22:20>
+#+TITLE: MySQL
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+#+PROPERTY: header-args:sql :engine mysql
+#+PROPERTY: header-args:sql+ :dbhost localhost
+#+PROPERTY: header-args:sql+ :dbport 3306
+#+PROPERTY: header-args:sql+ :dbuser root
+#+PROPERTY: header-args:sql+ :dbpassword c
+#+PROPERTY: header-args:sql+ :database mysql
+
+#+BEGIN_SRC sql
+  show databases;
+#+END_SRC
+
+#+RESULTS:
+| Database           |
+|--------------------|
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+
+#+BEGIN_SRC sql
+  use mysql;
+  show tables;
+#+END_SRC
+
+#+RESULTS:
+| Tables_in_mysql           |
+|---------------------------|
+| columns_priv              |
+| component                 |
+| db                        |
+| default_roles             |
+| engine_cost               |
+| func                      |
+| general_log               |
+| global_grants             |
+| gtid_executed             |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| innodb_index_stats        |
+| innodb_table_stats        |
+| password_history          |
+| plugin                    |
+| procs_priv                |
+| proxies_priv              |
+| role_edges                |
+| server_cost               |
+| servers                   |
+| slave_master_info         |
+| slave_relay_log_info      |
+| slave_worker_info         |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
+
+#+BEGIN_SRC sql
+  show columns from user;
+#+END_SRC
+
+#+RESULTS:
+| Field                    | Type                              | Null | Key | Default               | Extra |
+|--------------------------+-----------------------------------+------+-----+-----------------------+-------|
+| Host                     | char(60)                          | NO   | PRI |                       |       |
+| User                     | char(32)                          | NO   | PRI |                       |       |
+| Select_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Insert_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Update_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Delete_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Drop_priv                | enum('N','Y')                     | NO   |     | N                     |       |
+| Reload_priv              | enum('N','Y')                     | NO   |     | N                     |       |
+| Shutdown_priv            | enum('N','Y')                     | NO   |     | N                     |       |
+| Process_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| File_priv                | enum('N','Y')                     | NO   |     | N                     |       |
+| Grant_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| References_priv          | enum('N','Y')                     | NO   |     | N                     |       |
+| Index_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Alter_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Show_db_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| Super_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_tmp_table_priv    | enum('N','Y')                     | NO   |     | N                     |       |
+| Lock_tables_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Execute_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| Repl_slave_priv          | enum('N','Y')                     | NO   |     | N                     |       |
+| Repl_client_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_view_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Show_view_priv           | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_routine_priv      | enum('N','Y')                     | NO   |     | N                     |       |
+| Alter_routine_priv       | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_user_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Event_priv               | enum('N','Y')                     | NO   |     | N                     |       |
+| Trigger_priv             | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_tablespace_priv   | enum('N','Y')                     | NO   |     | N                     |       |
+| ssl_type                 | enum('','ANY','X509','SPECIFIED') | NO   |     |                       |       |
+| ssl_cipher               | blob                              | NO   |     | NULL                  |       |
+| x509_issuer              | blob                              | NO   |     | NULL                  |       |
+| x509_subject             | blob                              | NO   |     | NULL                  |       |
+| max_questions            | int(11) unsigned                  | NO   |     | 0                     |       |
+| max_updates              | int(11) unsigned                  | NO   |     | 0                     |       |
+| max_connections          | int(11) unsigned                  | NO   |     | 0                     |       |
+| max_user_connections     | int(11) unsigned                  | NO   |     | 0                     |       |
+| plugin                   | char(64)                          | NO   |     | caching_sha2_password |       |
+| authentication_string    | text                              | YES  |     | NULL                  |       |
+| password_expired         | enum('N','Y')                     | NO   |     | N                     |       |
+| password_last_changed    | timestamp                         | YES  |     | NULL                  |       |
+| password_lifetime        | smallint(5) unsigned              | YES  |     | NULL                  |       |
+| account_locked           | enum('N','Y')                     | NO   |     | N                     |       |
+| Create_role_priv         | enum('N','Y')                     | NO   |     | N                     |       |
+| Drop_role_priv           | enum('N','Y')                     | NO   |     | N                     |       |
+| Password_reuse_history   | smallint(5) unsigned              | YES  |     | NULL                  |       |
+| Password_reuse_time      | smallint(5) unsigned              | YES  |     | NULL                  |       |
+| Password_require_current | enum('N','Y')                     | YES  |     | NULL                  |       |
+| User_attributes          | json                              | YES  |     | NULL                  |       |
+
+* SQL 语言
+** 数据定义语言 Data Definition Language DDL
+CREATE 语句-创建数据库, 数据表
+ALTER 语句-修改表的定义
+DROP 语句-删除数据库, 删除表
+
+** 数据操作语言 Data Manipulation Language DML
+INSERT 语句-插入数据
+UPDATE 语句-修改数据
+DELETE 语句-删除数据
+
+** 数据查询语句 Data Query Language DQL
+SELECT 语句-查询数据库中一条或多条数据
+
+** 数据控制语句 Data Control Language DCL
+GRANT 语句-给用户增加权限
+REVOKE 语句-收回用户的权限
+COMMIT 语句-提交事务
+
+* MySQL 目录结构
+bin 目录：用于放置一些可执行文件，如 mysql.exe, mysqld.exe, mysqlshow.exe 等
+data 目录：用于放置一些日志文件以及数据库
+include 目录：用于放置一些头文件, 如 mysql.h，mysqld_ername.h 等
+lib 目录：用于放置一系列的库文件
+share 目录：用于存放字符集, 语言等信息
+my.ini：MySQL 数库中使用的配置文件
+my-huge.ini：适合超大型数据库的配置文件
+my-large.ini：适合大型数据库的配置文件
+my-medium.ini：适合中型数据库的配置文
+my-small.ini：适合小型数据库的配置文件
+my-template.ini：是配置文件的模板,MsQL 配置向导将该配置文件中选择项写入到 my.ini 文件
+my-imnodb-heavy4Gini：表示该配置件只对于 InnoDB 存储引有效，而且服务器的内存不能小于 4GB
+需要注意的是，在上述 7 个配置文件中,my.ini 是 MSQL 正在使用的配置文件，该文件是一定会被
+读取的，其它的配置文件都是适合不同数据库的配置文件的模板，会在某些特殊情况下被读取，如果没有特殊需求，只需配置 my.ini 文件即可。
+
+* 连接数据库
+#+BEGIN_SRC sql
+mysql -h localhost -P 3306 -u root -p
+#+END_SRC
+后回车。
+
+#+BEGIN_SRC sql
+mysql> \s
+--------------
+mysql  Ver 8.0.15 for osx10.14 on x86_64 (Homebrew)
+
+Connection id:		9
+Current database:
+Current user:		root@localhost
+SSL:			Not in use
+Current pager:		less
+Using outfile:		''
+Using delimiter:	;
+Server version:		8.0.15 Homebrew
+Protocol version:	10
+Connection:		Localhost via UNIX socket
+Server characterset:	utf8mb4
+Db     characterset:	utf8mb4
+Client characterset:	utf8mb4
+Conn.  characterset:	utf8mb4
+UNIX socket:		/tmp/mysql.sock
+Uptime:			17 min 44 sec
+
+Threads: 2  Questions: 57  Slow queries: 0  Opens: 180  Flush tables: 2  Open tables: 156  Queries per second avg: 0.053
+--------------
+#+END_SRC
+
+#+BEGIN_SRC sql
+help
+#+END_SRC
+
+#+RESULTS:
+| ?         (\?) Synonym for `help'.                                                                        |
+|-----------------------------------------------------------------------------------------------------------|
+| clear     (\c) Clear the current input statement.                                                         |
+| connect   (\r) Reconnect to the server. Optional arguments are db and host.                               |
+| delimiter (\d) Set statement delimiter.                                                                   |
+| edit      (\e) Edit command with $EDITOR.                                                                 |
+| ego       (\G) Send command to mysql server, display result vertically.                                   |
+| exit      (\q) Exit mysql. Same as quit.                                                                  |
+| go        (\g) Send command to mysql server.                                                              |
+| help      (\h) Display this help.                                                                         |
+| nopager   (\n) Disable pager, print to stdout.                                                            |
+| notee     (\t) Don't write into outfile.                                                                  |
+| pager     (\P) Set PAGER [to_pager]. Print the query results via PAGER.                                   |
+| print     (\p) Print current command.                                                                     |
+| prompt    (\R) Change your mysql prompt.                                                                  |
+| quit      (\q) Quit mysql.                                                                                |
+| rehash    (\#) Rebuild completion hash.                                                                   |
+| source    (\.) Execute an SQL script file. Takes a file name as an argument.                              |
+| status    (\s) Get status information from the server.                                                    |
+| system    (\!) Execute a system shell command.                                                            |
+| tee       (\T) Set outfile [to_outfile]. Append everything into given outfile.                            |
+| use       (\u) Use another database. Takes database name as argument.                                     |
+| charset   (\C) Switch to another charset. Might be needed for processing binlog with multi-byte charsets. |
+| warnings  (\W) Show warnings after every statement.                                                       |
+| nowarning (\w) Don't show warnings after every statement.                                                 |
+| resetconnection(\x) Clean session context.                                                                |
+
+* 重新配置 MySQL
+** 通过命令行
+
+#+BEGIN_SRC sql
+set character_set_client=gbk;
+#+END_SRC
+
+重新查看数据库状态信息，可以看到 Client characterset 变成了 gbk。
+#+BEGIN_SRC sql
+mysql> \s
+--------------
+mysql  Ver 8.0.15 for osx10.14 on x86_64 (Homebrew)
+
+Connection id:		9
+Current database:
+Current user:		root@localhost
+SSL:			Not in use
+Current pager:		less
+Using outfile:		''
+Using delimiter:	;
+Server version:		8.0.15 Homebrew
+Protocol version:	10
+Connection:		Localhost via UNIX socket
+Server characterset:	utf8mb4
+Db     characterset:	utf8mb4
+Client characterset:	gbk
+Conn.  characterset:	utf8mb4
+UNIX socket:		/tmp/mysql.sock
+Uptime:			30 min 42 sec
+
+Threads: 2  Questions: 109  Slow queries: 0  Opens: 180  Flush tables: 2  Open tables: 156  Queries per second avg: 0.059
+--------------
+#+END_SRC
+
+** 通过修改 my.ini 文件重新配置 MySQl
+需要手动重新启动 MySQL。
+
+* 数据库和表的基本操作
+** 创建数据库
+
+#+BEGIN_SRC sql
+CREATE DATABASE [IF NOT EXISTS] db_name
+  [create_specification [, create_specification]...]
+
+create_specification:
+[DEFAULT] CHARACTER SET charset_name
+[DEFAULT] COLLATE collation_name
+#+END_SRC
+
+*** 创建一个数据库
+
+#+BEGIN_SRC sql
+CREATE DATABASE mydb1;
+#+END_SRC
+
+#+BEGIN_SRC sql
+show databases;
+#+END_SRC
+
+#+RESULTS:
+| Database           |
+|--------------------|
+| information_schema |
+| mydb1              |
+| mysql              |
+| performance_schema |
+| sys                |
+
+*** 创建一个使用 gbk 字符集的 mydb2 数据库
+#+BEGIN_SRC sql
+CREATE DATABASE mydb2 CHARACTER SET gbk;
+#+END_SRC
+
+#+BEGIN_SRC sql
+show databases;
+#+END_SRC
+
+#+RESULTS:
+| Database           |
+|--------------------|
+| information_schema |
+| mydb1              |
+| mydb2              |
+| mysql              |
+| performance_schema |
+| sys                |
+
+*** 创建一个使用 gbk 字符集, 并带校对规则的数据库
+
+#+BEGIN_SRC sql
+CREATE DATABASE mydb3 CHARACTER SET utf8 COLLATE utf8_bin
+#+END_SRC
+
+#+BEGIN_SRC sql
+show databases;
+#+END_SRC
+
+#+RESULTS:
+| Database           |
+|--------------------|
+| information_schema |
+| mydb1              |
+| mydb2              |
+| mydb3              |
+| mysql              |
+| performance_schema |
+| sys                |
+
+** 修改数据库
+
+#+BEGIN_SRC sql
+ALTER DATABASE [IF NOT EXISTS] db_name
+ [alter_specification [, alter_specification]...]
+
+alter_specification:
+[DEFAULT] CHARACTER SET charset_name
+[DEFAULT] COLLATE collation_name
+#+END_SRC
+
+#+BEGIN_SRC sql
+SHOW CREATE DATABASE mydb2;
+#+END_SRC
+
+#+RESULTS:
+| Database | Create Database                                               |
+|----------+---------------------------------------------------------------|
+| mydb2    | CREATE DATABASE `mydb2` /*!40100 DEFAULT CHARACTER SET gbk */ |
+
+#+BEGIN_SRC sql
+ALTER DATABASE mydb2 CHARACTER SET utf8;
+#+END_SRC
+
+#+BEGIN_SRC sql
+SHOW CREATE DATABASE mydb2;
+#+END_SRC
+
+#+RESULTS:
+| Database | Create Database                                                |
+|----------+----------------------------------------------------------------|
+| mydb2    | CREATE DATABASE `mydb2` /*!40100 DEFAULT CHARACTER SET utf8 */ |
+
+可以看到字符集被修改了。
+
+** 显示数据库创建语句
+
+#+BEGIN_SRC sql
+SHOW CREATE DATABASE db_name;
+#+END_SRC
+
+** 删除数据库
+
+#+BEGIN_SRC sql
+DROP DATABASE IF EXISTS db_name;
+#+END_SRC
+
+** 选择数据库
+
+#+BEGIN_SRC sql
+USE db_name;
+#+END_SRC
+
+** 查看当前所选的数据库
+
+#+BEGIN_SRC sql
+SELECT DATABASE();
+#+END_SRC
+
+#+RESULTS:
+| DATABASE() |
+|------------|
+| mysql      |
+
+* MySQL 数据库中的数据类型
+** 整数类型
+| 数据类型  | 字节数 | 无符号数的取值范围 | 有符号数的取值范围 |
+|-----------+--------+--------------------+--------------------|
+| TINYINT   |      1 | 0~2^8-1            | -2^8~2^7-1         |
+| SMALLINT  |      2 | 0~2^16-1           | -2^16~2^15-1       |
+| MEDIUMINT |      3 |                    |                    |
+| INT       |      4 |                    |                    |
+| BIGINT    |      8 |                    |                    |
+
+** 浮点数类型和定点数类型
+在 MySQL 数据库中，存储的小数都是使用浮点数和定点数来表示的。
+浮点数的类型有两种，分别是单精度浮点数类型（FLOAT） 和双精度浮点类型（DOUBLE）。
+而定点数类型只有 DECIMAL 类型。
+
+| 数据类型     | 字节数 |
+|--------------+--------|
+| FLOAT        |      4 |
+| DOUBLE       |      8 |
+| DECIMAL(M,D) |    M+2 |
+
+DECIMAL 类型的取值范围与 DOUBLE 类型相同。
+需要注意的是，DECIMAL 类型的有效取值范围是由 M 和 D 决定的，其中，M 表示的是数据的长度，D 表示的是小数点后的长度
+比如，将数据类型为 DECIMAL（6，2）的数据 3.1415 插入数据库后,显示的结果为 3.14。

@@ -1,0 +1,13 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/05 应急反应手册/")); -*-
+:PROPERTIES:
+:ID:       E82C2002-D0B4-4781-B149-B4D26C17E089
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 15:05>
+#+TITLE: 05 应急反应手册
+#+ROAM_KEY: [[file:///Users/c/Documents/05应急反应手册/][05应急反应手册]]
+#+PDF_KEY:
+#+PAGE_KEY:
+
+* MF/05FF-发放清单
+* MF/05MC-目次

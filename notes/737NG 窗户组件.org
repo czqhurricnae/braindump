@@ -1,0 +1,30 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 窗户组件/")); -*-
+:PROPERTIES:
+:ID:       5DF96BEE-B292-43AA-B347-F7152DDA730F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 08:57>
+#+TITLE: 737NG 窗户组件
+#+ROAM_KEY: https://mp.weixin.qq.com/s?__biz=MzUzNDcwMjc4Mg==&mid=2247483824&idx=1&sn=8da8197816628cf4c2f2c84ccd4c96cf&chksm=fa91fe61cde67777eb9e0848846d8019fc708d5b82c0d40cea1f044a2047bdbd55618b62b875&scene=27#wechat_redirect https://mp.weixin.qq.com/s?__biz=MzIyNjY1MzYwNQ==&mid=2247487414&idx=3&sn=0aee553b1ed2fd8558fe70db2181e8f1&chksm=e86c6b7cdf1be26adb68240f2eaccc5210c05859d6bab49d17e1b8600881f02d877c69214a5b&scene=27#wechat_redirect
+#+PDF_KEY:
+#+PAGE_KEY:
+
+由于 737 NG 客舱窗户上出现的雾气问题，于是波音开发了一种新的客舱窗户组件。新的客舱窗户组件与旧式窗户底部的通气孔相比，新式窗户在顶部有一个通气孔 breather hole。
+
+新的客舱窗户组件使用更厚的外窗，重新设计的密封与整体加强环，在中层窗户的排气孔上设置了气流阻尼器 airflow dampener。
+另外，还使用了一种新的金属夹环，它能将夹紧载荷均匀地分配给弹簧夹。
+
+新的客窗组件解决了重复出现严重的多层窗口导致的雾气模糊问题。有关此窗口设计更改的所有相关信息，请参见 FTD 737NG-FTD-56-02003。
+
+只要记住，新的窗户组件通气孔在顶部，而旧的窗户组件通气孔在底部。
+
+改进后的客舱窗组件 P/N 140N2139-4 与现有的客舱窗组件 P/N 140N2139-1 完全可互换。建议将窗口组件作为整体单元更换， 因为新的单独窗户部件和密封件不能直接与旧组件互换。
+
+[[file:static/737NG 窗户组件/2022-07-22_08-59-55_screenshot.jpg]]
+
+[[file:static/737NG 窗户组件/2022-07-22_09-01-06_screenshot.jpg]]
+
+[[file:static/737NG 窗户组件/2022-07-22_09-01-15_screenshot.jpg]]
+
+[[file:static/737NG 窗户组件/2022-07-22_09-01-27_screenshot.jpg]]
+

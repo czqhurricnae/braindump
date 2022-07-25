@@ -8,5 +8,114 @@
 #+TITLE: AMOC
 
 Alternate Method of Compliance 合规替代方法
+* FAA AD 和 AMOC 介绍
+:PROPERTIES:
+:ID:       4DDD1094-C204-483C-8C9E-2D281B3297A3
+:END:
+根据美国联邦法 14 CFR 39.5，当发现民用航空器，航空发动机，螺旋桨及机载设备（以下简称民用航空产品）处于下述情况时，
+美国联邦航空管理局（FAA）会颁发 AD：
+(1) 某一民用航空产品存在不安全的状态；和
+(2) 这种状态很可能存在或发生于同型号设计的民用航空产品中。
 
-#+transclude: [[id:F5B91FA7-1E45-4BA3-BBAB-0CAEABEC7CF2][位于受适航指令（AD）影响区域的修理合规替代方法（AMOC)]]
+符合性替代方法（AMOC）提供了除 AD 要求外，另一种等效安全措施。
+当航空产品无法满足某 AD 要求时，需向 FAA 申请此 AD 的 AMOC，否则，此航空产品不得使用。
+
+14 CFR 39.19 明确说明任何人都可向 FAA 申请 FAA 发布 AD 的 AMOC，因此在中国注册的民用航空产品运营人和维护人都可向 FAA 申请适用于中国注册的民用航空产品的 AMOC。
+
+由于批准的 AMOC 属于申请人产权，除非航空器，航空发动机等生产厂家会向使用人公布由他们自行申请已批准的 AMOC 外，
+其他个人或团体正常情况下都无法免费获得已批准的 AMOC。
+
+* AMOC 申请文件的书写
+由于 AMOC 是法规性文件，为了规范申请文件，减少 FAA 的工作量，AC 39- 10 明确说明申请 AMOC 材料时需包括以下事项：
+- 申请人详细联系方式。
+- 申请 AMOC 适用的民用航空产品，如机型，件序号，注册号等。
+- 申请 AMOC 的 AD 号及相应段落。
+- 申请文件编号及文件名。
+- 申请原因。
+- 申请要求。
+- 证明等效要求的文件，包括，但不限于，相片，图纸，试验，分析计算，OEM 答复等。
+- 申请 AMOC 为一次性，还是通用型，是否可以转让。
+
+* 案例 SFN-AMOC-2017-01
+#+begin_example
+Document Number: SFN-AMOC-2017-001, April 6, 2017
+
+The Manager
+
+Systems and Equipment Branck, ANM-130S
+
+Federal Aviation Administration (FAA)
+
+Seattle Aircraft Certification Office (ACO)
+
+1601 Lind Avenue SW
+
+Renton, WA 98057- 3356
+
+Dear Manager of FAA ACO,
+
+Subject:  Request Alternative Method of Compliance (AMOC) to Paragraph (f) of Airworthiness Directive (AD) 2008-06-06
+
+Model: 767-200/300/300F
+
+Reference: A.FAA AD 2008-06-06 effective April 16, 2008
+
+B.   ⋯
+
+Background:
+FAA AD 2008-06-06 requires repetitive detailed in-spections, lubrication, and measurements of freeplay of
+the horizontal stabilizer drive mechanism (also known as the horizontal stabilizer trim actuator or HSTA)
+according to the accomplishment instructions of Boeing Alert Service Bulletin (SB) 767-27A0194 revision 2, dated J uly 13, ⋯ .
+During doing the Paragraph (f) of AD 2008-06-06 on the B-1589/VN097/MSN28154 (registered in China) in March 25, 2017, the damaged was found, ⋯ .
+
+Discussion:
+AMOC 130S-10-163, dated April 7, 2010 also states that the 30 day period to correct a condition of chrome flaking
+will not adversely affect the load carrying capa-bility of the HSTA ballscrew or ballnut⋯ .
+
+Proposal:
+A request approval of a 30 days continuance of op-eration in accordance with AMOC 130S-10-163, dated April 7, 2010,
+plus additional 30 days continuance of the operation, and inspection of the HSTA ballcrew ⋯ .
+
+A request to paragraph (f) FAA AD 2008-06-06 for the preceding proposal is a global AMOC and transferrable.
+All provisions of AD 2008- 06- 06 that are not specifically referenced in the preceding proposal
+remain fully applicable and must be met.
+
+Contacts:
+REN LIANG
+System Engineer Maintenance & Engineering Department, SF Airlines Co.,LTD
+T: XXXX
+M: XXXX
+E: XXXX
+A: XXXX
+Post code: XXXX
+
+Enclosures:
+1. FAA AD 2008- 06- 06 effective April 16, 2008
+2.  ⋯
+#+end_example
+
+* AMOC 申请文件的提交
+14 CFR 39.19 明确说明除非 FAA 特殊说明，将申请材料提交给你的主检查官（PI），PI 会在申请材料上表明相应意见，然后将材料提交给 AD 管理管理办公室。
+每个 AD 后面都有一段描述 AMOC 责任单位，如 AD 2008-06-06 段(K)(1)就明确说明此 AD 是由
+The Manager, Seattle Aircraft Certification Office (ACO), FAA 进行批准，并且说明当提交 AMOC 申请时，首先得提交给 PI。
+
+当无 PI，特别是中国注册的航空器运营人/维修单位无相应的 FAA PI，可以直接递交给 AD 管理办公室，即将相应的申请材料及支持性文件通过 AD 管理办公室公用邮箱 mailto:9-ANM-Seattle-ACO-AMOC-Requests@faa.gov 提交。
+
+* 与 AD 管理办公室沟通
+FAA AD 管理办公室收到申请文件后，管理办公室通过邮件告之申请人已指定专门人负责此申请和对应的受理号 WTS# XXXX，并且说明 FAA 受理人会在 30 天内进行相应回复。
+此后，如果受理人认为申请材料不够完整，会通过电话或邮件与申请人进行沟通。
+
+* AMOC 的批准和拒绝
+经过与 FAA 受理人沟通确认，后 FAA 受理人如果认为所有提交申请材料及相应解释符合等效安全要求，
+会正式批准 AMOC，并且发送给申请人；如果认为提交申请材料及相应解释不符合等效安全要求，
+会明确告之申请人拒绝批准相应请求，所以申请材料中对于等效安全性的论证是 AMOC 能否被批准的关键。
+
+[[file:static/AMOC/2022-07-21_22-38-32_page23_image1.png]]
+
+[[file:static/AMOC/2022-07-21_22-38-42_page23_image2.png]]
+
+[[file:static/AMOC/2022-07-21_22-38-52_page23_image5.png]]
+
+[[file:static/AMOC/2022-07-21_22-39-00_page23_image6.png]]
+
+#+transclude: [[id:F5B91FA7-1E45-4BA3-BBAB-0CAEABEC7CF2][位于受适航指令（AD）影响区域的修理合规替代方法（AMOC)]] :level 1

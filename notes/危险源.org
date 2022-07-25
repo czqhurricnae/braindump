@@ -5,9 +5,7 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-01-09 Sun 23:46>
 #+TITLE: 危险源
-
 #+ROAM_KEY:
-
 
 [[id:FF7E48D0-FF3C-499D-800F-3ACF2763D2DF][航空维修系统危险源识别和风险分析方法]]
 

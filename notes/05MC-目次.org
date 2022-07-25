@@ -1,0 +1,21 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/05MC-目次/")); -*-
+:PROPERTIES:
+:ID:       C0207594-6C5A-433E-A375-FB2B8181E786
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 15:09>
+#+TITLE: 05MC-目次
+#+ROAM_KEY:
+#+PDF_KEY: [[file:///Users/c/Documents/05应急反应手册/MF:05MC-目次.pdf][MF/05MC-目次.pdf]]
+#+PAGE_KEY:
+
+#+transclude: [[/Users/c/.spacemacs.d/convert_pdf2image.py]] :disable-auto :src python :rest ":python python3 :var input_file=(extract-value-from-keyword "PDF_KEY") pages=(extract-value-from-keyword "PAGE_KEY") relative_dir=(concat "./static/" (file-name-sans-extension (buffer-name)) "/") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
+
+#+RESULTS:
+
+
+[[file:./static/05MC-目次/MF:05MC-目次_page1.png]]
+
+[[file:./static/05MC-目次/MF:05MC-目次_page2.png]]
+
+[[file:./static/05MC-目次/MF:05MC-目次_page3.png]]

@@ -1,0 +1,38 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 天空内饰天花板灯/")); -*-
+:PROPERTIES:
+:ID:       F18CCAD6-66A0-425F-83BD-4AB62E2F93E0
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 21:39>
+#+TITLE: 737NG 天空内饰天花板灯
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_21-42-11_screenshot.jpg]]
+
+* COS Ceiling center overhead stowrage light
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-02-22_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-02-30_screenshot.jpg]]
+
+* Ceiling bin light and Ceiling wash light
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-02-40_screenshot.jpg]]
+
+* Cove light and Direct light
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-01-50_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-01-59_screenshot.jpg]]
+
+* SSM 之 POWER 流
+- 将驾驶舱 cabin/utility 电门置于 ON 位，则 R120、R394 和 R427 激励，115V 交流电送到客舱照明灯组件。
+- 在天花板灯组件已通电的前提下，工作者可以通过 ACP 控制天花板灯亮度和颜色。
+- 在 ACP 上选择不同的场景，前 ACP 将发送亮度数据和颜色数据到天花板灯组件；cove light 和 ceiling wash light，可改变亮度和颜色；
+  direct light、ceiling bin light、COS light，只能改变亮度；选择 OFF，天花板灯将熄灭，此时电源仍然接通。
+  
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-04-55_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰天花板灯/2022-07-22_22-05-02_screenshot.jpg]]

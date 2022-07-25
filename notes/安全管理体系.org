@@ -52,6 +52,7 @@
 - 安全检查
 - SMS 管理评审
 
+
 * 安全风险管理
 [[x-devonthink-item://93FDCB19-AA65-4354-A804-2BD7E336F894?page=2][MF/0305-1 风险管理方案]]
 ** [[id:A9EAAA3F-5F9C-4732-B9ED-6994DFDAB97B][危险源识别]]
@@ -99,6 +100,7 @@ DEADLINE: <2022-01-22 Sat>
 DEADLINE: <2022-01-22 Sat>
 [[x-devonthink-item://5AB8ECCB-4DC6-4D59-AC0E-205C2A046F90?page=51]]
 [[x-devonthink-item://E420EAD3-3A13-45D8-8B5B-A3A16DE6CFE3?page=76]]
+
 *** 确保全体人员得到适当之训练并胜任其 SMS 职责
 - 一线作业人员：
   - 安全政策

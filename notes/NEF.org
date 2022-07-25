@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/NEF/")); -*-
+:PROPERTIES:
+:ID:       7CB4DEAD-1086-481D-B860-71C4758AF1B1
+:ROAM_ALIASES: 非关键设备及装饰项目
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 14:58>
+#+TITLE: NEF
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+非关键设备及装饰项目指安装在飞机上作为原始取证、STC 或者 EO 的部分，但对飞行运行安全没有影响，
+不包括在取证、运行规则要求的范围。
+
+如果该项目失效、损伤或者丢失不影响飞机安全运行能力。

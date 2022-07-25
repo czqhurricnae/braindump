@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/危险品航空运输从业人员资质评估体系/")); -*-
+:PROPERTIES:
+:ID:       B87B8BCA-ADBC-4866-9A3B-9A36E4F7D276
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-25 Mon 20:15>
+#+TITLE: 危险品航空运输从业人员资质评估体系
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+[[file:static/危险品航空运输从业人员资质评估体系/2022-07-25_20-15-38_1645160637-8d8e690231a3b1542c574fc022031ab2.png]]

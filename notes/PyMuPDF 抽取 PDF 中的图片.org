@@ -43,3 +43,4 @@ for page_index in range(len(pdf_file)):
             pix0.pil_save(f"page{page_index+1}_image{image_index}.{image_ext}")
             pix0 = None
 #+END_SRC
+

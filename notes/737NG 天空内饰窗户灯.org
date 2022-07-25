@@ -5,7 +5,60 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2021-01-10 Sun 13:21>
 #+TITLE: 737NG 天空内饰窗户灯
+#+PDF_KEY:
+#+PAGE_KEY:
 
+#+transclude: [[/Users/c/.spacemacs.d/convert_pdf2image.py]] :disable-auto :src python :rest ":python python3 :var input_file=(extract-value-from-keyword "PDF_KEY") pages=(extract-value-from-keyword "PAGE_KEY") relative_dir=(concat "./static/" (file-name-sans-extension (buffer-name)) "/") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
+
+#+RESULTS:
+
+* SSM 之 POWER 流                                                      :R427:
+:PROPERTIES:
+:ID:       F271D7E5-A116-411D-ACA0-A357870CA613
+:END:
+
+电源分配组与组之间为并联供电，每个组内的灯组件之间为串联供电。
+
+左、右两侧机身（ STA 419、STA 616、STA 866 ）各有 3 处 115V 交流电接入点；每个接入点分为两组，每组最多给 6 个窗户灯供电；
+当某个灯组件内部的电源故障，最多可能导致 6 个窗户灯因断电而无法点亮。
+
+#+name SSM POWER
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-00-56_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-29-58_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-35-40_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-36-13_screenshot.jpg]]
+
+- 在窗户灯组件已通电的前提下，工作者可以通过 ACP 控制窗户灯亮度和颜色
+- 在 ACP 上选择不同的场景，前 ACP 将发送亮度数据和颜色数据到窗户灯组件，窗户灯将显示不同的亮度和颜色；选择 OFF，窗户灯将熄灭，此时电源仍然接通。
+
+#+transclude: [[id:A3B4F28E-6B38-4742-97C4-50CA3AEFA68E][SSM 33-22-11_(sh_1)]]
+
+#+transclude: [[id:029B9F30-C8DB-41E6-B73B-5B1D6C257DB4][SSM 33-21-11]]
+
+#+transclude: [[id:0E02E66F-10D0-4A58-B37A-07DFBAEADB28][SSM 33-21-12]]
+
+* SSM 之 DATA 流
+:PROPERTIES:
+:ID:       F7E47182-574E-4B1F-B9BD-15ED9F596CA7
+:END:
+[[file:./static/737NG 天空内饰窗户灯/SSM 737NG 天空内饰窗户灯_page1.png]]
+
+#+transclude: [[id:A3B4F28E-6B38-4742-97C4-50CA3AEFA68E][SSM 33-22-11_(sh_1)]]
+
+#+transclude: [[id:029B9F30-C8DB-41E6-B73B-5B1D6C257DB4][SSM 33-21-11]]
+
+
+#+transclude: [[id:999AF2E4-C32C-460F-A094-281422F0F198][SSM 33-22-14]]
+#+transclude: [[id:A5C0097B-BCA8-4B20-AD40-89DDC935F9FF][SSM 33-22-12]]
+
+#+transclude: [[id:6E694FB3-6462-461F-9606-4E3E3DA74252][SSM 33-22-13]]
+
+#+transclude: [[id:8E28B49E-00C9-4E59-929F-347BE7F9F55E][SSM 33-22-15]]
+
+* 控制电门
 天空内饰飞机设有主控制电门，P5-13 上 CAB/UTIL 就是主 LED 灯 电门，飞行员在紧急情况下可使用该电门切断客舱照明。
 
 主控制电门控制以下设备供电 :
@@ -50,11 +103,71 @@ When you set the cabin/utility switch on the P5-13 panel to the ON position, thi
 - 115V AC goes to the window light internal power supply.
 When you touch the scene button below the Passenger Seating Area section on the ACP Lighting display, the ACP sends intensity and color signals to the window lights.
 The window lights change intensity and color to the preset condition.
+
 When you touch the OFF button, only the window light internal LED lights go off.
-The window light internal power supply stays connected to the 115V AC.
+The window light internal power supply stays connected to the 115V AC. CAB/UTIL 电门 ON 位，ACP OFF 位，窗户灯仍然通电。
 
-#+transclude: [[id:A3B4F28E-6B38-4742-97C4-50CA3AEFA68E][SSM 33-22-11_(sh_1)]]
+* RS-485
+The ACP RS-485 interface controls the signal between the ACP and the lights through four signal ports.
+Port5 是连接 P13 和 P14。
 
-#+transclude: [[id:029B9F30-C8DB-41E6-B73B-5B1D6C257DB4][SSM 33-21-11]]
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_18-53-51_screenshot.jpg]]
 
-#+transclude: [[id:0E02E66F-10D0-4A58-B37A-07DFBAEADB28][SSM 33-21-12]]
+- RS-485 串行通信总线接口标准。
+- 每个灯组件，都按顺序分配一个数字地址（X-XX）。
+- 针对 ACP 控制的客舱灯组件（ABCDEFYZ），每个灯组件带有 2 个数据接口，一个从上游接收，一个下下游传递，最后到数据终点 R（data termination）。
+- 每个灯组件，都分配有数字地址，内部带有数据收发机-每个灯组件，带有 2 个数据库：构型数据库（CDB configuration database）和颜色数据库（LDB lighting database）；前者设置接口位置，后者设置灯光颜色。
+- 当工作者在 ACP 上选择场景之后，前 ACP 向下游灯组件发送亮度数据和颜色数据，每个灯组件接收数据并继续向下游发送，直到终点。
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_18-54-25_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_18-54-48_screenshot.jpg]]
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_18-54-58_screenshot.jpg]]
+
+* 放行
+:PROPERTIES:
+:ID:       36FF4268-7EA8-4413-805E-5D5460D881E9
+:END:
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_19-32-02_screenshot.jpg]]
+
+* 快速确定是哪个灯的问题
+:PROPERTIES:
+:ID:       7987F7A6-304D-4D08-8819-AC2121975527
+:END:
+左、右两侧机身（ STA 419、STA 616、STA 866 ）各有 3 处 115V 交流电接入点；每个接入点分为两组，每组最多给 6 个窗户灯供电；
+当某个灯组件内部的电源故障，最多可能导致 6 个窗户灯因断电而无法点亮。
+
+⽐比如之前案例例中的故障，42-49 排窗灯，对应图上是第三组，5 个灯，供电顺序是 35E←35F←14F←35F←F。
+
+5 个灯不不亮，所以⾸首先要怀疑的是第⼀一个灯 F 故障。最终也是更更换此灯后正常。
+
+如果是从这组⾥里里的 14F 开始不不亮，我⾸首先要怀疑的是 14F，其次是与其串串联的上游的灯 35F（F 与 14F 之间的那个）。
+
+#+name SSM POWER
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-00-56_screenshot.jpg]]
+
+* 快速确定故障灯的件号
+:PROPERTIES:
+:ID:       24F4C1DF-47CC-4378-8B1E-73C599648830
+:END:
+有了了灯的位置，就有了了灯的型号，对应表格就能得到件号。⽐比如图中的 F，对应的件号就是 9700-14-0001 或 9701-14-0001。
+需要注意的是，LED 窗灯有 1，2 代之分。
+
+2 代灯要完全发挥故障报告功能只能使⽤用 P5 软件，⽽而 1 代灯在 P4 和 P5 软件下都能⼯工作。
+P5 软件增强了了灯组件的故障报告信息安装新的灯组件后，注意对新的灯组件加载数据，否则新的灯组件颜⾊色不不受控制。
+* 数据装载
+:PROPERTIES:
+:ID:       5190C357-2307-4557-A817-824DF2EB1BE7
+:END:
+P4 软件，点击 ACP to LRUs，这将对新的灯组件进⾏行行数据装载。
+当按压维护页 ACP to LRUs 按钮时，按钮变蓝色，且 ACP 发送构型数据和照明数据到每个通信接口。在通信通道内，每个灯组件接收并向后传递信号。当信号传输完成之后，按钮回到正常的黑色，且出现以下：
+- cove light、ceiling wash light、window light，变绿色
+- direct light、ceiling bin light、COS light，变桔红色
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-22-11_screenshot.jpg]]
+
+P5 软件，点击 Phase 2 Date Load 和 Start 按钮，这将对新的灯组件进⾏行行数据装载。
+
+[[file:static/737NG 天空内饰窗户灯/2022-07-22_21-23-03_screenshot.jpg]]

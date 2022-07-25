@@ -34,24 +34,29 @@
 
 [[file:./static/737NG 天花板上通道照明灯不亮/9269.jpeg]]
 
-在 SSM 和 WDM 手册里，这个灯叫做 =天花板灯（CEILINGLT，L1417/L1419）= ，前后舱各有一个，位置在客舱和厨房之间的天花板上：
-
-[[file:./static/737NG 天花板上通道照明灯不亮/10125.jpeg]]
+在 SSM 和 WDM 手册里，这个灯叫做 =天花板灯（CEILING LT，L1417/L1419）= ，前后舱各有一个，位置在客舱和厨房之间的天花板上：
 
 前舱 L1417
+[[file:./static/737NG 天花板上通道照明灯不亮/10125.jpeg]]
 
-[[file:./static/737NG 天花板上通道照明灯不亮/10908.jpeg]]
 
 后舱 L1419
 
-[[file:./static/737NG 天花板上通道照明灯不亮/12709.jpeg]]
+[[file:./static/737NG 天花板上通道照明灯不亮/10908.jpeg]]
 
 SDS 手册里把飞机上的应急灯分为 4 类：
+
+[[file:./static/737NG 天花板上通道照明灯不亮/12709.jpeg]]
+
 - 出口信号灯
 - 紧急撤离外部照明灯
 - 过道灯
 - 地板紧急撤离通道灯
 
+* Dome Light L273, Ceiling mounted emergency aisle lights L1417 & L1419
+:PROPERTIES:
+:ID:       D7F7C480-5C62-43E5-B580-6481F41C4777
+:END:
 出口信号灯、紧急撤离外部照明灯、地板紧急撤离通道灯，包括哪些灯都比较好理解，SSM/WDM 里直接看灯的名字就能看出来。分类有疑问的主要是这两种灯：
 
 - CEILING LT，L1417 & L1419
@@ -66,12 +71,15 @@ SDS 手册里把飞机上的应急灯分为 4 类：
 RESPONSE:
 
 The L1417 (forward) and L1419 (aft) lights are referred to as =ceiling mounted emergency aisle lights=.
-As mentioned in Ref /B/, these two lights may be inoperative and *dispatched per MMEL item 33-15-02, provided no adjacent light assembly is inoperative.
+As mentioned in Ref /B/, these two lights may be inoperative and dispatched per MMEL item 33-15-02,
+provided no adjacent light assembly is inoperative.
 
+#+CAPTION: M1674
+<<M1674>>
 [[file:./static/737NG 天花板上通道照明灯不亮/17391.jpeg]]
 
 L273 dome light:
 
 This dome light is located on P18 panel in the flight compartment and is a dual lamp assembly.
 One lamp is an emergency light for the flight compartment, and it comes on with the emergency light system.
-There is MEL relief for this light.*
+There is MEL relief for this light.

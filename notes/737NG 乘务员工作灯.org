@@ -1,0 +1,16 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/737NG 乘务员工作灯/")); -*-
+:PROPERTIES:
+:ID:       8FEF2D7F-5159-4008-809A-2806D236FACC
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-22 Fri 22:24>
+#+TITLE: 737NG 乘务员工作灯
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+- 乘务员工作灯，使用白炽灯，位于乘务员工作站点上方，给乘务员工作站点提供照明；控制电门位于 ASP。
+- 按压 ASP 上控制按钮，来自 *28V 地面服务汇流条* 的电源使工作灯点亮。
+
+[[file:static/737NG 乘务员工作灯/2022-07-22_22-25-21_screenshot.jpg]]
+
+[[file:static/737NG 乘务员工作灯/2022-07-22_22-25-30_screenshot.jpg]]
