@@ -1,0 +1,80 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/0305-1 风险管理方案/")); -*-
+:PROPERTIES:
+:ID:       EFD6F0FD-2010-482E-A4FC-75243321AAE5
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-27 Wed 10:12>
+#+TITLE: 0305-1 风险管理方案
+#+ROAM_KEY: [[x-devonthink-item:93FDCB19-AA65-4354-A804-2BD7E336F894][MF/0305-1-风险管理方案]]
+#+PDF_KEY: [[file:///Users/c/Documents/03航空安全管理手册/MF:0305-1-风险管理方案.pdf][MF/0305-1-风险管理方案.pdf]]
+#+PAGE_KEY:
+
+#+transclude: [[/Users/c/.spacemacs.d/convert_pdf2image.py]]  :src python :rest ":python python3 :var input_file=(extract-value-from-keyword "PDF_KEY") pages=(extract-value-from-keyword "PAGE_KEY") relative_dir=(concat "./static/" (file-name-sans-extension (buffer-name)) "/") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
+
+#+RESULTS:
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page1.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page2.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page3.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page4.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page5.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page6.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page7.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page8.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page9.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page10.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page11.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page12.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page13.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page14.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page15.png]]
+
+* XX 部门活动统计表样式 & XX 部门岗位活动统计表样式 &
+:PROPERTIES:
+:ID:       BB1ED3B3-3A5A-4471-8993-06BAEDC8E1C5
+:END:
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page16.png]]
+* XX 部门作业分析表样式
+:PROPERTIES:
+:ID:       F628E62B-3EC8-4CB5-91E1-E531C027FED2
+:END:
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page17.png]]
+
+* 危险源辨识和风险评价汇总表样式
+:PROPERTIES:
+:ID:       8F4DC9C6-D6FA-47F9-A27D-FC987267507F
+:END:
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page18.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page19.png]]
+* 危险源基本信息表样式
+:PROPERTIES:
+:ID:       90DEA23A-E017-4CBE-B67B-8599B59D1BED
+:END:
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page20.png]]
+* 新项目风险评估控制措施跟踪表样式
+:PROPERTIES:
+:ID:       73A3F291-9B8B-4806-AC17-9DC420B26C6F
+:END:
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page21.png]]
+* 新项目运行风险评估结果表样式
+:PROPERTIES:
+:ID:       A9A099CF-8C8E-421B-A651-D6E4B76C4AB1
+:END:
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page22.png]]
+
+[[file:./static/0305-1 风险管理方案/MF:0305-1-风险管理方案_page23.png]]

@@ -1,0 +1,307 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Mac Homebrew 安装 Python@2/")); -*-
+:PROPERTIES:
+:ID:       971D3B28-1761-439B-96BD-5958DB1FA6EB
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-26 Tue 19:10>
+#+TITLE: Mac Homebrew 安装 Python@2
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+* 问题
+最近折腾 Python 环境有些需要在 Python@2 环境下才能进行，今天用 brew upgrade 后，发现 python@2 咋没了？
+没办法，我猜 brew 的 python@2 可能出问题了，卸载再安装报如下错误？
+
+#+BEGIN_SRC sh
+# 查找
+$ brew search python@2
+
+Error: No formulae or casks found for "python@2".
+
+# 安装
+$ brew install python@2
+
+==> Searching for similarly named formulae...
+
+Error: No similarly named formulae found.
+
+Error: No available formula or cask with the name "python@2".
+
+==> Searching for a previously deleted formula (in the last month)...
+
+Error: No previously deleted formula found.
+
+==> Searching taps on GitHub...
+
+Error: No formulae found in taps.
+
+#+END_SRC
+
+* 分析
+** 系统环境
+首先，看看本机环境都有哪些 python 版本：
+
+#+BEGIN_SRC sh
+# 本机环境版本
+$ python version
+Python 2.7.16
+
+# 本机环境，脚本命令路径
+$ which python
+/usr/bin/python
+
+## python2，脚本命令路径
+$ which python2
+/usr/local/bin/python2
+
+## python3，脚本命令路径
+$ which python3
+/usr/local/bin/python3
+#+END_SRC
+
+查看本机环境 =链接= 的脚本路径：
+
+#+BEGIN_SRC python
+# 本机环境链接的系统Python 版本
+$ ls -al /usr/bin/python*
+lrwxr-xr-x  1 root  wheel     75 12 20  2020 /usr/bin/python -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7
+lrwxr-xr-x  1 root  wheel     82 12 20  2020 /usr/bin/python-config -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7-config
+lrwxr-xr-x  1 root  wheel     75 12 20  2020 /usr/bin/python2 -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7
+lrwxr-xr-x  1 root  wheel     75 12 20  2020 /usr/bin/python2.7 -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7
+lrwxr-xr-x  1 root  wheel     82 12 20  2020 /usr/bin/python2.7-config -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7-config
+-rwxr-xr-x  1 root  wheel  31488  9 22  2020 /usr/bin/python3
+lrwxr-xr-x  1 root  wheel     76 12 20  2020 /usr/bin/pythonw -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/pythonw2.7
+lrwxr-xr-x  1 root  wheel     76 12 20  2020 /usr/bin/pythonw2.7 -> ../../System/Library/Frameworks/Python.framework/Versions/2.7/bin/pythonw2.7
+#+END_SRC
+
+可见，系统真实的引用路径为：
+
+~/System/Library/Frameworks/Python.framework/Versions/2.7/~
+
+系统本机环境提供的 python 版本 *不建议* 进行安装各种第三方和更新 python 版本，以免引起不必要的不可预见的麻烦；
+推荐 ~brew install python~ 方式，然后使用 virtualenv 虚拟环境方式，配置各个项目运行空间。
+
+** Cellar Python
+查看一下 =python2= 和 =python3= 引用的路径：
+
+#+BEGIN_SRC sh
+$ ls -al /usr/local/bin/python*
+lrwxr-xr-x  1 c  admin  38  1 24 12:02 /usr/local/bin/python -> ../Cellar/python@2/2.7.17_1/bin/python
+lrwxr-xr-x  1 c  admin  45  1 24 12:02 /usr/local/bin/python-config -> ../Cellar/python@2/2.7.17_1/bin/python-config
+lrwxr-xr-x  1 c  admin  39  1 24 12:02 /usr/local/bin/python2 -> ../Cellar/python@2/2.7.17_1/bin/python2
+lrwxr-xr-x  1 c  admin  46  1 24 12:02 /usr/local/bin/python2-config -> ../Cellar/python@2/2.7.17_1/bin/python2-config
+lrwxr-xr-x  1 c  admin  41  1 24 12:02 /usr/local/bin/python2.7 -> ../Cellar/python@2/2.7.17_1/bin/python2.7
+lrwxr-xr-x  1 c  admin  48  1 24 12:02 /usr/local/bin/python2.7-config -> ../Cellar/python@2/2.7.17_1/bin/python2.7-config
+lrwxr-xr-x  1 c  admin  39  1 24 14:25 /usr/local/bin/python3 -> ../Cellar/python@3.9/3.9.10/bin/python3
+lrwxr-xr-x  1 c  admin  46  1 24 14:25 /usr/local/bin/python3-config -> ../Cellar/python@3.9/3.9.10/bin/python3-config
+lrwxr-xr-x  1 c  admin  41  1 24 14:25 /usr/local/bin/python3.9 -> ../Cellar/python@3.9/3.9.10/bin/python3.9
+lrwxr-xr-x  1 c  admin  48  1 24 14:25 /usr/local/bin/python3.9-config -> ../Cellar/python@3.9/3.9.10/bin/python3.9-config
+lrwxr-xr-x  1 c  admin  39  1 24 12:02 /usr/local/bin/pythonw -> ../Cellar/python@2/2.7.17_1/bin/pythonw
+lrwxr-xr-x  1 c  admin  40  1 24 12:02 /usr/local/bin/pythonw2 -> ../Cellar/python@2/2.7.17_1/bin/pythonw2
+lrwxr-xr-x  1 c  admin  42  1 24 12:02 /usr/local/bin/pythonw2.7 -> ../Cellar/python@2/2.7.17_1/bin/pythonw2.7
+#+END_SRC
+
+目前发现，python3.x 版本链接的都是 [[https://brew.sh/index_zhcn][homebrew]] 中安装的；但是 python2 之前卸载掉后，通过 [[https://brew.sh/index_zhcn][homebrew]] 安装不上了，然后链接为本机系统的 python2.x 版本。
+
+查看一下，各个 python 版本的 pip 版本：
+
+#+BEGIN_SRC sh
+# python2 pip version
+$ python2 -m pip --version
+
+/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python: No module named pip
+
+# python3 pip version
+$ python3 -m pip --version
+
+pip 21.0.1 from /usr/local/lib/python3.9/sitepackages/pip (python 3.9)
+#+END_SRC
+
+目前发现，系统环境 Python 2.7.16 版本的 Python2.x 没有安装 pip；
+macOS 系统 Python 不提供 pip 。
+如果需要，请按照[[https://pip.readthedocs.io/en/stable/installing/#installpip][pip 文档]] 为系统 Python 安装它。
+
+* 查找
+从如上分析看来，需要做如下步骤：
+  通过 Homebrew 安装 python＠2；
+  如若无法安装，查找一下原因所在；
+  如果安装成功，查看一下有没有 pip 包；
+目前看来，步骤三是行不通的；
+
+去[[https://www.python.org/downloads/][Python 官网]]，[[https://www.python.org/downloads/][https://www.python.org/downloads/]] 发现如下信息:
+
+[[file:./static/Mac Homebrew 安装 Python@2/1642997387-841ef4a555bde47735dd5125d4253c1f.png]]
+
+Python 2.7是[[https://www.python.org/dev/peps/pep0373/][Python 2.x]]系列的结尾；作为 2.x 系列的最后一个版本，Python 2.7 在 2020 年之前获得了错误修复支持。
+该支持在 2020 年 1 月 1 日正式停止，并且 2.7.18 代码冻结在 2020 年 1 月 1 日发生，但最终版本在该日期之后发生。
+即不会有 Python 2.8 版本。
+
+** formula  和 cask
+formula 和 casks 如何翻译和如何区别：
+formulae 意思是一些软件包（SDK），一般是命令行工具、开发库、一些字体、插件，共性是不提供界面，提供给终端或者是开发者使用。
+cask 是用户软件（APP），比如 chrome、mvim、wechat、wechatwork 这些提供用户交互界面的软件。
+
+把问题转向[[https://docs.brew.sh/][ Homebrew Documentation]] > [[https://docs.brew.sh/HomebrewandPython][Python]] 看看官网上对 Python 有啥说明没？
+看到了如下说明:
+
+#+BEGIN_QUOTE
+Homebrew provided a python@2 formula until the end of 2019, at which point it was removed due to the Python 2 deprecation.
+*Important:* If you choose to use a Python which isn’t either of these two (system Python or brewed Python),
+the Homebrew team cannot support any breakage that may occur.
+#+END_QUOTE
+
+* 解决
+
+参考:[[https://stackoverflow.com/questions/60298514/howtoreinstallpython2fromhomebrew#][https://stackoverflow.com/questions/60298514/howtoreinstallpython2fromhomebrew]]
+
+#+BEGIN_SRC ruby
+cd ~
+
+wget https://raw.githubusercontent.com/Homebrew/homebrewcore/86a44a0a552c673a05f11018459c9f5faae3becc/Formula/python@2.rb
+
+brew install python@2.rb
+
+rm python@2.rb
+#+END_SRC
+
+执行过程，如下:
+
+#+BEGIN_SRC python
+# 1. 进入默认用户目录
+$ cd ~
+# 2. 下载 python@2.rb 文件
+$ wget https://raw.githubusercontent.com/Homebrew/homebrewcore/86a44a0a552c673a05f11018459c9f5faae3becc/Formula/python@2.rb
+
+20210518 16:47:21  https://raw.githubusercontent.com/Homebrew/homebrewcore/86a44a0a552c673a05f11018459c9f5faae3becc/Formula/python@2.rb
+
+正在解析主机 raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.109.133, 185.199.110.133, 185.199.108.133, ...
+
+正在连接 raw.githubusercontent.com (raw.githubusercontent.com)|185.199.109.133|:443... 已连接。
+
+已发出 HTTP 请求，正在等待回应... 200 OK
+
+长度：13347 (13K) [text/plain]
+
+正在保存至: “python@2.rb”
+
+python@2.rb                          100%[====================================================================>]  13.03K  .KB/s  用时 0.002s
+
+20210518 16:47:22 (6.84 MB/s)  已保存 “python@2.rb” [13347/13347])
+
+# 3. 修改 python@2.rb 文件权限(可选)
+
+$ chmod 755 python\@2.rb
+
+# 4. 删除系统默认 /usr/local/bin/python2 > /usr/bin/python2.7(可选)
+
+$ rm /usr/local/bin/python2
+
+# 5. 安装 python@2.rb
+
+$ brew install python@2.rb
+
+Error: Failed to load cask: python@2.rb
+
+Cask 'python@2' is unreadable: wrong constant name #<Class:0x00007fcc198f2360>
+
+Warning: Treating python@2.rb as a formula.
+
+==> Downloading https://homebrew.bintray.com/bottles/python%4022.7.17_1.catalina.bottle.tar.gz
+
+Already downloaded: /Users/dovsnier/Library/Caches/Homebrew/downloads/a4e7e62c67a0ffb99906cfde7bfaf5b028f31c44f5a5ec3aec49740205151fc5python@22.7.17_1.catalina.bottle.tar.gz
+
+==> Pouring python@22.7.17_1.catalina.bottle.tar.gz
+
+==> /usr/local/Cellar/python@2/2.7.17_1/bin/python s setup.py nousercfg install force verbose singleversionexternallymanaged recor
+
+==> /usr/local/Cellar/python@2/2.7.17_1/bin/python s setup.py nousercfg install force verbose singleversionexternallymanaged recor
+
+==> /usr/local/Cellar/python@2/2.7.17_1/bin/python s setup.py nousercfg install force verbose singleversionexternallymanaged recor
+
+==> Caveats
+
+Pip and setuptools have been installed. To update them
+
+  pip install upgrade pip setuptools
+
+You can install Python packages with
+
+  pip install <package>
+
+
+
+They will install into the sitepackage directory
+
+  /usr/local/lib/python2.7/sitepackages
+
+
+
+See: https://docs.brew.sh/HomebrewandPython
+
+==> Summary
+
+🍺  /usr/local/Cellar/python@2/2.7.17_1: 3,806 files, 51.7MB
+
+# 6. 删除 python@2.rb 文件
+
+$ rm python@2.rb
+
+# 7. 如果有需要，卸载 python@2.rb(可选)
+
+$ brew uninstall python\@2.rb
+#+END_SRC
+
+查看一下安装后，Python@2 引用：
+
+#+BEGIN_SRC sh
+$ ls al /usr/local/bin/python*
+
+lrwxrxrx  1 xxx  admin  38  5 18 17:03 /usr/local/bin/python > ../Cellar/python@2/2.7.17_1/bin/python
+
+lrwxrxrx  1 xxx  admin  45  5 18 17:03 /usr/local/bin/pythonconfig > ../Cellar/python@2/2.7.17_1/bin/pythonconfig
+
+lrwxrxrx  1 xxx  admin  39  5 18 17:03 /usr/local/bin/python2 > ../Cellar/python@2/2.7.17_1/bin/python2
+
+lrwxrxrx  1 xxx  admin  46  5 18 17:03 /usr/local/bin/python2config > ../Cellar/python@2/2.7.17_1/bin/python2config
+
+lrwxrxrx  1 xxx  admin  41  5 18 17:03 /usr/local/bin/python2.7 > ../Cellar/python@2/2.7.17_1/bin/python2.7
+
+lrwxrxrx  1 xxx  admin  48  5 18 17:03 /usr/local/bin/python2.7config > ../Cellar/python@2/2.7.17_1/bin/python2.7config
+
+lrwxrxrx  1 xxx  admin  40  5 18 10:19 /usr/local/bin/python3 > ../Cellar/python@3.9/3.9.1_8/bin/python3
+
+lrwxrxrx  1 xxx  admin  47  5 18 10:19 /usr/local/bin/python3config > ../Cellar/python@3.9/3.9.1_8/bin/python3config
+
+lrwxrxrx  1 xxx  admin  40  1 14 18:06 /usr/local/bin/python3.8 > ../Cellar/python@3.8/3.8.5/bin/python3.8
+
+lrwxrxrx  1 xxx  admin  47  1 14 18:06 /usr/local/bin/python3.8config > ../Cellar/python@3.8/3.8.5/bin/python3.8config
+
+lrwxrxrx  1 xxx  admin  42  5 18 10:19 /usr/local/bin/python3.9 > ../Cellar/python@3.9/3.9.1_8/bin/python3.9
+
+lrwxrxrx  1 xxx  admin  49  5 18 10:19 /usr/local/bin/python3.9config > ../Cellar/python@3.9/3.9.1_8/bin/python3.9config
+
+lrwxrxrx  1 xxx  admin  39  5 18 17:03 /usr/local/bin/pythonw > ../Cellar/python@2/2.7.17_1/bin/pythonw
+
+lrwxrxrx  1 xxx  admin  40  5 18 17:03 /usr/local/bin/pythonw2 > ../Cellar/python@2/2.7.17_1/bin/pythonw2
+
+lrwxrxrx  1 xxx  admin  42  5 18 17:03 /usr/local/bin/pythonw2.7 > ../Cellar/python@2/2.7.17_1/bin/pythonw2.7
+#+END_SRC
+
+* 五. 参考
+  [[https://brew.sh/index_zhcn][https://brew.sh/index_zhcn]]
+  [[https://docs.brew.sh/][https://docs.brew.sh/]]
+  [[https://docs.brew.sh/HomebrewandPython][https://docs.brew.sh/HomebrewandPython]]
+  [[https://docs.brew.sh/DeprecatingDisablingandRemovingFormulae][https://docs.brew.sh/DeprecatingDisablingandRemovingFormulae]]
+  [[https://devguide.python.org/#statusofpythonbranches][https://devguide.python.org/#statusofpythonbranches]]
+  [[https://pip.readthedocs.io/en/stable/installing/#installpip][https://pip.readthedocs.io/en/stable/installing/#installpip]]
+  [[https://www.python.org/downloads/][https://www.python.org/downloads/]]
+  [[https://www.python.org/dev/peps/pep0373/][https://www.python.org/dev/peps/pep0373/]]
+  [[https://github.com/Homebrew/brew][https://github.com/Homebrew/brew]]
+  [[https://github.com/Homebrew/brew/issues/7057][https://github.com/Homebrew/brew/issues/7057]]
+  [[https://github.com/Homebrew/homebrewcore/issues/50546][https://github.com/Homebrew/homebrewcore/issues/50546]]
+  [[https://github.com/Homebrew/brew/pull/7066][https://github.com/Homebrew/brew/pull/7066]]
+  [[https://github.com/Homebrew/brew/pull/7019][https://github.com/Homebrew/brew/pull/7019]]
+  [[https://github.com/Homebrew/homebrewcore/pull/49796][https://github.com/Homebrew/homebrewcore/pull/49796]]
+  [[https://stackoverflow.com/questions/tagged/python2.7][https://stackoverflow.com/questions/tagged/python2.7]]
+  [[https://stackoverflow.com/questions/60298514/howtoreinstallpython2fromhomebrew#][https://stackoverflow.com/questions/60298514/howtoreinstallpython2fromhomebrew]]

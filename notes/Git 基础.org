@@ -1,0 +1,1133 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Git 基础/")); -*-
+:PROPERTIES:
+:ID:       24C4D212-46F8-448E-8874-47376C73F14E
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-26 Tue 15:12>
+#+TITLE: Git 基础
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+* git 理论基础
+:PROPERTIES:
+:ID:       E6B2D0F1-B23D-4E66-8274-DFC087049697
+:END:
+** 工作区域，暂区域和 Git 存仓库
+- Working Directory：工作区域
+- Stage(Index)：暂存区域
+- Repository(Head)：Git 仓库
+
+** Git 管理的文件的三种状态
+- 已修改：modified
+- 已暂存：staged
+- 已提交：committed
+
+** 初次使用 Git 前的配置
+
+#+BEGIN_SRC sh
+ config --global user.name "<username>"
+ config --global user.email "<email>"
+#+END_SRC
+
+** 查看 config 文件
+
+#+BEGIN_SRC php
+ git config --list                                                  [12：33：07]
+ .name=czqhurricane
+ .email=7160844@qq.com
+#+END_SRC
+
+** 将工作区域文件推送到 Git 仓库
+
+#+BEGIN_SRC sh
+ add <filename>
+ commit -m "description message"
+#+END_SRC
+
+** 查看状态
+
+#+BEGIN_SRC sh
+ status
+#+END_SRC
+
+-  Untracked files：未跟踪，未加入暂存区域和 Git 仓库的文件
+-  Changes not staged for commit：已跟踪，未加入暂存区域和 Git 仓库的文件，modified 显示红色
+-  Changes to be committed：已跟踪，已加入暂存区域但未加入 Git 仓库，modified 显示绿色
+
+** 查看提交记录
+
+#+BEGIN_SRC sh
+ log
+#+END_SRC
+
+* 重命名
+:PROPERTIES:
+:ID:       15EEE9CC-02DC-49C3-9611-F13E8EC4FBD3
+:END:
+
+#+BEGIN_SRC sh :results raw drawer values list :exports no-eval
+git mv
+#+END_SRC
+
+* 重新组织结构
+:PROPERTIES:
+:ID:       CA09F7BE-535D-4998-809F-91C9A54CA176
+:END:
+
+先使用 mkdir 新建文件夹，后使用 git mv 将所需文件转移至新文件夹。
+
+** 如果关掉终端，如何查询以往的版本快照的 ID 号
+:PROPERTIES:
+:ID:       D3743E6C-BE47-4DE4-BA4C-F96AD2B6A7A4
+:END:
+
+#+BEGIN_SRC sh
+ git reflog
+#+END_SRC
+
+结果如下：
+
+#+BEGIN_SRC sh
+ 7162fb8 HEAD@{0}： reset： moving to HEAD~
+ b5a5617 HEAD@{1}： reset： moving to HEAD~
+ 7d4f85d HEAD@{2}： commit： change the LICENSE file
+ b5a5617 HEAD@{3}： commit： add a LICENSE file
+ 7162fb8 HEAD@{4}： commit (initial)： add a README file
+#+END_SRC
+
+** 将 Git 仓库最后一次提交恢复回暂存区域恢先前的状态，用于撤销上一次的 add
+:PROPERTIES:
+:ID:       29EB84AA-42DF-46AC-BA4B-BA3E2DFA2AFB
+:END:
+适用于 add 工作区域的文件进行了修改，但未 commit，使用这条命令相当于取消 add 操作（因为从上图可知，reset 是以 Git 仓库的文件为参照的）。
+与 checkout 命令不同的是 checkout 会使用暂存区域的文件覆盖工作区域的文件的新修改。
+reset HEAD 命令不会覆盖工作区域的文件的新修改。
+
+#+BEGIN_SRC sh
+git reset HEAD <last committed filename>
+#+END_SRC
+
+或者
+
+#+BEGIN_SRC sh
+git reset HEAD
+#+END_SRC
+
+如果对于连第一次 commit 的情况，HEAD 是个无效的指针，此时使用 ~git reset HEAD <last committed filename>~ 或者 ~git reset HEAD~ 会出现错误，如下所示：
+
+#+BEGIN_SRC sh
+ c@ubuntu： ~/project master ⚡
+ $ git reset HEAD                                                                                                             [21：55：08]
+ fatal： ambiguous argument 'HEAD'： unknown revision or path not in the working tree.
+ Use '--' to separate paths from revisions， like this：
+ 'git <command> [<revision>...] -- [<file>...]'
+ FAIL： 128
+#+END_SRC
+
+此时使用 ~git rm --cached <last committed filename>~ 命令。
+
+** 用暂存区域中的文件覆盖工作区域中的文件
+:PROPERTIES:
+:ID:       51301953-7A3A-4BC1-84B4-00D9EB7DBA22
+:END:
+
+#+BEGIN_SRC sh
+git checkout -- <filename>
+#+END_SRC
+
+前有两个空格，为什么需要两个空格呢？因为 checkout 还有切换分支的功能，如果不带两个空格，程序无法知道需要切换分支还是覆盖文件（假设有一个分支名与欲覆盖的文件名称相同）。
+这个命令有危险性，会将工作区域文件新修改的内容进行覆盖。
+
+* 版本对比
+:PROPERTIES:
+:ID:       BB7FF440-D8E7-4854-8DF2-E419CAA19FC5
+:END:
+
+[[file:./static/Git 基础/91786277.png]]
+
+** 比较工作区域和暂存区域
+:PROPERTIES:
+:ID:       1B4DDFB9-B30B-470D-8576-8571398990A8
+:END:
+
+#+BEGIN_SRC sh
+git diff
+#+END_SRC
+
+** 比较两个历史快照
+:PROPERTIES:
+:ID:       13226AB0-03D6-4822-9FCA-C762CA4F7084
+:END:
+
+#+BEGIN_SRC sh
+git diff 快照ID1 快照ID2
+#+END_SRC
+
+** 比较工作区域和 Git 仓库中的快照
+:PROPERTIES:
+:ID:       5277BA39-8D9E-401B-A50A-D351E6C27E26
+:END:
+
+#+BEGIN_SRC sh
+git diff 快照ID
+#+END_SRC
+
+** 比较工作区域和 Git 仓库中的最新快照
+:PROPERTIES:
+:ID:       8E609BE8-CB5A-408C-9FA3-63A14016AF19
+:END:
+
+#+BEGIN_SRC sh
+git diff HEAD
+#+END_SRC
+
+** 比较暂存区域和 Git 仓库中的快照
+:PROPERTIES:
+:ID:       FEE373A4-1E06-40FA-8DA0-E2A1169DAAFD
+:END:
+
+#+BEGIN_SRC sh
+git diff --cached [快照ID]
+#+END_SRC
+
+* 修改最后一次提交
+:PROPERTIES:
+:ID:       D66020D0-0F39-4AB4-B72B-DCCFAC066155
+:END:
+- 使用场景 1：版本刚一提交(commit)到 Git 仓库，突然想起漏掉两个文件还没有添加（add）。
+- 使用情景 2：版本刚一提交(commit)到 Git 仓库，突然想起版本说明写的不够全面，无法彰显你本次修改的重大意义。
+
+使用 amend 不会增加新的快照。
+
+#+BEGIN_SRC sh
+git commit --amend
+#+END_SRC
+
+回车进入修改页面。
+或者。
+
+#+BEGIN_SRC sh
+git commit --amend -m <new description message>
+#+END_SRC
+
+* 删除文件
+:PROPERTIES:
+:ID:       A83A17DA-43C2-47B5-B704-7A25220ED342
+:END:
+** git rm
+:PROPERTIES:
+:ID:       8D3937BC-2A7A-45D7-980D-01D919AD0CE9
+:END:
+该命令删除的只是工作区域和暂存区域的文件，也就是取消跟踪，在下次提交时不纳入版本管理，但是对 Git 仓库的快照不会有影响，例如：
+在 Git 仓库中添加一个戈壁.jpg 文件。
+
+#+BEGIN_SRC sh
+  commit ebc42448cf2931f548136b6e7816c7bfe3bda054
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Thu Jun 1 15：01：32 2017 +0800
+
+      add a jpg
+
+  commit f7ab87aa3617e78ec2674c32b674e0b7e0eee603
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 19：05：56 2017 +0800
+
+      change LICENSE file
+
+  commit b5a5617640facfd379883c2b4aa9099299e50691
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 18：49：45 2017 +0800
+
+      add a LICENSE file
+
+  commit 7162fb8e076dc89fdd8f486c955c9f248dbdf11a
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 18：43：26 2017 +0800
+
+      add a README file
+#+END_SRC
+
+使用 ~git rm~ 命令删除戈壁.jpg 文件后
+
+#+BEGIN_SRC sh
+-  c@ubuntu： ~/flask_bucket master ⚡
+  $ git rm 戈壁.jpg                                                                                                            [15：01：57]
+  rm '戈壁.jpg'
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ ll                                                                                                                         [15：04：46]
+  总用量 44K
+  drwxrwxrwx 6 c c 4.0K 5月  31 18：22 app
+  -rwxrw-rw- 1 c c  521 5月  31 13：37 config.py
+  -rwxrw-rw- 1 c c 1.2K 3月  27 21：51 config.pyc
+  -rw-rw-r-- 1 c c 1.6K 6月   1 14：32 LICENSE
+  -rwxrw-rw- 1 c c  201 5月  31 13：38 manager.py
+  drwxrwxr-x 2 c c 4.0K 5月   7 13：38 __pycache__
+  -rw-rw-r-- 1 c c   24 6月   1 14：29 README.md
+  -rwxrw-rw- 1 c c  243 3月  19 21：33 requirements.txt
+  -rwxrw-rw- 1 c c 3.9K 5月  31 18：22 sql.py
+  -rwxrw-rw- 1 c c 2.7K 3月  25 17：04 SQL.pyc
+  drwxrwxr-x 6 c c 4.0K 5月   2 23：28 VIRTUAL_ENV
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git diff
+#+END_SRC
+
+可以看出工作区域和暂存区域的戈壁.jpg 文件都被删除了
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git status                                                                                                                 [15：03：13]
+  位于分支 master
+  要提交的变更：
+    （使用 "git reset HEAD <文件>..." 以取消暂存）
+
+      删除：     "\346\210\210\345\243\201.jpg"
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log
+  commit ebc42448cf2931f548136b6e7816c7bfe3bda054
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Thu Jun 1 15：01：32 2017 +0800
+
+      add a jpg
+
+  commit f7ab87aa3617e78ec2674c32b674e0b7e0eee603
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 19：05：56 2017 +0800
+
+      change LICENSE file
+
+  commit b5a5617640facfd379883c2b4aa9099299e50691
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 18：49：45 2017 +0800
+
+      add a LICENSE file
+
+  commit 7162fb8e076dc89fdd8f486c955c9f248dbdf11a
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 18：43：26 2017 +0800
+
+      add a README file
+#+END_SRC
+
+使用 ~git status~ 和 ~git log~ 还是能够看出有添加过戈壁.jpg 的痕迹的.
+那么如何消除这个痕迹呢?使用 ~git reset --soft HEAD~~ 命令，此时再使用 ~git status~ 和 ~git log~ 命令会发现原来的痕迹已经消失了。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git status                                                                                                                 [15：08：47]
+  位于分支 master
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log
+  commit f7ab87aa3617e78ec2674c32b674e0b7e0eee603
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 19：05：56 2017 +0800
+
+      change LICENSE file
+
+  commit b5a5617640facfd379883c2b4aa9099299e50691
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 18：49：45 2017 +0800
+
+      add a LICENSE file
+
+  commit 7162fb8e076dc89fdd8f486c955c9f248dbdf11a
+  Author： czqhurricane <7160844@qq.com>
+  Date：   Wed May 31 18：43：26 2017 +0800
+
+      add a README file
+#+END_SRC
+
+** git rm -f
+:PROPERTIES:
+:ID:       AE89038E-2122-4AD6-819E-22AB9DD25181
+:END:
+工作区域和暂存区域的文件存在差异，如图所示：
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git status                                                                                                                 [15：12：58]
+  位于分支 master
+  要提交的变更：
+    （使用 "git reset HEAD <文件>..." 以取消暂存）
+
+      修改：     README.md
+
+  尚未暂存以备提交的变更：
+    （使用 "git add <文件>..." 更新要提交的内容）
+    （使用 "git checkout -- <文件>..." 丢弃工作区的改动）
+
+      修改：     README.md
+#+END_SRC
+
+如果单纯的使用 ~git rm README.md~ 会出现错误：
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git rm README.md                                                                                                           [15：13：07]
+  error： 如下文件其暂存的内容和工作区及 HEAD 中的都不一样：
+      README.md
+  （使用 -f 强制删除）
+  FAIL： 1
+#+END_SRC
+
+使用 ~git rm -f README.md~ 就会强制删除工作区域和暂存区域中的 README.md
+
+** git rm --cached
+:PROPERTIES:
+:ID:       435F4BE1-028A-4866-BBB2-C359A2B4DF27
+:END:
+
+只删除暂存区域文件而保留工作区域文件。
+
+* 重命名文件
+:PROPERTIES:
+:ID:       D47FCAEE-E3A5-4DEB-8CD6-5B6F243C2F8C
+:END:
+
+#+BEGIN_SRC sh
+git mv old_filename new_filename
+#+END_SRC
+
+#+BEGIN_SRC sh
+ ren/mv old_filename new_filename
+ git rm old_filename
+ git add new_filename
+#+END_SRC
+
+* Git 分支
+:PROPERTIES:
+:ID:       DBD7BFEE-268C-41F6-8422-F8A561F7B637
+:END:
+
+[[file:static/Git 基础/100642453.png]]
+
+** 创建分支
+有一个 Git 仓库
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline
+
+  f7ab87a (HEAD -> master) change README file
+  b5a5617 add a LICENSE file
+  7162fb8 add a README file
+#+END_SRC
+
+[[file:./static/Git 基础/acb362a5ad69daf224ca4cd43b0063a7.png]]
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git branch feature                                                                                                         [16：11：32]
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git checkout feature                                                                                                       [16：13：06]
+#+END_SRC
+
+切换到分支 ‘feature’
+此时 Git 仓库如图所示：
+
+[[file:./static/Git 基础/ef95f269dcc6d06eded55dfa198eae48.png]]
+
+可以进行验证
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket feature ⚡
+  $ git log --decorate --oneline
+
+  f7ab87a (HEAD -> feature， master) change README file
+  b5a5617 add a LICENSE file
+  7162fb8 add a README file
+#+END_SRC
+
+可以看到分支已经切换到 ‘feature’
+在 feature 分支下编辑 README.md 文件，添加 Powerby czq，如下所示：
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket feature ⚡
+  $ cat README.md                                                                                                              [16：22：29]
+  # flask_bucket
+  - 关于
+  - 测试
+  - 说明
+  - Powerby czq
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket feature ⚡
+  $ git add README.md                                                                                                          [16：24：21]
+
+  c@ubuntu： ~/flask_bucket feature ⚡
+  $ git commit -m "change README file again"                                                                                   [16：24：27]
+  [feature 1e80b82] change README file again
+  1 file changed， 3 insertions(+)
+
+  c@ubuntu： ~/flask_bucket feature ⚡
+  $ git log --decorate --oneline
+
+  1e80b82 (HEAD -> feature) change README file again
+  f7ab87a (master) change README file
+  b5a5617 add a LICENSE file
+  7162fb8 add a README file
+#+END_SRC
+
+此时 Git 仓库如图所示：
+
+[[file:./static/Git 基础/test.png]]
+
+再切换回 master 分支，查看 README.md 内容
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket feature ⚡
+  $ git checkout master                                                                                                        [16：25：18]
+  切换到分支 'master'
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ cat README.md                                                                                                              [16：33：49]
+  # flask_bucket
+  - 测试
+#+END_SRC
+
+可以看出并没有 feature 分支中的 Powerby czq。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline
+
+  f7ab87a (HEAD -> master) change README file
+  b5a5617 add a LICENSE file
+  7162fb8 add a README file
+#+END_SRC
+
+此时 Git 仓库如图所示：
+
+[[file:./static/Git 基础/c9790e9e34a7237ba40183198ea6fc98.png]]
+
+在 master 分支下，修改 README.md，增加开发内容
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git add README.md                                                                                                          [17：26：31]
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git commit -m "change README.md file again on master branch"                                                               [17：27：17]
+  [master 4c2a577] change README.md file again on master branch
+   1 file changed， 1 insertion(+)
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline
+
+  4c2a577 (HEAD -> master) change README.md file again on master branch
+  f7ab87a change README file
+  b5a5617 add a LICENSE file
+  7162fb8 add a README file
+  (END)
+#+END_SRC
+
+此时 Git 仓库如图所示：
+
+[[file:./static/Git 基础/e8b4967965190657a62ed28c20275c29.png]]
+
+可以进行验证
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline --graph --all
+
+  * 4c2a577 (HEAD -> master) change README.md file again on master branch
+  | * 1e80b82 (feature) change README file again
+  |/
+  * f7ab87a change README file
+  * b5a5617 add a LICENSE file
+  * 7162fb8 add a README file
+#+END_SRC
+
+** 创建分支
+
+#+BEGIN_SRC sh
+  git branch <branch name>
+#+END_SRC
+
+** 切换分支
+
+#+BEGIN_SRC sh
+  git checkout <branch name>
+#+END_SRC
+
+** 创建新分支的同时切换到新分支
+
+#+BEGIN_SRC sh
+git checkout -b <branch name>
+#+END_SRC
+
+* Git 工作流程
+:PROPERTIES:
+:ID:       01F456B0-9994-4368-8FB3-689602569FC5
+:END:
+
+[[file:./static/Git 基础/112523287.png]]
+
+Git 工作流使用一个中间仓库作为所有开发者的交流地点，开发者在本地工作，然后将各自的分支推送到中间仓库。
+
+** 开发分支 develop
+
+[[file:./static/Git 基础/113305179.png]]
+
+代替单一的 master 主分支，可以使用两个分支来处理项目发布和日常开发，
+master 主分支通常只是用于对外发布项目的新版本，日常开发应该在另一条分支上完成，我们把开发用的分支叫做 develop 分支。
+
+** 功能分支 feature
+
+[[file:./static/Git 基础/113556185.png]]
+
+每一个新功能应该使用单一功能分支进行开发，功能分支应该从开发分支中分离出来，功能开发完成后合并到开发分支。
+
+-  功能分支不应该跟 master 分支有任何交流。
+-  功能分支可以采用 feature-* 的形式命名。
+
+** 预发布分支 release
+
+[[file:./static/Git 基础/83e57fbb-a74a-4f4e-a0ec-65fe79517b8f.jpg]]
+
+在项目正式发布之前，你可能需要一个预发布的版本进行测试，于是可以从开发分支中分离出语法布分支，用于内部或公开的测试。
+
+-  预发布分支应该同时合并到主分支和开发分支中。
+-  预发布分支可以采用 release-* 的形式命名。
+
+** 维护分支 hotfix
+
+[[file:./static/Git 基础/113819983.png]]
+
+项目正式发布后出现 bug，这时候需要创建一个分支，进行 bug 的修补
+
+-  维护分支应该从主分支中分离出来，bug 被修补后，再合并到主分支和开发分支中。
+-  维护分支可以采用 fixbug-* 形式命名。
+
+** 常设分支
+
+常设分支就主分支 master 和开发分支 develop 两个即可，另外的功能分支 feature，预发布分支 release 和维护分支 hotfix 属于临时分支，用完之后应该及时删除。
+
+* 合并分支和删除分支
+:PROPERTIES:
+:ID:       11921F2A-EBBC-46EE-86BE-4D8214471FF2
+:END:
+** 合并分支 git merge
+:PROPERTIES:
+:ID:       AEF57973-8426-4CFB-921C-0AD08FD45ED9
+:END:
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git merge feature                                                                                                          [17：34：34]
+  自动合并 README.md
+  冲突（内容）：合并冲突于 README.md
+  自动合并失败，修正冲突然后提交修正的结果。
+  FAIL： 1
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git status                                                                                                                 [19：09：36]
+  位于分支 master
+  您有尚未合并的路径。
+    （解决冲突并运行 "git commit"）
+
+  未合并的路径：
+    （使用 "git add <文件>..." 标记解决方案）
+
+      双方修改：   README.md
+#+END_SRC
+
+此时打开 README.md 会发现文件里已经被做了标记，如下所示：
+
+#+BEGIN_SRC sh
+   # flask_bucket
+     2 <<<<<<< HEAD
+     3 - 开发
+     4 =======
+     5 - 关于
+     6 >>>>>>> feature
+     7 - 测试
+     8 - 说明
+     9 - Powerby czq
+#+END_SRC
+
+#+BEGIN_SRC sh
+     2 <<<<<<< HEAD
+     3 - 开发
+     4 =======
+     5 - 关于
+     6 >>>>>>> feature
+#+END_SRC
+
+即是两个分支之间不同的内容，删除分隔标志<<<<<<< HEAD 和>>>>>>> feature 和其他不需要的内容后保存。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git add README.md                                                                                                          [19：17：33]
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git commit -m "fix conflict"                                                                                               [19：17：41]
+  [master 30216f3] fix conflict
+#+END_SRC
+
+可以进行验证。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline --graph --all
+
+  *   30216f3 (HEAD -> master) fix conflict
+  |\
+  | * 1e80b82 (feature) change README file again
+  * | 4c2a577 change README.md file again on master branch
+  |/
+  * f7ab87a change README file
+  * b5a5617 add a LICENSE file
+  * 7162fb8 add a README file
+#+END_SRC
+
+可以看出在修复完冲突的部分后，分支被合并到一起了。
+
+[[file:./static/Git 基础/test_3.png]]
+
+** 从一个分支中 merge 一个本分支没有的文件
+:PROPERTIES:
+:ID:       C40FA6A8-EF48-4A26-8277-46D7DAC08733
+:END:
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ touch feature.md                                                                                                           [19：18：51]
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ vim feature.md                                                                                                             [19：32：56]
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git checkout -b feature2                                                                                                   [19：33：29]
+  切换到一个新分支 'feature2'
+
+  c@ubuntu： ~/flask_bucket feature2 ⚡
+  $ git add feature.md                                                                                                         [19：33：48]
+
+  c@ubuntu： ~/flask_bucket feature2 ⚡
+  $ git commit -m "add feature file"                                                                                          [19：33：59]
+  [feature2 a058796] add feature file
+  1 file changed， 1 insertion(+)
+  create mode 100644 feature.md
+
+  c@ubuntu： ~/flask_bucket feature2 ⚡
+  $ git log --decorate --oneline --graph --all                                                                                 [19：34：19]
+
+  * a058796 (HEAD -> feature2) add feature file
+  *   30216f3 (master) fix conflict
+  |\
+  | * 1e80b82 (feature) change README file again
+  * | 4c2a577 change README.md file again on master branch
+  |/
+  * f7ab87a change README file
+  * b5a5617 add a LICENSE file
+  * 7162fb8 add a README file
+#+END_SRC
+
+[[file:static/Git 基础/50a4e7f2a4dca719082a0e005a0e478e_1.png]]
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket feature2 ⚡
+  $ ll                                                                                                                         [19：34：53]
+  总用量 48K
+  drwxrwxrwx 6 c c 4.0K 5月  31 18：22 app
+  -rwxrw-rw- 1 c c  521 5月  31 13：37 config.py
+  -rwxrw-rw- 1 c c 1.2K 3月  27 21：51 config.pyc
+  -rw-rw-r-- 1 c c   16 6月   1 19：33 feature.md
+  -rw-rw-r-- 1 c c 1.6K 6月   1 14：32 LICENSE
+  -rwxrw-rw- 1 c c  201 5月  31 13：38 manager.py
+  drwxrwxr-x 2 c c 4.0K 5月   7 13：38 __pycache__
+  -rw-rw-r-- 1 c c   65 6月   1 19：17 README.md
+  -rwxrw-rw- 1 c c  243 3月  19 21：33 requirements.txt
+  -rwxrw-rw- 1 c c 3.9K 5月  31 18：22 sql.py
+  -rwxrw-rw- 1 c c 2.7K 3月  25 17：04 SQL.pyc
+  drwxrwxr-x 6 c c 4.0K 5月   2 23：28 VIRTUAL_ENV
+
+  c@ubuntu： ~/flask_bucket feature2 ⚡
+  $ git checkout master                                                                                                        [19：36：07]
+  切换到分支 'master'
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ ll                                                                                                                         [19：36：17]
+  总用量 44K
+  drwxrwxrwx 6 c c 4.0K 5月  31 18：22 app
+  -rwxrw-rw- 1 c c  521 5月  31 13：37 config.py
+  -rwxrw-rw- 1 c c 1.2K 3月  27 21：51 config.pyc
+  -rw-rw-r-- 1 c c 1.6K 6月   1 14：32 LICENSE
+  -rwxrw-rw- 1 c c  201 5月  31 13：38 manager.py
+  drwxrwxr-x 2 c c 4.0K 5月   7 13：38 __pycache__
+  -rw-rw-r-- 1 c c   65 6月   1 19：17 README.md
+  -rwxrw-rw- 1 c c  243 3月  19 21：33 requirements.txt
+  -rwxrw-rw- 1 c c 3.9K 5月  31 18：22 sql.py
+  -rwxrw-rw- 1 c c 2.7K 3月  25 17：04 SQL.pyc
+  drwxrwxr-x 6 c c 4.0K 5月   2 23：28 VIRTUAL_ENV
+#+END_SRC
+
+可以看出此时 master 分支并没有 feature.md 文件。
+
+#+BEGIN_SRC python
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git merge feature2                                                                                                         [19：41：08]
+  更新 30216f3..59b09ce
+  Fast-forward
+   feature.md | 1 +
+   1 file changed， 1 insertion(+)
+   create mode 100644 feature.md
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ ll                                                                                                                         [19：41：22]
+  总用量 48K
+  drwxrwxrwx 6 c c 4.0K 5月  31 18：22 app
+  -rwxrw-rw- 1 c c  521 5月  31 13：37 config.py
+  -rwxrw-rw- 1 c c 1.2K 3月  27 21：51 config.pyc
+  -rw-rw-r-- 1 c c   16 6月   1 19：41 feature.md
+  -rw-rw-r-- 1 c c 1.6K 6月   1 14：32 LICENSE
+  -rwxrw-rw- 1 c c  201 5月  31 13：38 manager.py
+  drwxrwxr-x 2 c c 4.0K 5月   7 13：38 __pycache__
+  -rw-rw-r-- 1 c c   65 6月   1 19：17 README.md
+  -rwxrw-rw- 1 c c  243 3月  19 21：33 requirements.txt
+  -rwxrw-rw- 1 c c 3.9K 5月  31 18：22 sql.py
+  -rwxrw-rw- 1 c c 2.7K 3月  25 17：04 SQL.pyc
+  drwxrwxr-x 6 c c 4.0K 5月   2 23：28 VIRTUAL_ENV
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline --graph --all                                                                                 [19：41：29]
+
+  * 59b09ce (HEAD -> master， feature2) add feature file
+  *   30216f3 fix conflict
+  |\
+  | * 1e80b82 (feature) change README file again
+  * | 4c2a577 change README.md file again on master branch
+  |/
+  * f7ab87a change README file
+  * b5a5617 add a LICENSE file
+  * 7162fb8 add a README file
+#+END_SRC
+
+在 merge 时出现 fast-forward 是什么意思呢?
+是因为 feature2 的副节点是 master，merge 操作就是相当于把指向 feature2 的指针移动到 master.
+
+[[file:./static/Git 基础/50a4e7f2a4dca719082a0e005a0e478e.png]]
+
+** 删除分支 git branch -d(--delete)
+:PROPERTIES:
+:ID:       C527275F-BCA2-4A29-9302-2D7D7A76E952
+:END:
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline --graph --all
+
+  * 59b09ce (HEAD -> master， feature2) add feature file
+  *   30216f3 fix conflict
+  |\
+  | * 1e80b82 (feature) change README file again
+  * | 4c2a577 change README.md file again on master branch
+  |/
+  * f7ab87a change LICENSE file
+  * b5a5617 add a LICENSE file
+  * 7162fb8 add a README file
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git branch -d feature                                                                                                      [21：07：59]
+  已删除分支 feature（曾为 1e80b82）。
+
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git branch -d feature2                                                                                                     [21：08：17]
+  已删除分支 feature2（曾为 59b09ce）。
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/flask_bucket master ⚡
+  $ git log --decorate --oneline --graph --all
+
+  * 59b09ce (HEAD -> master) add feature file
+  *   30216f3 fix conflict
+  |\
+  | * 1e80b82 change README file again
+  * | 4c2a577 change README.md file again on master branch
+  |/
+  * f7ab87a change LICENSE file
+  * b5a5617 add a LICENSE file
+  * 7162fb8 add a README file
+#+END_SRC
+
+* 匿名分支和 checkout 命令
+:PROPERTIES:
+:ID:       02DB2450-DE01-4FB6-AF86-D8874892DBEF
+:END:
+** 匿名分支
+:PROPERTIES:
+:ID:       98D06A2A-2FFD-45FE-9241-BDA91391FABD
+:END:
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project master
+  $ git log --decorate --oneline --graph --all
+
+  * 9830304 (HEAD -> master) 3.txt
+  * 637b674 2.txt
+  * a217cfd 1.txt
+#+END_SRC
+
+在主分支有三个文件 1.txt，2.txt，3.txt。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project master
+  $ git checkout HEAD~                                                                                                         [22：04：50]
+  Note： checking out 'HEAD~'.
+
+  You are in 'detached HEAD' state. You can look around， make experimental
+  changes and commit them， and you can discard any commits you make in this
+  state without impacting any branches by performing another checkout.
+
+  If you want to create a new branch to retain commits you create， you may
+  do so (now or later) by using -b with the checkout command again. Example：
+
+    git checkout -b <new-branch-name>
+
+  HEAD 目前位于 637b674... 2.txt
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project 637b674
+  $ git log --decorate --oneline --graph --all
+
+  * 9830304 (master) 3.txt
+  * 637b674 (HEAD) 2.txt
+  * a217cfd 1.txt
+#+END_SRC
+
+当使用 checkout 命令而没有指定分支名，这时程序会创建一个匿名分支，所谓匿名分支即当你切换到其他分支，在匿名分支中所做的操作都会被丢弃。可以使用匿名分支做实验，不会造成不良影响。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project 637b674
+  $ ll                                                                                                                         [22：22：21]
+  总用量 0
+  -rw-rw-r-- 1 c c 0 6月   1 21：52 1.txt
+  -rw-rw-r-- 1 c c 0 6月   1 21：52 2.txt
+#+END_SRC
+
+可以看出此时工作区域只有 1.txt，2.txt
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project 637b674
+  $ touch 4.txt                                                                                                                [22：25：25]
+
+  c@ubuntu： ~/project 637b674 ⚡
+  $ git add 4.txt                                                                                                              [22：26：30]
+
+  c@ubuntu： ~/project 637b674 ⚡
+  $ git commit 4.txt -m "4.txt"                                                                                                [22：26：34]
+  [分离头指针 7175e5c] 4.txt
+   1 file changed， 0 insertions(+)， 0 deletions(-)
+   create mode 100644 4.txt
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project 7175e5c
+  $ git log --decorate --oneline --graph --all
+
+  * 7175e5c (HEAD) 4.txt
+  | * 9830304 (master) 3.txt
+  |/
+  * 637b674 2.txt
+  * a217cfd 1.txt
+#+END_SRC
+
+可以看出 HEAD 由 637b674 改指向了 7175e5c。
+如果此时切换回 master 分支。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project 7175e5c
+  $ git checkout master                                                                                                        [22：29：03]
+  警告：您正丢下 1 个提交，未和任何分支关联：
+
+    7175e5c 4.txt
+
+  如果您想要通过创建新分支保存它，这可能是一个好时候。
+  如下操作：
+
+   git branch <新分支名> 7175e5c
+
+  切换到分支 'master'
+#+END_SRC
+
+此时如果不使用命令 ~git branch <新分支名> 7175e5c~ 则刚才对匿名分支的操作将会不再存在，即创建的 4.txt 文件将不存在。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project 7175e5c
+  $ git log --decorate --oneline --graph --all
+
+  * 9830304 (HEAD -> master) 3.txt
+  * 637b674 2.txt
+  * a217cfd 1.txt
+
+  c@ubuntu： ~/project master
+  $ ll                                                                                                                         [22：35：22]
+  总用量 0
+  -rw-rw-r-- 1 c c 0 6月   1 21：52 1.txt
+  -rw-rw-r-- 1 c c 0 6月   1 21：52 2.txt
+  -rw-rw-r-- 1 c c 0 6月   1 22：31 3.txt
+#+END_SRC
+
+可以看出 4.txt 已经不在了。
+
+** checkout 命令的两种功能
+:PROPERTIES:
+:ID:       8AB95C5E-8C72-4C29-A0F9-EEC40E1AE0B0
+:END:
+checkout 命令有两种功能
+
+-  从历史快照(或者暂存区域)中拷贝文件到工作区域。
+-  切换分支。
+
+*** 从历史快照(或者暂存区域)中拷贝文件到工作区域
+:PROPERTIES:
+:ID:       AEBFE45A-63B0-4348-9DA5-67F2FEA99E47
+:END:
+当给定某个文件名时，Git 会从指定的提交中拷贝文件到暂存区域和工作区域，比如执行 ~git checkout HEAD~ README.md~ 会将上一个快照中的 README.md 文件复制到暂存区域和工作区域中，如图所示：
+
+[[file:./static/Git 基础/126827596.png]]
+
+如果命令中没有指定具体的快照 ID ~git checkout README.md~ ，则将从暂存区域恢复 README.md 到工作区域，如图所示：
+
+[[file:./static/Git 基础/127000866.png]]
+
+有些朋友可能会问上次看你在文件名的前边有加两个横杆(--)，这次怎么就没有了呢?
+Git 提醒写成 ~git checkout -- README.md~ 是为了预防恰好有一个分支叫做 README.md，这样的话 Git 就搞不懂你要恢复的是文件还是要切换分支了，所以约定--后面跟着的是文件名，
+反过来说，如果确保没有一个叫做 README.md 的分支，直接写 ~git checkout README.md~ 也是没有问题的。
+
+*** 切换分支
+:PROPERTIES:
+:ID:       11F7D6A0-6F1B-46AB-B590-FF2884545F20
+:END:
+切换分支的操作，Git 是如何实现的呢?
+首先我们知道 Git 的分支其实就是添加一个指向快照的指针，其次我们还知道切换分支出来修改 HEAD 指针的指向，还会改变暂存区域和工作区域的内容，所以执行 git checkout 373c0，Git 主要就是做了下面两件事情
+(当然事实上更多)，如图所示：
+[[file:./static/Git 基础/128162200.png]]
+
+那回过头来，如果我们只想恢复指定的文件/路径 git checkout 版本快照的 ID 号 路径/文件名，那么我们只需要指定具体的文件，Git 就会忽略切换分支的两个步骤中的第一步：修改 HEAD 指向的操作，那么 git
+checkout 版本快照的 ID 号 路径/文件名命令不就和 git reset --hard 版本快照的 ID 号 路径/文件名命令一样了吗?具体看下文.
+
+*** checkout 和 reset 的区别
+:PROPERTIES:
+:ID:       DBD4F26E-2190-4846-A951-EE834A3F0E42
+:END:
+**** 恢复文件
+:PROPERTIES:
+:ID:       F8D7E75F-8072-45AA-B7D6-D073EF125CB9
+:END:
+checkout 和 reset 都可以用于恢复指定快照的指定文件，并且它们都不会改变 HEAD 指针的指向。
+它们的区别是 reset 命令（具体说只是 git reset 版本快照的 ID 号 路径/文件名命令，加了路径/文件名则不能使用 --soft，--hard）只将文件恢复到暂存区域（默认--mixed 的作用），
+而 git checkout 版本快照的 ID 号 路径/文件名命令是同时覆盖暂存区域和工作区域，这样看来在恢复文件方面，reset 命令要比 checkout 命令要安全一些?
+
+**** 恢复快照
+:PROPERTIES:
+:ID:       E862FB9F-5678-410E-9851-DECE6E0FCCBC
+:END:
+reset 命令是用来回到过去的，根据选项的不同，reset 命令将移动 HEAD 指针（--soft）>覆盖暂存区域所有文件（--mixed，默认）>覆盖工作区域所有文件（--hard）。
+checkout 命令事实上也是通过移动 HEAD 指针和覆盖暂存区域，工作区域来实现切换分支的作用。
+那么 git reset --hard 版本快照 ID 和 git checkout 版本快照 ID 有什么区别呢？
+
+-  第一个区别：对于 reset --hard 命令来说，checkout 命令更安全，因为 checkout 命令在切换分支前会先检查一下当前的工作状态，如果不是 clean 的话，Git 不会允许你这样做，而 reset --hard 命令是直接覆盖所有数据。
+-  第二个区别：如何更新 HEAD 指向，reset 命令会移动 HEAD 所在分支的指向，而 checkout 命令只会移动 HEAD 自身来指向另一个分支。
+
+举例：
+假设有一个 Git 仓库，如图所示：
+
+#+BEGIN_SRC lisp
+  c@ubuntu： ~/project master
+
+  * 81d610b (HEAD -> master) 5.txt
+  | * a233cc0 (feature) 4.txt
+  |/
+  * 9830304 3.txt
+  * 637b674 2.txt
+  * a217cfd 1.txt
+#+END_SRC
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project master
+  $ git checkout feature                                                                                                       [23：33：55]
+  切换到分支 'feature'
+
+  c@ubuntu： ~/project feature
+  $ git log --decorate --oneline --graph --all
+
+  * 81d610b (master) 5.txt
+  | * a233cc0 (HEAD -> feature) 4.txt
+  |/
+  * 9830304 3.txt
+  * 637b674 2.txt
+  * a217cfd 1.txt
+#+END_SRC
+
+可以看到只是切换了 HEAD 的指向到 feature 分支即 a233cc0，而 master 仍然指向 master 分支即 81d610b。
+
+#+BEGIN_SRC sh
+  c@ubuntu： ~/project feature
+  $ git checkout master                                                                                                        [23：53：20]
+  切换到分支 'master'
+
+  c@ubuntu： ~/project master
+  $ git reset --hard feature                                                                                                   [23：55：04]
+  HEAD 现在位于 a233cc0 4.txt
+
+  c@ubuntu： ~/project master
+  $ git log --decorate --oneline --graph --all
+  * a233cc0 (HEAD -> master， feature) 4.txt
+  * 9830304 3.txt
+  * 637b674 2.txt
+  * a217cfd 1.txt
+#+END_SRC
+
+可以看到 master 分支原先指向 81d610b，现在随着 HEAD 一起指向 a233cc0，即 master 分支和 feature 分支指向同一指针。
+
+* Git 删除本地仓库
+:PROPERTIES:
+:ID:       D798F1FB-AED6-4409-8EBE-009361E2F554
+:END:
+
+#+BEGIN_SRC sh
+find . -name ".git" | xargs rm -Rf
+#+END_SRC
+
+清除本地文件夹下的 git 文件，然后再重新初始化新建的 git 仓库。
+
+#+BEGIN_SRC sh
+ls -ah
+#+END_SRC
+
+查看隐藏的 .git 文件夹。
+
+* Git 配置忽略文件
+:PROPERTIES:
+:ID:       14303180-5628-4029-A9F5-C73ABCDDA2C5
+:END:
+
+#+BEGIN_SRC sh
+$ vim .gitignore
+#+END_SRC
+
+在 .gitignore 文件中：
+
+#+BEGIN_SRC sh
+# ignore objects and archives， anywhere in the tree.
+*.[oa]
+# ignore generated html files，
+*.html
+# except foo.html which is maintained by hand
+!foo.html
+#+END_SRC

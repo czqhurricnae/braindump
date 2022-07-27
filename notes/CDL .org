@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/CDL /")); -*-
+:PROPERTIES:
+:ID:       A6FA019A-936A-4F33-9AB8-1202DB888C11
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-27 Wed 16:03>
+#+TITLE: CDL
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+外形缺损清单（CDL）在航空器适航审定时随同飞行手册一同批准，无需局方再次批准。

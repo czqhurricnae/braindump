@@ -1,10 +1,10 @@
-# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/MF:0301-安全管理体系/")); -*-
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/MF:0301 安全管理体系/")); -*-
 :PROPERTIES:
 :ID:       7CBD492C-DFB9-4EC6-AAFD-25E635EC7242
 :END:
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-16 Wed 01:12>
-#+TITLE: MF:0301-安全管理体系
+#+TITLE: 0301 安全管理体系
 #+ROAM_ALIAS:
 
 [[id:0D2C84B0-8523-47DB-B2F1-666853A4381B][公司安全管理体系文件的结构]]

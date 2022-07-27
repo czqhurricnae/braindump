@@ -1,0 +1,44 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/in_emacs_how_to_reference_latex_equation_in_text_by_its_number_dvi/")); -*-
+:PROPERTIES:
+:ID:       2BC248F6-3622-405C-9165-6FFFEF270D58
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-27 Wed 08:54>
+#+TITLE: in_emacs_how_to_reference_latex_equation_in_text_by_its_number_dvi
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+* Question
+Suppose, I use Emacs to write a function in latex:
+
+#+BEGIN_EXAMPLE
+    \begin{equation}
+    \label{eq:myeq}
+    x=2y
+    \end{equation}
+#+END_EXAMPLE
+
+that gives me
+
+#+BEGIN_EXAMPLE
+     x = 2y   (1)
+#+END_EXAMPLE
+
+in a resulting .dvi. And suppose I have dozens of such equations.
+*Here is the problem:* if I have to reference this equation but don't remember its name I want to be able to reference it by it's number (=(1)= in the shown case).
+
+*The story.* Actually, I know there is an emacs package that has such a function.
+
+Like this: I press key combination, the function asks me to enter an equation number and returns it's name, nicely surrounded by =(\ref{= and =})=.
+
+I used it, but after changing OS on my computer I've lost that Emacs installation.
+
+And now I don't remember what was the name of that package I once installed. Or maybe it was just a function in =.emacs=.
+
+Googling by key words gives RefTex, but I didn't found that feature in RefTex. So if someone uses that incredible package - please tell me its name!
+
+* Answer1
+Found the following package: [[http://www.emacswiki.org/emacs/download/AuxLabel]]
+
+Make sure to read the =LIMITATIONS= section.

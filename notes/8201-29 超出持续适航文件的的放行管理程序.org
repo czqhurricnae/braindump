@@ -4,6 +4,6 @@
 :END:
 #+LATEX_CLASS: my-article
 #+DATE: <2021-07-06 Tue 09:46>
-#+TITLE: MF8201-29 超出持续适航文件的的放行管理程序
+#+TITLE: 8201-29 超出持续适航文件的的放行管理程序
 
-[[file:./static/MF8201-29 超出持续适航文件的的放行管理程序/2021-07-06_09-46-12_screenshot.jpg]]
+[[file:static/8201-29 超出持续适航文件的的放行管理程序/2021-07-06_09-46-12_screenshot.jpg]]
