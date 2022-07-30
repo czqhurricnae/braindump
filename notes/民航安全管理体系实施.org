@@ -10,32 +10,49 @@
 #+PAGE_KEY:
 #+FILETAGS: :书籍:
 
-* 第一章  系统和任务分析 41
-* 第二章  信息共享的观点 83
-* 第三章  高层安全管理支持 112
-* 第四章  美国海岸警卫队的安全文化建设 128
-* 第五章  SMS 中的安全文化 150
-* 第六章  SMS 的实施 172
-* 第七章  SMS 培训：总体概述 259
-* 第八章  量子安全指标：一种测量安全的实用方法 271
+* 第一章 系统和任务分析 51
+* 第二章 信息共享的观点 93
+* 第三章 高层安全管理支持 122
+* 第四章 美国海岸警卫队的安全文化建设 138
+* 第五章 SMS 中的安全文化 160
+* 第六章 SMS 的实施 182
+* 第七章 SMS 培训：总体概述 269
+* 第八章 量子安全指标：一种测量安全的实用方法 281
 安全保证的作用不是实现生产目标，而是评估真个生产过程，确保制定的安全控制措施时时在位，
 充分有效，发挥当初制定时需要它们发挥的作用。
 
-* 第九章  针对小型服务提供商或安全新成员的审计项目 280
-** 审计准备 282
-** 审计 284
+* 第九章  针对小型服务提供商或安全新成员的审计项目 290
+** 审计准备 292
+** 审计 294
 :PROPERTIES:
 :PAGE_KEY: (285 286)
 :END:
-- 审计内容和实际标准之间的差异？
-#+transclude: [[~/.spacemacs.d/convert_pdf2image.py]] :disable-auto :src python :rest ":python python3 :var input_file=(or (hurricane//headline-property hurricane--pdf-prop) (hurricane//extract-value-from-keyword "PDF_KEY")) pages=(or (hurricane//headline-property hurricane--page-prop) (hurricane//extract-value-from-keyword "PAGE_KEY")) relative_dir=(concat "./static/" (file-name-sans-extension (buffer-name)) "/") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
+*** 审计内容和实际标准之间的差异？ 295
 
 [[file:./static/民航安全管理体系实施/民航安全管理体系实施_page285.png]]
 
 [[file:./static/民航安全管理体系实施/民航安全管理体系实施_page286.png]]
 
-* 第十章  从 32 份到 320 份：非惩罚性报告制度的完善之路 293
-* 第十一章  风险管理的实际运用 307
-* 第十二章  将 SMS 整合进入应急计划和突发事件指挥 330
-* 第十三章  安全促进 359
-* 第十四章  飞机维修中的 SMS 366
+*** ISARPs 如何区分是标准还是建议 298
+*** 接口界面 299
+:PROPERTIES:
+:PAGE_KEY: (289 290)
+:END:
+
+[[file:./static/民航安全管理体系实施/民航安全管理体系实施_page289.png]]
+
+[[file:./static/民航安全管理体系实施/民航安全管理体系实施_page290.png]]
+
+* 第十章 从 32 份到 320 份：非惩罚性报告制度的完善之路 303
+* 第十一章 风险管理的实际运用 317
+** 识别危险源 319
+*** 危险源识别网站 322
+- http://www.skybrary.aero 航空安全知识网站。
+** 评估风险 322
+** 作出风险决策 326
+** 实施决策 329
+** 监督和关注变更 331
+* 第十二章 将 SMS 整合进入应急计划和突发事件指挥 340
+** ICS/SMS 比较 345
+* 第十三章 安全促进 369
+* 第十四章 飞机维修中的 SMS 376

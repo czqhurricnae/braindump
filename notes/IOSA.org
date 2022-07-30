@@ -6,9 +6,7 @@
 #+LATEX_CLASS: my-article
 #+DATE: <2022-02-15 Tue 16:35>
 #+TITLE: IOSA
-
 #+ROAM_KEY:
-
 
 IOSA 认证（IATA Operational Safety Audit），即国际航空运输协会运行安全审计认证，
 是国际航空运输协会（IATA）制定的一项为国际所认可和接受的航空安全标准，用于评估航空公司的运行管理和控制系统。
