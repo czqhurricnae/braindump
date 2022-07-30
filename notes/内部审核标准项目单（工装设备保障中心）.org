@@ -9,10 +9,6 @@
 #+PDF_KEY: /Users/c/Library/Mobile Documents/iCloud~QReader~MarginStudy/Documents/737/内部审核标准项目单（工装设备保障中心）.pdf
 #+PAGE_KEY:
 
-#+transclude: [[/Users/c/.spacemacs.d/convert_pdf2image.py]] :disable-auto :src python :rest ":python python3 :var input_file=(extract-value-from-keyword "PDF_KEY") pages=(extract-value-from-keyword "PAGE_KEY") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
-
-#+RESULTS:
-
 [[file:static/内部审核标准项目单（工装设备保障中心）/内部审核标准项目单（工装设备保障中心）_page1.png]]
 
 [[file:static/内部审核标准项目单（工装设备保障中心）/内部审核标准项目单（工装设备保障中心）_page2.png]]

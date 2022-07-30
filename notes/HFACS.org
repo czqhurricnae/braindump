@@ -1,0 +1,12 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/HFACS/")); -*-
+:PROPERTIES:
+:ID:       521881AB-BDB6-44F2-B319-5E48ED0B78AA
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-30 Sat 15:29>
+#+TITLE: HFACS
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+人为因素和分类系统。

@@ -1,0 +1,11 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/0407-10-载重与平衡/")); -*-
+:PROPERTIES:
+:ID:       729366F2-7B1F-4698-8BF7-2DD633425BE9
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-28 Thu 00:26>
+#+TITLE: 0407-10-载重与平衡
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+

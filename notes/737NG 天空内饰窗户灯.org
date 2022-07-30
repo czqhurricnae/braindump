@@ -8,10 +8,6 @@
 #+PDF_KEY:
 #+PAGE_KEY:
 
-#+transclude: [[/Users/c/.spacemacs.d/convert_pdf2image.py]] :disable-auto :src python :rest ":python python3 :var input_file=(extract-value-from-keyword "PDF_KEY") pages=(extract-value-from-keyword "PAGE_KEY") relative_dir=(concat "./static/" (file-name-sans-extension (buffer-name)) "/") output_dir=(concat default-directory "static/" (file-name-sans-extension (buffer-name)) "/") :results raw output :exporte no-eval"
-
-#+RESULTS:
-
 * SSM 之 POWER 流                                                      :R427:
 :PROPERTIES:
 :ID:       F271D7E5-A116-411D-ACA0-A357870CA613

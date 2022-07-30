@@ -1,0 +1,22 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/Search and extract property in Org mode buffer/")); -*-
+:PROPERTIES:
+:ID:       5902870A-6BC0-4D81-A7E8-E85348836029
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-30 Sat 13:11>
+#+TITLE: Search and extract property in Org mode buffer
+#+ROAM_KEY:
+#+PDF_KEY:
+#+PAGE_KEY:
+
+#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
+(defun hurricane--find-pdf-path (buffer)
+  "Search the `PDF_KEY' property in BUFFER and extracts it when found."
+  (with-current-buffer buffer
+    (save-restriction
+      (widen)
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+PDF_KEY: \\(.*\\)" nil :noerror)
+          (match-string 1))))))
+#+END_SRC

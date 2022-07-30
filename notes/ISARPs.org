@@ -7,4 +7,6 @@
 #+TITLE: ISARPs
 #+ROAM_KEY: IOSA 标准和建议措施
 
-IOSA 标准和建议措施 ISARPs
+IOSA 标准和建议措施 ISARPs。
+
+IOSA Standards and Recommended Practices.

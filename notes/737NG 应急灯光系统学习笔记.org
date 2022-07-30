@@ -3,7 +3,6 @@
 :ID:       9D767F64-2AF0-49D0-9509-91845020980F
 :END:
 #+LATEX_CLASS: my-article
-
 #+DATE: <2020-12-27 Dec 14:38>
 #+TITLE: 737NG 应急灯光系统学习笔记
 
@@ -76,5 +75,3 @@
 [[file:./static/737NG 应急灯光系统学习笔记/17712.jpeg]]
 [[file:./static/737NG 应急灯光系统学习笔记/17915.jpeg]]
 [[file:./static/737NG 应急灯光系统学习笔记/18118.jpeg]]
-
-

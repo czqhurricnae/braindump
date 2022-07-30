@@ -35,17 +35,3 @@ CASA CAAP 48-1(1) Fatigue Management for Flight Crew Members
 
 * 航线维修放行人员疲劳管理水平分值评估方法
 #+transclude: [[id:3120CF3F-33DB-434E-828C-8CBFCCD2E2D3][AC-121-FS-075 公共运输航空运营人维修系统的设置]] :level 2
-
-#+BEGIN_SRC emacs-lisp :results raw drawer values list :exports no-eval
-(defun hurricane//chrome-close-tab-1 ()
-  (interactive)
-  (do-applescript
-   (concat (format "tell window %s of application \"Google Chrome\"\n" 1)
-                   "  close (tab index 3 4)\n"
-                   "end tell\n")))
-#+END_SRC
-
-#+RESULTS:
-:results:
-- hurricane//chrome-close-tab-1
-:end:
