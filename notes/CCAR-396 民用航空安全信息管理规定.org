@@ -1,0 +1,82 @@
+# -*- eval: (setq org-media-note-screenshot-image-dir (concat default-directory "./static/CCAR-396 民用航空安全信息管理规定/")); -*-
+:PROPERTIES:
+:ID:       8CE42952-7ECD-44AC-AB6F-F9193369124F
+:END:
+#+LATEX_CLASS: my-article
+#+DATE: <2022-07-31 Sun 13:59>
+#+TITLE: CCAR-396 民用航空安全信息管理规定
+#+ROAM_KEY:
+#+PDF_KEY: /Users/c/Documents/其他 CCAR 和 AC/CCAR-396 民用航空安全信息管理规定.pdf
+#+PAGE_KEY:
+
+* 第一章 总则 2
+:PROPERTIES:
+:ID:       38595D17-8664-4867-9928-3AEEE50D0968
+:END:
+* 第二章 民用航空安全信息的报告 4
+:PROPERTIES:
+:ID:       5517FF53-EA46-4C49-B834-238357BA24F5
+:END:
+** 第十一条 飞行事故信息的报告按照以下规定进行： 4
+:PROPERTIES:
+:ID:       EA9CB871-E5CF-4BEA-BB3E-6F528EE39363
+:END:
+** 第十二条 航空地面事故信息的报告按照以下规定进行： 5
+:PROPERTIES:
+:ID:       05D5BE49-6323-44AA-871C-5950763C5663
+:END:
+** 第十三条 飞行事故征候信息的报告按照以下规定进行： 5
+:PROPERTIES:
+:ID:       81296352-EF37-4476-A00D-A17BA54375F0
+:END:
+** 第十四条 其他不安全事件信息的报告按照以下规定进行： 6
+:PROPERTIES:
+:ID:       839035EB-8EEB-4388-9A0C-B69E74449DB3
+:END:
+** 第十五条 举报事件调查信息报告按照以下规定进行： 6
+:PROPERTIES:
+:ID:       41EAEF8E-6503-45AF-B81D-62A139AC95B7
+:END:
+* 第三章 民用航空安全信息的发布 7
+:PROPERTIES:
+:ID:       43B8480E-AAF3-4275-98FF-FFABC2FE54B1
+:END:
+** 第十九条 民航总局负责发布全行业的民用航空安全信息；民航地区管理局根据民航总局授权发布民用航空安全信息。 7
+** 第二十条 民用航空安全信息发布分为定期信息发布和紧急事件信息发布。 7
+* 第四章 法律责任 8
+:PROPERTIES:
+:ID:       9D3A51E2-81DD-4CF6-A374-D3B46DB39231
+:END:
+* 第五章 CCAR-396 民用航空安全信息管理规定 附则 9
+:PROPERTIES:
+:ID:       E74C7EC7-C422-40B2-AB6A-9A20483434AF
+:END:
+** 附录一 民用航空飞行不安全事件初始报告表 10
+:PROPERTIES:
+:ID:       0ACD63FF-4E83-4870-91EC-D2150006E565
+:END:
+** 附录二 民用航空飞行不安全事件最终报告表 14
+:PROPERTIES:
+:ID:       B0D115CD-CE51-40C3-B07C-7715397BF21A
+:END:
+** 附录三 民用航空地面不安全事件初始报告表 62
+:PROPERTIES:
+:PAGE_KEY: (62 63)
+:ID:       E5140234-BCA5-4240-B64C-86FDA4CE9ADA
+:END:
+
+[[file:./static/CCAR-396 民用航空安全信息管理规定/CCAR-396 民用航空安全信息管理规定_page62.png]]
+
+[[file:./static/CCAR-396 民用航空安全信息管理规定/CCAR-396 民用航空安全信息管理规定_page63.png]]
+
+** 附录四 民用航空地面不安全事件最终报告表 63
+:PROPERTIES:
+:PAGE_KEY: (63 64 65 66)
+:ID:       B5648D28-09DA-4E28-9082-7CFE7A381C49
+:END:
+
+[[file:./static/CCAR-396 民用航空安全信息管理规定/CCAR-396 民用航空安全信息管理规定_page64.png]]
+
+[[file:./static/CCAR-396 民用航空安全信息管理规定/CCAR-396 民用航空安全信息管理规定_page65.png]]
+
+[[file:./static/CCAR-396 民用航空安全信息管理规定/CCAR-396 民用航空安全信息管理规定_page66.png]]
